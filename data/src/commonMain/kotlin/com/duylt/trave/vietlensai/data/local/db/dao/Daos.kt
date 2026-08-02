@@ -8,7 +8,6 @@ import androidx.room.Upsert
 import com.duylt.trave.vietlensai.data.local.db.entity.ChatMessageEntity
 import com.duylt.trave.vietlensai.data.local.db.entity.DiscoveryEntity
 import com.duylt.trave.vietlensai.data.local.db.entity.DiscoveryNoteEntity
-import com.duylt.trave.vietlensai.data.local.db.entity.RecommendationEntity
 import com.duylt.trave.vietlensai.data.local.db.entity.TranslationEntity
 import com.duylt.trave.vietlensai.data.local.db.entity.TripSummaryEntity
 import kotlinx.coroutines.flow.Flow
@@ -28,7 +27,14 @@ interface DiscoveryDao {
     @Query("SELECT * FROM discoveries WHERE id = :id")
     suspend fun getById(id: String): DiscoveryEntity?
 
-    /** Newest first, capped — used to build recommendation and journal prompts. */
+    /**
+     * Newest first, capped.
+     *
+     * The cap is vestigial: the one surviving caller is `deleteAll`, which passes
+     * `Int.MAX_VALUE` because it wants every row — it walks them to delete the capture file
+     * behind each discovery before the rows go. The journal prompt is built from
+     * [getBetween], not from here, whatever the ordering suggests.
+     */
     @Query("SELECT * FROM discoveries ORDER BY createdAt DESC LIMIT :limit")
     suspend fun getRecent(limit: Int): List<DiscoveryEntity>
 
@@ -193,32 +199,6 @@ interface TranslationDao {
      */
     @Query("SELECT imagePath FROM translations WHERE imagePath IS NOT NULL")
     suspend fun getAllImagePaths(): List<String>
-}
-
-@Dao
-interface RecommendationDao {
-
-    @Query("SELECT * FROM recommendations ORDER BY generatedAt DESC")
-    fun observeAll(): Flow<List<RecommendationEntity>>
-
-    @Query("SELECT MAX(generatedAt) FROM recommendations")
-    suspend fun lastGeneratedAt(): Long?
-
-    @Query("DELETE FROM recommendations")
-    suspend fun deleteAll()
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAll(entities: List<RecommendationEntity>)
-
-    /**
-     * Recommendations are only meaningful as a set generated for one moment, so a
-     * refresh swaps the whole table atomically rather than merging rows.
-     */
-    @androidx.room.Transaction
-    suspend fun replaceAll(entities: List<RecommendationEntity>) {
-        deleteAll()
-        insertAll(entities)
-    }
 }
 
 @Dao

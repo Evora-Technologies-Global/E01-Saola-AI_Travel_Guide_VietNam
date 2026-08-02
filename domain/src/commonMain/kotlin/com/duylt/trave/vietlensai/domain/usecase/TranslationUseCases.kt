@@ -4,7 +4,6 @@ import com.duylt.trave.vietlensai.domain.model.TranslateLanguage
 import com.duylt.trave.vietlensai.domain.model.TranslationResult
 import com.duylt.trave.vietlensai.domain.repository.TranslationRepository
 import com.duylt.trave.vietlensai.domain.util.AppResult
-import kotlinx.coroutines.flow.Flow
 
 /**
  * Translates whatever text is in the photo into the language the traveller asked for.
@@ -26,22 +25,4 @@ class TranslateImageUseCase(
         sourceLanguage = sourceLanguage,
         targetLanguage = targetLanguage,
     )
-}
-
-class ObserveTranslationsUseCase(
-    private val repository: TranslationRepository,
-) {
-    operator fun invoke(): Flow<List<TranslationResult>> = repository.observeTranslations()
-}
-
-class ObserveTranslationUseCase(
-    private val repository: TranslationRepository,
-) {
-    operator fun invoke(id: String): Flow<TranslationResult?> = repository.observeTranslation(id)
-}
-
-class DeleteTranslationUseCase(
-    private val repository: TranslationRepository,
-) {
-    suspend operator fun invoke(id: String): AppResult<Unit> = repository.delete(id)
 }

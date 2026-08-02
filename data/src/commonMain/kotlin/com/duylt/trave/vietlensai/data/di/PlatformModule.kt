@@ -29,18 +29,15 @@ internal expect val platformDataModule: Module
 /**
  * The persistence policy both platforms share.
  *
- * Only the file path is platform business; the migration, the fallback and the driver are
- * decided here so the two platforms cannot drift into different storage behaviour.
+ * Only the file path is platform business; the fallback and the driver are decided here
+ * so the two platforms cannot drift into different storage behaviour.
  */
 internal fun RoomDatabase.Builder<VietLensDatabase>.applySharedConfiguration(
     ioDispatcher: CoroutineDispatcher,
 ): RoomDatabase.Builder<VietLensDatabase> = this
-    // v2 adds provinceId for the passport map, v3 the traveller's own notes. Both are
-    // additive, so both get real migrations — losing every recorded discovery is too high
-    // a price for one nullable column, and losing what the traveller wrote is worse still.
-    .addMigrations(VietLensDatabase.MIGRATION_1_2, VietLensDatabase.MIGRATION_2_3)
-    // Pre-1.0: any *other* schema change should reset local history rather than block
-    // the build on a migration no shipped install will ever need.
+    // Pre-1.0, and no migrations are declared: any schema change should reset local
+    // history rather than block the build on a migration no shipped install will ever
+    // need. Nothing is published, so the only file this can ever drop is a developer's.
     .fallbackToDestructiveMigration(dropAllTables = true)
     // The bundled driver, not the platform one: it ships the same SQLite build to both
     // platforms, so a query cannot behave differently because the OS happens to link an

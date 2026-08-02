@@ -119,27 +119,6 @@ data class TranslationEntity(
     val createdAt: Long,
 )
 
-/**
- * Cached "where to next" results.
- *
- * The whole table is replaced on each refresh — recommendations are only ever
- * meaningful as a set generated for one moment and place.
- */
-@Entity(tableName = "recommendations")
-data class RecommendationEntity(
-    @PrimaryKey val id: String,
-    val name: String,
-    val category: String,
-    val reason: String,
-    val addressHint: String?,
-    val distanceHint: String?,
-    val bestTime: String?,
-    val estimatedCost: String?,
-    val latitude: Double?,
-    val longitude: Double?,
-    val generatedAt: Long,
-)
-
 /** One AI-written diary entry per day, keyed by ISO date so regeneration overwrites. */
 @Entity(tableName = "trip_summaries")
 data class TripSummaryEntity(

@@ -2,7 +2,6 @@ package com.duylt.trave.vietlensai.data.remote.gemini
 
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.add
-import kotlinx.serialization.json.buildJsonArray
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 import kotlinx.serialization.json.putJsonArray
@@ -163,47 +162,6 @@ internal object GeminiSchemas {
         }
         putJsonArray("required") { add("detectedLanguage"); add("lines") }
         putJsonArray("propertyOrdering") { add("detectedLanguage"); add("contextNote"); add("lines") }
-    }
-
-    /** "Where to next", grounded on location and the trip so far. */
-    val recommendations: JsonObject = buildJsonObject {
-        put(TYPE, OBJECT)
-        putJsonObject("properties") {
-            putJsonObject("recommendations") {
-                put(TYPE, ARRAY)
-                putJsonObject("items") {
-                    put(TYPE, OBJECT)
-                    putJsonObject("properties") {
-                        putJsonObject("name") { put(TYPE, STRING) }
-                        putJsonObject("category") {
-                            put(TYPE, STRING)
-                            putJsonArray("enum") { categoryValues.forEach { add(it) } }
-                        }
-                        putJsonObject("reason") {
-                            put(TYPE, STRING)
-                            put("description", "Why THIS traveller, given what they have already seen. Two sentences.")
-                        }
-                        putJsonObject("addressHint") { put(TYPE, STRING) }
-                        putJsonObject("distanceHint") {
-                            put(TYPE, STRING)
-                            put("description", "Human phrasing such as '10 minutes on foot'.")
-                        }
-                        putJsonObject("bestTime") { put(TYPE, STRING) }
-                        putJsonObject("estimatedCost") { put(TYPE, STRING) }
-                        putJsonObject("latitude") { put(TYPE, NUMBER) }
-                        putJsonObject("longitude") { put(TYPE, NUMBER) }
-                    }
-                    putJsonArray("required") { add("name"); add("category"); add("reason") }
-                    putJsonArray("propertyOrdering") {
-                        add("name"); add("category"); add("reason"); add("addressHint")
-                        add("distanceHint"); add("bestTime"); add("estimatedCost")
-                        add("latitude"); add("longitude")
-                    }
-                }
-            }
-        }
-        putJsonArray("required") { add("recommendations") }
-        putJsonArray("propertyOrdering") { add("recommendations") }
     }
 
     /** The end-of-day journal write-up. */

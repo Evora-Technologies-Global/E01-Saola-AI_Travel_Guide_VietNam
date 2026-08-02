@@ -41,12 +41,6 @@ class ObserveDiscoveriesUseCase(
     operator fun invoke(): Flow<List<Discovery>> = repository.observeDiscoveries()
 }
 
-class ObserveFavoritesUseCase(
-    private val repository: DiscoveryRepository,
-) {
-    operator fun invoke(): Flow<List<Discovery>> = repository.observeFavorites()
-}
-
 class ObserveDiscoveryUseCase(
     private val repository: DiscoveryRepository,
 ) {

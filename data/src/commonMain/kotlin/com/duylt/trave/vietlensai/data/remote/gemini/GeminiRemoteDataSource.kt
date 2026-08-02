@@ -5,7 +5,6 @@ import com.duylt.trave.vietlensai.data.remote.gemini.dto.DiscoveryPayload
 import com.duylt.trave.vietlensai.data.remote.gemini.dto.InlineData
 import com.duylt.trave.vietlensai.data.remote.gemini.dto.Part
 import com.duylt.trave.vietlensai.data.remote.gemini.dto.LineTranslationPayload
-import com.duylt.trave.vietlensai.data.remote.gemini.dto.RecommendationsPayload
 import com.duylt.trave.vietlensai.data.remote.gemini.dto.TripSummaryPayload
 import com.duylt.trave.vietlensai.domain.model.AppLanguage
 import com.duylt.trave.vietlensai.domain.model.ChatMessage
@@ -98,23 +97,6 @@ internal class GeminiRemoteDataSource(
             ),
         )
     }
-
-    suspend fun recommendations(
-        location: GeoPoint?,
-        visitedPlaces: List<String>,
-        interests: List<String>,
-        language: AppLanguage,
-        model: GeminiModel,
-    ): AppResult<StructuredResponse<RecommendationsPayload>> = client.generateStructured(
-        modelChain = model.fallbackChain,
-        systemInstruction = GeminiPrompts.recommendationSystemInstruction(language),
-        parts = listOf(
-            Part(text = GeminiPrompts.recommendationPrompt(location, visitedPlaces, interests)),
-        ),
-        schema = GeminiSchemas.recommendations,
-        deserializer = serializer(),
-        temperature = 0.6f,
-    )
 
     /** @param notes what the traveller wrote themselves that day; empty when they wrote nothing. */
     suspend fun daySummary(

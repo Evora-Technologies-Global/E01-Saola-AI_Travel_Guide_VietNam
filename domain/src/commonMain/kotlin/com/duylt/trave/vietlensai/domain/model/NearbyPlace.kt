@@ -5,12 +5,12 @@ import kotlin.math.log10
 /**
  * A real place near the traveller, assembled from OpenStreetMap and Wikipedia.
  *
- * Deliberately *not* a [Recommendation]. That type is a model's opinion about where
- * someone should go next, and everything on it — the address, the price, the walking
- * time — was written by the model and could be wrong in ways nobody could check.
- * Everything here was mapped by a person or written in an encyclopaedia, so a marker is
- * where the place actually is and the words under it are somebody's account of it
- * rather than a plausible-sounding invention.
+ * Deliberately *not* a model's opinion about where someone should go next. The app used
+ * to carry one of those, and everything on it — the address, the price, the walking time
+ * — was written by the model and could be wrong in ways nobody could check. Everything
+ * here was mapped by a person or written in an encyclopaedia, so a marker is where the
+ * place actually is and the words under it are somebody's account of it rather than a
+ * plausible-sounding invention.
  *
  * **There is no star rating, and there is not meant to be.** No open data source carries
  * Google's ratings, and rather than invent a number the screen ranks by two things that

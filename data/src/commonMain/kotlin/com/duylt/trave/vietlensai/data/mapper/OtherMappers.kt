@@ -3,22 +3,16 @@ package com.duylt.trave.vietlensai.data.mapper
 import com.duylt.trave.vietlensai.data.local.db.Converters
 import com.duylt.trave.vietlensai.data.local.db.entity.ChatMessageEntity
 import com.duylt.trave.vietlensai.data.local.db.entity.DiscoveryNoteEntity
-import com.duylt.trave.vietlensai.data.local.db.entity.RecommendationEntity
 import com.duylt.trave.vietlensai.data.local.db.entity.TextBoxJson
 import com.duylt.trave.vietlensai.data.local.db.entity.TranslationBlockJson
 import com.duylt.trave.vietlensai.data.local.db.entity.TranslationEntity
 import com.duylt.trave.vietlensai.data.local.db.entity.TripSummaryEntity
 import com.duylt.trave.vietlensai.data.remote.gemini.dto.LineTranslationPayload
-import com.duylt.trave.vietlensai.data.remote.gemini.dto.RecommendationPayload
 import com.duylt.trave.vietlensai.data.remote.gemini.dto.TripSummaryPayload
-import com.duylt.trave.vietlensai.domain.model.AppLanguage
 import com.duylt.trave.vietlensai.domain.model.ChatMessage
 import com.duylt.trave.vietlensai.domain.model.ChatRole
-import com.duylt.trave.vietlensai.domain.model.DiscoveryCategory
 import com.duylt.trave.vietlensai.domain.model.DiscoveryNote
-import com.duylt.trave.vietlensai.domain.model.GeoPoint
 import com.duylt.trave.vietlensai.domain.model.RecognizedLine
-import com.duylt.trave.vietlensai.domain.model.Recommendation
 import com.duylt.trave.vietlensai.domain.model.TextBox
 import com.duylt.trave.vietlensai.domain.model.TranslateLanguage
 import com.duylt.trave.vietlensai.domain.model.TranslationBlock
@@ -121,36 +115,6 @@ internal fun TranslationEntity.toDomain(): TranslationResult = TranslationResult
     },
     contextNote = contextNote,
     createdAt = Instant.fromEpochMilliseconds(createdAt),
-)
-
-// --- Recommendations ---
-
-internal fun RecommendationPayload.toEntity(id: String, generatedAt: Instant): RecommendationEntity =
-    RecommendationEntity(
-        id = id,
-        name = name.trim(),
-        category = DiscoveryCategory.fromWire(category).wireName,
-        reason = reason.trim(),
-        addressHint = addressHint?.trim()?.takeIf { it.isNotEmpty() },
-        distanceHint = distanceHint?.trim()?.takeIf { it.isNotEmpty() },
-        bestTime = bestTime?.trim()?.takeIf { it.isNotEmpty() },
-        estimatedCost = estimatedCost?.trim()?.takeIf { it.isNotEmpty() },
-        latitude = latitude,
-        longitude = longitude,
-        generatedAt = generatedAt.toEpochMilliseconds(),
-    )
-
-internal fun RecommendationEntity.toDomain(): Recommendation = Recommendation(
-    id = id,
-    name = name,
-    category = DiscoveryCategory.fromWire(category),
-    reason = reason,
-    addressHint = addressHint,
-    distanceHint = distanceHint,
-    bestTime = bestTime,
-    estimatedCost = estimatedCost,
-    location = if (latitude != null && longitude != null) GeoPoint(latitude, longitude) else null,
-    generatedAt = Instant.fromEpochMilliseconds(generatedAt),
 )
 
 // --- Trip summary ---
