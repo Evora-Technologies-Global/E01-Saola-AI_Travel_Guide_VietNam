@@ -71,8 +71,6 @@
     <string name="analysing_recognising">Nhận diện vật thể trong khung hình</string>
     <string name="analysing_history">Tra cứu lịch sử phía sau</string>
     <string name="analysing_stories">Tìm những câu chuyện đáng kể</string>
-    <string name="analysing_translate_title">Đang đọc phần chữ…</string>
-    <string name="analysing_translate_detail">Ghi lại nguyên văn rồi dịch từng dòng</string>
 
     <!-- Discovery -->
     <string name="discovery_confidence">Khớp %1$d%</string>
@@ -117,7 +115,6 @@
     <string name="discovery_note_delete">Xoá ghi chú</string>
     <string name="discovery_note_edited">đã sửa</string>
     <string name="discovery_note_take_photo">Chụp ảnh</string>
-    <string name="discovery_note_camera_shutter">Chụp ảnh</string>
     <string name="discovery_note_camera_flip">Đổi camera</string>
     <!-- Asked in the app's own words before the system dialog, which never says why. -->
     <string name="discovery_note_camera_permission_title">Chụp một tấm cho ghi chú này?</string>
@@ -139,8 +136,6 @@
     <string name="chat_clear">Xóa cuộc trò chuyện</string>
 
     <!-- Translation -->
-    <string name="translate_title">Bản dịch</string>
-    <string name="translate_detected">Ngôn ngữ nhận diện: %1$s</string>
     <string name="translate_copy">Sao chép bản dịch</string>
     <string name="translate_copied">Đã sao chép bản dịch</string>
     <string name="translate_speak">Đọc to</string>
@@ -152,7 +147,6 @@
     <string name="translate_leave_stay">Ở lại</string>
 
     <!-- Journal -->
-    <string name="journal_title">Nhật ký hành trình</string>
     <string name="journal_kicker">Hành trình của bạn</string>
     <string name="journal_heading">Nhật ký hành trình</string>
     <plurals name="journal_discoveries_label">
@@ -169,12 +163,8 @@
     <string name="journal_end_of_day_action">Viết ngày hôm nay</string>
     <string name="journal_story_expand">Đọc trọn câu chuyện</string>
     <string name="journal_story_collapse">Thu gọn</string>
-    <string name="journal_stats_discoveries">Khám phá</string>
-    <string name="journal_stats_days">Ngày</string>
-    <string name="journal_stats_favorites">Yêu thích</string>
     <string name="journal_stats_open_passport">Mở bản đồ hành trình</string>
     <string name="journal_stats_open_collection">Mở bộ sưu tập văn hoá</string>
-    <string name="journal_summary_generate">Viết câu chuyện của ngày này</string>
     <string name="journal_summary_regenerate">Viết lại</string>
     <string name="journal_summary_generating">Đang viết nhật ký cho bạn…</string>
     <string name="journal_tomorrow">Gợi ý cho ngày mai</string>
@@ -233,7 +223,6 @@
     <string name="settings_api_key_save">Lưu khóa</string>
     <string name="settings_api_key_clear">Xóa</string>
     <string name="settings_api_key_saved">Đã lưu khóa API</string>
-    <string name="settings_model">Mô hình</string>
     <string name="settings_model_balanced">Cân bằng</string>
     <string name="settings_model_balanced_summary">Đủ sâu, đủ nhanh để đọc một tờ thực đơn.</string>
     <string name="settings_model_quick">Nhanh</string>
@@ -242,7 +231,6 @@
     <string name="settings_model_scholar_summary">Lịch sử và văn hóa sâu nhất. Chậm hơn.</string>
     <string name="settings_section_experience">Trải nghiệm</string>
     <string name="settings_language">Ngôn ngữ kể chuyện</string>
-    <string name="settings_language_summary">Ngôn ngữ mà hướng dẫn viên nói và viết</string>
     <string name="settings_speak">Đọc to câu trả lời</string>
     <string name="settings_speak_summary">Đọc phần mô tả và câu trả lời trong khung chat</string>
     <string name="settings_section_appearance">Giao diện</string>
@@ -298,7 +286,6 @@
     <string name="error_unexpected">Đã xảy ra lỗi. Thử lại nhé.</string>
 
     <!-- Hộ chiếu du lịch -->
-    <string name="nav_passport">Hành trình</string>
     <string name="passport_title">Hộ chiếu du lịch</string>
     <string name="passport_subtitle">Việt Nam hiện dần theo bước chân bạn</string>
     <string name="passport_progress_of">trên %1$d tỉnh thành</string>
