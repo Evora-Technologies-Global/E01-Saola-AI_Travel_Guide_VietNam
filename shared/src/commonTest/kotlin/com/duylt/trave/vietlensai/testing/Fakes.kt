@@ -149,6 +149,7 @@ class FakeSettingsRepository : SettingsRepository {
     /** `DataStore` throws `IOException` on a corrupt or unreadable preferences file. */
     var throwOnCurrent: Throwable? = null
     var throwOnWrite: Throwable? = null
+    var failOnWrite: AppError? = null
 
     var usableApiKey = true
     var locationAskedCalls = 0
@@ -165,35 +166,51 @@ class FakeSettingsRepository : SettingsRepository {
         return usableApiKey
     }
 
-    override suspend fun setApiKey(key: String?) {
-        throwOnWrite?.let { throw it }
+    override suspend fun setApiKey(key: String?) = write {
         state.value = state.value.copy(apiKey = key)
     }
 
-    override suspend fun setLanguage(language: AppLanguage) {
-        throwOnWrite?.let { throw it }
+    override suspend fun setLanguage(language: AppLanguage) = write {
         state.value = state.value.copy(language = language)
     }
 
-    override suspend fun setModel(model: GeminiModel) {
-        throwOnWrite?.let { throw it }
+    override suspend fun setModel(model: GeminiModel) = write {
         state.value = state.value.copy(preferredModel = model)
     }
 
-    override suspend fun setSpeakAnswers(enabled: Boolean) {
-        throwOnWrite?.let { throw it }
+    override suspend fun setSpeakAnswers(enabled: Boolean) = write {
         state.value = state.value.copy(speakAnswers = enabled)
     }
 
-    override suspend fun setLocationAsked() {
+    /**
+     * The counter is bumped before [write], not inside it.
+     *
+     * `LensViewModelCrashTest.'an exception while recording the location prompt is contained'`
+     * asserts the call was *attempted* when the write blows up, so the count has to survive a
+     * throw — counting inside the block would only ever record the writes that succeeded.
+     */
+    override suspend fun setLocationAsked(): AppResult<Unit> {
         locationAskedCalls++
-        throwOnWrite?.let { throw it }
-        state.value = state.value.copy(hasAskedLocation = true)
+        return write { state.value = state.value.copy(hasAskedLocation = true) }
     }
 
-    override suspend fun setThemePreference(preference: ThemePreference) {
-        throwOnWrite?.let { throw it }
+    override suspend fun setThemePreference(preference: ThemePreference) = write {
         state.value = state.value.copy(darkTheme = preference)
+    }
+
+    /**
+     * The two ways a write can go wrong, kept apart on purpose.
+     *
+     * [throwOnWrite] is the crash probe this file exists for — the unhandled path, where the
+     * question is whether the caller survives at all. [failOnWrite] is the handled one the
+     * repository now promises: a write that reports [AppResult.Failure] instead of throwing,
+     * which is what the settings screen reads to decide whether it may say "saved".
+     */
+    private inline fun write(block: () -> Unit): AppResult<Unit> {
+        throwOnWrite?.let { throw it }
+        failOnWrite?.let { return AppResult.Failure(it) }
+        block()
+        return AppResult.Success(Unit)
     }
 }
 

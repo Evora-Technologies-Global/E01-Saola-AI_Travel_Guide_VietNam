@@ -17,6 +17,8 @@ import com.duylt.trave.vietlensai.domain.usecase.SaveApiKeyUseCase
 import com.duylt.trave.vietlensai.domain.usecase.UpdateLanguageUseCase
 import com.duylt.trave.vietlensai.domain.usecase.UpdateModelUseCase
 import com.duylt.trave.vietlensai.domain.usecase.UpdateThemeUseCase
+import com.duylt.trave.vietlensai.domain.util.AppError
+import com.duylt.trave.vietlensai.domain.util.AppResult
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -26,6 +28,12 @@ data class SettingsState(
     val apiKeyDraft: String = "",
     val hasUsableKey: Boolean = false,
     val showClearConfirm: Boolean = false,
+    /**
+     * Held only so the screen can resolve the message in the traveller's language —
+     * `toUserMessage` is a composable and the effect collector is not. Same arrangement as
+     * the explore and journal routes.
+     */
+    val error: AppError? = null,
 ) : UiState
 
 sealed interface SettingsIntent : UiIntent {
@@ -44,6 +52,9 @@ sealed interface SettingsIntent : UiIntent {
 sealed interface SettingsEffect : UiEffect {
     data object ApiKeySaved : SettingsEffect
     data object HistoryCleared : SettingsEffect
+
+    /** A write that did not land. Carries the error so the screen shows why, not just that. */
+    data class ShowMessage(val error: AppError) : SettingsEffect
 }
 
 class SettingsViewModel(
@@ -71,12 +82,23 @@ class SettingsViewModel(
         when (intent) {
             is SettingsIntent.ApiKeyDraftChanged -> setState { copy(apiKeyDraft = intent.value) }
 
+            // Both the cleared field and the confirmation are gated on the write actually
+            // landing. Unconditionally they were a lie with teeth: a failed write discarded
+            // the key the traveller had just pasted, told them it was saved, and left the
+            // status pill one row below still reading "no key configured".
             SettingsIntent.SaveApiKey -> launchSafely {
-                saveApiKey(currentState.apiKeyDraft)
-                // Clearing the draft means the field never keeps a secret on screen
-                // after it has been stored.
-                setState { copy(apiKeyDraft = "") }
-                sendEffect(SettingsEffect.ApiKeySaved)
+                when (val result = saveApiKey(currentState.apiKeyDraft)) {
+                    is AppResult.Failure -> {
+                        setState { copy(error = result.error) }
+                        sendEffect(SettingsEffect.ShowMessage(result.error))
+                    }
+                    // Clearing the draft means the field never keeps a secret on screen
+                    // after it has been stored.
+                    is AppResult.Success -> {
+                        setState { copy(apiKeyDraft = "", error = null) }
+                        sendEffect(SettingsEffect.ApiKeySaved)
+                    }
+                }
             }
 
             SettingsIntent.ClearApiKey -> launchSafely {

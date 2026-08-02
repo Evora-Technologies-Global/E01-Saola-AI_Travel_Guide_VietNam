@@ -102,10 +102,12 @@ import com.duylt.trave.vietlensai.resources.settings_title
 import com.duylt.trave.vietlensai.core.designsystem.component.AppSnackbarHost
 import com.duylt.trave.vietlensai.core.designsystem.component.Kicker
 import com.duylt.trave.vietlensai.core.designsystem.component.SovereigntySeal
+import com.duylt.trave.vietlensai.core.designsystem.component.showError
 import com.duylt.trave.vietlensai.core.designsystem.component.showMessage
 import com.duylt.trave.vietlensai.core.designsystem.theme.ScreenGutter
 import com.duylt.trave.vietlensai.core.designsystem.theme.Vermilion
 import com.duylt.trave.vietlensai.core.designsystem.theme.screenInsetsPadding
+import com.duylt.trave.vietlensai.core.util.toUserMessage
 import com.duylt.trave.vietlensai.domain.model.AppLanguage
 import com.duylt.trave.vietlensai.domain.model.GeminiModel
 import com.duylt.trave.vietlensai.domain.model.ThemePreference
@@ -135,6 +137,10 @@ fun SettingsRoute(
     val savedMessage = stringResource(Res.string.settings_api_key_saved)
     val clearedMessage = stringResource(Res.string.settings_cleared)
 
+    // Resolved here rather than inside the collector: `toUserMessage` is a composable,
+    // and a non-composable collector cannot call one. Same shape as JournalRoute.
+    val errorMessage = state.error?.toUserMessage()
+
     // Which picker is open is the screen's own business, not the ViewModel's: it
     // survives nothing but a rotation, and a dialog reopening after process death
     // would be a surprise rather than a restoration.
@@ -150,6 +156,8 @@ fun SettingsRoute(
             when (effect) {
                 SettingsEffect.ApiKeySaved -> snackbarHostState.showMessage(savedMessage)
                 SettingsEffect.HistoryCleared -> snackbarHostState.showMessage(clearedMessage)
+                is SettingsEffect.ShowMessage ->
+                    snackbarHostState.showError(errorMessage ?: return@collectLatest)
             }
         }
     }

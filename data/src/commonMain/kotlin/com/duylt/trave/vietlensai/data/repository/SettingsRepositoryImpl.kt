@@ -17,10 +17,14 @@ import kotlinx.coroutines.flow.first
  * caught here is everything it deliberately lets through — a mapping mistake, a value of a
  * type the file has never held before — because of who calls this: recognition, chat,
  * translation and the diary all read [current] to find the language and the model *before*
- * they reach their own guards, and none of the three methods below has an `AppResult` to
- * report a failure in. Settings that cannot be read are settings the traveller never
- * changed, which is a working app in Vietnamese on the default model; an exception here is
- * a camera that will not take a photograph.
+ * they reach their own guards, and [settings] and [current] have no `AppResult` to report a
+ * failure in. Settings that cannot be read are settings the traveller never changed, which
+ * is a working app in Vietnamese on the default model; an exception here is a camera that
+ * will not take a photograph.
+ *
+ * The writes are the other direction and do carry an `AppResult` — they delegate straight to
+ * [SettingsDataStore], which folds a failed write into [AppError.Storage] rather than
+ * dropping it, so the settings screen can stop confirming a save that did not happen.
  */
 internal class SettingsRepositoryImpl(
     private val dataStore: SettingsDataStore,
