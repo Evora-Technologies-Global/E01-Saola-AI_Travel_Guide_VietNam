@@ -13,6 +13,7 @@ import com.duylt.trave.vietlensai.domain.util.AppError
 import com.duylt.trave.vietlensai.domain.util.AppResult
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import kotlin.time.Clock
@@ -39,6 +40,7 @@ internal class ChatRepositoryImpl(
     override fun observeMessages(discoveryId: String): Flow<List<ChatMessage>> =
         chatDao.observeThread(discoveryId)
             .map { entities -> entities.map { it.toDomain() } }
+            .flowOn(ioDispatcher)
             .fallbackOnFailure(emptyList(), what = "observe the thread for $discoveryId")
 
     override suspend fun ask(discoveryId: String, question: String): AppResult<ChatMessage> =

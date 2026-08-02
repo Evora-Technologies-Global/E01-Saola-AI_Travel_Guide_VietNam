@@ -19,6 +19,7 @@ import com.duylt.trave.vietlensai.domain.util.AppResult
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.DateTimeUnit
@@ -68,6 +69,11 @@ internal class JournalRepositoryImpl(
                 )
             }
     }
+        // Off the collector's thread: the `combine` above decodes every discovery, parses a
+        // `LocalDate` per summary row and then groups and sorts the lot, and the collector is
+        // a ViewModel on `Dispatchers.Main.immediate`. One `flowOn` here covers the whole
+        // transform because it applies upstream of this point.
+        .flowOn(ioDispatcher)
         // The diary is the app's home screen, and this is the read that runs before the
         // traveller has done anything. A summary row whose `date` column no longer parses
         // — `TripSummaryEntity.toDomain` calls `LocalDate.parse` on it — would otherwise
@@ -88,6 +94,7 @@ internal class JournalRepositoryImpl(
                         .eachCount(),
                 )
             }
+            .flowOn(ioDispatcher)
             .fallbackOnFailure(
                 JournalStats(
                     totalDiscoveries = 0,
