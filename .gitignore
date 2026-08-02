@@ -1,0 +1,45 @@
+*.iml
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
+# Every module's build output, not just the root one. A leading slash would match
+# `/build` alone and quietly track app/build, data/build and domain/build — 393 MB
+# of generated Room and Compose code that changes on every compile.
+build/
+/captures
+.externalNativeBuild
+.cxx
+.kotlin
+local.properties
+
+# Signing material: keystores stay on the machine that owns them.
+# Credentials live in local.properties (also ignored above).
+*.jks
+*.keystore
+
+# Province pipeline intermediates: a 22 MB Overpass dump and a 9.7 MB Natural Earth
+# extract, both re-downloadable by the recipe in tools/provinces/README.md. The
+# curated archipelago geometry and the generated provinces.json *are* committed —
+# they are what the app ships.
+tools/provinces/osm_raw.json
+tools/provinces/ne_land.geojson
+tools/provinces/provinces.json
+tools/provinces/*.png
+
+# Synced into the Xcode project by `:data:copySharedAssetsToIos` before every framework build.
+# Build output; `data/src/androidMain/assets` is the single source of truth.
+# (Compose resources need no entry here — the Compose plugin writes those straight into the
+# built .app rather than into the project directory.)
+/iosApp/SharedAssets/
+/iosApp/build/
+# Per-user Xcode state. The *shared* scheme under xcshareddata/ is committed on purpose:
+# Android Studio's Kotlin Multiplatform run configuration and CI both resolve the target
+# through it, and a scheme that only exists in xcuserdata is invisible to them.
+xcuserdata/
+*.xcuserstate

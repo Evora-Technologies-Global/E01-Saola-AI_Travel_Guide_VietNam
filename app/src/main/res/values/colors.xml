@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Only the handful of colours the platform needs before Compose takes over.
+  The real palette lives in core/designsystem/theme/Color.kt.
+-->
+<resources>
+    <color name="window_background">#FFFFFBF8</color>
+    <color name="ic_launcher_background">#FFB3261E</color>
+</resources>

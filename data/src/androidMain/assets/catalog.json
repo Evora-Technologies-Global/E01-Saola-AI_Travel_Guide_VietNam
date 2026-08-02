@@ -1,0 +1,560 @@
+{
+  "version": 1,
+  "note": "The collection catalogue. Aliases are matched case-insensitively against a discovery's title, local name and tags, as whole words, with Vietnamese diacritics kept — see CatalogMatcher.kt for why folding them would be wrong.",
+  "items": [
+    {
+      "id": "pho",
+      "category": "FOOD",
+      "name": "Phở",
+      "nameEn": "Phở",
+      "hint": "Sợi bánh dẹt màu trắng ngà trong nước dùng trong ninh từ xương, ăn kèm hành lá và rau thơm.",
+      "hintEn": "Flat ivory rice noodles in a clear bone broth, served with spring onion and herbs.",
+      "aliases": ["phở", "phở bò", "phở gà", "bánh phở"]
+    },
+    {
+      "id": "bun-bo-hue",
+      "category": "FOOD",
+      "name": "Bún bò Huế",
+      "nameEn": "Bún bò Huế",
+      "hint": "Sợi bún tròn to trong nước dùng đỏ cay có sả và mắm ruốc, thường kèm một khoanh giò heo.",
+      "hintEn": "Thick round noodles in a spicy red broth of lemongrass and shrimp paste, usually with a slice of pork knuckle.",
+      "aliases": ["bún bò huế", "bún bò"]
+    },
+    {
+      "id": "banh-mi",
+      "category": "FOOD",
+      "name": "Bánh mì",
+      "nameEn": "Bánh mì",
+      "hint": "Ổ bánh vỏ giòn ruột rỗng, rạch dọc và nhồi pate, thịt, đồ chua và rau mùi.",
+      "hintEn": "A crisp hollow baguette split lengthways and filled with pâté, meat, pickles and coriander.",
+      "aliases": ["bánh mì", "banh mi"]
+    },
+    {
+      "id": "banh-xeo",
+      "category": "FOOD",
+      "name": "Bánh xèo",
+      "nameEn": "Bánh xèo",
+      "hint": "Bánh tráng mỏng vàng nghệ gập đôi hình bán nguyệt, nhân tôm thịt giá, cuốn với rau sống.",
+      "hintEn": "A thin turmeric-yellow crêpe folded in half over prawn, pork and beansprouts, eaten wrapped in leaves.",
+      "aliases": ["bánh xèo", "bánh khoái"]
+    },
+    {
+      "id": "goi-cuon",
+      "category": "FOOD",
+      "name": "Gỏi cuốn",
+      "nameEn": "Fresh spring rolls",
+      "hint": "Cuốn bánh tráng trong suốt nhìn rõ tôm hồng và rau bên trong, ăn nguội chấm tương.",
+      "hintEn": "Translucent rice-paper rolls showing the pink prawn inside, served cold with a dipping sauce.",
+      "aliases": ["gỏi cuốn", "nem cuốn", "summer roll", "fresh spring roll"]
+    },
+    {
+      "id": "cao-lau",
+      "category": "FOOD",
+      "name": "Cao lầu",
+      "nameEn": "Cao lầu",
+      "hint": "Sợi mì dày màu nâu ngà, rất ít nước dùng, rắc tóp mỡ giòn — chỉ Hội An mới có.",
+      "hintEn": "Thick brownish noodles with barely any broth and crisp pork crackling — found only in Hội An.",
+      "aliases": ["cao lầu"]
+    },
+    {
+      "id": "mi-quang",
+      "category": "FOOD",
+      "name": "Mì Quảng",
+      "nameEn": "Mì Quảng",
+      "hint": "Sợi mì bản to màu vàng nghệ chan xăm xắp nước, phủ đậu phộng rang và bánh tráng mè bẻ vụn.",
+      "hintEn": "Wide turmeric noodles in just a splash of broth, topped with roasted peanuts and shards of sesame rice cracker.",
+      "aliases": ["mì quảng"]
+    },
+    {
+      "id": "bun-cha",
+      "category": "FOOD",
+      "name": "Bún chả",
+      "nameEn": "Bún chả",
+      "hint": "Chả viên và thịt nướng thả trong bát nước mắm chua ngọt, bún trắng để riêng.",
+      "hintEn": "Grilled pork patties floating in a bowl of sweet-sour fish sauce, with the white noodles served separately.",
+      "aliases": ["bún chả"]
+    },
+    {
+      "id": "com-tam",
+      "category": "FOOD",
+      "name": "Cơm tấm",
+      "nameEn": "Cơm tấm",
+      "hint": "Cơm nấu từ hạt gạo gãy, ăn với sườn nướng, bì và chả trứng, chan mỡ hành.",
+      "hintEn": "Rice cooked from broken grains, served with grilled pork chop, shredded skin and an egg meatloaf.",
+      "aliases": ["cơm tấm"]
+    },
+    {
+      "id": "banh-chung",
+      "category": "FOOD",
+      "name": "Bánh chưng",
+      "nameEn": "Bánh chưng",
+      "hint": "Khối vuông gói lá dong buộc lạt; cắt ra thấy nếp xanh, nhân đậu xanh và thịt mỡ ở giữa.",
+      "hintEn": "A square parcel bound in dong leaves; cut open it shows green sticky rice around mung bean and pork.",
+      "aliases": ["bánh chưng", "bánh tét"]
+    },
+    {
+      "id": "che",
+      "category": "FOOD",
+      "name": "Chè",
+      "nameEn": "Chè",
+      "hint": "Cốc nhiều lớp màu gồm đậu, thạch và nước cốt dừa, ăn lạnh bằng thìa dài.",
+      "hintEn": "A layered glass of beans, jelly and coconut cream, eaten cold with a long spoon.",
+      "aliases": ["chè", "chè ba màu", "chè đậu"]
+    },
+    {
+      "id": "ca-phe-sua-da",
+      "category": "FOOD",
+      "name": "Cà phê sữa đá",
+      "nameEn": "Vietnamese iced coffee",
+      "hint": "Phin nhôm đặt trên miệng ly, cà phê nhỏ từng giọt xuống lớp sữa đặc trắng ngà.",
+      "hintEn": "An aluminium filter perched on the glass, dripping coffee onto a layer of condensed milk.",
+      "aliases": ["cà phê sữa đá", "cà phê phin", "cà phê đá", "cà phê trứng"]
+    },
+    {
+      "id": "hu-tieu",
+      "category": "FOOD",
+      "name": "Hủ tiếu",
+      "nameEn": "Hủ tiếu",
+      "hint": "Sợi nhỏ dai, nước dùng trong ngọt vị xương heo; ăn khô thì nước lèo để chén riêng.",
+      "hintEn": "Thin chewy noodles in a clear pork broth; the dry version keeps the broth in a separate bowl.",
+      "aliases": ["hủ tiếu", "hủ tíu"]
+    },
+    {
+      "id": "banh-cuon",
+      "category": "FOOD",
+      "name": "Bánh cuốn",
+      "nameEn": "Bánh cuốn",
+      "hint": "Lá bột gạo tráng mỏng như tờ giấy, cuốn nhân mộc nhĩ thịt băm, rắc hành phi.",
+      "hintEn": "Paper-thin steamed rice sheets rolled around minced pork and wood-ear mushroom, scattered with fried shallot.",
+      "aliases": ["bánh cuốn"]
+    },
+    {
+      "id": "nem-ran",
+      "category": "FOOD",
+      "name": "Nem rán",
+      "nameEn": "Fried spring rolls",
+      "hint": "Cuốn chiên vàng giòn vỏ bánh đa nem, cắt khúc, chấm nước mắm chua ngọt.",
+      "hintEn": "Golden deep-fried rolls in rice-paper wrappers, cut into lengths and dipped in sweet-sour fish sauce.",
+      "aliases": ["nem rán", "chả giò", "nem cua bể"]
+    },
+    {
+      "id": "banh-beo",
+      "category": "FOOD",
+      "name": "Bánh bèo",
+      "nameEn": "Bánh bèo",
+      "hint": "Từng chén nhỏ bột gạo trắng lõm giữa, rắc tôm chấy màu cam và tóp mỡ.",
+      "hintEn": "Small saucers of white rice batter dimpled in the middle, topped with orange dried shrimp and crackling.",
+      "aliases": ["bánh bèo"]
+    },
+
+    {
+      "id": "dinh-lang",
+      "category": "ARCHITECTURE",
+      "name": "Đình làng",
+      "nameEn": "Village communal house",
+      "hint": "Nhà chung của làng: mái ngói lớn xoè rộng gần chạm đất, sân gạch phía trước, cột gỗ để mộc.",
+      "hintEn": "The village's shared hall: a broad tiled roof sweeping almost to the ground, a brick forecourt, bare timber columns.",
+      "aliases": ["đình làng", "ngôi đình", "communal house"]
+    },
+    {
+      "id": "cong-tam-quan",
+      "category": "ARCHITECTURE",
+      "name": "Cổng tam quan",
+      "nameEn": "Three-entrance gate",
+      "hint": "Cổng chùa ba lối: một lối lớn ở giữa, hai lối nhỏ hai bên, nhiều nơi có gác chuông bên trên.",
+      "hintEn": "A pagoda gate with three openings — one large in the middle, two small at the sides — often with a bell tower above.",
+      "aliases": ["tam quan", "cổng tam quan"]
+    },
+    {
+      "id": "dau-dao",
+      "category": "ARCHITECTURE",
+      "name": "Đầu đao",
+      "nameEn": "Upswept roof corner",
+      "hint": "Bốn góc mái cong vút lên như mũi thuyền, đầu đao thường chạm hình rồng hoặc phượng.",
+      "hintEn": "Roof corners curving up like the prow of a boat, usually carved into a dragon or phoenix.",
+      "aliases": ["đầu đao", "mái đao", "mái cong"]
+    },
+    {
+      "id": "ngoi-am-duong",
+      "category": "ARCHITECTURE",
+      "name": "Ngói âm dương",
+      "nameEn": "Yin-yang roof tiles",
+      "hint": "Hàng ngói úp ngửa xen kẽ nhau thành sóng — thường gặp ở Hội An và vùng núi phía Bắc.",
+      "hintEn": "Tiles laid alternately face-up and face-down into waves — common in Hội An and the northern uplands.",
+      "aliases": ["ngói âm dương", "ngói ống", "ngói vảy cá"]
+    },
+    {
+      "id": "nha-ruong",
+      "category": "ARCHITECTURE",
+      "name": "Nhà rường",
+      "nameEn": "Nhà rường timber house",
+      "hint": "Nhà gỗ xứ Huế: hệ cột kèo lộ hẳn ra trong lòng nhà, chạm khắc tinh xảo, ghép mộng không dùng đinh.",
+      "hintEn": "The timber house of Huế: its post-and-beam frame left fully exposed inside, finely carved, jointed without nails.",
+      "aliases": ["nhà rường"]
+    },
+    {
+      "id": "nha-san",
+      "category": "ARCHITECTURE",
+      "name": "Nhà sàn",
+      "nameEn": "Stilt house",
+      "hint": "Nhà dựng trên cột cao cách mặt đất, cầu thang gỗ dẫn lên sàn, gầm sàn để trống.",
+      "hintEn": "A house raised on tall posts, a wooden stair up to the floor, the space underneath left open.",
+      "aliases": ["nhà sàn", "stilt house"]
+    },
+    {
+      "id": "nha-ong-pho-co",
+      "category": "ARCHITECTURE",
+      "name": "Nhà ống phố cổ",
+      "nameEn": "Old-quarter tube house",
+      "hint": "Mặt tiền hẹp chỉ vài mét nhưng nhà sâu hun hút, có giếng trời ở giữa để lấy sáng và thoát nhiệt.",
+      "hintEn": "A frontage only metres wide but a plan running far back, with a light well in the middle.",
+      "aliases": ["nhà ống", "nhà phố cổ", "tube house"]
+    },
+    {
+      "id": "kien-truc-phap",
+      "category": "ARCHITECTURE",
+      "name": "Kiến trúc Pháp thuộc",
+      "nameEn": "French colonial architecture",
+      "hint": "Tường vàng, cửa chớp gỗ sơn xanh, ban công sắt uốn và mái ngói dốc kiểu Âu.",
+      "hintEn": "Ochre walls, green timber shutters, wrought-iron balconies and a steep European tiled roof.",
+      "aliases": ["kiến trúc pháp", "pháp thuộc", "kiểu pháp", "colonial", "french colonial"]
+    },
+    {
+      "id": "nha-tho-cong-giao",
+      "category": "ARCHITECTURE",
+      "name": "Nhà thờ Công giáo",
+      "nameEn": "Catholic church",
+      "hint": "Tháp chuông nhọn vươn cao, mặt tiền đối xứng, cửa sổ kính màu và mái vòm bên trong.",
+      "hintEn": "A tall pointed bell tower, a symmetrical front, stained glass and a vaulted interior.",
+      "aliases": ["nhà thờ", "thánh đường", "nhà thờ chính tòa", "cathedral"]
+    },
+    {
+      "id": "thap-cham",
+      "category": "ARCHITECTURE",
+      "name": "Tháp Chăm",
+      "nameEn": "Cham tower",
+      "hint": "Tháp gạch đỏ nâu xây khít không thấy mạch vữa, thân thu nhỏ dần lên đỉnh, có phù điêu thần Hindu.",
+      "hintEn": "A red-brick tower laid so tightly no mortar line shows, tapering upward, carved with Hindu deities.",
+      "aliases": ["tháp chăm", "tháp chàm", "cham tower"]
+    },
+    {
+      "id": "cau-ngoi",
+      "category": "ARCHITECTURE",
+      "name": "Cầu ngói",
+      "nameEn": "Roofed bridge",
+      "hint": "Cầu có mái lợp ngói bắc qua kênh hoặc ao làng, người đi bộ trú được mưa nắng bên dưới.",
+      "hintEn": "A tile-roofed bridge over a canal or village pond, sheltering whoever crosses it.",
+      "aliases": ["cầu ngói", "cầu mái", "covered bridge"]
+    },
+
+    {
+      "id": "ao-dai",
+      "category": "CULTURE",
+      "name": "Áo dài",
+      "nameEn": "Áo dài",
+      "hint": "Áo tay dài thân ôm, xẻ tà từ eo xuống thành hai vạt, mặc cùng quần lụa.",
+      "hintEn": "A long-sleeved fitted tunic split from the waist into two panels, worn over silk trousers.",
+      "aliases": ["áo dài"]
+    },
+    {
+      "id": "non-la",
+      "category": "CULTURE",
+      "name": "Nón lá",
+      "nameEn": "Conical leaf hat",
+      "hint": "Nón hình chóp đan lá cọ trên vành tre, có quai vải buộc dưới cằm.",
+      "hintEn": "A cone of palm leaf stitched over bamboo rings, with a cloth strap under the chin.",
+      "aliases": ["nón lá", "nón bài thơ", "conical hat"]
+    },
+    {
+      "id": "mua-lan",
+      "category": "CULTURE",
+      "name": "Múa lân sư rồng",
+      "nameEn": "Lion and dragon dance",
+      "hint": "Đầu lân to có mắt chớp được, người múa nâng lên hạ xuống theo nhịp trống.",
+      "hintEn": "A large lion head with blinking eyes, lifted and dropped by the dancer to the beat of a drum.",
+      "aliases": ["múa lân", "lân sư rồng", "múa rồng", "lion dance"]
+    },
+    {
+      "id": "ban-tho-gia-tien",
+      "category": "CULTURE",
+      "name": "Bàn thờ gia tiên",
+      "nameEn": "Ancestral altar",
+      "hint": "Bàn thờ đặt trên cao với bát hương, đôi chân nến, mâm ngũ quả và ảnh người đã khuất.",
+      "hintEn": "A raised altar with an incense bowl, a pair of candlesticks, a five-fruit tray and photographs of the dead.",
+      "aliases": ["bàn thờ", "bàn thờ gia tiên", "bát hương", "ancestral altar"]
+    },
+    {
+      "id": "cau-doi",
+      "category": "CULTURE",
+      "name": "Câu đối",
+      "nameEn": "Parallel verse couplet",
+      "hint": "Hai vế chữ viết dọc treo đối xứng hai bên cột hoặc cửa, thường sơn son chữ vàng.",
+      "hintEn": "Two vertical lines of characters hung symmetrically on either side of a column or door, usually gold on red.",
+      "aliases": ["câu đối"]
+    },
+    {
+      "id": "hoanh-phi",
+      "category": "CULTURE",
+      "name": "Hoành phi",
+      "nameEn": "Horizontal lacquered board",
+      "hint": "Tấm biển gỗ nằm ngang treo cao giữa gian thờ, khắc vài chữ Hán lớn thếp vàng.",
+      "hintEn": "A horizontal wooden board hung high in the shrine, carved with a few large gilded characters.",
+      "aliases": ["hoành phi", "biển hoành phi"]
+    },
+    {
+      "id": "den-long",
+      "category": "CULTURE",
+      "name": "Đèn lồng",
+      "nameEn": "Silk lantern",
+      "hint": "Đèn khung tre bọc lụa nhiều màu, treo thành dãy trước hiên nhà.",
+      "hintEn": "Bamboo frames covered in coloured silk, strung in rows along a shopfront.",
+      "aliases": ["đèn lồng", "lồng đèn", "lantern"]
+    },
+    {
+      "id": "tranh-dan-gian",
+      "category": "CULTURE",
+      "name": "Tranh dân gian",
+      "nameEn": "Folk woodblock print",
+      "hint": "Tranh in mộc bản trên giấy điệp óng ánh, màu lấy từ vỏ sò và lá cây; hình gà, lợn, đám cưới chuột.",
+      "hintEn": "Woodblock prints on iridescent điệp paper in colours ground from shell and leaf — cockerels, pigs, the rats' wedding.",
+      "aliases": ["tranh đông hồ", "tranh dân gian", "tranh hàng trống", "folk painting"]
+    },
+    {
+      "id": "mua-roi-nuoc",
+      "category": "CULTURE",
+      "name": "Múa rối nước",
+      "nameEn": "Water puppetry",
+      "hint": "Con rối gỗ sơn diễn ngay trên mặt nước, người điều khiển đứng khuất sau tấm mành.",
+      "hintEn": "Lacquered wooden puppets performing on the water itself, the puppeteers hidden behind a screen.",
+      "aliases": ["múa rối nước", "rối nước", "water puppet"]
+    },
+    {
+      "id": "tho-cam",
+      "category": "CULTURE",
+      "name": "Thổ cẩm",
+      "nameEn": "Highland brocade",
+      "hint": "Vải dệt tay hoa văn hình học nhiều màu — khăn đội đầu, váy và địu của các dân tộc vùng cao.",
+      "hintEn": "Hand-woven cloth in dense geometric colour — the headscarves, skirts and baby carriers of the highland peoples.",
+      "aliases": ["thổ cẩm", "trang phục dân tộc", "dệt thổ cẩm", "brocade"]
+    },
+    {
+      "id": "cho-noi",
+      "category": "CULTURE",
+      "name": "Chợ nổi",
+      "nameEn": "Floating market",
+      "hint": "Ghe thuyền chở đầy nông sản họp chợ trên sông; mỗi ghe treo một cây bẹo cắm thứ mình bán.",
+      "hintEn": "Boats laden with produce trading on the river, each flying a pole with a sample of what it sells.",
+      "aliases": ["chợ nổi", "floating market"]
+    },
+    {
+      "id": "ganh-hang-rong",
+      "category": "CULTURE",
+      "name": "Gánh hàng rong",
+      "nameEn": "Shoulder-pole vendor",
+      "hint": "Đôi quang gánh tre trĩu hai đầu, gánh trên vai người bán đi dọc phố.",
+      "hintEn": "A bamboo shoulder pole weighed down at both ends, carried through the street by the seller.",
+      "aliases": ["gánh hàng rong", "quang gánh", "hàng rong", "street vendor"]
+    },
+
+    {
+      "id": "trong-dong",
+      "category": "ARTIFACT",
+      "name": "Trống đồng Đông Sơn",
+      "nameEn": "Đông Sơn bronze drum",
+      "hint": "Mặt trống tròn có ngôi sao nhiều cánh ở chính giữa, quanh là vòng chim Lạc bay ngược chiều kim đồng hồ.",
+      "hintEn": "A round drum face with a many-rayed star at its centre, ringed by Lạc birds flying anticlockwise.",
+      "aliases": ["trống đồng", "đông sơn", "bronze drum"]
+    },
+    {
+      "id": "gom-bat-trang",
+      "category": "ARTIFACT",
+      "name": "Gốm Bát Tràng",
+      "nameEn": "Bát Tràng ceramics",
+      "hint": "Gốm dày dặn men trắng ngà hoặc men rạn nứt như mạng nhện, hoa văn lam vẽ tay.",
+      "hintEn": "Sturdy ware in ivory or crackle glaze, its cobalt patterns painted by hand.",
+      "aliases": ["gốm bát tràng", "bát tràng"]
+    },
+    {
+      "id": "gom-hoa-lam",
+      "category": "ARTIFACT",
+      "name": "Gốm hoa lam",
+      "nameEn": "Blue-and-white ceramics",
+      "hint": "Gốm trắng vẽ lam bằng cô ban dưới men, hoa dây, sen và cúc chạy quanh thân.",
+      "hintEn": "White ware painted in cobalt under the glaze — scrolling vines, lotus and chrysanthemum around the body.",
+      "aliases": ["gốm hoa lam", "chu đậu", "gốm chu đậu", "blue and white"]
+    },
+    {
+      "id": "bia-tien-si",
+      "category": "ARTIFACT",
+      "name": "Bia đá đội rùa",
+      "nameEn": "Stele on a stone tortoise",
+      "hint": "Tấm bia đá dựng trên lưng một con rùa đá, mặt bia khắc dày chữ Hán.",
+      "hintEn": "A stone stele standing on the back of a stone tortoise, its face densely carved with Chinese characters.",
+      "aliases": ["bia tiến sĩ", "bia đá", "rùa đội bia", "stele"]
+    },
+    {
+      "id": "tuong-phat",
+      "category": "ARTIFACT",
+      "name": "Tượng Phật",
+      "nameEn": "Buddha statue",
+      "hint": "Tượng ngồi kiết già trên toà sen, tay kết ấn, sau đầu thường có vầng hào quang.",
+      "hintEn": "A figure seated cross-legged on a lotus throne, hands in a mudra, usually haloed.",
+      "aliases": ["tượng phật", "phật bà", "tượng quan âm", "tượng a di đà", "buddha statue"]
+    },
+    {
+      "id": "cong-chieng",
+      "category": "ARTIFACT",
+      "name": "Cồng chiêng",
+      "nameEn": "Gong",
+      "hint": "Bộ cồng chiêng đồng tròn treo thành dàn, loại có núm giữa và loại mặt phẳng, đánh bằng dùi bọc vải.",
+      "hintEn": "Bronze gongs hung in a set — some with a raised boss, some flat — struck with a cloth-wrapped mallet.",
+      "aliases": ["cồng chiêng", "chiêng", "gong"]
+    },
+    {
+      "id": "cua-vong",
+      "category": "ARTIFACT",
+      "name": "Cửa võng chạm khắc",
+      "nameEn": "Carved gilded screen",
+      "hint": "Mảng gỗ chạm thủng sơn son thếp vàng treo trước ban thờ, kín đặc hoa lá rồng phượng.",
+      "hintEn": "A pierced timber panel in red lacquer and gold hung before an altar, packed with foliage, dragons and phoenixes.",
+      "aliases": ["cửa võng", "chạm khắc gỗ", "sơn son thếp vàng"]
+    },
+    {
+      "id": "thuyen-thung",
+      "category": "ARTIFACT",
+      "name": "Thuyền thúng",
+      "nameEn": "Basket boat",
+      "hint": "Thuyền tròn đan nan tre trát dầu rái, không mũi không lái, chèo bằng một mái chèo duy nhất.",
+      "hintEn": "A round boat woven from bamboo and sealed with resin — no bow, no stern, worked with a single oar.",
+      "aliases": ["thuyền thúng", "thúng chai", "basket boat"]
+    },
+
+    {
+      "id": "ruong-bac-thang",
+      "category": "NATURE",
+      "name": "Ruộng bậc thang",
+      "nameEn": "Terraced rice fields",
+      "hint": "Sườn núi xếp thành từng bậc uốn theo đường đồng mức, đổi màu theo mùa nước đổ và mùa lúa chín.",
+      "hintEn": "Hillsides stepped along the contour lines, changing colour between the flooding season and the harvest.",
+      "aliases": ["ruộng bậc thang", "terraced field", "rice terrace"]
+    },
+    {
+      "id": "dong-lua",
+      "category": "NATURE",
+      "name": "Cánh đồng lúa",
+      "nameEn": "Rice paddy",
+      "hint": "Mặt bằng xanh hoặc vàng trải rộng, chia thành ô bởi những bờ ruộng nhỏ.",
+      "hintEn": "A wide plane of green or gold, divided into plots by low earth bunds.",
+      "aliases": ["cánh đồng lúa", "đồng lúa", "ruộng lúa", "rice paddy"]
+    },
+    {
+      "id": "hang-dong",
+      "category": "NATURE",
+      "name": "Hang động đá vôi",
+      "nameEn": "Limestone cave",
+      "hint": "Vòm đá vôi có thạch nhũ rủ từ trần xuống và măng đá mọc lên từ nền.",
+      "hintEn": "A limestone chamber with stalactites hanging from the roof and stalagmites rising from the floor.",
+      "aliases": ["hang động", "thạch nhũ", "limestone cave"]
+    },
+    {
+      "id": "nui-da-voi",
+      "category": "NATURE",
+      "name": "Núi đá vôi trên nước",
+      "nameEn": "Karst pinnacles",
+      "hint": "Những khối đá vôi dựng đứng nhô lên khỏi mặt nước, chân bị sóng ăn lõm vào thành ngấn.",
+      "hintEn": "Sheer limestone towers rising straight out of the water, undercut at the waterline by the waves.",
+      "aliases": ["núi đá vôi", "karst", "vịnh đá vôi"]
+    },
+    {
+      "id": "thac-nuoc",
+      "category": "NATURE",
+      "name": "Thác nước",
+      "nameEn": "Waterfall",
+      "hint": "Dòng nước đổ từ vách đá xuống thành nhiều tầng, chân thác có hồ nước và màn hơi nước mù.",
+      "hintEn": "Water falling from a rock face in tiers, with a pool and a haze of spray at the bottom.",
+      "aliases": ["thác nước", "thác", "waterfall"]
+    },
+    {
+      "id": "rung-ngap-man",
+      "category": "NATURE",
+      "name": "Rừng ngập mặn",
+      "nameEn": "Mangrove forest",
+      "hint": "Rừng mọc trong nước lợ, rễ chống chằng chịt nhô lên khỏi bùn khi triều xuống.",
+      "hintEn": "Forest standing in brackish water, its tangle of prop roots exposed above the mud at low tide.",
+      "aliases": ["rừng ngập mặn", "rừng đước", "rừng tràm", "mangrove"]
+    },
+    {
+      "id": "doi-cat",
+      "category": "NATURE",
+      "name": "Đồi cát",
+      "nameEn": "Sand dunes",
+      "hint": "Đồi cát trải sóng do gió thổi, màu vàng hoặc đỏ, gần như không có cây cối.",
+      "hintEn": "Dunes rippled by the wind, yellow or red, almost bare of vegetation.",
+      "aliases": ["đồi cát", "cồn cát", "sand dune"]
+    },
+
+    {
+      "id": "van-mieu",
+      "category": "LANDMARK",
+      "name": "Văn Miếu – Quốc Tử Giám",
+      "nameEn": "Temple of Literature",
+      "hint": "Khuê Văn Các hai tầng tám mái nhìn xuống hồ vuông, phía trong là sân bia tiến sĩ trên lưng rùa.",
+      "hintEn": "The two-storey Khuê Văn pavilion over a square pond, and beyond it the courtyard of doctors' steles on tortoises.",
+      "aliases": ["văn miếu", "quốc tử giám", "khuê văn các", "temple of literature"]
+    },
+    {
+      "id": "chua-mot-cot",
+      "category": "LANDMARK",
+      "name": "Chùa Một Cột",
+      "nameEn": "One Pillar Pagoda",
+      "hint": "Ngôi chùa nhỏ hình vuông đặt trên một cột đá duy nhất giữa hồ, dựng như một bông sen đang nở.",
+      "hintEn": "A small square shrine on a single stone pillar in a pond, built to stand like an opening lotus.",
+      "aliases": ["chùa một cột", "diên hựu", "one pillar pagoda"]
+    },
+    {
+      "id": "kinh-thanh-hue",
+      "category": "LANDMARK",
+      "name": "Kinh thành Huế",
+      "nameEn": "Huế Citadel",
+      "hint": "Tường thành gạch dày có hào nước bao quanh; Ngọ Môn năm lối với lầu Ngũ Phụng bên trên.",
+      "hintEn": "Thick brick ramparts inside a moat, entered through the five-passage Ngọ Môn beneath its Five Phoenix pavilion.",
+      "aliases": ["kinh thành huế", "đại nội", "ngọ môn", "hoàng thành huế", "imperial citadel"]
+    },
+    {
+      "id": "chua-cau",
+      "category": "LANDMARK",
+      "name": "Chùa Cầu Hội An",
+      "nameEn": "Japanese Covered Bridge",
+      "hint": "Cầu gỗ có mái che bắc qua lạch nước ở Hội An, hai đầu cầu đặt tượng khỉ và tượng chó đá.",
+      "hintEn": "A roofed timber bridge over a Hội An creek, guarded at one end by stone monkeys and at the other by stone dogs.",
+      "aliases": ["chùa cầu", "cầu nhật bản", "lai viễn kiều", "japanese bridge"]
+    },
+    {
+      "id": "nha-tho-duc-ba",
+      "category": "LANDMARK",
+      "name": "Nhà thờ Đức Bà Sài Gòn",
+      "nameEn": "Saigon Notre-Dame Cathedral",
+      "hint": "Nhà thờ xây gạch đỏ trần không tô, hai tháp chuông vuông cao bằng nhau đứng giữa quảng trường.",
+      "hintEn": "A cathedral of bare red brick with two matching square bell towers, standing in its own square.",
+      "aliases": ["nhà thờ đức bà", "vương cung thánh đường sài gòn", "notre dame"]
+    },
+    {
+      "id": "lang-bac",
+      "category": "LANDMARK",
+      "name": "Lăng Chủ tịch Hồ Chí Minh",
+      "nameEn": "Hồ Chí Minh Mausoleum",
+      "hint": "Khối đá xám vuông vức giật cấp, hàng cột vuông chạy quanh mặt trước, có tiêu binh đứng gác.",
+      "hintEn": "A stepped block of grey stone fronted by square columns, with a sentry standing guard.",
+      "aliases": ["lăng chủ tịch hồ chí minh", "lăng bác", "mausoleum"]
+    },
+    {
+      "id": "my-son",
+      "category": "LANDMARK",
+      "name": "Thánh địa Mỹ Sơn",
+      "nameEn": "Mỹ Sơn Sanctuary",
+      "hint": "Cụm tháp gạch Chăm trong thung lũng núi bao quanh; nhiều tháp chỉ còn phần chân sau chiến tranh.",
+      "hintEn": "A cluster of Cham brick towers in a valley ringed by hills, many reduced to their bases by the war.",
+      "aliases": ["mỹ sơn", "thánh địa mỹ sơn", "my son sanctuary"]
+    }
+  ]
+}

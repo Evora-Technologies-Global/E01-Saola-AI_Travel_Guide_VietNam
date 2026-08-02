@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- See the default locale's file for what this is and why it exists. -->
+    <string name="resource_language">vi</string>
+
+    <!-- Navigation -->
+    <string name="nav_lens">Ống kính</string>
+    <string name="nav_journal">Nhật ký</string>
+    <string name="nav_explore">Khám phá</string>
+    <string name="nav_settings">Cài đặt</string>
+
+    <!-- Camera -->
+    <string name="camera_permission_title">Cần quyền truy cập camera</string>
+    <string name="camera_permission_body">VietLens dùng camera để nhận diện di tích, món ăn và biển báo quanh bạn. Ảnh chỉ được lưu trên máy của bạn.</string>
+    <string name="camera_permission_grant">Cho phép camera</string>
+    <string name="camera_permission_blocked_body">Quyền camera đang tắt cho VietLens và Android sẽ không hỏi lại nữa. Bạn hãy bật lại trong cài đặt ứng dụng để tiếp tục.</string>
+    <string name="location_permission_title">Đóng dấu hộ chiếu</string>
+    <string name="location_permission_body">Có vị trí, mỗi tấm ảnh sẽ biết mình được chụp ở tỉnh nào, và tỉnh đó hiện lên trên bản đồ hộ chiếu của bạn.</string>
+    <string name="location_permission_blocked_body">Quyền vị trí đang tắt cho VietLens và Android sẽ không hỏi lại nữa. Bạn hãy bật lại trong cài đặt ứng dụng để ảnh có thể đóng dấu lên bản đồ hộ chiếu.</string>
+    <string name="location_permission_grant">Cho phép</string>
+    <string name="location_permission_later">Để sau</string>
+    <string name="permission_open_settings">Mở cài đặt</string>
+    <string name="camera_capture">Chụp</string>
+    <string name="camera_pick_gallery">Chọn ảnh có sẵn</string>
+    <string name="camera_flash_on">Bật đèn flash</string>
+    <string name="camera_flash_off">Tắt đèn flash</string>
+    <string name="camera_mode_selector">Chế độ chụp</string>
+    <string name="camera_grid_show">Hiện lưới</string>
+    <string name="camera_grid_hide">Ẩn lưới</string>
+    <string name="camera_switch_lens">Đổi camera</string>
+    <string name="camera_timer_off">Tắt hẹn giờ</string>
+    <string name="camera_timer_3">Hẹn giờ 3 giây</string>
+    <string name="camera_timer_10">Hẹn giờ 10 giây</string>
+    <string name="camera_cancel_timer">Huỷ hẹn giờ</string>
+    <string name="camera_open_journal">Mở nhật ký</string>
+    <string name="camera_ae_af_locked">ĐÃ KHOÁ NÉT &amp; SÁNG</string>
+    <string name="camera_hint_auto">Hướng vào di tích, món ăn hoặc hiện vật</string>
+    <string name="camera_hint_landmark">Lấy trọn công trình vào khung hình</string>
+    <string name="camera_hint_food">Đưa máy lại gần món ăn</string>
+    <string name="camera_hint_artifact">Chụp kèm bảng chú thích nếu có</string>
+    <string name="camera_hint_translate">Giữ máy thật vững trên phần chữ</string>
+
+    <!-- Lens modes -->
+    <string name="mode_auto">Tự động</string>
+    <string name="mode_landmark">Di tích</string>
+    <string name="mode_food">Món ăn</string>
+    <string name="mode_artifact">Bảo tàng</string>
+    <string name="mode_translate">Dịch</string>
+
+    <!-- Photo translation language picker -->
+    <string name="camera_translate_auto">Tự động</string>
+    <string name="camera_translate_auto_detect">Tự động phát hiện</string>
+    <string name="camera_translate_from">Dịch từ</string>
+    <string name="camera_translate_to">Dịch sang</string>
+    <string name="camera_translate_swap">Đảo chiều dịch</string>
+    <string name="camera_translate_pick_from">Chọn ngôn ngữ nguồn</string>
+    <string name="camera_translate_pick_to">Chọn ngôn ngữ đích</string>
+
+    <!-- Language names, as a gloss beside each language's own name -->
+    <string name="language_vi">Tiếng Việt</string>
+    <string name="language_en">Tiếng Anh</string>
+    <string name="language_ja">Tiếng Nhật</string>
+    <string name="language_ko">Tiếng Hàn</string>
+    <string name="language_zh">Tiếng Trung</string>
+    <string name="language_fr">Tiếng Pháp</string>
+    <string name="language_es">Tiếng Tây Ban Nha</string>
+    <string name="language_th">Tiếng Thái</string>
+
+    <!-- Analysing -->
+    <string name="analysing_title">Đang xem ảnh của bạn…</string>
+    <string name="analysing_recognising">Nhận diện vật thể trong khung hình</string>
+    <string name="analysing_history">Tra cứu lịch sử phía sau</string>
+    <string name="analysing_stories">Tìm những câu chuyện đáng kể</string>
+    <string name="analysing_translate_title">Đang đọc phần chữ…</string>
+    <string name="analysing_translate_detail">Ghi lại nguyên văn rồi dịch từng dòng</string>
+
+    <!-- Discovery -->
+    <string name="discovery_confidence">Khớp %1$d%</string>
+    <string name="discovery_low_confidence">Mình chưa chắc lắm — thử đổi góc chụp để nhận diện chính xác hơn nhé.</string>
+    <string name="discovery_nearby">Đã tới đây thì ghé thêm</string>
+    <string name="discovery_ask">Hỏi thêm về nơi này</string>
+    <string name="discovery_ask_subtitle">Hướng dẫn viên của bạn nhớ toàn bộ nội dung ở trên</string>
+    <string name="discovery_listen">Nghe</string>
+    <string name="discovery_stop">Dừng</string>
+    <string name="discovery_favorite_add">Lưu vào yêu thích</string>
+    <string name="discovery_favorite_remove">Bỏ khỏi yêu thích</string>
+    <string name="discovery_delete">Xóa</string>
+    <string name="discovery_walk_minutes">Đi bộ %1$d phút</string>
+    <string name="discovery_model">Trả lời bởi %1$s</string>
+    <string name="discovery_not_found">Khám phá này không còn nữa.</string>
+    <string name="discovery_delete_confirm_title">Xóa khám phá này?</string>
+    <string name="discovery_delete_confirm_body">Ảnh và cuộc trò chuyện về nó sẽ bị xóa khỏi máy.</string>
+    <string name="discovery_photo_label">Ảnh · %1$s</string>
+    <string name="discovery_listen_title">Nghe câu chuyện</string>
+    <string name="discovery_listen_meta">%1$d phút · tường thuật bằng %2$s</string>
+    <string name="discovery_favorite_saved">Đã lưu</string>
+    <string name="discovery_share">Chia sẻ</string>
+    <string name="discovery_share_body">%1$s\n\n%2$s\n\nChia sẻ từ VietLens AI</string>
+    <plurals name="discovery_notice_count">
+        <item quantity="other">%1$d điều đáng chú ý</item>
+    </plurals>
+
+    <!-- The traveller's own note: the one thing on this screen the app did not write. -->
+    <string name="discovery_note_kicker">Ghi chú của bạn</string>
+    <string name="discovery_note_empty_title">Giữ lại kỉ niệm của riêng bạn</string>
+    <string name="discovery_note_empty_body">Một dòng cảm nhận, một tấm ảnh của chính bạn — thứ mà không cuốn cẩm nang nào viết hộ được.</string>
+    <string name="discovery_note_add">Viết ghi chú</string>
+    <string name="discovery_note_edit">Sửa</string>
+    <string name="discovery_note_placeholder">Bạn muốn nhớ điều gì về nơi này?</string>
+    <string name="discovery_note_add_photo">Thêm ảnh</string>
+    <string name="discovery_note_photo_count">%1$d / %2$d ảnh</string>
+    <string name="discovery_note_remove_photo">Bỏ ảnh này</string>
+    <string name="discovery_note_open_photo">Xem ảnh này</string>
+    <!-- Which of the note's photos is on screen. Bare numbers: it sits under the photo itself. -->
+    <string name="discovery_note_photo_position">%1$d / %2$d</string>
+    <string name="discovery_note_save">Lưu ghi chú</string>
+    <string name="discovery_note_delete">Xoá ghi chú</string>
+    <string name="discovery_note_edited">đã sửa</string>
+    <string name="discovery_note_take_photo">Chụp ảnh</string>
+    <string name="discovery_note_camera_shutter">Chụp ảnh</string>
+    <string name="discovery_note_camera_flip">Đổi camera</string>
+    <!-- Asked in the app's own words before the system dialog, which never says why. -->
+    <string name="discovery_note_camera_permission_title">Chụp một tấm cho ghi chú này?</string>
+    <string name="discovery_note_camera_permission_body">VietLens cần quyền camera để chụp tấm ảnh bạn giữ cùng ghi chú. Ảnh chỉ lưu trên máy của bạn và không được tải lên đâu cả.</string>
+    <string name="discovery_note_camera_permission_blocked_body">Quyền camera đang tắt cho VietLens và Android sẽ không hỏi lại nữa. Bạn hãy bật lại trong cài đặt ứng dụng để chụp ảnh — trong lúc đó vẫn có thể chọn ảnh từ thư viện.</string>
+    <string name="discovery_note_camera_permission_allow">Đồng ý</string>
+    <string name="discovery_note_camera_permission_deny">Từ chối</string>
+    <string name="discovery_note_in_diary">Hướng dẫn viên sẽ dùng ghi chú này khi viết nhật ký ngày cho bạn.</string>
+
+    <!-- Chat -->
+    <string name="chat_title">Hỏi hướng dẫn viên</string>
+    <string name="chat_subtitle">Hỏi người bản địa</string>
+    <string name="chat_suggestions_kicker">Thử hỏi</string>
+    <string name="chat_input_hint">Hỏi bất cứ điều gì về nơi này…</string>
+    <string name="chat_send">Gửi</string>
+    <string name="chat_thinking">Đang suy nghĩ…</string>
+    <string name="chat_empty_title">Hỏi mình bất cứ điều gì</string>
+    <string name="chat_empty_body">Ai xây, vì sao quan trọng, nên đi đâu tiếp — mình vẫn nhớ thứ chúng ta vừa xem.</string>
+    <string name="chat_clear">Xóa cuộc trò chuyện</string>
+
+    <!-- Translation -->
+    <string name="translate_title">Bản dịch</string>
+    <string name="translate_detected">Ngôn ngữ nhận diện: %1$s</string>
+    <string name="translate_copy">Sao chép bản dịch</string>
+    <string name="translate_copied">Đã sao chép bản dịch</string>
+    <string name="translate_speak">Đọc to</string>
+    <string name="translate_show_original">Giữ để xem ảnh gốc</string>
+    <string name="translate_direction">%1$s → %2$s</string>
+    <string name="translate_leave_title">Thoát khi chưa dịch xong?</string>
+    <string name="translate_leave_body">Ảnh này vẫn đang được dịch. Thoát bây giờ sẽ huỷ và không lưu lại kết quả.</string>
+    <string name="translate_leave_confirm">Thoát</string>
+    <string name="translate_leave_stay">Ở lại</string>
+
+    <!-- Journal -->
+    <string name="journal_title">Nhật ký hành trình</string>
+    <string name="journal_kicker">Hành trình của bạn</string>
+    <string name="journal_heading">Nhật ký hành trình</string>
+    <plurals name="journal_discoveries_label">
+        <item quantity="other">khám phá</item>
+    </plurals>
+    <string name="journal_passport_progress">%1$d / %2$d</string>
+    <string name="journal_collection_progress">%1$d / %2$d</string>
+    <string name="journal_day_write_story">Viết câu chuyện</string>
+    <string name="journal_end_of_day_kicker">Cuối ngày</string>
+    <plurals name="journal_end_of_day_title">
+        <item quantity="other">Gộp %1$d khám phá hôm nay thành một câu chuyện</item>
+    </plurals>
+    <string name="journal_end_of_day_body">Một đoạn ngắn để giữ lại hoặc gửi về nhà — viết từ chính những gì bạn đã thấy.</string>
+    <string name="journal_end_of_day_action">Viết ngày hôm nay</string>
+    <string name="journal_story_expand">Đọc trọn câu chuyện</string>
+    <string name="journal_story_collapse">Thu gọn</string>
+    <string name="journal_stats_discoveries">Khám phá</string>
+    <string name="journal_stats_days">Ngày</string>
+    <string name="journal_stats_favorites">Yêu thích</string>
+    <string name="journal_stats_open_passport">Mở bản đồ hành trình</string>
+    <string name="journal_stats_open_collection">Mở bộ sưu tập văn hoá</string>
+    <string name="journal_summary_generate">Viết câu chuyện của ngày này</string>
+    <string name="journal_summary_regenerate">Viết lại</string>
+    <string name="journal_summary_generating">Đang viết nhật ký cho bạn…</string>
+    <string name="journal_tomorrow">Gợi ý cho ngày mai</string>
+    <string name="journal_highlights">Điểm nhấn</string>
+    <string name="journal_empty_title">Hành trình bắt đầu từ đây</string>
+    <string name="journal_empty_body">Mọi khám phá đều được lưu lại theo từng ngày, kèm bài viết do AI tóm tắt mà bạn có thể tạo vào cuối ngày.</string>
+    <string name="journal_empty_action">Mở ống kính</string>
+    <string name="journal_filter_all">Tất cả</string>
+    <string name="journal_filter_favorites">Yêu thích</string>
+    <string name="journal_favorites_empty_title">Chưa có mục yêu thích</string>
+    <string name="journal_favorites_empty_body">Chạm vào trái tim trên một khám phá, nó sẽ nằm sẵn ở đây.</string>
+
+    <!-- Explore: tạm để trống, bộ sưu tập đã dời sang màn hình riêng -->
+    <!-- Khám phá: bản đồ quanh chỗ đang đứng, dữ liệu từ Places API. -->
+    <string name="explore_title">Quanh bạn</string>
+    <string name="explore_nearby_count">%1$d địa điểm trong 5 km</string>
+    <string name="explore_loading">Đang tìm những chỗ đáng ghé…</string>
+    <string name="explore_recenter">Về vị trí của tôi</string>
+    <string name="explore_refresh">Tìm lại</string>
+    <string name="explore_search_failed_title">Không tìm được quanh bạn</string>
+    <string name="explore_empty_title">Quanh đây chưa được lập bản đồ</string>
+    <string name="explore_empty_body">Khu này có ít địa điểm trên OpenStreetMap. Thử lại khi bạn đã đi xa hơn, hoặc kéo bản đồ để xem xung quanh.</string>
+    <string name="explore_permission_title">Khám phá cần vị trí của bạn</string>
+    <string name="explore_permission_body">Bản đồ lấy chỗ bạn đang đứng làm tâm và tìm những địa điểm đáng ghé trong bán kính 5 km. Vị trí chỉ được gửi đi với vai trò tâm của vòng tìm kiếm đó.</string>
+    <string name="explore_permission_blocked_body">Quyền vị trí đang tắt cho VietLens và hệ thống sẽ không hỏi lại nữa. Bật lại trong cài đặt ứng dụng để xem quanh bạn có gì.</string>
+    <string name="explore_source_note">Địa điểm từ OpenStreetMap · mô tả và ảnh từ Wikipedia và Wikimedia Commons</string>
+    <string name="explore_read_more">Đọc bài đầy đủ</string>
+    <string name="explore_readers">%1$s lượt đọc</string>
+    <string name="explore_start_navigation">Bắt đầu</string>
+    <string name="explore_hours_title">Thông tin</string>
+
+    <!-- Bộ sưu tập văn hoá -->
+    <string name="collection_title">Bộ sưu tập văn hoá</string>
+    <string name="collection_subtitle">Nước Việt hiện dần qua từng tấm ảnh</string>
+    <string name="collection_progress_of">trên %1$d thứ</string>
+    <string name="collection_collected_percent">%1$d% đã sưu tầm</string>
+    <string name="collection_section_progress">%1$d/%2$d</string>
+    <string name="collection_open_discovery">Mở khám phá của bạn</string>
+    <string name="collection_locked_hint">Xem cách nhận biết</string>
+    <string name="collection_collected_badge">Đã sưu tầm</string>
+    <string name="collection_go_capture">Đi chụp thôi</string>
+    <string name="collection_view_capture">Xem ảnh của bạn</string>
+    <string name="collection_sovereignty_subtitle">Quần đảo Hoàng Sa &amp; Trường Sa · Chủ quyền Việt Nam</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Cài đặt</string>
+    <string name="settings_kicker">Tùy chọn</string>
+    <string name="settings_section_ai">Trí tuệ</string>
+    <string name="settings_api_key">Khóa API</string>
+    <string name="settings_api_key_set">Đang dùng khóa của bạn</string>
+    <string name="settings_api_key_default">Đang dùng khóa tích hợp sẵn trong ứng dụng</string>
+    <string name="settings_api_key_none">Chưa có khóa nào</string>
+    <string name="settings_api_key_active">Đang hoạt động</string>
+    <string name="settings_api_key_inactive">Chưa có khóa</string>
+    <string name="settings_api_key_hint">dán khóa của riêng bạn…</string>
+    <string name="settings_api_key_save">Lưu khóa</string>
+    <string name="settings_api_key_clear">Xóa</string>
+    <string name="settings_api_key_saved">Đã lưu khóa API</string>
+    <string name="settings_model">Mô hình</string>
+    <string name="settings_model_balanced">Cân bằng</string>
+    <string name="settings_model_balanced_summary">Đủ sâu, đủ nhanh để đọc một tờ thực đơn.</string>
+    <string name="settings_model_quick">Nhanh</string>
+    <string name="settings_model_quick_summary">Biển hiệu, nhãn, giá tiền. Rẻ nhất.</string>
+    <string name="settings_model_scholar">Chuyên sâu</string>
+    <string name="settings_model_scholar_summary">Lịch sử và văn hóa sâu nhất. Chậm hơn.</string>
+    <string name="settings_section_experience">Trải nghiệm</string>
+    <string name="settings_language">Ngôn ngữ kể chuyện</string>
+    <string name="settings_language_summary">Ngôn ngữ mà hướng dẫn viên nói và viết</string>
+    <string name="settings_speak">Đọc to câu trả lời</string>
+    <string name="settings_speak_summary">Đọc phần mô tả và câu trả lời trong khung chat</string>
+    <string name="settings_section_appearance">Giao diện</string>
+    <string name="settings_theme">Chủ đề</string>
+    <string name="settings_theme_system">Theo hệ thống</string>
+    <string name="settings_theme_light">Sáng</string>
+    <string name="settings_theme_dark">Tối</string>
+    <string name="settings_section_data">Dữ liệu</string>
+    <string name="settings_clear_history">Xóa toàn bộ khám phá</string>
+    <string name="settings_clear_history_summary">Xóa mọi ảnh, cuộc trò chuyện và nhật ký</string>
+    <string name="settings_clear_confirm_title">Xóa tất cả?</string>
+    <string name="settings_clear_confirm_body">Thao tác này xóa vĩnh viễn mọi khám phá, ảnh, cuộc trò chuyện và nhật ký trên thiết bị.</string>
+    <string name="settings_cleared">Đã xóa toàn bộ khám phá</string>
+    <string name="settings_footer">Làm tại Việt Nam · v%1$s</string>
+
+    <!-- Categories -->
+    <string name="category_landmark">Di tích</string>
+    <string name="category_food">Ẩm thực</string>
+    <string name="category_artifact">Hiện vật</string>
+    <string name="category_architecture">Kiến trúc</string>
+    <string name="category_nature">Thiên nhiên</string>
+    <string name="category_culture">Văn hóa</string>
+    <string name="category_other">Khác</string>
+
+    <!-- Time -->
+    <string name="time_just_now">Vừa xong</string>
+    <string name="time_minutes_ago">%1$d phút trước</string>
+    <string name="time_hours_ago">%1$d giờ trước</string>
+    <string name="time_yesterday">Hôm qua</string>
+    <string name="date_today">Hôm nay</string>
+    <string name="date_yesterday">Hôm qua</string>
+
+    <!-- Generic actions -->
+    <string name="action_retry">Thử lại</string>
+    <string name="action_cancel">Hủy</string>
+    <string name="action_delete">Xóa</string>
+    <string name="action_back">Quay lại</string>
+    <string name="action_close">Đóng</string>
+
+    <!-- Errors -->
+    <string name="error_missing_api_key">Chưa có khóa API Gemini. Thêm khóa trong Cài đặt để bắt đầu nhận diện.</string>
+    <string name="error_invalid_api_key">Khóa API bị từ chối. Kiểm tra lại trong Cài đặt.</string>
+    <string name="error_no_connection">Không có kết nối mạng. Việc nhận diện cần kết nối tới Gemini.</string>
+    <string name="error_timeout">Quá thời gian chờ. Thử lại nhé.</string>
+    <string name="error_rate_limited">Bạn đã dùng hết hạn mức miễn phí lúc này. Chờ một chút rồi thử lại.</string>
+    <string name="error_models_busy">Gemini đang quá tải. Đợi vài giây rồi thử lại.</string>
+    <string name="error_api">Gemini không xử lý được yêu cầu (lỗi %1$d).</string>
+    <string name="error_malformed">Câu trả lời trả về bị lỗi định dạng. Thử lại nhé.</string>
+    <string name="error_not_recognized">Mình chưa nhận ra được. Thử lại gần hơn hoặc đổi góc chụp nhé.</string>
+    <string name="error_image_unavailable">Không đọc được ảnh này.</string>
+    <string name="error_location_unavailable">Hiện chưa lấy được vị trí.</string>
+    <string name="error_storage">Không lưu được vào thiết bị.</string>
+    <string name="error_unexpected">Đã xảy ra lỗi. Thử lại nhé.</string>
+
+    <!-- Hộ chiếu du lịch -->
+    <string name="nav_passport">Hành trình</string>
+    <string name="passport_title">Hộ chiếu du lịch</string>
+    <string name="passport_subtitle">Việt Nam hiện dần theo bước chân bạn</string>
+    <string name="passport_progress_of">trên %1$d tỉnh thành</string>
+    <string name="passport_explored">%1$d% đã khám phá</string>
+    <string name="passport_empty_title">Bản đồ còn trống</string>
+    <string name="passport_empty_body">Nhận diện một địa điểm bất kỳ, tỉnh đó sẽ sáng lên bằng chính ảnh của bạn.</string>
+    <string name="passport_empty_action">Mở ống kính</string>
+    <string name="passport_merged_from">Hợp nhất từ %1$s</string>
+    <string name="passport_province_locked">Bạn chưa đặt chân tới đây. Hướng camera vào bất cứ thứ gì ở tỉnh này để mở khoá.</string>
+    <string name="passport_province_locked_action">Mở ống kính</string>
+    <string name="passport_unavailable_title">Chưa tải được bản đồ</string>
+    <string name="passport_unavailable_body">Không đọc được dữ liệu ranh giới tỉnh. Các tính năng khác vẫn hoạt động bình thường.</string>
+    <plurals name="passport_discovery_count">
+        <item quantity="other">%1$d khám phá</item>
+    </plurals>
+    <string name="passport_sheet_first_visit">Lần đầu</string>
+    <string name="passport_sheet_last_visit">Gần nhất</string>
+    <string name="passport_sheet_unlock_order">tỉnh thứ %1$d</string>
+    <string name="passport_sheet_no_stamp">Chưa có dấu nào ở đây</string>
+    <string name="passport_sheet_open_discovery">Mở khám phá %1$s</string>
+    <string name="passport_sheet_expand">Mở rộng bảng tỉnh</string>
+    <string name="passport_no_location_title">Định vị đang tắt</string>
+    <string name="passport_no_location_body">Các khám phá của bạn vẫn được lưu, nhưng không cái nào biết được chụp ở đâu nên chưa tô được tỉnh nào. Bật định vị trong Cài đặt để những lần chụp sau đóng dấu lên bản đồ.</string>
+    <string name="passport_administers">Quản lý quần đảo %1$s</string>
+    <string name="passport_status_unlocked">Đã đến</string>
+    <string name="passport_status_locked">Chưa đến</string>
+
+    <!-- Chủ quyền -->
+    <string name="sovereignty_title">Hoàng Sa và Trường Sa là của Việt Nam</string>
+    <string name="sovereignty_seal">Chủ\nquyền\nVN</string>
+    <string name="sovereignty_read">Đọc</string>
+    <string name="sovereignty_open">Đọc tuyên bố chủ quyền</string>
+
+    <!-- Trang tuyên bố chủ quyền -->
+    <string name="sovereignty_page_title">Hoàng Sa và Trường Sa thuộc chủ quyền Việt Nam</string>
+    <string name="sovereignty_page_subtitle">Quần đảo Hoàng Sa và quần đảo Trường Sa</string>
+    <string name="sovereignty_body">Việt Nam đã xác lập và thực thi chủ quyền đối với hai quần đảo Hoàng Sa và Trường Sa một cách liên tục và hòa bình qua nhiều thế kỷ — được ghi lại trong châu bản, thư tịch và bản đồ của triều đình như Đại Nam nhất thống toàn đồ (1838).</string>
+    <string name="sovereignty_body_source">Đại Nam nhất thống toàn đồ</string>
+    <string name="sovereignty_body_secondary">Mọi bản đồ, địa danh và câu chuyện trong ứng dụng này đều theo đúng điều đó. Nếu một tấm bản đồ bạn thấy ở nơi khác không giống tấm bản đồ trên máy bạn, đây là lý do.</string>
+    <string name="sovereignty_note">Hiển thị với mọi du khách, ở lần mở đầu tiên và trong Cài đặt.</string>
+    <string name="sovereignty_understood">Đã hiểu</string>
+    <string name="sovereignty_close">Đóng</string>
+    <string name="sovereignty_map_country">Việt Nam</string>
+    <string name="sovereignty_map_sea">Biển Đông</string>
+
+    <string name="settings_section_about">Về ứng dụng</string>
+    <string name="settings_sovereignty">Lập trường của chúng tôi về Biển Đông</string>
+    <string name="settings_sovereignty_summary">Hoàng Sa &amp; Trường Sa · Việt Nam</string>
+</resources>

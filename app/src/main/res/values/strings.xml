@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+      The launcher label, and the only string left in Android resources.
+
+      Everything the UI renders now lives in `shared/src/commonMain/composeResources`,
+      which both platforms read. The manifest cannot reach those, so this one stays.
+    -->
+    <string name="app_name">VietLens AI</string>
+</resources>

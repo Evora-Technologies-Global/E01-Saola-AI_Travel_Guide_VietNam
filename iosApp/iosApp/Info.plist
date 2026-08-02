@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>vi</string>
+	<key>CFBundleDisplayName</key>
+	<string>VietLens AI</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>$(PRODUCT_NAME)</string>
+	<key>CFBundlePackageType</key>
+	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0</string>
+	<key>CFBundleVersion</key>
+	<string>1</string>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
+
+	<!--
+	  The app ships Vietnamese and English and lets the traveller switch between them in
+	  Settings, so the bundle has to declare both rather than inheriting one from the device.
+	-->
+	<key>CFBundleLocalizations</key>
+	<array>
+		<string>vi</string>
+		<string>en</string>
+	</array>
+
+	<!-- Every prompt the app can raise, in the traveller's own terms. -->
+	<key>NSCameraUsageDescription</key>
+	<string>VietLens points its lens at landmarks, dishes and signs so it can tell you what you are looking at.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Ask your guide a question out loud instead of typing it.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Your spoken questions are turned into text so the guide can answer them.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Your rough location tells apart two temples that look alike, and fills in the province on your travel passport.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Pick a photo you have already taken and have it recognised.</string>
+
+	<!-- An empty dictionary is the "plain background" launch screen; naming an empty colour
+	     is invalid rather than defaulted. -->
+	<key>UILaunchScreen</key>
+	<dict/>
+	<key>UIRequiredDeviceCapabilities</key>
+	<array>
+		<!-- arm64, not armv7: the 32-bit requirement in Xcode's template can never be met by
+		     any device or simulator this app supports, and validation rejects the bundle. -->
+		<string>arm64</string>
+	</array>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<!-- Portrait only, like the Android build: the viewfinder is framed for it. -->
+		<string>UIInterfaceOrientationPortrait</string>
+	</array>
+	<!--
+	  Required by Compose Multiplatform, which refuses to start without it.
+
+	  Without the key iOS caps an app at 60 Hz on a 120 Hz display, and Compose would render at
+	  half the rate the panel can do. CMP treats that as a misconfiguration rather than a
+	  degradation and throws from the first composition, so the app builds, launches and then
+	  aborts — see `PlistSanityCheck`.
+	-->
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
+	<key>UIStatusBarStyle</key>
+	<string>UIStatusBarStyleLightContent</string>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<true/>
+</dict>
+</plist>
