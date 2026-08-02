@@ -6,6 +6,7 @@ import com.duylt.trave.vietlensai.core.util.log
 import com.duylt.trave.vietlensai.domain.model.AppSettings
 import com.duylt.trave.vietlensai.domain.usecase.ObserveSettingsUseCase
 import com.duylt.trave.vietlensai.domain.usecase.SweepOrphanCapturesUseCase
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -38,8 +39,18 @@ class MainViewModel(
         // unreferenced file safely readable as abandoned rather than in flight. Failing
         // is not worth surfacing: the only cost is storage, and the next launch retries.
         viewModelScope.launch {
-            runCatching { sweepOrphanCaptures() }
-                .onFailure { log.w(it) { "Orphan capture sweep failed" } }
+            // Not `runCatching`: it catches Throwable, so it swallows the
+            // CancellationException that ends this coroutine when the app is torn down
+            // mid-sweep — reporting an ordinary shutdown as a sweep failure, and completing
+            // normally instead of cancelling. The layer below rethrows cancellation on
+            // purpose (StorageGuards, launchSafely); this is the same rule.
+            try {
+                sweepOrphanCaptures()
+            } catch (cancellation: CancellationException) {
+                throw cancellation
+            } catch (e: Exception) {
+                log.w(e) { "Orphan capture sweep failed" }
+            }
         }
     }
 }
