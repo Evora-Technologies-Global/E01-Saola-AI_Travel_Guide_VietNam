@@ -140,7 +140,6 @@ val presentationModule: Module = module {
             observeSettings = get(),
             askFollowUp = get(),
             clearChat = get(),
-            speechRecognizer = get(),
             textToSpeech = get(),
         )
     }
@@ -223,8 +222,8 @@ val presentationModule: Module = module {
 }
 
 /**
- * Whatever the platform has to supply that shared code cannot build for itself: the speech
- * engines, which need an Android `Context` on one side and nothing on the other.
+ * Whatever the platform has to supply that shared code cannot build for itself: the narration
+ * engine, which needs an Android `Context` on one side and nothing on the other.
  */
 internal expect val platformUiModule: Module
 

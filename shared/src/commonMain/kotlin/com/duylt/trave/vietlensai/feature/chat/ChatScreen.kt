@@ -110,9 +110,11 @@ fun ChatRoute(
     // the phone's own preference is.
     PinSystemBarIcons(darkIcons = true)
 
-    // Driven by message count rather than by the effect so the scroll happens after
-    // the new row has actually been laid out. While a question is in flight the
-    // thinking card is the last row, one past the final message.
+    // Driven by message count rather than by a one-shot effect so the scroll happens
+    // after the new row has actually been laid out — an effect sent from the ViewModel
+    // arrives while the list is still the length it was. That is why ChatEffect carries no
+    // scroll event for this route to collect. While a question is in flight the thinking
+    // card is the last row, one past the final message.
     LaunchedEffect(state.messages.size, state.isSending) {
         if (state.messages.isEmpty()) return@LaunchedEffect
         val target = if (state.isSending) state.messages.size else state.messages.lastIndex

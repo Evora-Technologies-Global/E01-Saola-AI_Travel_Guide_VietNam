@@ -29,7 +29,7 @@ plugins {
  *
  * `:app` is a thin Android host that sets a theme and calls into here, and `iosApp` is
  * an Xcode project that links the framework this module produces. Anything that genuinely
- * differs per platform (the camera, the voice engines, the permission prompts) is an
+ * differs per platform (the camera, the narration engine, the permission prompts) is an
  * `expect` declaration with an actual in androidMain and iosMain.
  */
 /*

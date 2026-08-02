@@ -5,7 +5,6 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <!--
       Coarse location is enough to tell Hà Nội from Hội An, which is all the
@@ -27,11 +26,10 @@
         android:name="android.hardware.camera.front"
         android:required="false" />
 
-    <!-- Needed on Android 11+ to check that a speech recogniser is installed. -->
+    <!-- Needed on Android 11+ so the narration engine can find an installed voice; without
+         the query TextToSpeech resolves nothing and reads nothing aloud. The companion
+         RecognitionService query went with the voice-input branch on 02.08.2026. -->
     <queries>
-        <intent>
-            <action android:name="android.speech.RecognitionService" />
-        </intent>
         <intent>
             <action android:name="android.intent.action.TTS_SERVICE" />
         </intent>

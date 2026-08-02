@@ -284,12 +284,18 @@ class ComposeStabilityReportTest {
 
     private companion object {
         /**
-         * What is left after `compose-stability.conf`: ten ViewModels, the two platform
-         * voice managers, the Android camera device, the camera controller, the shutter
+         * What is left after `compose-stability.conf`: the ViewModels, the platform
+         * narration manager, the Android camera device, the camera controller, the shutter
          * bus, the MVI base class, the two sovereignty geometry holders and a generated
          * serializer. Every one of them is genuinely mutable or genuinely an array.
+         *
+         * Lowered from 20 to 19 when the voice-input branch was deleted on 02.08.2026 and
+         * `AndroidSpeechRecognizerManager` went with it. The ceiling is the count as it
+         * stands, not a target to grow into — leaving it at 20 would have left one free slot
+         * for the next unstable class to arrive in unnoticed, which is the whole failure
+         * this gate exists to catch.
          */
-        const val UNSTABLE_CLASS_CEILING = 20
+        const val UNSTABLE_CLASS_CEILING = 19
 
         val DECLARATION = Regex("""fun ([\w.]+)\(""")
         val UNSTABLE_PARAM = Regex("""^\s+unstable (\w+):""")
