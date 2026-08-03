@@ -32,6 +32,13 @@ tools/provinces/ne_land.geojson
 tools/provinces/provinces.json
 tools/provinces/*.png
 
+# Room's exported schemas. Generated on every build from the `@Database` declaration, so
+# they are output, not source. Their one real use is auto-migrations and migration tests,
+# and this app declares no migrations at all — `fallbackToDestructiveMigration` resets a
+# stale file instead, because nothing is published. Tracking them only produced a new
+# numbered JSON in every diff that touched an entity.
+data/schemas/
+
 # Synced into the Xcode project by `:data:copySharedAssetsToIos` before every framework build.
 # Build output; `data/src/androidMain/assets` is the single source of truth.
 # (Compose resources need no entry here — the Compose plugin writes those straight into the
