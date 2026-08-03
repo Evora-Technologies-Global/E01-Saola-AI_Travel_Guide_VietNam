@@ -156,11 +156,18 @@ sealed interface LensEffect : UiEffect {
     data class ShowMessage(val error: AppError) : LensEffect
 
     /**
-     * Fire the shutter now.
+     * Fire the shutter now, into [outputPath].
      *
      * The camera hardware is held by the screen, so the ViewModel decides *when*
      * a photo is taken and the screen decides *how* — that split is what lets the
      * self-timer live in tested, lifecycle-safe code instead of in a composable.
+     *
+     * The destination travels with the instruction rather than being fetched by the
+     * screen from a public method on the ViewModel: the same moment already decides
+     * *when* the shutter fires, and a composable that has to call back for *where*
+     * is a second entry point into a ViewModel that is supposed to have one.
+     * [com.duylt.trave.vietlensai.domain.repository.CaptureStore] stays the only
+     * thing that knows captures live in a particular app-storage directory.
      */
-    data object TakePhoto : LensEffect
+    data class TakePhoto(val outputPath: String) : LensEffect
 }

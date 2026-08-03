@@ -297,17 +297,47 @@ class LensViewModel(
 }
 ```
 
+### Where the rule stops: screens, not every ViewModel
+
+**`MviViewModel` is for screens** — anything with a route and a back-stack entry, a user who
+acts on it, and a state to render. A **window host** is the stated exception: in this codebase
+`MainViewModel` owns the theme and the splash gate for the whole window and is read by the
+Android Activity and by `MainViewController` on iOS, before any screen exists. It has no
+route, nothing sends it an intent, and nothing would collect an effect, so it stays a plain
+`ViewModel` with two StateFlows.
+
+That is the whole exemption. It is written down here, in `LLM.md` §3, and in the class's own
+KDoc so that nobody files it as an oversight — and so nobody cites it for a screen. If it is
+reached by navigation, it extends `MviViewModel`.
+
 ### Hard rules
 
 1. **`onIntent` is the only public method.** No other public function, no public property
-   besides `state` and `effects`.
+   besides `state` and `effects`. `onCleared()` is a framework override, not a public method
+   in this sense.
 
    ```kotlin
    fun newCapturePath(): String = captureStore.newCapturePath()   // ❌ escape hatch
    fun onMicPermissionGranted() { … }                             // ❌ should be an Intent
    ```
    If the composable needs a value the VM has, either raise it in an Effect or let the
-   Route get the collaborator from DI directly.
+   composable get the collaborator from DI directly. Both shapes are in this codebase, and
+   which one is right depends on **who knows when the value is needed**:
+
+   ```kotlin
+   // The lens: the ViewModel already decides WHEN the shutter fires (self-timer), so it
+   // decides WHERE the file goes at the same moment and sends both together.
+   data class TakePhoto(val outputPath: String) : LensEffect
+   ```
+   ```kotlin
+   // Discovery's note camera: the shutter is pressed inside the overlay and the ViewModel
+   // never learns of the press, so there is no effect for a path to ride on. The composable
+   // takes the store from Koin — it is the store, not the ViewModel, and nothing below the
+   // Route sees a ViewModel.
+   val captureStore: CaptureStore = koinInject()
+   ```
+   What is *not* acceptable is the third option both replaced: a public method on the
+   ViewModel, threaded down as a lambda through five composables.
 
 2. **The `when` must be exhaustive with no `else`.** That is the entire reason Intent is a
    sealed interface: adding a case becomes a compile error at every reducer.
@@ -455,9 +485,10 @@ private fun LensScreen(
 ) { … }
 ```
 
-### The effect collector — write it once, in `core/mvi/`
+### The effect collector — written once, in `core/mvi/CollectEffects.kt`
 
-Five screens hand-rolling this block is how two of them ended up forgetting it entirely.
+Six screens hand-rolling this block is how two of them ended up forgetting it entirely.
+There is now exactly one copy, and `effects.collect` appears nowhere else in the codebase.
 
 ```kotlin
 // core/mvi/CollectEffects.kt
@@ -477,12 +508,65 @@ fun <E : UiEffect> CollectEffects(effects: Flow<E>, onEffect: suspend (E) -> Uni
   previous effect the moment the next arrives — a navigation half-performed.
 - **`repeatOnLifecycle(STARTED)`,** so nothing is handled while the screen is not visible.
   The channel buffers meanwhile; nothing is lost.
+- **The handler is not a `LaunchedEffect` key.** It is a fresh lambda on every recomposition,
+  so keying on it would tear the collector down and rebuild it each frame.
+  `rememberUpdatedState` is what lets the collector stay up while still calling the newest
+  navigation lambdas.
 - **If a ViewModel declares an Effect, some screen must collect it.** An uncollected
   `Channel(BUFFERED)` fills at 64 and every subsequent `send` suspends forever inside
-  `viewModelScope` — one leaked coroutine per emission, and the feature silently dead.
-  This is currently true of `ChatScreen` and `JournalScreen`.
-- Work that must outlive the collector (a capture in flight) is `scope.launch { … }` from a
-  `rememberCoroutineScope()` **outside** the collector.
+  `viewModelScope` — one leaked coroutine per emission, and the feature silently dead. The
+  matching rule is that an effect nobody collects should not be declared: `ChatEffect`,
+  `CollectionEffect`, `PassportEffect` and `SovereigntyEffect` are empty sealed interfaces,
+  and those four routes correctly have no collector.
+- **An effect must carry everything its handler needs.** The collector runs one main-queue
+  turn after `sendEffect`; the recomposition that reacts to the `setState` beside it runs on
+  the next *frame*, which is later. So a handler that reads anything the same emission just
+  wrote to state reads the value from *before* the failure. This shipped, and it was silent:
+
+  ```kotlin
+  // ❌ resolved during composition, still null when the effect lands
+  val errorMessage = state.error?.toUserMessage()
+  CollectEffects(viewModel.effects) { effect ->
+      when (effect) {
+          is JournalEffect.ShowMessage -> scope.launch {
+              snackbarHostState.showError(errorMessage ?: return@launch)   // drops it, every time
+          }
+      }
+  }
+
+  // ✅ from the effect's own payload — no recomposition involved
+  is JournalEffect.ShowMessage -> scope.launch {
+      snackbarHostState.showError(effect.error.userMessage())
+  }
+  ```
+
+  `toUserMessage()` is `@Composable`, which is *why* the wrong version looked necessary.
+  `core/util/ErrorMessages.kt` therefore has a `suspend` twin, `AppError.userMessage()`,
+  built on `getString` rather than `stringResource` and sharing one `when` with the composable
+  form. Reach for it in any collector.
+
+  The cost of getting this wrong was a failed day summary reaching the traveller as a spinner
+  that simply stopped — see `LLM.md` §11 row #15.
+
+- **If a screen draws no inline error, the failure does not belong in state at all.** Holding
+  it in both places is what invited the bug above: `JournalState.error` and
+  `SettingsState.error` were written on every failure and read by nobody. Keep a failure in
+  state only where a composable renders it — `ExploreState.error` is the good case, drawn as
+  a card whenever the map is empty, with the effect reserved for the case where the map
+  already has markers and there is nowhere left to draw it.
+
+- **Anything that suspends for a visible duration goes in a `scope.launch { … }` inside the
+  branch, not awaited by the collector.** `SnackbarHostState.showSnackbar` suspends until the
+  notice is dismissed, so a collector that awaited it would hold the next effect behind the
+  current snackbar — which turns "replace" into "queue four seconds later". Same for work
+  that must outlive the collector: the collector now dies at `ON_STOP`, and a capture in
+  flight has to reach its `finally`.
+
+  ```kotlin
+  is SettingsEffect.ShowMessage -> scope.launch {          // ✅ collector stays free
+      snackbarHostState.showError(errorMessage ?: return@launch)
+  }
+  ```
 
 ### Rules for `XScreen` and below
 
@@ -688,6 +772,59 @@ Other performance rules that follow from MVI:
 - Split large states only if a genuinely independent region recomposes on unrelated
   changes. Prefer one state class; reach for `derivedStateOf` in the composable first.
 
+### `skippable` is a promise the route can break
+
+Every composable in this project is marked `skippable`, and most of them still recompose
+on every emission. The mark says the compiler *may* skip the call; it skips only when
+every argument is `equals` its predecessor — and `onIntent = viewModel::onIntent`, written
+at the call site, is not.
+
+A bound callable reference captures its receiver, and **every ViewModel is `unstable`** —
+the compose report says so, because a `ViewModel` is a class with mutable fields. The
+compiler will not memoise a lambda over an unstable capture, so the expression allocates a
+new `Function1` on every recomposition of the route, every child taking it is unequal to
+its predecessor, and the skip never happens. It cascades: the derived
+`{ id -> onIntent(SelectPlace(id)) }` in the child cannot be memoised either, so *its*
+children are denied their skip too.
+
+```kotlin
+// XRoute — hold it steady when the subtree below is expensive to re-run
+val onIntent = remember(viewModel) { viewModel::onIntent }
+```
+
+Cheap subtrees do not need this and most screens here do not do it. Reach for it when the
+tree below contains something that costs more than a layout pass — a map, a camera
+preview, a `Canvas` that projects geometry. On `ExploreScreen` re-running `PlaceMap`
+means crossing into the Maps SDK once per marker on Android and re-running the whole
+`UIKitView` update on iOS, and it was doing that for emissions that only moved a spinner.
+
+### Warm a heavy platform engine before its composable needs it
+
+An SDK-backed view is not free to create, and the bill is presented on the **first** frame
+that composes it. The Maps SDK fetches and links its renderer out of Play services;
+MapKit builds a tile pipeline. Both are synchronous, both run on the thread that asked,
+and inside a composable that thread is the main one.
+
+Composed inside a `when` arm that only becomes true when the data lands, the cost falls on
+the exact frame the traveller is watching. Two halves to the fix, and it needs both:
+
+1. **Start the engine off the main thread and gate the composable on it.** `PlaceMap` on
+   Android runs `MapsInitializer.initialize` on `Dispatchers.IO` behind a process-wide
+   flag and draws a plain surface until it returns. The method is `static synchronized`,
+   so this is the identical work moved somewhere it does not show.
+2. **Compose the view early, behind an opaque cover**, rather than swapping it in when the
+   data arrives. `ExploreScreen` composes the map as soon as the permission is answered
+   and draws the loading and failure states *over* it — so the engine starts while the
+   fix and the search are still in flight, and the cover lifts onto a map that is warm.
+
+A cover over a live view has to **swallow touches** as well as be opaque, or the drag goes
+straight through to a map nobody can see. An empty `Modifier.pointerInput(Unit) {}` is
+hit-tested like any other pointer node and stops the sibling below being tested at all.
+
+Composing early also means the view is created before the first camera target exists, so
+it opens on a fallback. **Apply the first camera move without an animation** — otherwise
+every visit to the tab begins by flying the traveller in from the fallback city.
+
 ---
 
 ## 9. Checklist — run this before opening a PR
@@ -724,6 +861,11 @@ Other performance rules that follow from MVI:
 - [ ] No business logic in a composable
 - [ ] File under 200 lines
 
+**Screen chrome** (§11)
+- [ ] The screen renders `PageHeader` or `OverlayHeader`, never a header of its own
+- [ ] No `.dp` in a `Spacer`, a `padding` or a `RoundedCornerShape`; no `.sp` or
+      `fontWeight` anywhere under `feature/`
+
 **Tests**
 - [ ] Reducer test per intent that changes state
 - [ ] Effect test per effect
@@ -738,10 +880,13 @@ Other performance rules that follow from MVI:
 
 | Anti-pattern | What it actually costs |
 |---|---|
-| Effect declared but never collected | `Channel(BUFFERED)` fills at 64, `send` suspends forever, one leaked coroutine per emission, feature silently dead. **Live in `ChatScreen` and `JournalScreen`.** |
-| Public method on a VM besides `onIntent` | The screen can drive the VM out of band; the reducer stops being the whole story. **Live: `newCapturePath()`, `onMicPermissionGranted()`.** |
-| `effects.collectLatest { }` | The next effect cancels the handling of the previous one. **Live in three screens.** |
-| Contract inline in the ViewModel file | The state class is buried; nobody reads it; fields get duplicated. **Live in four features.** |
+| Effect declared but never collected | `Channel(BUFFERED)` fills at 64, `send` suspends forever, one leaked coroutine per emission, feature silently dead. *Was* live in `ChatScreen` and `JournalScreen`. |
+| Public method on a VM besides `onIntent` | The screen can drive the VM out of band; the reducer stops being the whole story. *Was* live: `newCapturePath()`, `onMicPermissionGranted()`. |
+| `effects.collectLatest { }` | The next effect cancels the handling of the previous one. *Was* live in three screens. |
+| Awaiting `showSnackbar` in the collector | It suspends for the length of the notice, so the next effect waits behind it and a replacement becomes a queue. Launch it from a `rememberCoroutineScope()`. |
+| Effect handler reading state the same emission just wrote | The handler runs a main-queue turn before the next frame, so it reads the pre-failure value. **Cost a real bug**: a failed day summary was reported to nobody for as long as the feature existed. Put it on the effect. |
+| A failure in state that no composable draws | Two records of one fact, one of which is never read — and the unread one is the one the collector trusted. |
+| Contract inline in the ViewModel file | The state class is buried; nobody reads it; fields get duplicated. *Was* live in four features. |
 | `viewModelScope.launch` without a handler | No `CoroutineExceptionHandler` on `viewModelScope` → process death on Android. |
 | Swallowing `CancellationException` | Every ordinary cancellation becomes an error banner; structured concurrency breaks. |
 | `SharedFlow` for effects | Drops the event (replay 0) or re-fires it (replay 1). |
@@ -751,4 +896,66 @@ Other performance rules that follow from MVI:
 | `advanceUntilIdle` with a ticker | The suite hangs instead of failing. |
 | Domain types not in `compose-stability.conf` | Every composable taking one becomes non-skippable; whole screens repaint per tick. |
 | `single { }` for a ViewModel | It outlives its screen with all its state and jobs. |
-| Plain `ViewModel` instead of `MviViewModel` | No effect channel, no crash floor, untestable in the same way as everything else. **Live: `SovereigntyViewModel`.** |
+| Plain `ViewModel` instead of `MviViewModel` for a **screen** | No effect channel, no crash floor, untestable in the same way as everything else. *Was* live: `SovereigntyViewModel`. The window host is the one stated exception — see §3. |
+| A screen building its own header | Five screens did, and produced five header boxes and four title sizes for one job. Nothing looked wrong on any single screen. See §11. |
+| `statusBarsPadding()` on a screen | The app hides the system bars, so the inset is **zero** and the notch is still there. **Cost a real defect**: five controls on the discovery page sat under the cutout. Use `screenInsetsPadding()` or `OverlayHeader`. |
+| A `.dp` or `.sp` literal in `feature/` | It compiles to the same bytecode as the token, so no reviewer and no other test can see it. There were 57 hardcoded radii at twelve values and 195 spacing literals at nineteen before `DesignTokenTest`. |
+
+---
+
+## 11. Screen chrome — the header and the tokens
+
+The MVI rules above say how a screen *behaves*. This section says what it is allowed to
+decide about how it *looks*, and the answer is: less than you would expect.
+
+### `XScreen` renders one of two headers. It never writes its own.
+
+| Component | For | Applies the top inset? |
+|---|---|---|
+| `PageHeader` | a document screen — journal, settings, collection, passport, chat | **No.** The screen's outermost container does, because in landscape the display cutout moves to one side and the whole page has to move with it |
+| `OverlayHeader` | an immersive screen — one drawing over a photograph, a camera feed or a map | **Yes**, itself. It floats over content, so nothing else is in a position to |
+
+Both take strings and lambdas. Neither takes a text style, and `PageHeader` takes colours
+only because two screens are fixed to the lacquer palette by design (`LLM.md` §12).
+
+**The cost of writing your own.** Five screens used to. Their header boxes ran 0/16, 0/4,
+12/4, 12/4 and 10/12 top-and-bottom, and their titles were set at `headlineLarge`,
+`headlineMedium`, `headlineMedium`, `headlineMedium` and `titleLarge` — five titles, four
+sizes. Nothing on any one screen looked wrong. The app looked wrong, because a traveller
+crosses three of them in about four seconds and the heading moved every time.
+
+**And a real defect, not just an inconsistency.** The discovery page reached for
+`statusBarsPadding()` in five places instead of `screenInsetsPadding()`. This app hides the
+system bars, so that inset is zero — and the notch is still a hole in the glass. The page's
+close and delete, the photo viewer's close and the note camera's close and flip all sat
+under the cutout on every phone that has one. `OverlayHeader` owning the inset is what stops
+the next screen repeating it.
+
+**A second inset trap, found while reviewing this refactor.** Material3's `Surface` chains
+the caller's `modifier` *ahead of* its own `.background(...)`, so an inset passed to a
+`Surface` shrinks the painted area rather than the content inside it. The chat header did
+exactly that for one revision and left a bare strip above its own coloured band. Put the
+inset on the content, and leave the surface full-bleed.
+
+Two screens are deliberately outside this rule, and `DesignTokenTest` records both:
+`LensScreen`, whose camera tool row is a line of switches rather than a header, and
+`SovereigntyScreen`, a scrolling document whose own column already takes the inset.
+
+### Nothing is measured at the call site
+
+| You want | Use | Never |
+|---|---|---|
+| A gap | `Spacing.xxs…xxl` (2/4/8/12/16/24/32) | `Spacer(Modifier.height(12.dp))` |
+| A gap that must agree across screens | `PageSpacing.headerTop`, `headerToContent`, `sectionGap`, `listBottom`, `snackbarLift` | a literal repeated on three screens |
+| The page edge | `ScreenGutter` | `ScreenGutter + 4.dp` |
+| A corner | `MaterialTheme.shapes.X`, `Pill`, `CircleShape` | `RoundedCornerShape(20.dp)` |
+| A text style | one of the fifteen scales, or `StampType` | `.copy(fontSize = …)`, or a call-site `fontWeight` |
+| The top edge | `screenInsetsPadding()`, or `OverlayHeader` | `statusBarsPadding()` |
+
+A value that is a *position* rather than a gap — how much room a floating composer takes,
+where the shutter sits above the navigation bar — is not on the 4 dp scale at all. Give it
+a named `private val` and a sentence saying what it was measured against.
+
+`DesignTokenTest` (androidHostTest) enforces every row of that table by reading the sources
+as text, because a literal and a token compile to identical bytecode and the difference
+survives nowhere else. Its failure messages state the cost, not just the line.

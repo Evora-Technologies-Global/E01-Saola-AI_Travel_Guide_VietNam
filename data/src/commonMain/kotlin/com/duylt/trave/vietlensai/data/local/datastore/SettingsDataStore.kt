@@ -13,6 +13,8 @@ import com.duylt.trave.vietlensai.domain.model.AppLanguage
 import com.duylt.trave.vietlensai.domain.model.AppSettings
 import com.duylt.trave.vietlensai.domain.model.GeminiModel
 import com.duylt.trave.vietlensai.domain.model.ThemePreference
+import com.duylt.trave.vietlensai.domain.util.AppError
+import com.duylt.trave.vietlensai.domain.util.AppResult
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -68,23 +70,33 @@ internal class SettingsDataStore(
         edit { it[Keys.THEME] = preference.name }
 
     /**
-     * A failed settings write is logged and swallowed: nothing on screen is waiting on it,
-     * and the value the traveller typed is still in the field they typed it into.
+     * A failed settings write is reported, not swallowed.
      *
-     * Written out rather than as the `runCatching` it used to be. That helper catches
-     * `Throwable`, which includes the [CancellationException] thrown when the settings
-     * screen closes mid-write — reported as a failed save, and worse, absorbed instead of
-     * being allowed to cancel the coroutine that raised it.
+     * It used to be logged and dropped, on the reasoning that "nothing on screen is waiting
+     * on it, and the value the traveller typed is still in the field they typed it into".
+     * That is true of the toggles and false of the one write that matters: on `SaveApiKey`
+     * the screen clears the field *and* shows a green "API key saved", so a failed write
+     * produced a discarded key, a confirmation that it was stored, and a status pill one row
+     * below still reading "no key configured" — with nothing connecting the three. Returning
+     * the outcome lets the caller decide; the toggles are free to ignore it, because their
+     * own UI is driven off the settings flow and reverts by itself when no write lands.
+     *
+     * [CancellationException] is rethrown first. `runCatching` here would catch `Throwable`
+     * and absorb the cancellation raised when the settings screen closes mid-write, reporting
+     * an ordinary navigation as a failed save.
      */
-    private suspend inline fun edit(crossinline block: (MutablePreferences) -> Unit) {
+    private suspend inline fun edit(
+        crossinline block: (MutablePreferences) -> Unit,
+    ): AppResult<Unit> =
         try {
             dataStore.edit { prefs -> block(prefs) }
+            AppResult.Success(Unit)
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
             log.w(e) { "Could not persist settings change" }
+            AppResult.Failure(AppError.Storage(e.message))
         }
-    }
 
     private object Keys {
         val API_KEY = stringPreferencesKey("gemini_api_key")

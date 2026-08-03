@@ -8,6 +8,7 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import androidx.compose.ui.graphics.decodeToImageBitmap
 import androidx.lifecycle.viewModelScope
@@ -61,9 +62,19 @@ class PassportViewModel(
         // were taken. Stamping them here means a traveller who has been using the
         // app opens the map to their real journey rather than to 34 empty outlines.
         launchSafely {
-            runCatching { backfillProvinces() }
-                .onSuccess { if (it > 0) log.i { "Stamped $it earlier discoveries" } }
-                .onFailure { log.e(it) { "Province backfill failed" } }
+            // Not `runCatching`: it catches Throwable, so leaving the passport tab while the
+            // backfill is still walking unstamped rows — an ordinary action, and the window is
+            // one database write per row — was reported as "Province backfill failed" at ERROR
+            // every time. Cancellation is how this coroutine is told to stop, so it goes back
+            // up, exactly as StorageGuards and launchSafely do one layer down.
+            try {
+                val stamped = backfillProvinces()
+                if (stamped > 0) log.i { "Stamped $stamped earlier discoveries" }
+            } catch (cancellation: CancellationException) {
+                throw cancellation
+            } catch (e: Exception) {
+                log.e(e) { "Province backfill failed" }
+            }
         }
 
         observePassport()

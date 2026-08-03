@@ -11,7 +11,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -22,10 +21,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.outlined.ErrorOutline
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilledTonalButton
@@ -44,17 +41,18 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.graphics.vector.ImageVector
 import org.jetbrains.compose.resources.stringResource
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.duylt.trave.vietlensai.resources.Res
 import com.duylt.trave.vietlensai.resources.action_back
 import com.duylt.trave.vietlensai.resources.action_retry
 import com.duylt.trave.vietlensai.core.designsystem.theme.Marigold
+import com.duylt.trave.vietlensai.core.designsystem.theme.PageSpacing
+import com.duylt.trave.vietlensai.core.designsystem.theme.Pill
 import com.duylt.trave.vietlensai.core.designsystem.theme.ScreenGutter
+import com.duylt.trave.vietlensai.core.designsystem.theme.Spacing
+import com.duylt.trave.vietlensai.core.designsystem.theme.StampType
 import com.duylt.trave.vietlensai.core.designsystem.theme.Vermilion
 
 /**
@@ -79,14 +77,14 @@ fun LoadingState(
             modifier = Modifier.size(48.dp),
             strokeWidth = 4.dp,
         )
-        Spacer(Modifier.height(24.dp))
+        Spacer(Modifier.height(Spacing.xl))
         Text(
             text = message,
             style = MaterialTheme.typography.titleMedium,
             textAlign = TextAlign.Center,
         )
         if (detail != null) {
-            Spacer(Modifier.height(8.dp))
+            Spacer(Modifier.height(Spacing.sm))
             Text(
                 text = detail,
                 style = MaterialTheme.typography.bodyMedium,
@@ -114,14 +112,14 @@ fun ErrorState(
             tint = MaterialTheme.colorScheme.error,
             modifier = Modifier.size(48.dp),
         )
-        Spacer(Modifier.height(16.dp))
+        Spacer(Modifier.height(Spacing.lg))
         Text(
             text = message,
             style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Center,
         )
         if (onRetry != null) {
-            Spacer(Modifier.height(24.dp))
+            Spacer(Modifier.height(Spacing.xl))
             FilledTonalButton(onClick = onRetry) {
                 Text(stringResource(Res.string.action_retry))
             }
@@ -156,13 +154,13 @@ fun EmptyState(
                 modifier = Modifier.size(40.dp),
             )
         }
-        Spacer(Modifier.height(20.dp))
+        Spacer(Modifier.height(Spacing.xl))
         Text(
             text = title,
             style = MaterialTheme.typography.titleLarge,
             textAlign = TextAlign.Center,
         )
-        Spacer(Modifier.height(8.dp))
+        Spacer(Modifier.height(Spacing.sm))
         Text(
             text = description,
             style = MaterialTheme.typography.bodyMedium,
@@ -170,7 +168,7 @@ fun EmptyState(
             textAlign = TextAlign.Center,
         )
         if (action != null) {
-            Spacer(Modifier.height(24.dp))
+            Spacer(Modifier.height(Spacing.xl))
             action()
         }
     }
@@ -186,14 +184,14 @@ fun AccentChip(
 ) {
     Row(
         modifier = modifier
-            .clip(RoundedCornerShape(50))
+            .clip(Pill)
             .background(accent.copy(alpha = CHIP_BACKGROUND_ALPHA))
-            .padding(horizontal = 10.dp, vertical = 5.dp),
+            .padding(horizontal = Spacing.md, vertical = Spacing.xs),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         if (leading != null) {
             leading()
-            Spacer(Modifier.width(4.dp))
+            Spacer(Modifier.width(Spacing.xs))
         }
         Text(
             text = text,
@@ -218,7 +216,7 @@ fun AccentChip(
 @Composable
 fun ShimmerBox(
     modifier: Modifier = Modifier,
-    shape: Shape = RoundedCornerShape(12.dp),
+    shape: Shape = MaterialTheme.shapes.small,
     baseColor: Color = MaterialTheme.colorScheme.surfaceContainerHigh,
 ) {
     val transition = rememberInfiniteTransition(label = "shimmer")
@@ -293,8 +291,11 @@ private fun shimmerHighlight(baseColor: Color): Color =
 /**
  * Small caps with wide tracking — the label that names a block without shouting.
  *
- * Monospaced on purpose: the kickers read as stamped-on captions beside the
- * proportional body type, the way a museum label sits beside its object.
+ * The style itself is [StampType.kicker] and lives in `Type.kt`; this composable is the
+ * thing that draws it, and its one piece of behaviour is the uppercasing. The mono, the
+ * weight and the tracking used to be decided here, in a component file, which is how the
+ * app ended up with two near-copies of them elsewhere — a text style defined where it is
+ * drawn is a text style nobody can find.
  */
 @Composable
 fun Kicker(
@@ -305,10 +306,7 @@ fun Kicker(
 ) {
     Text(
         text = text.uppercase(),
-        style = MaterialTheme.typography.labelSmall,
-        fontFamily = FontFamily.Monospace,
-        fontWeight = FontWeight.Bold,
-        letterSpacing = 1.2.sp,
+        style = StampType.kicker,
         color = color,
         maxLines = maxLines,
         overflow = TextOverflow.Ellipsis,
@@ -334,31 +332,6 @@ fun BackChip(
         onClick = onClick,
         icon = Icons.AutoMirrored.Filled.ArrowBack,
         contentDescription = stringResource(Res.string.action_back),
-        modifier = modifier,
-        containerColor = containerColor,
-        contentColor = contentColor,
-    )
-}
-
-/**
- * The same chip with a cross in it, for a screen that is dismissed rather than
- * navigated away from.
- *
- * The sovereignty statement is the one screen that opens by itself, on first
- * launch. A back arrow there would point at nothing the traveller has seen.
- */
-@Composable
-fun CloseChip(
-    onClick: () -> Unit,
-    contentDescription: String,
-    modifier: Modifier = Modifier,
-    containerColor: Color = MaterialTheme.colorScheme.surfaceContainerHigh,
-    contentColor: Color = MaterialTheme.colorScheme.onSurface,
-) {
-    IconChip(
-        onClick = onClick,
-        icon = Icons.Filled.Close,
-        contentDescription = contentDescription,
         modifier = modifier,
         containerColor = containerColor,
         contentColor = contentColor,
@@ -429,18 +402,45 @@ fun FillGauge(
 
 private const val GAUGE_TRACK_ALPHA = 0.32f
 
+/**
+ * The label that names a block within a page.
+ *
+ * There were three of these and only two were used. This one sat in the design system at
+ * `titleMedium` on 20/12 padding with **zero** call sites; the settings page drew its own
+ * at kicker weight on `ScreenGutter + 4` / 24 / 10, and the collection drew a third with a
+ * count on the end at 20 / 10. Two private copies of a shared component, already a step
+ * apart from each other — which is what a dead component in a design system always
+ * produces, because the next person writes the one they need rather than fixing the one
+ * that is wrong.
+ *
+ * The kicker style rather than a title scale: a section label names a group of rows, and
+ * setting it at `titleMedium` puts it in competition with the row titles underneath it.
+ *
+ * @param trailing the count on the right, which only the collection has — "4/16" beside
+ *   its category. A slot rather than a `String` so it can be a chip tomorrow.
+ */
 @Composable
 fun SectionHeader(
     text: String,
     modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(horizontal = 20.dp, vertical = 12.dp),
+    color: Color = MaterialTheme.colorScheme.onSurfaceVariant,
+    trailing: (@Composable () -> Unit)? = null,
 ) {
-    Text(
-        text = text,
-        style = MaterialTheme.typography.titleMedium,
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
-        modifier = modifier.fillMaxWidth().padding(contentPadding),
-    )
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(
+                start = ScreenGutter,
+                end = ScreenGutter,
+                top = PageSpacing.sectionGap,
+                bottom = Spacing.sm,
+            ),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
+    ) {
+        Kicker(text = text, color = color)
+        trailing?.invoke()
+    }
 }
 
 private const val CHIP_BACKGROUND_ALPHA = 0.14f

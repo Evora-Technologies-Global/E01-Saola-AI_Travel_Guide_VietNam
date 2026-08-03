@@ -11,7 +11,6 @@ import com.duylt.trave.vietlensai.domain.usecase.ObserveCollectionUseCase
 import com.duylt.trave.vietlensai.domain.usecase.ClearHistoryUseCase
 import com.duylt.trave.vietlensai.domain.usecase.DeleteDiscoveryUseCase
 import com.duylt.trave.vietlensai.domain.usecase.DeleteNoteUseCase
-import com.duylt.trave.vietlensai.domain.usecase.DeleteTranslationUseCase
 import com.duylt.trave.vietlensai.domain.usecase.GenerateDaySummaryUseCase
 import com.duylt.trave.vietlensai.domain.usecase.GetCurrentLocationUseCase
 import com.duylt.trave.vietlensai.domain.usecase.LoadNearbyPlacesUseCase
@@ -21,19 +20,13 @@ import com.duylt.trave.vietlensai.domain.usecase.ObserveApiKeyAvailabilityUseCas
 import com.duylt.trave.vietlensai.domain.usecase.ObserveChatUseCase
 import com.duylt.trave.vietlensai.domain.usecase.ObserveDiscoveriesUseCase
 import com.duylt.trave.vietlensai.domain.usecase.ObserveDiscoveryUseCase
-import com.duylt.trave.vietlensai.domain.usecase.ObserveFavoritesUseCase
 import com.duylt.trave.vietlensai.domain.usecase.ObserveJournalStatsUseCase
 import com.duylt.trave.vietlensai.domain.usecase.ObserveJournalUseCase
 import com.duylt.trave.vietlensai.domain.usecase.ObserveNoteUseCase
 import com.duylt.trave.vietlensai.domain.usecase.ObserveProvinceDiscoveriesUseCase
-import com.duylt.trave.vietlensai.domain.usecase.ObserveRecommendationsUseCase
 import com.duylt.trave.vietlensai.domain.usecase.ObserveSettingsUseCase
-import com.duylt.trave.vietlensai.domain.usecase.ObserveTranslationUseCase
-import com.duylt.trave.vietlensai.domain.usecase.ObserveTranslationsUseCase
 import com.duylt.trave.vietlensai.domain.usecase.ObserveTravelPassportUseCase
 import com.duylt.trave.vietlensai.domain.usecase.RecognizeImageUseCase
-import com.duylt.trave.vietlensai.domain.usecase.RefreshRecommendationsUseCase
-import com.duylt.trave.vietlensai.domain.usecase.ResolveProvinceUseCase
 import com.duylt.trave.vietlensai.domain.usecase.SaveApiKeyUseCase
 import com.duylt.trave.vietlensai.domain.usecase.SaveNoteUseCase
 import com.duylt.trave.vietlensai.domain.usecase.SweepOrphanCapturesUseCase
@@ -42,7 +35,6 @@ import com.duylt.trave.vietlensai.domain.usecase.TranslateImageUseCase
 import com.duylt.trave.vietlensai.domain.usecase.UpdateLanguageUseCase
 import com.duylt.trave.vietlensai.domain.usecase.UpdateModelUseCase
 import com.duylt.trave.vietlensai.domain.usecase.UpdateThemeUseCase
-import com.duylt.trave.vietlensai.domain.repository.SettingsRepository
 import com.duylt.trave.vietlensai.feature.camera.LensViewModel
 import com.duylt.trave.vietlensai.feature.chat.ChatViewModel
 import com.duylt.trave.vietlensai.feature.collection.CollectionViewModel
@@ -72,7 +64,6 @@ val useCaseModule: Module = module {
 
     factory { RecognizeImageUseCase(get(), get()) }
     factory { ObserveDiscoveriesUseCase(get()) }
-    factory { ObserveFavoritesUseCase(get()) }
     factory { ObserveDiscoveryUseCase(get()) }
     factory { ObserveProvinceDiscoveriesUseCase(get()) }
     factory { ToggleFavoriteUseCase(get()) }
@@ -88,11 +79,7 @@ val useCaseModule: Module = module {
     factory { GenerateDaySummaryUseCase(get()) }
 
     factory { ObserveTravelPassportUseCase(get()) }
-    factory { ResolveProvinceUseCase(get()) }
     factory { BackfillProvincesUseCase(get()) }
-
-    factory { ObserveRecommendationsUseCase(get()) }
-    factory { RefreshRecommendationsUseCase(get(), get()) }
 
     factory { GetCurrentLocationUseCase(get()) }
     factory { LoadNearbyPlacesUseCase(get()) }
@@ -101,9 +88,6 @@ val useCaseModule: Module = module {
     factory { ObserveCollectionUseCase(get()) }
 
     factory { TranslateImageUseCase(get()) }
-    factory { ObserveTranslationsUseCase(get()) }
-    factory { ObserveTranslationUseCase(get()) }
-    factory { DeleteTranslationUseCase(get()) }
 
     factory { ObserveSettingsUseCase(get()) }
     factory { ObserveApiKeyAvailabilityUseCase(get()) }
@@ -156,7 +140,6 @@ val presentationModule: Module = module {
             observeSettings = get(),
             askFollowUp = get(),
             clearChat = get(),
-            speechRecognizer = get(),
             textToSpeech = get(),
         )
     }
@@ -239,8 +222,8 @@ val presentationModule: Module = module {
 }
 
 /**
- * Whatever the platform has to supply that shared code cannot build for itself: the speech
- * engines, which need an Android `Context` on one side and nothing on the other.
+ * Whatever the platform has to supply that shared code cannot build for itself: the narration
+ * engine, which needs an Android `Context` on one side and nothing on the other.
  */
 internal expect val platformUiModule: Module
 

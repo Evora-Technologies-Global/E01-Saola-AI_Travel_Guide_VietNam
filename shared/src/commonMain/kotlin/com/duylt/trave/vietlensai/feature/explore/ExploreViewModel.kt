@@ -14,7 +14,6 @@ import com.duylt.trave.vietlensai.domain.util.directionsUrl
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 
 /**
  * The Explore tab: where the traveller is, and what is worth walking to from there.

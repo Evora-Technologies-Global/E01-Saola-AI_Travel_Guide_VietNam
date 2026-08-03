@@ -17,8 +17,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -37,7 +38,6 @@ import org.jetbrains.compose.resources.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import org.koin.compose.viewmodel.koinViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -52,13 +52,14 @@ import com.duylt.trave.vietlensai.resources.sovereignty_note
 import com.duylt.trave.vietlensai.resources.sovereignty_page_subtitle
 import com.duylt.trave.vietlensai.resources.sovereignty_page_title
 import com.duylt.trave.vietlensai.resources.sovereignty_understood
-import com.duylt.trave.vietlensai.core.designsystem.component.CloseChip
+import com.duylt.trave.vietlensai.core.designsystem.component.OverlayIconButton
 import com.duylt.trave.vietlensai.core.designsystem.component.PinSystemBarIcons
 import com.duylt.trave.vietlensai.core.designsystem.component.SovereigntySeal
 import com.duylt.trave.vietlensai.core.designsystem.component.lacquerHatch
 import com.duylt.trave.vietlensai.core.designsystem.theme.Marigold
 import com.duylt.trave.vietlensai.core.designsystem.theme.PaperCream
 import com.duylt.trave.vietlensai.core.designsystem.theme.ScreenGutter
+import com.duylt.trave.vietlensai.core.designsystem.theme.Spacing
 import com.duylt.trave.vietlensai.core.designsystem.theme.Vermilion
 import com.duylt.trave.vietlensai.core.designsystem.theme.screenInsetsPadding
 
@@ -81,7 +82,7 @@ fun SovereigntyRoute(
     modifier: Modifier = Modifier,
     viewModel: SovereigntyViewModel = koinViewModel(),
 ) {
-    val map by viewModel.map.collectAsStateWithLifecycle()
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
     // Deep red under the bars in either theme, so the icons have to be light in both.
     PinSystemBarIcons(darkIcons = false)
@@ -100,56 +101,58 @@ fun SovereigntyRoute(
             .verticalScroll(rememberScrollState())
             .padding(horizontal = ScreenGutter),
     ) {
-        CloseChip(
-            onClick = onBack,
+        // The app's one overlay affordance, in this page's own ink. The statement is a
+        // sheet of lacquer red, so the default black glass would read as a hole in it.
+        OverlayIconButton(
+            icon = Icons.Filled.Close,
             contentDescription = stringResource(Res.string.sovereignty_close),
+            onClick = onBack,
             containerColor = PaperCream.copy(alpha = CHIP_ALPHA),
             contentColor = PaperCream,
         )
 
-        Spacer(Modifier.height(24.dp))
+        Spacer(Modifier.height(Spacing.xl))
         CompassMark()
 
-        Spacer(Modifier.height(18.dp))
+        Spacer(Modifier.height(Spacing.lg))
         Text(
             text = stringResource(Res.string.sovereignty_page_title),
             style = MaterialTheme.typography.headlineMedium,
             color = PaperCream,
         )
-        Spacer(Modifier.height(8.dp))
+        Spacer(Modifier.height(Spacing.sm))
         Text(
             text = stringResource(Res.string.sovereignty_page_subtitle),
             style = MaterialTheme.typography.titleMedium,
             color = Marigold,
         )
 
-        Spacer(Modifier.height(20.dp))
-        MapCard(map)
+        Spacer(Modifier.height(Spacing.xl))
+        MapCard(state.map)
 
-        Spacer(Modifier.height(22.dp))
+        Spacer(Modifier.height(Spacing.xl))
         Statement()
 
-        Spacer(Modifier.height(24.dp))
+        Spacer(Modifier.height(Spacing.xl))
         WhereItAppears()
 
-        Spacer(Modifier.height(20.dp))
+        Spacer(Modifier.height(Spacing.xl))
         Button(
             onClick = onBack,
             modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(16.dp),
+            shape = MaterialTheme.shapes.medium,
             colors = ButtonDefaults.buttonColors(
                 containerColor = PaperCream,
                 contentColor = Vermilion,
             ),
-            contentPadding = PaddingValues(vertical = 16.dp),
+            contentPadding = PaddingValues(vertical = Spacing.lg),
         ) {
             Text(
                 text = stringResource(Res.string.sovereignty_understood),
                 style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
             )
         }
-        Spacer(Modifier.height(28.dp))
+        Spacer(Modifier.height(Spacing.xxl))
     }
 }
 
@@ -202,7 +205,7 @@ private fun MapCard(map: RegionMap?) {
         modifier = Modifier
             .fillMaxWidth()
             .aspectRatio(map?.aspectRatio ?: FRAME_ASPECT)
-            .clip(RoundedCornerShape(20.dp))
+            .clip(MaterialTheme.shapes.large)
             .background(SeaWash)
             .lacquerHatch(alpha = MAP_HATCH_ALPHA),
     ) {
@@ -240,7 +243,7 @@ private fun Statement() {
         style = MaterialTheme.typography.bodyLarge,
         color = PaperCream,
     )
-    Spacer(Modifier.height(16.dp))
+    Spacer(Modifier.height(Spacing.lg))
     Text(
         text = stringResource(Res.string.sovereignty_body_secondary),
         style = MaterialTheme.typography.bodyLarge,
@@ -254,14 +257,14 @@ private fun WhereItAppears() {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(20.dp))
+            .clip(MaterialTheme.shapes.large)
             .background(SeaWash)
             .lacquerHatch(alpha = MAP_HATCH_ALPHA)
-            .padding(16.dp),
+            .padding(Spacing.lg),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         SovereigntySeal(size = 44.dp)
-        Spacer(Modifier.width(14.dp))
+        Spacer(Modifier.width(Spacing.md))
         Text(
             text = stringResource(Res.string.sovereignty_note),
             style = MaterialTheme.typography.bodyMedium,

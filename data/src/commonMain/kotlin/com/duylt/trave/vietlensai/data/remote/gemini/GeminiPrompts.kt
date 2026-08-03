@@ -160,51 +160,6 @@ internal object GeminiPrompts {
         append("\nAlso say what kind of text this is, so the traveller knows what they are reading.")
     }
 
-    fun recommendationSystemInstruction(language: AppLanguage): String = buildString {
-        append(GUIDE_PERSONA)
-        append(' ')
-        append(languageDirective(language))
-        append(' ')
-        append(
-            "Recommend only real, currently-operating places in Vietnam that you are confident " +
-                "exist. Favour specific named places over categories ('Bún chả Hương Liên' not " +
-                "'a bún chả restaurant'). Never recommend somewhere the traveller has already been.",
-        )
-    }
-
-    fun recommendationPrompt(
-        location: GeoPoint?,
-        visitedPlaces: List<String>,
-        interests: List<String>,
-    ): String = buildString {
-        append("Suggest 5 places this traveller should go next.\n\n")
-        if (location != null) {
-            append(
-                "They are currently at latitude ${location.latitude.to5dp()}, " +
-                    "longitude ${location.longitude.to5dp()}. Prioritise places within " +
-                    "walking or short-taxi distance and say roughly how far each one is.\n",
-            )
-        } else {
-            append(
-                "Their exact position is unknown, so infer the area from the places they have " +
-                    "already visited.\n",
-            )
-        }
-        if (visitedPlaces.isNotEmpty()) {
-            append("\nAlready visited on this trip (do not repeat any of these):\n")
-            visitedPlaces.take(MAX_VISITED_IN_PROMPT).forEach { append("- ").append(it).append('\n') }
-        }
-        if (interests.isNotEmpty()) {
-            append("\nRecurring interests inferred from their photos: ")
-            append(interests.take(MAX_INTERESTS_IN_PROMPT).joinToString(", "))
-            append('\n')
-        }
-        append(
-            "\nMix categories so the list is not all temples or all food. Explain each choice in " +
-                "terms of what they have already enjoyed.",
-        )
-    }
-
     fun summarySystemInstruction(language: AppLanguage): String = buildString {
         append(
             "You are writing a traveller's diary entry for them, in second person, about a day " +
@@ -243,9 +198,6 @@ internal object GeminiPrompts {
                 "follow naturally from it.",
         )
     }
-
-    private const val MAX_VISITED_IN_PROMPT = 25
-    private const val MAX_INTERESTS_IN_PROMPT = 12
 }
 
 /**

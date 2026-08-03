@@ -65,14 +65,6 @@ class LensViewModel(
             .launchIn(viewModelScope)
     }
 
-    /**
-     * Where the next capture should be written.
-     *
-     * Exposed from here so the composable never has to know that captures live in a specific
-     * app-storage directory — that stays owned by [CaptureStore].
-     */
-    fun newCapturePath(): String = captureStore.newCapturePath()
-
     override fun onIntent(intent: LensIntent) {
         when (intent) {
             is LensIntent.SelectMode -> setState { copy(mode = intent.mode, error = null) }
@@ -138,7 +130,7 @@ class LensViewModel(
         val seconds = currentState.timer.seconds
         if (seconds == 0) {
             setState { copy(isCapturing = true) }
-            sendEffect(LensEffect.TakePhoto)
+            sendEffect(LensEffect.TakePhoto(captureStore.newCapturePath()))
             return
         }
 
@@ -148,7 +140,10 @@ class LensViewModel(
                 delay(COUNTDOWN_TICK_MILLIS)
             }
             setState { copy(countdown = 0, isCapturing = true) }
-            sendEffect(LensEffect.TakePhoto)
+            // Named at the moment the shutter actually fires rather than when the timer
+            // started: a countdown that is cancelled and restarted must not leave a
+            // reserved path behind that no JPEG is ever written to.
+            sendEffect(LensEffect.TakePhoto(captureStore.newCapturePath()))
         }
     }
 

@@ -149,9 +149,6 @@ class DiscoveryViewModel(
         }
     }
 
-    /** An absolute path for the in-app camera to shoot into. */
-    fun newCapturePath(): String = captureStore.newCapturePath()
-
     /**
      * Takes what fits into the composer and deletes the rest.
      *

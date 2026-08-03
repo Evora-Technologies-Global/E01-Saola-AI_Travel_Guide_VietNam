@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.Icon
@@ -23,12 +22,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import org.jetbrains.compose.resources.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.duylt.trave.vietlensai.resources.Res
 import com.duylt.trave.vietlensai.resources.sovereignty_open
 import com.duylt.trave.vietlensai.resources.sovereignty_read
@@ -36,6 +32,8 @@ import com.duylt.trave.vietlensai.resources.sovereignty_seal
 import com.duylt.trave.vietlensai.resources.sovereignty_title
 import com.duylt.trave.vietlensai.core.designsystem.theme.Marigold
 import com.duylt.trave.vietlensai.core.designsystem.theme.PaperCream
+import com.duylt.trave.vietlensai.core.designsystem.theme.Spacing
+import com.duylt.trave.vietlensai.core.designsystem.theme.StampType
 import com.duylt.trave.vietlensai.core.designsystem.theme.Vermilion
 
 /**
@@ -66,29 +64,28 @@ fun SovereigntyBanner(
     Surface(
         onClick = onClick,
         modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(20.dp),
+        shape = MaterialTheme.shapes.large,
         color = Vermilion,
         contentColor = PaperCream,
     ) {
         Row(
             modifier = Modifier
                 .lacquerHatch()
-                .padding(horizontal = 16.dp, vertical = 14.dp),
+                .padding(horizontal = Spacing.lg, vertical = Spacing.md),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             SovereigntySeal()
-            Spacer(Modifier.width(14.dp))
+            Spacer(Modifier.width(Spacing.md))
             Column(modifier = Modifier.weight(1f)) {
                 // One language only: the app already follows the device locale, and a
                 // statement printed twice reads as a caption rather than as a claim.
                 Text(
                     text = stringResource(Res.string.sovereignty_title),
                     style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
                     color = PaperCream,
                 )
                 if (subtitle != null) {
-                    Spacer(Modifier.size(4.dp))
+                    Spacer(Modifier.size(Spacing.xs))
                     Text(
                         text = subtitle,
                         style = MaterialTheme.typography.labelMedium,
@@ -96,7 +93,7 @@ fun SovereigntyBanner(
                     )
                 }
             }
-            Spacer(Modifier.width(10.dp))
+            Spacer(Modifier.width(Spacing.sm))
             Row(verticalAlignment = Alignment.CenterVertically) {
                 if (showReadLabel) {
                     Kicker(text = stringResource(Res.string.sovereignty_read), color = Marigold)
@@ -131,18 +128,7 @@ fun SovereigntySeal(modifier: Modifier = Modifier, size: Dp = 48.dp) {
     ) {
         Text(
             text = stringResource(Res.string.sovereignty_seal).uppercase(),
-            style = MaterialTheme.typography.labelSmall.copy(
-                fontSize = 7.sp,
-                lineHeight = 9.sp,
-                // Vietnamese stacks marks two deep on Ủ and Ề; the default trimming
-                // clips them off at a line height this tight.
-                lineHeightStyle = LineHeightStyle(
-                    alignment = LineHeightStyle.Alignment.Center,
-                    trim = LineHeightStyle.Trim.None,
-                ),
-            ),
-            fontWeight = FontWeight.Bold,
-            letterSpacing = 0.4.sp,
+            style = StampType.seal,
             color = Marigold,
             textAlign = TextAlign.Center,
         )

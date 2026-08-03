@@ -14,10 +14,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.Check
@@ -41,7 +39,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.semantics.onClick
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -49,11 +46,15 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import com.duylt.trave.vietlensai.core.designsystem.component.AppAsyncImage
-import com.duylt.trave.vietlensai.core.designsystem.component.BackChip
 import com.duylt.trave.vietlensai.core.designsystem.component.FillGauge
 import com.duylt.trave.vietlensai.core.designsystem.component.Kicker
+import com.duylt.trave.vietlensai.core.designsystem.component.PageHeader
+import com.duylt.trave.vietlensai.core.designsystem.component.SectionHeader
 import com.duylt.trave.vietlensai.core.designsystem.component.SovereigntyBanner
+import com.duylt.trave.vietlensai.core.designsystem.theme.PageSpacing
+import com.duylt.trave.vietlensai.core.designsystem.theme.Pill
 import com.duylt.trave.vietlensai.core.designsystem.theme.ScreenGutter
+import com.duylt.trave.vietlensai.core.designsystem.theme.Spacing
 import com.duylt.trave.vietlensai.core.designsystem.theme.Vermilion
 import com.duylt.trave.vietlensai.core.designsystem.theme.screenInsetsPadding
 import com.duylt.trave.vietlensai.core.util.accentColor
@@ -113,10 +114,14 @@ fun CollectionRoute(
     ) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(bottom = 32.dp),
+            contentPadding = PaddingValues(bottom = PageSpacing.listBottom),
         ) {
             item(key = "header") {
-                CollectionHeader(onBack = onBack)
+                PageHeader(
+                    title = stringResource(Res.string.collection_title),
+                    subtitle = stringResource(Res.string.collection_subtitle),
+                    onBack = onBack,
+                )
             }
 
             item(key = "progress") {
@@ -132,7 +137,7 @@ fun CollectionRoute(
                     onClick = onOpenSovereignty,
                     subtitle = stringResource(Res.string.collection_sovereignty_subtitle),
                     showReadLabel = false,
-                    modifier = Modifier.padding(horizontal = ScreenGutter, vertical = 8.dp),
+                    modifier = Modifier.padding(horizontal = ScreenGutter, vertical = Spacing.sm),
                 )
             }
 
@@ -171,38 +176,6 @@ fun CollectionRoute(
 }
 
 /**
- * The masthead, laid out exactly as the passport's.
- *
- * Same row, same chip, same headline and subtitle beside it — deliberately, not
- * incidentally. These two screens are one idea counted along two axes, they are
- * reached from adjacent rows of the journal, and a traveller moving between them
- * should feel they are turning a page rather than opening a different app.
- */
-@Composable
-private fun CollectionHeader(onBack: () -> Unit) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = ScreenGutter, end = ScreenGutter, top = 12.dp, bottom = 4.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        BackChip(onClick = onBack)
-        Spacer(Modifier.width(14.dp))
-        Column {
-            Text(
-                text = stringResource(Res.string.collection_title),
-                style = MaterialTheme.typography.headlineMedium,
-            )
-            Text(
-                text = stringResource(Res.string.collection_subtitle),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-        }
-    }
-}
-
-/**
  * The count, the share, and the bar — the passport's progress block, counting objects
  * instead of provinces.
  *
@@ -218,29 +191,27 @@ private fun CollectionProgress(collected: Int, total: Int, progress: Float) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = ScreenGutter, vertical = 14.dp)
+            .padding(horizontal = ScreenGutter, vertical = Spacing.md)
     ) {
         Row(verticalAlignment = Alignment.Bottom) {
             Text(
                 text = collected.toString(),
                 style = MaterialTheme.typography.displaySmall,
-                fontWeight = FontWeight.Bold,
                 color = Vermilion,
             )
             Text(
                 text = stringResource(Res.string.collection_progress_of, total),
                 style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(start = 8.dp, bottom = 4.dp),
+                modifier = Modifier.padding(start = Spacing.sm, bottom = Spacing.xs),
             )
             Spacer(Modifier.weight(1f))
             Kicker(
                 text = stringResource(Res.string.collection_collected_percent, percent),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(bottom = 6.dp),
+                modifier = Modifier.padding(bottom = Spacing.xs),
             )
         }
-        Spacer(Modifier.height(10.dp))
+        Spacer(Modifier.height(Spacing.sm))
         FillGauge(progress = animated)
     }
 }
@@ -248,28 +219,21 @@ private fun CollectionProgress(collected: Int, total: Int, progress: Float) {
 /** "Ẩm thực · 4/16", in the category's own colour. */
 @Composable
 private fun SectionHeading(section: CollectionSection) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = ScreenGutter)
-            .padding(top = 20.dp, bottom = 10.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween,
-    ) {
-        Kicker(
-            text = section.category.label(),
-            color = section.category.accentColor,
-        )
-        Text(
-            text = stringResource(
-                Res.string.collection_section_progress,
-                section.collectedCount,
-                section.total,
-            ),
-            style = MaterialTheme.typography.labelMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
-    }
+    SectionHeader(
+        text = section.category.label(),
+        color = section.category.accentColor,
+        trailing = {
+            Text(
+                text = stringResource(
+                    Res.string.collection_section_progress,
+                    section.collectedCount,
+                    section.total,
+                ),
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        },
+    )
 }
 
 /** One row of the board, padded out with gaps so a short last row stays left-aligned. */
@@ -283,8 +247,8 @@ private fun CollectionRow(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = ScreenGutter, vertical = 4.dp),
-        horizontalArrangement = Arrangement.spacedBy(10.dp),
+            .padding(horizontal = ScreenGutter, vertical = Spacing.xs),
+        horizontalArrangement = Arrangement.spacedBy(Spacing.sm),
         verticalAlignment = Alignment.Top,
     ) {
         row.forEach { entry ->
@@ -335,14 +299,14 @@ private fun CollectionTile(
                     model = discovery.imagePath,
                     contentDescription = name,
                     modifier = Modifier.fillMaxSize(),
-                    shape = TILE_SHAPE,
+                    shape = MaterialTheme.shapes.medium,
                     contentScale = ContentScale.Crop,
                     onClick = { onOpenDiscovery(discovery.id) },
                     onClickLabel = openLabel,
                 )
                 CollectedBadge(
                     accent = entry.item.category.accentColor,
-                    modifier = Modifier.align(Alignment.TopEnd).padding(6.dp),
+                    modifier = Modifier.align(Alignment.TopEnd).padding(Spacing.xs),
                 )
             } else {
                 LockedTile(
@@ -353,7 +317,7 @@ private fun CollectionTile(
                 )
             }
         }
-        Spacer(Modifier.height(6.dp))
+        Spacer(Modifier.height(Spacing.xs))
         Text(
             text = name,
             style = MaterialTheme.typography.labelMedium,
@@ -397,7 +361,7 @@ private fun LockedTile(
         // directly — without it a screen reader announces the name and leaves what
         // the tap does to guesswork.
         modifier = modifier.semantics { onClick(label = onClickLabel, action = null) },
-        shape = TILE_SHAPE,
+        shape = MaterialTheme.shapes.medium,
         color = Color.Transparent,
     ) {
         Box(
@@ -438,7 +402,7 @@ private fun CollectedBadge(accent: Color, modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
             .size(20.dp)
-            .clip(RoundedCornerShape(50))
+            .clip(Pill)
             .background(accent),
         contentAlignment = Alignment.Center,
     ) {
@@ -475,24 +439,24 @@ private fun EntrySheet(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = ScreenGutter)
-                .padding(bottom = 32.dp),
+                .padding(bottom = PageSpacing.listBottom),
         ) {
             Kicker(
                 text = entry.item.category.label(),
                 color = entry.item.category.accentColor,
             )
-            Spacer(Modifier.height(8.dp))
+            Spacer(Modifier.height(Spacing.sm))
             Text(
                 text = entry.item.displayName(language),
                 style = MaterialTheme.typography.headlineSmall,
             )
-            Spacer(Modifier.height(10.dp))
+            Spacer(Modifier.height(Spacing.sm))
             Text(
                 text = entry.item.displayHint(language),
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
-            Spacer(Modifier.height(24.dp))
+            Spacer(Modifier.height(Spacing.xl))
 
             // The sheet is opened from uncollected tiles only, but a photograph taken
             // while it is up flips the entry underneath it — so it has to be able to
@@ -518,7 +482,7 @@ private fun EntrySheet(
                             Res.string.collection_go_capture
                         },
                     ),
-                    modifier = Modifier.padding(start = 8.dp),
+                    modifier = Modifier.padding(start = Spacing.sm),
                 )
             }
         }
@@ -533,8 +497,6 @@ private fun EntrySheet(
  * both be truncated on every row.
  */
 private const val COLUMNS = 3
-
-private val TILE_SHAPE = RoundedCornerShape(14.dp)
 
 private const val STRIPE_ALPHA = 0.11f
 private const val STRIPE_STEP_DP = 11f

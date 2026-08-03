@@ -49,9 +49,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.graphics.vector.ImageVector
 import org.jetbrains.compose.resources.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import org.koin.compose.viewmodel.koinViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -67,13 +65,17 @@ import com.duylt.trave.vietlensai.resources.chat_thinking
 import com.duylt.trave.vietlensai.resources.chat_title
 import com.duylt.trave.vietlensai.resources.discovery_listen
 import com.duylt.trave.vietlensai.resources.discovery_stop
-import com.duylt.trave.vietlensai.core.designsystem.component.BackChip
 import com.duylt.trave.vietlensai.core.designsystem.component.Kicker
+import com.duylt.trave.vietlensai.core.designsystem.component.PageHeader
+import com.duylt.trave.vietlensai.core.designsystem.component.PageHeaderDefaults
 import com.duylt.trave.vietlensai.core.designsystem.component.PinSystemBarIcons
 import com.duylt.trave.vietlensai.core.designsystem.theme.InkBrown
 import com.duylt.trave.vietlensai.core.designsystem.theme.Marigold
 import com.duylt.trave.vietlensai.core.designsystem.theme.PaperCream
+import com.duylt.trave.vietlensai.core.designsystem.theme.Corner
+import com.duylt.trave.vietlensai.core.designsystem.theme.Pill
 import com.duylt.trave.vietlensai.core.designsystem.theme.ScreenGutter
+import com.duylt.trave.vietlensai.core.designsystem.theme.Spacing
 import com.duylt.trave.vietlensai.core.designsystem.theme.Vermilion
 import com.duylt.trave.vietlensai.core.designsystem.theme.screenInsetsPadding
 import com.duylt.trave.vietlensai.core.util.toUserMessage
@@ -96,6 +98,11 @@ private val GuideCard = Color(0xFFFFFCF6)
 private val GuideCardBorder = Marigold.copy(alpha = 0.35f)
 private val InkMuted = InkBrown.copy(alpha = 0.60f)
 private val Hairline = InkBrown.copy(alpha = 0.10f)
+private const val BACK_CHIP_ALPHA = 0.07f
+
+/** `VietLensShapes.large` and `extraSmall`, as numbers so one bubble can carry both. */
+private val BubbleCorner = Corner.large
+private val BubbleTail = Corner.extraSmall
 
 @Composable
 fun ChatRoute(
@@ -110,9 +117,11 @@ fun ChatRoute(
     // the phone's own preference is.
     PinSystemBarIcons(darkIcons = true)
 
-    // Driven by message count rather than by the effect so the scroll happens after
-    // the new row has actually been laid out. While a question is in flight the
-    // thinking card is the last row, one past the final message.
+    // Driven by message count rather than by a one-shot effect so the scroll happens
+    // after the new row has actually been laid out — an effect sent from the ViewModel
+    // arrives while the list is still the length it was. That is why ChatEffect carries no
+    // scroll event for this route to collect. While a question is in flight the thinking
+    // card is the last row, one past the final message.
     LaunchedEffect(state.messages.size, state.isSending) {
         if (state.messages.isEmpty()) return@LaunchedEffect
         val target = if (state.isSending) state.messages.size else state.messages.lastIndex
@@ -165,15 +174,18 @@ private fun ChatScreen(
                 LazyColumn(
                     state = listState,
                     modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(horizontal = ScreenGutter, vertical = 20.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                    contentPadding = PaddingValues(
+                        horizontal = ScreenGutter,
+                        vertical = Spacing.xl,
+                    ),
+                    verticalArrangement = Arrangement.spacedBy(Spacing.md),
                 ) {
                     if (state.messages.isEmpty()) {
                         item(key = "suggestions-kicker") {
                             Kicker(
                                 text = stringResource(Res.string.chat_suggestions_kicker),
                                 color = InkMuted,
-                                modifier = Modifier.padding(bottom = 4.dp),
+                                modifier = Modifier.padding(bottom = Spacing.xs),
                             )
                         }
                         items(state.suggestions, key = { it }) { suggestion ->
@@ -208,7 +220,7 @@ private fun ChatScreen(
                 Surface(
                     color = Vermilion,
                     contentColor = PaperCream,
-                    shape = RoundedCornerShape(14.dp),
+                    shape = MaterialTheme.shapes.medium,
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
                         .padding(ScreenGutter)
@@ -217,7 +229,7 @@ private fun ChatScreen(
                     Text(
                         text = error.toUserMessage(),
                         style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.padding(14.dp),
+                        modifier = Modifier.padding(Spacing.md),
                     )
                 }
             }
@@ -232,45 +244,45 @@ private fun ChatHeader(
     onBack: () -> Unit,
     onClear: () -> Unit,
 ) {
+    // The inset goes on `PageHeader`, NOT on the `Surface`. Material3 chains the caller's
+    // modifier ahead of its own `.background(...)`, so an inset passed to the Surface would
+    // shrink the painted band rather than the content inside it — leaving a bare cream
+    // strip above a tinted header, seamed across the top of the screen. The band has to run
+    // under the notch; only the title stops short of it. This screen takes the inset at all
+    // because it is a `Scaffold` with its own window insets switched off.
     Surface(color = HeaderBackground) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .screenInsetsPadding()
-                .padding(start = ScreenGutter, end = 8.dp, top = 10.dp, bottom = 12.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            BackChip(
-                onClick = onBack,
-                containerColor = InkBrown.copy(alpha = 0.07f),
-                contentColor = InkBrown,
-            )
-            Spacer(Modifier.width(12.dp))
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold,
-                    color = InkBrown,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
-                Text(
-                    text = stringResource(Res.string.chat_subtitle),
-                    style = MaterialTheme.typography.labelMedium,
-                    color = InkMuted,
-                )
-            }
-            if (canClear) {
-                IconButton(onClick = onClear) {
-                    Icon(
-                        imageVector = Icons.Outlined.DeleteOutline,
-                        contentDescription = stringResource(Res.string.chat_clear),
-                        tint = InkMuted,
-                    )
+        PageHeader(
+            modifier = Modifier.screenInsetsPadding(),
+            title = title,
+            subtitle = stringResource(Res.string.chat_subtitle),
+            onBack = onBack,
+            // The lens palette, not the scheme: this screen is a page in the same
+            // notebook as the passport, and it is cream in both themes by design —
+            // see the note on `PageBackground` above and `LLM.md` §12.
+            colors = PageHeaderDefaults.colors(
+                title = InkBrown,
+                subtitle = InkMuted,
+                kicker = InkMuted,
+                backContainer = InkBrown.copy(alpha = BACK_CHIP_ALPHA),
+                backContent = InkBrown,
+            ),
+            // Null rather than a lambda that draws nothing: `PageHeader` spaces the slot on
+            // the parameter being present, so an always-supplied trailing would hold an 8 dp
+            // gap open on every empty thread.
+            trailing = if (canClear) {
+                {
+                    IconButton(onClick = onClear) {
+                        Icon(
+                            imageVector = Icons.Outlined.DeleteOutline,
+                            contentDescription = stringResource(Res.string.chat_clear),
+                            tint = InkMuted,
+                        )
+                    }
                 }
-            }
-        }
+            } else {
+                null
+            },
+        )
     }
 }
 
@@ -285,11 +297,10 @@ private fun ChatEmptyState() {
         Text(
             text = stringResource(Res.string.chat_empty_title),
             style = MaterialTheme.typography.titleLarge,
-            fontWeight = FontWeight.Bold,
             color = InkBrown,
             textAlign = TextAlign.Center,
         )
-        Spacer(Modifier.height(10.dp))
+        Spacer(Modifier.height(Spacing.sm))
         Text(
             text = stringResource(Res.string.chat_empty_body),
             style = MaterialTheme.typography.bodyMedium,
@@ -318,26 +329,32 @@ private fun MessageBubble(
                 color = if (isUser) Vermilion else GuideCard,
                 contentColor = if (isUser) PaperCream else InkBrown,
                 border = if (isUser) null else BorderStroke(1.dp, GuideCardBorder),
+                // The app's `large` corner on three sides and its `extraSmall` on the
+                // one nearest the speaker: the clipped corner is what points a bubble at
+                // whoever said it, and it is the only place these two radii ever meet.
                 shape = RoundedCornerShape(
-                    topStart = 20.dp,
-                    topEnd = 20.dp,
-                    bottomStart = if (isUser) 20.dp else 6.dp,
-                    bottomEnd = if (isUser) 6.dp else 20.dp,
+                    topStart = BubbleCorner,
+                    topEnd = BubbleCorner,
+                    bottomStart = if (isUser) BubbleCorner else BubbleTail,
+                    bottomEnd = if (isUser) BubbleTail else BubbleCorner,
                 ),
             ) {
                 Text(
                     text = message.content,
                     style = MaterialTheme.typography.bodyLarge,
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
+                    modifier = Modifier.padding(
+                        horizontal = Spacing.lg,
+                        vertical = Spacing.md,
+                    ),
                 )
             }
             // Only the guide's answers are worth reading aloud.
             if (!isUser) {
                 Row(
                     modifier = Modifier
-                        .clip(RoundedCornerShape(50))
+                        .clip(Pill)
                         .clickable(onClick = onSpeak)
-                        .padding(horizontal = 8.dp, vertical = 6.dp),
+                        .padding(horizontal = Spacing.sm, vertical = Spacing.xs),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Icon(
@@ -350,7 +367,7 @@ private fun MessageBubble(
                         tint = Vermilion,
                         modifier = Modifier.size(16.dp),
                     )
-                    Spacer(Modifier.width(6.dp))
+                    Spacer(Modifier.width(Spacing.xs))
                     Text(
                         text = stringResource(
                             if (isSpeaking) Res.string.discovery_stop else Res.string.discovery_listen,
@@ -374,7 +391,7 @@ private fun MessageBubble(
 private fun SuggestionPill(text: String, onClick: () -> Unit) {
     Surface(
         onClick = onClick,
-        shape = RoundedCornerShape(50),
+        shape = Pill,
         color = Color.Transparent,
         contentColor = Vermilion,
         border = BorderStroke(1.dp, Vermilion.copy(alpha = 0.45f)),
@@ -382,7 +399,7 @@ private fun SuggestionPill(text: String, onClick: () -> Unit) {
         Text(
             text = text,
             style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.padding(horizontal = 18.dp, vertical = 12.dp),
+            modifier = Modifier.padding(horizontal = Spacing.lg, vertical = Spacing.md),
         )
     }
 }
@@ -390,13 +407,18 @@ private fun SuggestionPill(text: String, onClick: () -> Unit) {
 @Composable
 private fun ThinkingCard() {
     Surface(
-        shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp, bottomStart = 6.dp, bottomEnd = 20.dp),
+        shape = RoundedCornerShape(
+            topStart = BubbleCorner,
+            topEnd = BubbleCorner,
+            bottomStart = BubbleTail,
+            bottomEnd = BubbleCorner,
+        ),
         color = GuideCard,
         contentColor = InkMuted,
         border = BorderStroke(1.dp, GuideCardBorder),
     ) {
         Row(
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
+            modifier = Modifier.padding(horizontal = Spacing.lg, vertical = Spacing.md),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             CircularProgressIndicator(
@@ -404,7 +426,7 @@ private fun ThinkingCard() {
                 strokeWidth = 2.dp,
                 color = Vermilion,
             )
-            Spacer(Modifier.width(10.dp))
+            Spacer(Modifier.width(Spacing.sm))
             Text(
                 text = stringResource(Res.string.chat_thinking),
                 style = MaterialTheme.typography.labelLarge,
@@ -421,7 +443,9 @@ private fun ChatComposer(
 ) {
     Surface(modifier = modifier.fillMaxWidth(), color = ComposerBackground) {
         Row(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = ScreenGutter, vertical = 12.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = ScreenGutter, vertical = Spacing.md),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             OutlinedTextField(
@@ -436,7 +460,7 @@ private fun ChatComposer(
                 textStyle = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.weight(1f),
                 maxLines = 4,
-                shape = RoundedCornerShape(28.dp),
+                shape = MaterialTheme.shapes.extraLarge,
                 colors = TextFieldDefaults.colors(
                     focusedContainerColor = PageBackground,
                     unfocusedContainerColor = PageBackground,
@@ -449,7 +473,7 @@ private fun ChatComposer(
                     unfocusedPlaceholderColor = InkMuted,
                 ),
             )
-            Spacer(Modifier.width(12.dp))
+            Spacer(Modifier.width(Spacing.md))
             SendButton(
                 enabled = state.canSend,
                 onClick = { onIntent(ChatIntent.SubmitQuestion()) },

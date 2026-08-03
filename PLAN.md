@@ -303,8 +303,11 @@ Giúp client xử lý dữ liệu ổn định thay vì parse text.
 
 ## Voice
 
-* Android SpeechRecognizer
 * Android TextToSpeech
+
+> Dictation (`Android SpeechRecognizer`) đã viết xong cả hai nền tảng nhưng không có nút nào
+> gọi tới, nên **đã xoá ngày 02.08.2026** cùng quyền micro và speech recognition. Chỉ còn
+> phần đọc — câu trả lời và bản dịch được đọc lên; câu hỏi thì gõ.
 
 *(Có thể thay thế bằng Gemini Live nếu muốn trải nghiệm hội thoại tự nhiên hơn.)*
 

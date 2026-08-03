@@ -16,7 +16,6 @@ import com.duylt.trave.vietlensai.data.repository.JournalRepositoryImpl
 import com.duylt.trave.vietlensai.data.repository.NoteRepositoryImpl
 import com.duylt.trave.vietlensai.data.repository.PlaceRepositoryImpl
 import com.duylt.trave.vietlensai.data.repository.ProvinceRepositoryImpl
-import com.duylt.trave.vietlensai.data.repository.RecommendationRepositoryImpl
 import com.duylt.trave.vietlensai.data.repository.SettingsRepositoryImpl
 import com.duylt.trave.vietlensai.data.repository.TranslationRepositoryImpl
 import com.duylt.trave.vietlensai.domain.repository.CaptureMaintenance
@@ -27,7 +26,6 @@ import com.duylt.trave.vietlensai.domain.repository.JournalRepository
 import com.duylt.trave.vietlensai.domain.repository.NoteRepository
 import com.duylt.trave.vietlensai.domain.repository.PlaceRepository
 import com.duylt.trave.vietlensai.domain.repository.ProvinceRepository
-import com.duylt.trave.vietlensai.domain.repository.RecommendationRepository
 import com.duylt.trave.vietlensai.domain.repository.SettingsRepository
 import com.duylt.trave.vietlensai.domain.repository.TranslationRepository
 import kotlinx.coroutines.CoroutineDispatcher
@@ -137,16 +135,6 @@ val repositoryModule: Module = module {
         PlaceRepositoryImpl(
             overpass = get(),
             wikipedia = get(),
-            ioDispatcher = get(IoDispatcher),
-        )
-    }
-
-    single<RecommendationRepository> {
-        RecommendationRepositoryImpl(
-            recommendationDao = get(),
-            discoveryDao = get(),
-            remote = get(),
-            settingsRepository = get(),
             ioDispatcher = get(IoDispatcher),
         )
     }

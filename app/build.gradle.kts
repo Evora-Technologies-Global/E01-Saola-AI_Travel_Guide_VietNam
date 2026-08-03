@@ -152,6 +152,36 @@ android {
                 signingConfig = signingConfigs.getByName("release")
             }
         }
+        /*
+         * The APK handed round at a demo: release in every respect that the app can
+         * observe — signed with the release key, `BuildConfig.DEBUG` false, so Ktor's
+         * `Logging` plugin stays off and the same applicationId installs over the real
+         * thing — except that R8 does not run.
+         *
+         * That exception is the entire point. A profiled `:app:assembleRelease` spends
+         * 44-61s in `minifyReleaseWithR8` and under 12s in everything else combined,
+         * so shrinking is not a part of the build, it *is* the build. Producing an APK
+         * for a demo through it means waiting a minute for an optimisation nobody
+         * watching the demo can perceive.
+         *
+         * Named for what it *is* rather than what it is for: `demo` would have read as
+         * "the build with the seeded demo data" next to `tools/seed_demo.py`, which is
+         * a different thing entirely and orthogonal to this one.
+         *
+         * `release` is still what ships. Anything that only reproduces under
+         * obfuscation — a missing keep rule, a serializer resolved by name — is
+         * invisible here by construction, so a build meant for Play must go through
+         * `assembleRelease` and be smoke-tested there.
+         */
+        create("fastRelease") {
+            initWith(getByName("release"))
+            isMinifyEnabled = false
+            // AGP rejects resource shrinking without code shrinking.
+            isShrinkResources = false
+            // Distinguishes it in Android's app info. Not in the Settings footer:
+            // that reads `vietlens.versionName` from :shared, which has no build type.
+            versionNameSuffix = "-fast"
+        }
     }
 
     compileOptions {
@@ -177,6 +207,17 @@ android {
         // Lint still runs and still reports, but a newly-introduced warning must
         // never be the reason a demo build cannot be produced.
         abortOnError = false
+
+        // `abortOnError = false` only stops lint *failing* the build; `lintVital`
+        // still runs on every non-debuggable variant, and it was measured at 12.7s.
+        // Under `assembleRelease` that hid behind R8, which runs longer and in
+        // parallel — but `fastRelease` has no R8 to hide behind, so lint would become
+        // the whole build and the variant would miss its point.
+        //
+        // Nothing is lost that `abortOnError = false` had not already given up:
+        // lint could not block a release either way. It is still there on demand,
+        // as `./gradlew :app:lint`.
+        checkReleaseBuilds = false
     }
 
     testOptions {

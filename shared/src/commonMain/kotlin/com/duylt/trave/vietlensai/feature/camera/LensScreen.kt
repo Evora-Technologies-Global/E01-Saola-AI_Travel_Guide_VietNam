@@ -37,7 +37,6 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cameraswitch
 import androidx.compose.material.icons.filled.Check
@@ -53,18 +52,14 @@ import androidx.compose.material.icons.filled.TimerOff
 import androidx.compose.material.icons.filled.WbSunny
 import androidx.compose.material.icons.outlined.PhotoLibrary
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.ModalBottomSheetProperties
-import androidx.compose.material3.SheetValue
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -75,7 +70,6 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -108,7 +102,6 @@ import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.drawText
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -116,7 +109,6 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import org.koin.compose.viewmodel.koinViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.duylt.trave.vietlensai.resources.Res
@@ -184,9 +176,13 @@ import com.duylt.trave.vietlensai.core.designsystem.theme.InkBrown
 import com.duylt.trave.vietlensai.core.designsystem.theme.InkDarkest
 import com.duylt.trave.vietlensai.core.designsystem.theme.Marigold
 import com.duylt.trave.vietlensai.core.designsystem.theme.PaperCream
+import com.duylt.trave.vietlensai.core.designsystem.theme.Pill
 import com.duylt.trave.vietlensai.core.designsystem.theme.ScreenGutter
+import com.duylt.trave.vietlensai.core.designsystem.theme.Spacing
+import com.duylt.trave.vietlensai.core.designsystem.theme.StampType
 import com.duylt.trave.vietlensai.core.designsystem.theme.Vermilion
 import com.duylt.trave.vietlensai.core.designsystem.theme.screenInsetsPadding
+import com.duylt.trave.vietlensai.core.mvi.CollectEffects
 import com.duylt.trave.vietlensai.core.util.rememberCameraPermissionState
 import com.duylt.trave.vietlensai.core.util.rememberLocationPermissionState
 import com.duylt.trave.vietlensai.core.util.toUserMessage
@@ -197,10 +193,7 @@ import com.duylt.trave.vietlensai.domain.model.TranslateLanguage
 import com.duylt.trave.vietlensai.domain.util.AppError
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.ensureActive
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlin.math.PI
@@ -244,38 +237,41 @@ fun LensRoute(
     val controller = rememberCameraController()
     val scope = rememberCoroutineScope()
 
-    LaunchedEffect(viewModel) {
-        viewModel.effects.collectLatest { effect ->
-            when (effect) {
-                is LensEffect.OpenDiscovery -> onDiscoveryCaptured(effect.id)
-                is LensEffect.OpenTranslation -> onTranslationCaptured(
-                    effect.imagePath,
-                    effect.from?.code.orEmpty(),
-                    effect.to.code,
-                )
-                is LensEffect.ShowMessage -> Unit // rendered inline by ErrorBanner
-                is LensEffect.TakePhoto -> scope.launch {
-                    // Launched outside the collector: collectLatest would cancel a
-                    // capture in flight the moment the next effect arrives.
-                    var path: String? = null
-                    try {
-                        // Wrapped because takePicture throws outright if the use case
-                        // was unbound between the timer firing and this frame.
-                        path = runCatching { controller.capture(viewModel.newCapturePath()) }
-                            .getOrNull()
-                    } finally {
-                        // Reported from a finally because this scope dies with the
-                        // composition: a capture the screen outlived must still
-                        // release the shutter, without looking like a failure.
-                        val captured = path
-                        viewModel.onIntent(
-                            when {
-                                captured != null -> LensIntent.PhotoCaptured(captured)
-                                isActive -> LensIntent.CaptureFailed(null)
-                                else -> LensIntent.CaptureAborted
-                            },
-                        )
-                    }
+    CollectEffects(viewModel.effects) { effect ->
+        when (effect) {
+            is LensEffect.OpenDiscovery -> onDiscoveryCaptured(effect.id)
+            is LensEffect.OpenTranslation -> onTranslationCaptured(
+                effect.imagePath,
+                effect.from?.code.orEmpty(),
+                effect.to.code,
+            )
+            is LensEffect.ShowMessage -> Unit // rendered inline by ErrorBanner
+            is LensEffect.TakePhoto -> scope.launch {
+                // Launched outside the collector, which is now lifecycle-scoped and is
+                // cancelled at ON_STOP. A capture already in flight has to reach its
+                // `finally` whatever the screen does — that is what raises PhotoCaptured
+                // / CaptureFailed / CaptureAborted and releases the shutter, and a
+                // capture killed silently mid-write would leave `isCapturing` true with
+                // nothing left to clear it. `rememberCoroutineScope()` lives until the
+                // composable leaves composition, which is the lifetime this needs.
+                var path: String? = null
+                try {
+                    // Wrapped because takePicture throws outright if the use case
+                    // was unbound between the timer firing and this frame.
+                    path = runCatching { controller.capture(effect.outputPath) }
+                        .getOrNull()
+                } finally {
+                    // Reported from a finally because this scope dies with the
+                    // composition: a capture the screen outlived must still
+                    // release the shutter, without looking like a failure.
+                    val captured = path
+                    viewModel.onIntent(
+                        when {
+                            captured != null -> LensIntent.PhotoCaptured(captured)
+                            isActive -> LensIntent.CaptureFailed(null)
+                            else -> LensIntent.CaptureAborted
+                        },
+                    )
                 }
             }
         }
@@ -351,7 +347,7 @@ private fun LensScreen(
                 onIntent = onIntent,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = ScreenGutter, vertical = 8.dp),
+                    .padding(horizontal = ScreenGutter, vertical = Spacing.sm),
             )
 
             Box(
@@ -367,9 +363,13 @@ private fun LensScreen(
                     .weight(1f)
                     .fillMaxWidth()
                     .padding(horizontal = ScreenGutter)
-                    .clip(FRAME_SHAPE)
+                    .clip(MaterialTheme.shapes.large)
                     .background(InkBrown)
-                    .border(width = 1.dp, color = Marigold.copy(alpha = 0.22f), shape = FRAME_SHAPE),
+                    .border(
+                        width = 1.dp,
+                        color = Marigold.copy(alpha = 0.22f),
+                        shape = MaterialTheme.shapes.large,
+                    ),
             ) {
                 if (cameraPermission.isGranted) {
                     Viewfinder(
@@ -382,7 +382,7 @@ private fun LensScreen(
 
                     CaptureHintBubble(
                         mode = state.mode,
-                        modifier = Modifier.align(Alignment.TopCenter).padding(top = 14.dp),
+                        modifier = Modifier.align(Alignment.TopCenter).padding(top = Spacing.md),
                     )
                 } else {
                     CameraPermissionPrompt(
@@ -397,7 +397,7 @@ private fun LensScreen(
                 // where the eye already is. The camera's own settings stay up in the
                 // tool row, off the image entirely.
                 Column(
-                    modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 8.dp),
+                    modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = Spacing.sm),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     AnimatedVisibility(
@@ -413,7 +413,7 @@ private fun LensScreen(
                             // an arrangement gap would also be held open by the
                             // collapsed bar, and lift the dial off the frame's edge
                             // in every mode but this one.
-                            modifier = Modifier.padding(bottom = 10.dp),
+                            modifier = Modifier.padding(bottom = Spacing.sm),
                         )
                     }
 
@@ -431,7 +431,7 @@ private fun LensScreen(
                 modes = state.availableModes,
                 selected = state.mode,
                 onSelect = { onIntent(LensIntent.SelectMode(it)) },
-                modifier = Modifier.padding(top = 14.dp, bottom = 14.dp),
+                modifier = Modifier.padding(vertical = Spacing.md),
             )
 
             ShutterRow(
@@ -645,18 +645,17 @@ private fun Viewfinder(
         if (focusLocked) {
             Text(
                 text = stringResource(Res.string.camera_ae_af_locked),
-                style = MaterialTheme.typography.labelSmall,
-                fontWeight = FontWeight.Bold,
+                style = StampType.kicker,
                 color = InkBrown,
                 modifier = Modifier
                     // In the corner rather than centred: the middle of the top edge
                     // is where the framing tip lands, and two gold pills stacked on
                     // one another read as a single unreadable one.
                     .align(Alignment.TopStart)
-                    .padding(top = 14.dp, start = 14.dp)
-                    .clip(RoundedCornerShape(percent = 50))
+                    .padding(top = Spacing.md, start = Spacing.md)
+                    .clip(Pill)
                     .background(Marigold)
-                    .padding(horizontal = 10.dp, vertical = 4.dp),
+                    .padding(horizontal = Spacing.sm, vertical = Spacing.xs),
             )
         }
     }
@@ -799,14 +798,13 @@ private fun FocusReticle(
             modifier = Modifier
                 .offset { IntOffset(0, ((1f - progress) * (trackPx - trackWidthPx)).roundToInt()) }
                 .size(EV_TRACK_WIDTH)
-                .padding(2.dp),
+                .padding(Spacing.xxs),
         )
 
         if (capabilities.exposureIndex != 0) {
             Text(
                 text = capabilities.exposureEv.formatEv(),
-                style = MaterialTheme.typography.labelSmall,
-                fontWeight = FontWeight.Bold,
+                style = StampType.ordinal,
                 color = InkBrown,
                 maxLines = 1,
                 softWrap = false,
@@ -815,9 +813,9 @@ private fun FocusReticle(
                     // Allowed past the track's width, which is only as wide as the
                     // sun: "+1.0" folded into two lines otherwise.
                     .wrapContentWidth(unbounded = true)
-                    .clip(RoundedCornerShape(percent = 50))
+                    .clip(Pill)
                     .background(Marigold)
-                    .padding(horizontal = 6.dp, vertical = 2.dp),
+                    .padding(horizontal = Spacing.xs, vertical = Spacing.xxs),
             )
         }
     }
@@ -920,10 +918,9 @@ private fun ToolButton(
         if (badge != null) {
             Text(
                 text = badge,
-                style = MaterialTheme.typography.labelSmall,
-                fontWeight = FontWeight.Bold,
+                style = StampType.ordinal,
                 color = content,
-                modifier = Modifier.align(Alignment.BottomEnd).padding(end = 5.dp, bottom = 3.dp),
+                modifier = Modifier.align(Alignment.BottomEnd).padding(end = Spacing.xs, bottom = Spacing.xxs),
             )
         }
     }
@@ -970,7 +967,7 @@ private fun ModeChipRow(
         modifier = modifier.fillMaxWidth(),
         state = listState,
         contentPadding = PaddingValues(horizontal = ScreenGutter),
-        horizontalArrangement = Arrangement.spacedBy(6.dp),
+        horizontalArrangement = Arrangement.spacedBy(Spacing.xs),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         items(modes) { mode ->
@@ -979,14 +976,15 @@ private fun ModeChipRow(
                 text = stringResource(mode.labelRes()),
                 // A step under the app's label size, which is set for reading
                 // paragraphs: five chips have to share one line, and this is a row of
-                // switches rather than something anybody reads.
-                style = MaterialTheme.typography.labelLarge.copy(fontSize = 13.sp),
-                fontWeight = if (active) FontWeight.Bold else FontWeight.Medium,
+                // switches rather than something anybody reads. Selection is carried by
+                // the gold fill and the ink on it, not by a second weight — a chip that
+                // is both filled and bolder is saying the same thing twice.
+                style = MaterialTheme.typography.labelMedium,
                 color = if (active) InkBrown else PaperCream,
                 maxLines = 1,
                 softWrap = false,
                 modifier = Modifier
-                    .clip(RoundedCornerShape(percent = 50))
+                    .clip(Pill)
                     .background(if (active) Marigold else PaperCream.copy(alpha = 0.12f))
                     .clickable(
                         role = Role.RadioButton,
@@ -996,7 +994,10 @@ private fun ModeChipRow(
                     // Spoken as well as coloured: the chip row is a single choice, and
                     // TalkBack has no way to hear a gold background.
                     .semantics { this.selected = active }
-                    .padding(horizontal = 12.dp, vertical = 10.dp),
+                    // 12, not 8: this row is the primary mode selector and the type scale
+                    // already dropped a step, so the smaller pad would take the chip from
+                    // 40 dp to 32 — shrinking the target while standardising it.
+                    .padding(horizontal = Spacing.md, vertical = Spacing.md),
             )
         }
     }
@@ -1033,7 +1034,7 @@ private fun ShutterRow(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(start = ScreenGutter, end = ScreenGutter, bottom = 8.dp),
+            .padding(start = ScreenGutter, end = ScreenGutter, bottom = Spacing.sm),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.CenterStart) {
@@ -1096,9 +1097,9 @@ private fun TranslateLanguageBar(
             // twice in the same place.
             .fillMaxWidth()
             .padding(horizontal = TRANSLATE_BAR_MARGIN)
-            .clip(RoundedCornerShape(percent = 50))
+            .clip(Pill)
             .background(Color.Black.copy(alpha = 0.55f))
-            .padding(4.dp),
+            .padding(Spacing.xs),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         LanguageChip(
@@ -1117,7 +1118,7 @@ private fun TranslateLanguageBar(
 
         Box(
             modifier = Modifier
-                .padding(horizontal = 2.dp)
+                .padding(horizontal = Spacing.xxs)
                 .size(32.dp)
                 .clip(CircleShape)
                 .background(Color.White.copy(alpha = if (canSwap) 0.16f else 0.06f))
@@ -1178,9 +1179,11 @@ private fun LanguageChip(
     Box(modifier = modifier, contentAlignment = Alignment.Center) {
         Row(
             modifier = Modifier
-                .clip(RoundedCornerShape(percent = 50))
+                .clip(Pill)
                 .clickable(role = Role.Button, onClickLabel = description) { picking = true }
-                .padding(start = 10.dp, end = 2.dp, top = 6.dp, bottom = 6.dp),
+                // Vertical pad up a step rather than down: this row opens the language
+                // picker, and 4 dp either side would leave it a 28 dp target.
+                .padding(start = Spacing.sm, end = Spacing.xxs, top = Spacing.sm, bottom = Spacing.sm),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             if (selected == null) {
@@ -1194,7 +1197,7 @@ private fun LanguageChip(
             } else {
                 Text(text = selected.flag, style = MaterialTheme.typography.labelLarge)
             }
-            Spacer(Modifier.width(6.dp))
+            Spacer(Modifier.width(Spacing.xs))
             Text(
                 text = selected?.displayName ?: stringResource(Res.string.camera_translate_auto),
                 style = MaterialTheme.typography.labelLarge,
@@ -1256,13 +1259,16 @@ private fun LanguageSheet(
 
     ModalBottomSheet(onDismissRequest = onDismiss, sheetState = sheetState) {
         Row(
-            modifier = Modifier.fillMaxWidth().padding(start = ScreenGutter, end = 8.dp, bottom = 8.dp),
+            modifier = Modifier.fillMaxWidth().padding(
+                start = ScreenGutter,
+                end = Spacing.sm,
+                bottom = Spacing.sm,
+            ),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
                 text = title,
                 style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold,
                 modifier = Modifier.weight(1f),
             )
             IconButton(onClick = close) {
@@ -1276,7 +1282,7 @@ private fun LanguageSheet(
         Column(
             // Scrollable because the list outgrows a half-height sheet on a short
             // phone, and a language that cannot be reached cannot be chosen.
-            modifier = Modifier.verticalScroll(rememberScrollState()).padding(bottom = 16.dp),
+            modifier = Modifier.verticalScroll(rememberScrollState()).padding(bottom = Spacing.lg),
         ) {
             if (autoAllowed) {
                 LanguageSheetRow(
@@ -1326,17 +1332,17 @@ private fun LanguageSheetRow(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 12.dp, vertical = 2.dp)
+            .padding(horizontal = Spacing.md, vertical = Spacing.xxs)
             // Faded whole rather than per-element: the flag is a colour emoji and
             // ignores content colour, so dimming the text alone left a bright flag
             // beside a greyed-out name.
             .alpha(if (enabled) 1f else 0.38f)
-            .clip(RoundedCornerShape(14.dp))
+            .clip(MaterialTheme.shapes.medium)
             .background(
                 if (selected) MaterialTheme.colorScheme.surfaceVariant else Color.Transparent,
             )
             .clickable(enabled = enabled, role = Role.RadioButton, onClick = onClick)
-            .padding(horizontal = 12.dp, vertical = 12.dp),
+            .padding(Spacing.md),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Box(modifier = Modifier.width(32.dp), contentAlignment = Alignment.Center) {
@@ -1346,16 +1352,16 @@ private fun LanguageSheetRow(
                 Text(text = flag, style = MaterialTheme.typography.titleLarge)
             }
         }
-        Spacer(Modifier.width(14.dp))
+        Spacer(Modifier.width(Spacing.md))
         Text(
             text = name,
+            // The selected row already carries `surfaceVariant` behind it.
             style = MaterialTheme.typography.bodyLarge,
-            fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
         )
         if (gloss == null) {
             Spacer(Modifier.weight(1f))
         } else {
-            Spacer(Modifier.width(8.dp))
+            Spacer(Modifier.width(Spacing.sm))
             Text(
                 text = "($gloss)",
                 style = MaterialTheme.typography.bodyMedium,
@@ -1594,14 +1600,13 @@ private fun ZoomDial(
         // the traveller can read what the zoom is actually doing.
         Text(
             text = capabilities.zoomRatio.formatZoom(),
-            style = MaterialTheme.typography.labelMedium,
-            fontWeight = FontWeight.Bold,
+            style = StampType.ordinal,
             color = InkBrown,
             modifier = Modifier
                 .align(Alignment.TopCenter)
-                .clip(RoundedCornerShape(percent = 50))
+                .clip(Pill)
                 .background(Marigold)
-                .padding(horizontal = 10.dp, vertical = 2.dp),
+                .padding(horizontal = Spacing.sm, vertical = Spacing.xxs),
         )
     }
 }
@@ -1649,14 +1654,13 @@ private fun CaptureHintBubble(mode: LensMode, modifier: Modifier = Modifier) {
         Text(
             text = stringResource(mode.hintRes()),
             style = MaterialTheme.typography.labelLarge,
-            fontWeight = FontWeight.Medium,
             color = InkBrown,
             textAlign = TextAlign.Center,
             modifier = Modifier
                 .padding(horizontal = ScreenGutter)
-                .clip(RoundedCornerShape(percent = 50))
+                .clip(Pill)
                 .background(Marigold)
-                .padding(horizontal = 18.dp, vertical = 10.dp),
+                .padding(horizontal = Spacing.lg, vertical = Spacing.sm),
         )
     }
 }
@@ -1670,7 +1674,7 @@ private fun CaptureHintBubble(mode: LensMode, modifier: Modifier = Modifier) {
  */
 @Composable
 private fun GalleryButton(enabled: Boolean, onClick: () -> Unit, modifier: Modifier = Modifier) {
-    val shape = RoundedCornerShape(14.dp)
+    val shape = MaterialTheme.shapes.medium
     Box(
         modifier = modifier
             .size(GALLERY_SLOT_SIZE)
@@ -1762,7 +1766,7 @@ private fun ShutterButton(enabled: Boolean, counting: Boolean, onClick: () -> Un
             Box(
                 modifier = Modifier
                     .size(24.dp)
-                    .clip(RoundedCornerShape(6.dp))
+                    .clip(MaterialTheme.shapes.extraSmall)
                     .background(InkBrown),
             )
         } else {
@@ -1814,7 +1818,7 @@ private fun RecentCaptureCard(
     enabled: Boolean,
     onClick: () -> Unit,
 ) {
-    val shape = RoundedCornerShape(12.dp)
+    val shape = MaterialTheme.shapes.small
     AppAsyncImage(
         model = discovery.imagePath,
         contentDescription = discovery.title,
@@ -1864,7 +1868,6 @@ private fun CountdownOverlay(seconds: Int, modifier: Modifier = Modifier) {
                     blurRadius = 24f,
                 ),
             ),
-            fontWeight = FontWeight.Bold,
             color = Color.White,
             modifier = Modifier.scale(pulse.value),
         )
@@ -1909,13 +1912,13 @@ private fun AnalysingOverlay(stage: Int) {
                 color = Color.White,
                 modifier = Modifier.size(44.dp),
             )
-            Spacer(Modifier.height(20.dp))
+            Spacer(Modifier.height(Spacing.xl))
             Text(
                 text = stringResource(Res.string.analysing_title),
                 style = MaterialTheme.typography.titleMedium,
                 color = Color.White,
             )
-            Spacer(Modifier.height(8.dp))
+            Spacer(Modifier.height(Spacing.sm))
             Text(
                 text = stringResource(stages[stage.coerceIn(0, stages.lastIndex)]),
                 style = MaterialTheme.typography.bodyMedium,
@@ -2119,7 +2122,6 @@ private val DIAL_WIDTH = 164.dp
 private val DIAL_HEIGHT = 68.dp
 
 /** Rounded hard enough to read as a card of its own against the backdrop. */
-private val FRAME_SHAPE = RoundedCornerShape(24.dp)
 
 /**
  * The dial's geometry: a circle far below the screen, of which only the top arc shows.

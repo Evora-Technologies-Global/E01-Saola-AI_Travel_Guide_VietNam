@@ -17,7 +17,6 @@ val databaseModule: Module = module {
     single { get<VietLensDatabase>().chatDao() }
     single { get<VietLensDatabase>().noteDao() }
     single { get<VietLensDatabase>().translationDao() }
-    single { get<VietLensDatabase>().recommendationDao() }
     single { get<VietLensDatabase>().tripSummaryDao() }
 
     single { SettingsDataStore(dataStore = get()) }

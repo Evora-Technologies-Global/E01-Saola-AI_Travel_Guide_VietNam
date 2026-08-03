@@ -20,13 +20,15 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.automirrored.outlined.MenuBook
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.GridView
@@ -55,9 +57,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.PathEffect
 import com.duylt.trave.vietlensai.core.designsystem.component.AppAsyncImage
+import com.duylt.trave.vietlensai.core.designsystem.component.AppSnackbarHost
+import com.duylt.trave.vietlensai.core.designsystem.component.showError
+import com.duylt.trave.vietlensai.core.util.userMessage
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import org.koin.compose.viewmodel.koinViewModel
@@ -99,11 +104,16 @@ import com.duylt.trave.vietlensai.resources.passport_title
 import com.duylt.trave.vietlensai.resources.permission_open_settings
 import com.duylt.trave.vietlensai.core.designsystem.component.EmptyState
 import com.duylt.trave.vietlensai.core.designsystem.component.Kicker
+import com.duylt.trave.vietlensai.core.designsystem.component.PageHeader
 import com.duylt.trave.vietlensai.core.designsystem.theme.InkBrown
 import com.duylt.trave.vietlensai.core.designsystem.theme.Marigold
 import com.duylt.trave.vietlensai.core.designsystem.theme.PaperCream
+import com.duylt.trave.vietlensai.core.designsystem.theme.PageSpacing
+import com.duylt.trave.vietlensai.core.designsystem.theme.Pill
 import com.duylt.trave.vietlensai.core.designsystem.theme.ScreenGutter
+import com.duylt.trave.vietlensai.core.designsystem.theme.Spacing
 import com.duylt.trave.vietlensai.core.designsystem.theme.Vermilion
+import com.duylt.trave.vietlensai.core.mvi.CollectEffects
 import com.duylt.trave.vietlensai.core.designsystem.theme.screenInsetsPadding
 import com.duylt.trave.vietlensai.core.util.LocationPermissionState
 import com.duylt.trave.vietlensai.core.util.accentColor
@@ -145,6 +155,27 @@ fun JournalRoute(
     val state by viewModel.state.collectAsStateWithLifecycle()
     val today = Clock.System.todayIn(TimeZone.currentSystemDefault())
     val locationPermission = rememberLocationPermissionState()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+
+    // "Write story" is a model call that can fail for the same reasons the lens can — no
+    // key, no network, a throttled model — and every one of them arrives as an AppError
+    // rather than a throw. Without this the spinner on the day header simply stopped and
+    // nothing else changed, so the traveller was told nothing at all on the screen that
+    // hosts one of the app's headline features.
+    //
+    // The message is resolved from the effect through `userMessage()`, not read out of
+    // state. Reading it from state is what silently lost it: the route resolved
+    // `state.error?.toUserMessage()` during composition, and by the time the effect was
+    // handled — one main-queue turn after `sendEffect`, before the next frame — that value
+    // was still the null from before the failure.
+    CollectEffects(viewModel.effects) { effect ->
+        when (effect) {
+            is JournalEffect.ShowMessage -> scope.launch {
+                snackbarHostState.showError(effect.error.userMessage())
+            }
+        }
+    }
 
     // Stored as ISO strings rather than LocalDate so the set survives process death
     // through the default saver — an expanded story should still be open when the
@@ -174,11 +205,11 @@ fun JournalRoute(
         } else {
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(bottom = 32.dp),
+                contentPadding = PaddingValues(bottom = PageSpacing.listBottom),
             ) {
                 item(key = "header") {
                     JournalHeader(
-                        discoveryCount = state.stats.totalDiscoveries
+                        discoveryCount = state.stats.totalDiscoveries,
                     )
                 }
 
@@ -209,7 +240,7 @@ fun JournalRoute(
                         ),
                         openLabel = stringResource(Res.string.journal_stats_open_collection),
                         onClick = onOpenCollection,
-                        modifier = Modifier.padding(top = 10.dp),
+                        modifier = Modifier.padding(top = Spacing.sm),
                     )
                 }
 
@@ -229,7 +260,7 @@ fun JournalRoute(
                             icon = Icons.Outlined.FavoriteBorder,
                             title = stringResource(Res.string.journal_favorites_empty_title),
                             description = stringResource(Res.string.journal_favorites_empty_body),
-                            modifier = Modifier.padding(top = 32.dp, bottom = 24.dp),
+                            modifier = Modifier.padding(top = Spacing.xxl, bottom = Spacing.xl),
                         )
                     }
                 }
@@ -296,6 +327,12 @@ fun JournalRoute(
             }
         }
     }
+
+    // Placed last so it draws over the day list, and lifted clear of the bottom bar —
+    // the same placement ExploreRoute uses for the same reason.
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
+        AppSnackbarHost(snackbarHostState, modifier = Modifier.padding(bottom = PageSpacing.snackbarLift))
+    }
 }
 
 /**
@@ -336,36 +373,26 @@ private fun LocationPermissionPrompt(permission: LocationPermissionState) {
 
 @Composable
 private fun JournalHeader(discoveryCount: Int) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = ScreenGutter, end = ScreenGutter, bottom = 16.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Column(modifier = Modifier.weight(1f)) {
-            Kicker(
-                text = stringResource(Res.string.journal_kicker),
-                color = MaterialTheme.colorScheme.primary,
-            )
-            Spacer(Modifier.height(6.dp))
-            Text(
-                text = stringResource(Res.string.journal_heading),
-                style = MaterialTheme.typography.headlineMedium,
-            )
-        }
-        Column(horizontalAlignment = Alignment.End) {
-            Text(
-                text = discoveryCount.toString(),
-                style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.secondary,
-            )
-            Kicker(
-                text = pluralStringResource(Res.plurals.journal_discoveries_label, discoveryCount),
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-        }
-    }
+    PageHeader(
+        title = stringResource(Res.string.journal_heading),
+        kicker = stringResource(Res.string.journal_kicker),
+        trailing = {
+            Column(horizontalAlignment = Alignment.End) {
+                Text(
+                    text = discoveryCount.toString(),
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = MaterialTheme.colorScheme.secondary,
+                )
+                Kicker(
+                    text = pluralStringResource(
+                        Res.plurals.journal_discoveries_label,
+                        discoveryCount,
+                    ),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+        },
+    )
 }
 
 /**
@@ -394,7 +421,7 @@ private fun ProgressRow(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = ScreenGutter),
-        shape = RoundedCornerShape(20.dp),
+        shape = MaterialTheme.shapes.large,
         color = MaterialTheme.colorScheme.surfaceContainer,
         border = BorderStroke(
             width = 1.dp,
@@ -402,13 +429,18 @@ private fun ProgressRow(
         ),
     ) {
         Row(
-            modifier = Modifier.padding(start = 12.dp, end = 10.dp, top = 12.dp, bottom = 12.dp),
+            modifier = Modifier.padding(
+                start = Spacing.md,
+                end = Spacing.sm,
+                top = Spacing.md,
+                bottom = Spacing.md,
+            ),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Box(
                 modifier = Modifier
                     .size(44.dp)
-                    .clip(RoundedCornerShape(14.dp))
+                    .clip(MaterialTheme.shapes.medium)
                     .background(MaterialTheme.colorScheme.secondaryContainer),
                 contentAlignment = Alignment.Center,
             ) {
@@ -419,7 +451,7 @@ private fun ProgressRow(
                     modifier = Modifier.size(22.dp),
                 )
             }
-            Spacer(Modifier.width(14.dp))
+            Spacer(Modifier.width(Spacing.md))
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = title,
@@ -427,18 +459,18 @@ private fun ProgressRow(
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
-                Spacer(Modifier.height(8.dp))
+                Spacer(Modifier.height(Spacing.sm))
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     LinearProgressIndicator(
                         progress = { animated },
                         modifier = Modifier
                             .weight(1f)
                             .height(6.dp)
-                            .clip(RoundedCornerShape(3.dp)),
+                            .clip(Pill),
                         color = MaterialTheme.colorScheme.primary,
                         trackColor = MaterialTheme.colorScheme.surfaceContainerHigh,
                     )
-                    Spacer(Modifier.width(10.dp))
+                    Spacer(Modifier.width(Spacing.sm))
                     Text(
                         text = progressLabel,
                         style = MaterialTheme.typography.labelMedium,
@@ -461,14 +493,14 @@ private fun FilterRow(favoritesOnly: Boolean, onChange: (Boolean) -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = ScreenGutter, vertical = 16.dp),
-        horizontalArrangement = Arrangement.spacedBy(10.dp),
+            .padding(horizontal = ScreenGutter, vertical = Spacing.lg),
+        horizontalArrangement = Arrangement.spacedBy(Spacing.sm),
     ) {
         FilterChip(
             selected = !favoritesOnly,
             onClick = { onChange(false) },
             label = { Text(stringResource(Res.string.journal_filter_all)) },
-            shape = RoundedCornerShape(50),
+            shape = Pill,
             colors = FilterChipDefaults.filterChipColors(
                 selectedContainerColor = MaterialTheme.colorScheme.secondary,
                 selectedLabelColor = MaterialTheme.colorScheme.onSecondary,
@@ -478,7 +510,7 @@ private fun FilterRow(favoritesOnly: Boolean, onChange: (Boolean) -> Unit) {
             selected = favoritesOnly,
             onClick = { onChange(true) },
             label = { Text(stringResource(Res.string.journal_filter_favorites)) },
-            shape = RoundedCornerShape(50),
+            shape = Pill,
             colors = FilterChipDefaults.filterChipColors(
                 selectedContainerColor = MaterialTheme.colorScheme.secondary,
                 selectedLabelColor = MaterialTheme.colorScheme.onSecondary,
@@ -514,18 +546,17 @@ private fun DayHeader(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = ScreenGutter, end = ScreenGutter, top = 20.dp, bottom = 8.dp),
+            .padding(start = ScreenGutter, end = ScreenGutter, top = PageSpacing.sectionGap, bottom = Spacing.sm),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
             text = day.date.asJournalHeading(language),
             style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.Bold,
         )
         DashedRule(
             modifier = Modifier
                 .weight(1f)
-                .padding(horizontal = 12.dp),
+                .padding(horizontal = Spacing.md),
         )
         when {
             isGenerating -> CircularProgressIndicator(
@@ -535,8 +566,8 @@ private fun DayHeader(
 
             hasStory -> OutlinedButton(
                 onClick = onGenerate,
-                shape = RoundedCornerShape(50),
-                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 6.dp),
+                shape = Pill,
+                contentPadding = PaddingValues(horizontal = Spacing.lg, vertical = Spacing.xs),
                 modifier = Modifier.height(34.dp),
             ) {
                 Text(
@@ -547,8 +578,8 @@ private fun DayHeader(
 
             !isToday -> Button(
                 onClick = onGenerate,
-                shape = RoundedCornerShape(50),
-                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 6.dp),
+                shape = Pill,
+                contentPadding = PaddingValues(horizontal = Spacing.lg, vertical = Spacing.xs),
                 modifier = Modifier.height(34.dp),
             ) {
                 Text(
@@ -587,13 +618,13 @@ private fun StoryCard(summary: TripSummary, expanded: Boolean, onToggle: () -> U
         onClick = onToggle,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = ScreenGutter, vertical = 4.dp),
-        shape = RoundedCornerShape(20.dp),
+            .padding(horizontal = ScreenGutter, vertical = Spacing.xs),
+        shape = MaterialTheme.shapes.large,
         color = MaterialTheme.colorScheme.secondaryContainer,
     ) {
         Column(
             modifier = Modifier
-                .padding(18.dp)
+                .padding(Spacing.lg)
                 .animateContentSize()
         ) {
             Row(verticalAlignment = Alignment.Top) {
@@ -612,7 +643,7 @@ private fun StoryCard(summary: TripSummary, expanded: Boolean, onToggle: () -> U
                     modifier = Modifier.size(22.dp),
                 )
             }
-            Spacer(Modifier.height(8.dp))
+            Spacer(Modifier.height(Spacing.sm))
             Text(
                 text = summary.narrative,
                 style = MaterialTheme.typography.bodyMedium,
@@ -641,7 +672,7 @@ private fun StoryCard(summary: TripSummary, expanded: Boolean, onToggle: () -> U
 
 @Composable
 private fun StoryList(title: String, items: List<String>) {
-    Spacer(Modifier.height(14.dp))
+    Spacer(Modifier.height(Spacing.md))
     Text(
         text = title,
         style = MaterialTheme.typography.labelLarge,
@@ -652,7 +683,7 @@ private fun StoryList(title: String, items: List<String>) {
             text = "• $item",
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSecondaryContainer,
-            modifier = Modifier.padding(top = 4.dp),
+            modifier = Modifier.padding(top = Spacing.xs),
         )
     }
 }
@@ -669,13 +700,13 @@ private fun EndOfDayCard(findCount: Int, isGenerating: Boolean, onWrite: () -> U
     Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = ScreenGutter, vertical = 12.dp),
-        shape = RoundedCornerShape(24.dp),
+            .padding(horizontal = ScreenGutter, vertical = Spacing.md),
+        shape = MaterialTheme.shapes.large,
         color = InkBrown,
     ) {
-        Column(modifier = Modifier.padding(22.dp)) {
+        Column(modifier = Modifier.padding(Spacing.xl)) {
             Kicker(text = stringResource(Res.string.journal_end_of_day_kicker), color = Marigold)
-            Spacer(Modifier.height(12.dp))
+            Spacer(Modifier.height(Spacing.md))
             Text(
                 text = pluralStringResource(
                     Res.plurals.journal_end_of_day_title,
@@ -685,24 +716,24 @@ private fun EndOfDayCard(findCount: Int, isGenerating: Boolean, onWrite: () -> U
                 style = MaterialTheme.typography.headlineSmall,
                 color = PaperCream,
             )
-            Spacer(Modifier.height(10.dp))
+            Spacer(Modifier.height(Spacing.sm))
             Text(
                 text = stringResource(Res.string.journal_end_of_day_body),
                 style = MaterialTheme.typography.bodyMedium,
                 color = PaperCream.copy(alpha = 0.78f),
             )
-            Spacer(Modifier.height(18.dp))
+            Spacer(Modifier.height(Spacing.lg))
             Button(
                 onClick = onWrite,
                 enabled = !isGenerating,
-                shape = RoundedCornerShape(50),
+                shape = Pill,
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Vermilion,
                     contentColor = PaperCream,
                     disabledContainerColor = Vermilion.copy(alpha = 0.5f),
                     disabledContentColor = PaperCream.copy(alpha = 0.7f),
                 ),
-                contentPadding = PaddingValues(horizontal = 22.dp, vertical = 12.dp),
+                contentPadding = PaddingValues(horizontal = Spacing.xl, vertical = Spacing.md),
             ) {
                 if (isGenerating) {
                     CircularProgressIndicator(
@@ -710,7 +741,7 @@ private fun EndOfDayCard(findCount: Int, isGenerating: Boolean, onWrite: () -> U
                         strokeWidth = 2.dp,
                         color = PaperCream,
                     )
-                    Spacer(Modifier.width(10.dp))
+                    Spacer(Modifier.width(Spacing.sm))
                     Text(
                         text = stringResource(Res.string.journal_summary_generating),
                         style = MaterialTheme.typography.labelLarge,
@@ -736,20 +767,20 @@ private fun DiscoveryCard(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = ScreenGutter, vertical = 5.dp)
-            .clip(RoundedCornerShape(20.dp))
+            .padding(horizontal = ScreenGutter, vertical = Spacing.xs)
+            .clip(MaterialTheme.shapes.large)
             .background(MaterialTheme.colorScheme.surfaceContainer)
             .clickable(onClick = onClick)
-            .padding(12.dp),
+            .padding(Spacing.md),
         verticalAlignment = Alignment.Top,
     ) {
         AppAsyncImage(
             model = discovery.imagePath,
             contentDescription = discovery.title,
-            shape = RoundedCornerShape(16.dp),
+            shape = MaterialTheme.shapes.medium,
             modifier = Modifier.size(72.dp),
         )
-        Spacer(Modifier.width(14.dp))
+        Spacer(Modifier.width(Spacing.md))
         Column(modifier = Modifier.weight(1f)) {
             Row(verticalAlignment = Alignment.Top) {
                 Text(
@@ -759,16 +790,16 @@ private fun DiscoveryCard(
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.weight(1f, fill = false),
                 )
-                Spacer(Modifier.width(8.dp))
+                Spacer(Modifier.width(Spacing.sm))
                 Text(
                     text = discovery.createdAt.formatTime(language),
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 1,
-                    modifier = Modifier.padding(top = 3.dp),
+                    modifier = Modifier.padding(top = Spacing.xxs),
                 )
             }
-            Spacer(Modifier.height(4.dp))
+            Spacer(Modifier.height(Spacing.xs))
             Text(
                 text = discovery.summary,
                 style = MaterialTheme.typography.bodyMedium,
@@ -776,7 +807,7 @@ private fun DiscoveryCard(
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
             )
-            Spacer(Modifier.height(8.dp))
+            Spacer(Modifier.height(Spacing.sm))
             Kicker(
                 text = discovery.category.label(),
                 color = discovery.category.accentColor,

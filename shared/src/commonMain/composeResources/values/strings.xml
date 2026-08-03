@@ -93,11 +93,9 @@
     <string name="analysing_recognising">Recognising what is in frame</string>
     <string name="analysing_history">Gathering the history behind it</string>
     <string name="analysing_stories">Finding the stories worth telling</string>
-    <string name="analysing_translate_title">Reading the text…</string>
-    <string name="analysing_translate_detail">Transcribing, then translating line by line</string>
 
     <!-- Discovery -->
-    <string name="discovery_confidence">%1$d%% match</string>
+    <string name="discovery_confidence">%1$d% match</string>
     <string name="discovery_low_confidence">Not fully sure about this one — try another angle for a better match.</string>
     <string name="discovery_nearby">While you are here</string>
     <string name="discovery_ask">Ask about this</string>
@@ -141,7 +139,6 @@
     <string name="discovery_note_delete">Delete note</string>
     <string name="discovery_note_edited">edited</string>
     <string name="discovery_note_take_photo">Take photo</string>
-    <string name="discovery_note_camera_shutter">Take the photo</string>
     <string name="discovery_note_camera_flip">Switch camera</string>
     <!-- Asked in the app's own words before the system dialog, which never says why. -->
     <string name="discovery_note_camera_permission_title">Take a photo for this note?</string>
@@ -163,8 +160,6 @@
     <string name="chat_clear">Clear conversation</string>
 
     <!-- Translation -->
-    <string name="translate_title">Translation</string>
-    <string name="translate_detected">Detected: %1$s</string>
     <string name="translate_copy">Copy translation</string>
     <string name="translate_copied">Translation copied</string>
     <string name="translate_speak">Read aloud</string>
@@ -176,7 +171,6 @@
     <string name="translate_leave_stay">Stay</string>
 
     <!-- Journal -->
-    <string name="journal_title">Travel journal</string>
     <string name="journal_kicker">Your journey</string>
     <string name="journal_heading">Journey log</string>
     <plurals name="journal_discoveries_label">
@@ -188,19 +182,15 @@
     <string name="journal_day_write_story">Write story</string>
     <string name="journal_end_of_day_kicker">End of day</string>
     <plurals name="journal_end_of_day_title">
-        <item quantity="one">Turn today\'s one find into a story</item>
-        <item quantity="other">Turn today\'s %1$d finds into one story</item>
+        <item quantity="one">Turn today's one find into a story</item>
+        <item quantity="other">Turn today's %1$d finds into one story</item>
     </plurals>
     <string name="journal_end_of_day_body">A short piece you can keep or send home — written from what you actually saw.</string>
     <string name="journal_end_of_day_action">Write my day</string>
     <string name="journal_story_expand">Read the whole story</string>
     <string name="journal_story_collapse">Collapse</string>
-    <string name="journal_stats_discoveries">Discoveries</string>
-    <string name="journal_stats_days">Days</string>
-    <string name="journal_stats_favorites">Favourites</string>
     <string name="journal_stats_open_passport">Open your journey map</string>
     <string name="journal_stats_open_collection">Open your culture collection</string>
-    <string name="journal_summary_generate">Write this day\'s story</string>
     <string name="journal_summary_regenerate">Rewrite</string>
     <string name="journal_summary_generating">Writing your diary entry…</string>
     <string name="journal_tomorrow">Ideas for tomorrow</string>
@@ -236,7 +226,7 @@
     <string name="collection_title">Culture collection</string>
     <string name="collection_subtitle">Vietnam, one photograph at a time</string>
     <string name="collection_progress_of">of %1$d things</string>
-    <string name="collection_collected_percent">%1$d%% collected</string>
+    <string name="collection_collected_percent">%1$d% collected</string>
     <string name="collection_section_progress">%1$d/%2$d</string>
     <string name="collection_open_discovery">Open your discovery</string>
     <string name="collection_locked_hint">See how to spot it</string>
@@ -259,7 +249,6 @@
     <string name="settings_api_key_save">Save key</string>
     <string name="settings_api_key_clear">Clear</string>
     <string name="settings_api_key_saved">API key saved</string>
-    <string name="settings_model">Model</string>
     <string name="settings_model_balanced">Balanced</string>
     <string name="settings_model_balanced_summary">Good depth, fast enough to read a menu.</string>
     <string name="settings_model_quick">Quick</string>
@@ -268,7 +257,6 @@
     <string name="settings_model_scholar_summary">Deepest history and cultural detail. Slower.</string>
     <string name="settings_section_experience">Experience</string>
     <string name="settings_language">Story language</string>
-    <string name="settings_language_summary">What your guide speaks and writes</string>
     <string name="settings_speak">Read answers aloud</string>
     <string name="settings_speak_summary">Speak descriptions and chat replies</string>
     <string name="settings_section_appearance">Appearance</string>
@@ -324,11 +312,10 @@
     <string name="error_unexpected">Something went wrong. Try again.</string>
 
     <!-- Passport -->
-    <string name="nav_passport">Passport</string>
     <string name="passport_title">Travel passport</string>
     <string name="passport_subtitle">Việt Nam fills in as you walk it</string>
     <string name="passport_progress_of">of %1$d provinces</string>
-    <string name="passport_explored">%1$d%% explored</string>
+    <string name="passport_explored">%1$d% explored</string>
     <string name="passport_empty_title">Your map is still blank</string>
     <string name="passport_empty_body">Recognise something and the province it stands in lights up with your photo.</string>
     <string name="passport_empty_action">Open lens</string>

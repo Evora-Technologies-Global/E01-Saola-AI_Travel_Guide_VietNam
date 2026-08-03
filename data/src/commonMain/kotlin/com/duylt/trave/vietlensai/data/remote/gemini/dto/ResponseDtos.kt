@@ -60,24 +60,6 @@ data class TranslatedLinePayload(
 )
 
 @Serializable
-data class RecommendationsPayload(
-    val recommendations: List<RecommendationPayload> = emptyList(),
-)
-
-@Serializable
-data class RecommendationPayload(
-    val name: String = "",
-    val category: String = "OTHER",
-    val reason: String = "",
-    val addressHint: String? = null,
-    val distanceHint: String? = null,
-    val bestTime: String? = null,
-    val estimatedCost: String? = null,
-    val latitude: Double? = null,
-    val longitude: Double? = null,
-)
-
-@Serializable
 data class TripSummaryPayload(
     val headline: String = "",
     val narrative: String = "",

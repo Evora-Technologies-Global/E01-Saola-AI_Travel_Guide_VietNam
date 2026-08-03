@@ -19,6 +19,7 @@ import com.duylt.trave.vietlensai.domain.util.AppResult
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import kotlin.time.Clock
@@ -116,24 +117,42 @@ internal class DiscoveryRepositoryImpl(
         }
     }
 
+    /**
+     * The mapping runs on [ioDispatcher], not on whoever collects.
+     *
+     * A `Flow` returned by Room emits on the collector's context, and every collector here is
+     * a ViewModel — so without [flowOn] the `map` below runs on `Dispatchers.Main.immediate`.
+     * That map is not cheap: [DiscoveryEntity.toDomain] decodes five JSON columns per row, and
+     * `discoveries` has no LIMIT, so it is the traveller's whole history. Three collectors sit
+     * on this table at once (the journal, its stats, and the lens's recent strip), all held by
+     * ViewModels that outlive tab switches, so one favourite toggle re-decodes every discovery
+     * three times over — on the frame loop.
+     *
+     * Placed after the `map` and before the guard so it covers the decode; the guard itself
+     * only catches. This is what [CatalogRepositoryImpl] already does for the same reason.
+     */
     override fun observeDiscoveries(): Flow<List<Discovery>> =
         discoveryDao.observeAll()
             .map { entities -> entities.map { it.toDomain() } }
+            .flowOn(ioDispatcher)
             .fallbackOnFailure(emptyList(), what = "observe discoveries")
 
     override fun observeFavorites(): Flow<List<Discovery>> =
         discoveryDao.observeFavorites()
             .map { entities -> entities.map { it.toDomain() } }
+            .flowOn(ioDispatcher)
             .fallbackOnFailure(emptyList(), what = "observe favourites")
 
     override fun observeByProvince(provinceId: String): Flow<List<Discovery>> =
         discoveryDao.observeByProvince(provinceId)
             .map { entities -> entities.map { it.toDomain() } }
+            .flowOn(ioDispatcher)
             .fallbackOnFailure(emptyList(), what = "observe discoveries in $provinceId")
 
     override fun observeDiscovery(id: String): Flow<Discovery?> =
         discoveryDao.observeById(id)
             .map { it?.toDomain() }
+            .flowOn(ioDispatcher)
             .fallbackOnFailure(null, what = "observe discovery $id")
 
     /**

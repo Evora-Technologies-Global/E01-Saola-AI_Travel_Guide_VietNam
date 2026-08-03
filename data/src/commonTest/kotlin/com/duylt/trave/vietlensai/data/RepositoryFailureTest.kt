@@ -10,14 +10,12 @@ import com.duylt.trave.vietlensai.data.local.db.dao.ChatDao
 import com.duylt.trave.vietlensai.data.local.db.dao.DiscoveryDao
 import com.duylt.trave.vietlensai.data.local.db.dao.NoteDao
 import com.duylt.trave.vietlensai.data.local.db.dao.ProvinceStampRow
-import com.duylt.trave.vietlensai.data.local.db.dao.RecommendationDao
 import com.duylt.trave.vietlensai.data.local.db.dao.TranslationDao
 import com.duylt.trave.vietlensai.data.local.db.dao.TripSummaryDao
 import com.duylt.trave.vietlensai.data.local.db.dao.UnstampedRow
 import com.duylt.trave.vietlensai.data.local.db.entity.ChatMessageEntity
 import com.duylt.trave.vietlensai.data.local.db.entity.DiscoveryEntity
 import com.duylt.trave.vietlensai.data.local.db.entity.DiscoveryNoteEntity
-import com.duylt.trave.vietlensai.data.local.db.entity.RecommendationEntity
 import com.duylt.trave.vietlensai.data.local.db.entity.TranslationEntity
 import com.duylt.trave.vietlensai.data.local.db.entity.TripSummaryEntity
 import com.duylt.trave.vietlensai.data.remote.gemini.ApiKeyProvider
@@ -29,7 +27,6 @@ import com.duylt.trave.vietlensai.data.repository.DiscoveryRepositoryImpl
 import com.duylt.trave.vietlensai.data.repository.JournalRepositoryImpl
 import com.duylt.trave.vietlensai.data.repository.NoteRepositoryImpl
 import com.duylt.trave.vietlensai.data.repository.ProvinceRepositoryImpl
-import com.duylt.trave.vietlensai.data.repository.RecommendationRepositoryImpl
 import com.duylt.trave.vietlensai.data.repository.SettingsRepositoryImpl
 import com.duylt.trave.vietlensai.data.repository.TranslationRepositoryImpl
 import com.duylt.trave.vietlensai.domain.model.AppSettings
@@ -255,7 +252,7 @@ class RepositoryFailureTest {
     }
 
     // ---------------------------------------------------------------------------------
-    // Translations and recommendations
+    // Translations
     // ---------------------------------------------------------------------------------
 
     @Test
@@ -277,24 +274,6 @@ class RepositoryFailureTest {
         assertNull(repository.observeTranslation("translation-1").first())
         assertStorageFailure(repository.delete("translation-1"))
     }
-
-    @Test
-    fun `a failing recommendation cache is a storage failure, not a missing location`() =
-        runTest {
-            val repository = RecommendationRepositoryImpl(
-                recommendationDao = FakeRecommendationDao(failure = diskFailure),
-                discoveryDao = FakeDiscoveryDao(failure = diskFailure),
-                remote = unusedRemote(),
-                settingsRepository = workingSettings(),
-                ioDispatcher = Dispatchers.Unconfined,
-            )
-
-            assertEquals(emptyList(), repository.observeRecommendations().first())
-            // Specifically not `LocationUnavailable`, which is what an unguarded read used
-            // to produce: an empty history and an unreadable one looked identical, so a
-            // broken database was reported to the traveller as a GPS problem.
-            assertStorageFailure(repository.refresh(location = null, forceRefresh = false))
-        }
 
     // ---------------------------------------------------------------------------------
     // The passport, and the sweep that deletes files
@@ -639,19 +618,6 @@ private class FakeTranslationDao(
     override suspend fun getAllImagePaths(): List<String> = answer(rows.mapNotNull { it.imagePath })
     override suspend fun upsert(entity: TranslationEntity) = answer(Unit)
     override suspend fun deleteById(id: String) = answer(Unit)
-    override suspend fun deleteAll() = answer(Unit)
-}
-
-private class FakeRecommendationDao(
-    private val rows: List<RecommendationEntity> = emptyList(),
-    private val failure: (() -> Throwable)? = null,
-) : RecommendationDao {
-
-    private fun <T> answer(value: T): T = failure?.let { throw it() } ?: value
-
-    override fun observeAll(): Flow<List<RecommendationEntity>> = flow { emit(answer(rows)) }
-    override suspend fun lastGeneratedAt(): Long? = answer(null)
-    override suspend fun insertAll(entities: List<RecommendationEntity>) = answer(Unit)
     override suspend fun deleteAll() = answer(Unit)
 }
 

@@ -13,6 +13,7 @@ import com.duylt.trave.vietlensai.domain.util.AppError
 import com.duylt.trave.vietlensai.domain.util.AppResult
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import kotlin.time.Clock
@@ -82,11 +83,13 @@ internal class TranslationRepositoryImpl(
     override fun observeTranslations(): Flow<List<TranslationResult>> =
         translationDao.observeAll()
             .map { entities -> entities.map { it.toDomain() } }
+            .flowOn(ioDispatcher)
             .fallbackOnFailure(emptyList(), what = "observe translations")
 
     override fun observeTranslation(id: String): Flow<TranslationResult?> =
         translationDao.observeById(id)
             .map { it?.toDomain() }
+            .flowOn(ioDispatcher)
             .fallbackOnFailure(null, what = "observe translation $id")
 
     override suspend fun delete(id: String): AppResult<Unit> = withContext(ioDispatcher) {

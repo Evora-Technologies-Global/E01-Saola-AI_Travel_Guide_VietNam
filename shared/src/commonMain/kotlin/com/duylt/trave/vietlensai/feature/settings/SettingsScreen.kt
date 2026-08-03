@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Visibility
@@ -40,10 +39,10 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -51,7 +50,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import org.jetbrains.compose.resources.stringResource
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
@@ -101,15 +99,23 @@ import com.duylt.trave.vietlensai.resources.settings_theme_system
 import com.duylt.trave.vietlensai.resources.settings_title
 import com.duylt.trave.vietlensai.core.designsystem.component.AppSnackbarHost
 import com.duylt.trave.vietlensai.core.designsystem.component.Kicker
+import com.duylt.trave.vietlensai.core.designsystem.component.SectionHeader
+import com.duylt.trave.vietlensai.core.designsystem.component.PageHeader
 import com.duylt.trave.vietlensai.core.designsystem.component.SovereigntySeal
+import com.duylt.trave.vietlensai.core.designsystem.component.showError
 import com.duylt.trave.vietlensai.core.designsystem.component.showMessage
+import com.duylt.trave.vietlensai.core.designsystem.theme.PageSpacing
+import com.duylt.trave.vietlensai.core.designsystem.theme.Pill
 import com.duylt.trave.vietlensai.core.designsystem.theme.ScreenGutter
+import com.duylt.trave.vietlensai.core.designsystem.theme.Spacing
 import com.duylt.trave.vietlensai.core.designsystem.theme.Vermilion
 import com.duylt.trave.vietlensai.core.designsystem.theme.screenInsetsPadding
+import com.duylt.trave.vietlensai.core.mvi.CollectEffects
+import com.duylt.trave.vietlensai.core.util.userMessage
 import com.duylt.trave.vietlensai.domain.model.AppLanguage
 import com.duylt.trave.vietlensai.domain.model.GeminiModel
 import com.duylt.trave.vietlensai.domain.model.ThemePreference
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
 
 /**
@@ -132,6 +138,7 @@ fun SettingsRoute(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
     val savedMessage = stringResource(Res.string.settings_api_key_saved)
     val clearedMessage = stringResource(Res.string.settings_cleared)
 
@@ -141,15 +148,26 @@ fun SettingsRoute(
     var pickingLanguage by rememberSaveable { mutableStateOf(false) }
     var pickingTheme by rememberSaveable { mutableStateOf(false) }
 
-    LaunchedEffect(viewModel) {
-        viewModel.effects.collectLatest { effect ->
-            // `showMessage` dismisses whatever is on screen first. Saving a key and
-            // clearing history can land seconds apart, and a queued snackbar would
-            // tell the traveller about the first act while they are looking at the
-            // result of the second.
-            when (effect) {
-                SettingsEffect.ApiKeySaved -> snackbarHostState.showMessage(savedMessage)
-                SettingsEffect.HistoryCleared -> snackbarHostState.showMessage(clearedMessage)
+    // Shown from `scope` rather than from the collector itself, the same way the explore
+    // and journal routes do it. `showSnackbar` suspends for the length of the snackbar, so
+    // a collector that awaited it would hold the next effect behind the current notice —
+    // and saving a key and clearing history can land seconds apart, which would tell the
+    // traveller about the first act while they are looking at the result of the second.
+    // Launched separately, each message reaches `showLatest`, which dismisses what is on
+    // screen before showing, so the newer notice replaces the older one.
+    CollectEffects(viewModel.effects) { effect ->
+        when (effect) {
+            SettingsEffect.ApiKeySaved -> scope.launch {
+                snackbarHostState.showMessage(savedMessage)
+            }
+            SettingsEffect.HistoryCleared -> scope.launch {
+                snackbarHostState.showMessage(clearedMessage)
+            }
+            // From the effect's own payload, not from `state.error`: the state value has not
+            // been through a recomposition yet when this runs, so a key that failed to save
+            // used to say nothing at all the first time. See `AppError.userMessage`.
+            is SettingsEffect.ShowMessage -> scope.launch {
+                snackbarHostState.showError(effect.error.userMessage())
             }
         }
     }
@@ -170,11 +188,11 @@ fun SettingsRoute(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding),
-            contentPadding = PaddingValues(bottom = 32.dp),
+            contentPadding = PaddingValues(bottom = PageSpacing.listBottom),
         ) {
             item(key = "header") { SettingsHeader() }
 
-            item(key = "section-ai") { SectionLabel(stringResource(Res.string.settings_section_ai)) }
+            item(key = "section-ai") { SectionHeader(stringResource(Res.string.settings_section_ai)) }
             item(key = "api-key") { ApiKeyCard(state = state, onIntent = viewModel::onIntent) }
             item(key = "model") {
                 ModelPicker(
@@ -184,7 +202,7 @@ fun SettingsRoute(
             }
 
             item(key = "section-experience") {
-                SectionLabel(stringResource(Res.string.settings_section_experience))
+                SectionHeader(stringResource(Res.string.settings_section_experience))
             }
             item(key = "experience") {
                 SettingsCard {
@@ -211,7 +229,7 @@ fun SettingsRoute(
             }
 
             item(key = "section-appearance") {
-                SectionLabel(stringResource(Res.string.settings_section_appearance))
+                SectionHeader(stringResource(Res.string.settings_section_appearance))
             }
             item(key = "appearance") {
                 SettingsCard {
@@ -228,7 +246,7 @@ fun SettingsRoute(
                 }
             }
 
-            item(key = "section-data") { SectionLabel(stringResource(Res.string.settings_section_data)) }
+            item(key = "section-data") { SectionHeader(stringResource(Res.string.settings_section_data)) }
             item(key = "data") {
                 SettingsCard {
                     DestructiveRow(
@@ -240,7 +258,7 @@ fun SettingsRoute(
             }
 
             item(key = "section-about") {
-                SectionLabel(stringResource(Res.string.settings_section_about))
+                SectionHeader(stringResource(Res.string.settings_section_about))
             }
             item(key = "sovereignty") {
                 // The one row here rather than in "Experience": it is not a setting.
@@ -256,7 +274,7 @@ fun SettingsRoute(
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = ScreenGutter + 4.dp, vertical = 20.dp),
+                        .padding(horizontal = ScreenGutter, vertical = Spacing.xl),
                 )
             }
         }
@@ -314,21 +332,10 @@ fun SettingsRoute(
 
 @Composable
 private fun SettingsHeader() {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = ScreenGutter, end = ScreenGutter, bottom = 4.dp),
-    ) {
-        Kicker(
-            text = stringResource(Res.string.settings_kicker),
-            color = MaterialTheme.colorScheme.primary,
-        )
-        Spacer(Modifier.height(6.dp))
-        Text(
-            text = stringResource(Res.string.settings_title),
-            style = MaterialTheme.typography.headlineLarge,
-        )
-    }
+    PageHeader(
+        title = stringResource(Res.string.settings_title),
+        kicker = stringResource(Res.string.settings_kicker),
+    )
 }
 
 /**
@@ -345,7 +352,7 @@ private fun SettingsHeader() {
 private fun ApiKeyCard(state: SettingsState, onIntent: (SettingsIntent) -> Unit) {
     var visible by remember { mutableStateOf(false) }
 
-    SettingsCard(contentPadding = PaddingValues(18.dp)) {
+    SettingsCard(contentPadding = PaddingValues(Spacing.lg)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
                 text = stringResource(Res.string.settings_api_key),
@@ -354,7 +361,7 @@ private fun ApiKeyCard(state: SettingsState, onIntent: (SettingsIntent) -> Unit)
             )
             StatusPill(active = state.hasUsableKey)
         }
-        Spacer(Modifier.height(4.dp))
+        Spacer(Modifier.height(Spacing.xs))
         Text(
             text = stringResource(
                 when {
@@ -367,7 +374,7 @@ private fun ApiKeyCard(state: SettingsState, onIntent: (SettingsIntent) -> Unit)
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
 
-        Spacer(Modifier.height(14.dp))
+        Spacer(Modifier.height(Spacing.md))
         OutlinedTextField(
             value = state.apiKeyDraft,
             onValueChange = { onIntent(SettingsIntent.ApiKeyDraftChanged(it)) },
@@ -400,7 +407,7 @@ private fun ApiKeyCard(state: SettingsState, onIntent: (SettingsIntent) -> Unit)
                     )
                 }
             },
-            shape = RoundedCornerShape(14.dp),
+            shape = MaterialTheme.shapes.medium,
             colors = OutlinedTextFieldDefaults.colors(
                 focusedContainerColor = MaterialTheme.colorScheme.surface,
                 unfocusedContainerColor = MaterialTheme.colorScheme.surface,
@@ -411,8 +418,8 @@ private fun ApiKeyCard(state: SettingsState, onIntent: (SettingsIntent) -> Unit)
 
         val canSave = state.apiKeyDraft.isNotBlank()
         if (canSave || state.settings.hasApiKey) {
-            Spacer(Modifier.height(12.dp))
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Spacer(Modifier.height(Spacing.md))
+            Row(horizontalArrangement = Arrangement.spacedBy(Spacing.sm)) {
                 if (canSave) {
                     Button(onClick = { onIntent(SettingsIntent.SaveApiKey) }) {
                         Text(stringResource(Res.string.settings_api_key_save))
@@ -437,11 +444,11 @@ private fun StatusPill(active: Boolean) {
         MaterialTheme.colorScheme.error
     }
     Surface(
-        shape = RoundedCornerShape(50),
+        shape = Pill,
         color = accent.copy(alpha = PILL_BACKGROUND_ALPHA),
     ) {
         Row(
-            modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
+            modifier = Modifier.padding(horizontal = Spacing.sm, vertical = Spacing.xs),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Box(
@@ -450,7 +457,7 @@ private fun StatusPill(active: Boolean) {
                     .clip(CircleShape)
                     .background(accent)
             )
-            Spacer(Modifier.width(6.dp))
+            Spacer(Modifier.width(Spacing.xs))
             Kicker(
                 text = stringResource(
                     if (active) Res.string.settings_api_key_active else Res.string.settings_api_key_inactive,
@@ -473,8 +480,8 @@ private fun ModelPicker(selected: GeminiModel, onIntent: (SettingsIntent) -> Uni
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = ScreenGutter, vertical = 4.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+            .padding(horizontal = ScreenGutter, vertical = Spacing.xs),
+        verticalArrangement = Arrangement.spacedBy(Spacing.sm),
     ) {
         GeminiModel.entries.forEach { model ->
             ModelOption(
@@ -496,7 +503,7 @@ private fun ModelOption(
 ) {
     Surface(
         onClick = onClick,
-        shape = RoundedCornerShape(16.dp),
+        shape = MaterialTheme.shapes.medium,
         color = if (selected) {
             MaterialTheme.colorScheme.primaryContainer.copy(alpha = SELECTED_CONTAINER_ALPHA)
         } else {
@@ -512,7 +519,7 @@ private fun ModelOption(
         modifier = Modifier.fillMaxWidth(),
     ) {
         Row(
-            modifier = Modifier.padding(horizontal = 14.dp, vertical = 14.dp),
+            modifier = Modifier.padding(Spacing.md),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             RadioButton(
@@ -525,7 +532,7 @@ private fun ModelOption(
                     unselectedColor = MaterialTheme.colorScheme.outline,
                 ),
             )
-            Spacer(Modifier.width(12.dp))
+            Spacer(Modifier.width(Spacing.md))
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = label,
@@ -536,7 +543,7 @@ private fun ModelOption(
                         MaterialTheme.colorScheme.onSurface
                     },
                 )
-                Spacer(Modifier.height(2.dp))
+                Spacer(Modifier.height(Spacing.xxs))
                 Text(
                     text = summary,
                     style = MaterialTheme.typography.bodySmall,
@@ -552,7 +559,7 @@ private fun ModelOption(
 private fun SovereigntyCard(onClick: () -> Unit) {
     Surface(
         onClick = onClick,
-        shape = RoundedCornerShape(20.dp),
+        shape = MaterialTheme.shapes.large,
         color = MaterialTheme.colorScheme.surfaceContainer,
         // Outlined in the fixed vermilion rather than filled with it: filled is what
         // the banner on the explore tab does, and this row sits under a heading that
@@ -563,7 +570,7 @@ private fun SovereigntyCard(onClick: () -> Unit) {
             .padding(horizontal = ScreenGutter),
     ) {
         Row(
-            modifier = Modifier.padding(horizontal = 14.dp, vertical = 14.dp),
+            modifier = Modifier.padding(Spacing.md),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Box(
@@ -575,21 +582,20 @@ private fun SovereigntyCard(onClick: () -> Unit) {
             ) {
                 SovereigntySeal(size = 40.dp)
             }
-            Spacer(Modifier.width(14.dp))
+            Spacer(Modifier.width(Spacing.md))
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = stringResource(Res.string.settings_sovereignty),
                     style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
                 )
-                Spacer(Modifier.height(2.dp))
+                Spacer(Modifier.height(Spacing.xxs))
                 Text(
                     text = stringResource(Res.string.settings_sovereignty_summary),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
-            Spacer(Modifier.width(10.dp))
+            Spacer(Modifier.width(Spacing.sm))
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
                 contentDescription = null,
@@ -613,7 +619,7 @@ private fun SettingsCard(
     content: @Composable () -> Unit,
 ) {
     Surface(
-        shape = RoundedCornerShape(20.dp),
+        shape = MaterialTheme.shapes.large,
         color = MaterialTheme.colorScheme.surfaceContainer,
         modifier = Modifier
             .fillMaxWidth()
@@ -630,7 +636,7 @@ private fun ValueRow(title: String, value: String, onClick: () -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .clickable(onClick = onClick)
-            .padding(horizontal = 16.dp, vertical = 16.dp),
+            .padding(Spacing.lg),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
@@ -643,7 +649,7 @@ private fun ValueRow(title: String, value: String, onClick: () -> Unit) {
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
-        Spacer(Modifier.width(4.dp))
+        Spacer(Modifier.width(Spacing.xs))
         Icon(
             imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
             contentDescription = null,
@@ -664,7 +670,7 @@ private fun SwitchRow(
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onChange(!checked) }
-            .padding(horizontal = 16.dp, vertical = 12.dp),
+            .padding(horizontal = Spacing.lg, vertical = Spacing.md),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Column(modifier = Modifier.weight(1f)) {
@@ -675,7 +681,7 @@ private fun SwitchRow(
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
-        Spacer(Modifier.width(12.dp))
+        Spacer(Modifier.width(Spacing.md))
         Switch(checked = checked, onCheckedChange = onChange)
     }
 }
@@ -686,7 +692,7 @@ private fun DestructiveRow(title: String, summary: String, onClick: () -> Unit) 
         modifier = Modifier
             .fillMaxWidth()
             .clickable(onClick = onClick)
-            .padding(horizontal = 16.dp, vertical = 14.dp),
+            .padding(horizontal = Spacing.lg, vertical = Spacing.md),
     ) {
         Text(
             text = title,
@@ -704,24 +710,8 @@ private fun DestructiveRow(title: String, summary: String, onClick: () -> Unit) 
 @Composable
 private fun RowDivider() {
     HorizontalDivider(
-        modifier = Modifier.padding(horizontal = 16.dp),
+        modifier = Modifier.padding(horizontal = Spacing.lg),
         color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = DIVIDER_ALPHA),
-    )
-}
-
-/**
- * The section labels, in the same stamped mono the rest of the app uses for kickers —
- * muted rather than red, because there are five of them and a page of red headings
- * would leave nothing for the model choice to stand out against.
- */
-@Composable
-private fun SectionLabel(text: String) {
-    Kicker(
-        text = text,
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = ScreenGutter + 4.dp, top = 24.dp, bottom = 10.dp),
     )
 }
 
@@ -745,11 +735,11 @@ private fun <T> ChoiceDialog(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable { onSelect(option) }
-                            .padding(vertical = 12.dp),
+                            .padding(vertical = Spacing.md),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         RadioButton(selected = option == selected, onClick = null)
-                        Spacer(Modifier.width(12.dp))
+                        Spacer(Modifier.width(Spacing.md))
                         Text(text = label(option), style = MaterialTheme.typography.bodyLarge)
                     }
                 }

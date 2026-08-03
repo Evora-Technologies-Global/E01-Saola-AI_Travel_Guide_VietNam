@@ -16,9 +16,11 @@ class ObserveChatUseCase(
 /**
  * Asks a follow-up question about a discovery.
  *
- * Rejects blank input here rather than in the ViewModel so every entry point —
- * typed text, a suggested-question chip, or a voice transcript that came back
- * empty — is guarded by the same rule.
+ * Rejects blank input here rather than in the ViewModel so both entry points — typed
+ * text and a suggested-question chip — are guarded by the same rule, and a third
+ * cannot arrive without it. There used to be a third: a voice transcript that came
+ * back empty, which is what put the guard down here in the first place. Dictation was
+ * deleted on 02.08.2026, but the reason it belongs at this level outlived it.
  */
 class AskFollowUpUseCase(
     private val repository: ChatRepository,

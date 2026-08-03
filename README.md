@@ -34,7 +34,7 @@ AI Travel Companion combines:
 
 - Computer Vision
 - Google Gemini
-- Voice Conversation
+- Voice narration (answers only — see below)
 - Context Awareness
 
 into one seamless experience.
@@ -134,6 +134,19 @@ Supports international visitors.
 
 ## 🎙 Voice Conversation
 
+> **Half built.** The answers are spoken, the questions are typed.
+>
+> Narration reads guide replies aloud in the app's language, and translations in whichever
+> of the eight target languages was picked. The Settings switch auto-speaks chat replies
+> only — the Listen buttons on a translation and on a discovery are manual taps it does not
+> reach.
+>
+> Dictation was written against Android's `SpeechRecognizer` and iOS's Speech framework and
+> finished on both, but no button was ever added to reach it, so nothing could call it. It
+> was deleted on 02.08.2026 along with the microphone and speech-recognition permissions it
+> had the app *declare* — declared but never requested, since the code that would have asked
+> was itself unreachable.
+
 Users can ask naturally:
 
 > Why was this building constructed?
@@ -147,6 +160,13 @@ The AI remembers previous context without requiring users to repeat information.
 ---
 
 ## 📍 Smart Recommendation
+
+> **Not built — replaced.** This was the original pitch: ask the model what to see next
+> from your location and trip history. It shipped, and every address, price and distance
+> in it turned out to be invented, so it was removed rather than patched. What answers the
+> same question now is [Explore](#-explore), which asks OpenStreetMap and Wikipedia — two
+> sources that can be checked — and the [culture collection](#-culture-collection), which
+> tracks what you have found. The code was deleted on 02.08.2026.
 
 Based on:
 
@@ -233,7 +253,7 @@ Recommend nearby attractions
 | Networking | Ktor Client (OkHttp engine) + kotlinx.serialization |
 | AI | Google Gemini 3 via the Google AI Studio REST API |
 | Camera | CameraX (Preview + ImageCapture) |
-| Voice | Android `SpeechRecognizer` + `TextToSpeech` |
+| Narration | Android `TextToSpeech` / iOS `AVSpeechSynthesizer` |
 | Location | Play Services fused location |
 | Logging | Timber |
 | Testing | JUnit4, MockK, Turbine, Ktor MockEngine, Hilt instrumented tests |
@@ -483,9 +503,11 @@ back which locale it resolved, the string table answers for itself through a
   and the Mekong delta is under-represented against the north.
 - **`aliases` is a hand-maintained list.** A dish Gemini names in a way nobody
   anticipated stays locked with no signal that anything went wrong.
-- **The old recommendation stack is still in the tree.** `RecommendationRepository`,
-  its DAO, entity, prompt and schema now have no caller. Left in place deliberately —
-  this project has no version control, so deleting it would be unrecoverable.
+- **The favourites and translation-history reads are held open by tests alone.**
+  `DiscoveryRepository.observeFavorites` and `TranslationRepository.observeTranslations`
+  / `observeTranslation` / `delete` lost their last screen when the recommendation
+  clean-out removed the use cases in front of them. The queries still work and are still
+  tested; nothing calls them.
 
 ---
 
@@ -795,6 +817,40 @@ produces an *unsigned* release APK, rather than failing with a confusing
 APKs are date-stamped so the file handed round during a demo says which build it
 is. Debug carries a `-dev` version suffix, which shows up on the Settings screen.
 
+#### `fastRelease`: the release build without the minute of waiting
+
+```bash
+./gradlew :app:assembleFastRelease   # -> app/build/outputs/apk/fastRelease/…-fastRelease.apk
+./gradlew :app:installFastRelease
+```
+
+`fastRelease` is `release` with R8 turned off, and it exists because of where the
+time goes. Profiling `assembleRelease` on a warm tree: `minifyReleaseWithR8`
+takes 45–61s and every one of the other 129 tasks put together takes under 12s.
+Shrinking is not part of that build, it *is* that build. `assembleFastRelease` on
+the same tree finishes in ~12s.
+
+Everything the running app can observe is unchanged: same `applicationId`, same
+release keystore, `BuildConfig.DEBUG` still false — so Ktor's `Logging` plugin
+stays off — and it installs straight over a release APK. Only the version name
+differs, `1.0.0-fast`, visible in Android's app info.
+
+What it cannot tell you is anything that only appears under obfuscation: a
+missing keep rule, a serializer resolved by name, a class R8 renamed out from
+under reflection. **Whatever ships to Play goes through `assembleRelease` and
+gets smoke-tested there.** `fastRelease` is for the phone being passed around a
+table.
+
+The name says what the variant *is*, not what it is for: `demo` would have read
+as "the build carrying the seeded demo data" next to `tools/seed_demo.py`, which
+is an unrelated thing.
+
+Lint is no longer part of either: `lintVital` ran on every non-debuggable
+variant and was measured at 12.7s, which `assembleRelease` hid behind the longer
+R8 task but `assembleFastRelease` could not. Since `abortOnError = false` already
+meant lint could never fail a build, nothing was given up by taking it off the
+path — run it deliberately with `./gradlew :app:lint`.
+
 ### A note on AGP 9 and minification
 
 The project template generates `optimization { enable = false }` in the release
@@ -866,7 +922,7 @@ The application makes cultural exploration more engaging, interactive, and acces
 | Landmark / food / artifact recognition with structured output | ✅ |
 | Rich result screen: sections, fun facts, tags, nearby, confidence | ✅ |
 | Contextual chat grounded on the discovery, history persisted | ✅ |
-| Voice input (SpeechRecognizer) + narration (TextToSpeech) | ✅ |
+| Narration of answers and translations (TextToSpeech) | ✅ |
 | OCR + bilingual translation of menus and signs | ✅ |
 | Travel journal grouped by day + AI day summary | ✅ |
 | Travel passport: 34-province map that fills with your own photos | ✅ |

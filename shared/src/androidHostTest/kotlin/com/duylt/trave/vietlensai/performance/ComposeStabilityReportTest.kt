@@ -59,12 +59,22 @@ class ComposeStabilityReportTest {
      *  - `map` — the sovereignty outlines, `List<DoubleArray>`. Arrays are mutable, so
      *    unstable is the *correct* answer; the value is parsed from an asset once and
      *    remembered, never edited.
+     *  - `effects` / `onEffect` on [com.duylt.trave.vietlensai.core.mvi.CollectEffects] —
+     *    `Flow` is an interface Compose cannot see inside, and a suspend lambda is never
+     *    stable. Neither is a remembered singleton in the usual sense, and this entry rests
+     *    on a different argument: the whole body of that composable is one `LaunchedEffect`
+     *    keyed on `effects` and the lifecycle owner. `effects` is created once by
+     *    `MviViewModel`, so re-executing the body restarts nothing — it re-reads two keys
+     *    that did not change. The handler is deliberately *not* a key; it is held through
+     *    `rememberUpdatedState` precisely so a new lambda each recomposition cannot tear the
+     *    collector down and rebuild it.
      *
      * Adding to this list is a deliberate act. A state class turning up here means a screen
      * has stopped skipping, and the fix is `compose-stability.conf`, not this allowlist.
      */
     private val allowedUnstableParams: Map<String, Set<String>> = mapOf(
         "AppAsyncImage" to setOf("model"),
+        "CollectEffects" to setOf("effects", "onEffect"),
         "CameraPreview" to setOf("controller"),
         "LensRoute" to setOf("viewModel"),
         "LensScreen" to setOf("controller"),
@@ -92,6 +102,12 @@ class ComposeStabilityReportTest {
      * the single point at which that screen either skips or does not. Checking them by name
      * rather than relying on the aggregate count means the failure message says *which*
      * screen regressed.
+     *
+     * `SovereigntyState` is the one screen state deliberately absent. It holds the parsed
+     * `RegionMap`, whose outlines are `List<DoubleArray>` — arrays are mutable, so unstable is
+     * the correct answer and no entry in `compose-stability.conf` could honestly say otherwise.
+     * It costs nothing: the state is read inside `SovereigntyRoute` and never passed to a
+     * composable as a whole, and it changes exactly once, when the asset finishes parsing.
      */
     private val stateClassesThatMustBeStable = listOf(
         "feature.camera.LensState",
@@ -284,10 +300,24 @@ class ComposeStabilityReportTest {
 
     private companion object {
         /**
-         * What is left after `compose-stability.conf`: ten ViewModels, the two platform
-         * voice managers, the Android camera device, the camera controller, the shutter
+         * What is left after `compose-stability.conf`: the ViewModels, the platform
+         * narration manager, the Android camera device, the camera controller, the shutter
          * bus, the MVI base class, the two sovereignty geometry holders and a generated
          * serializer. Every one of them is genuinely mutable or genuinely an array.
+         *
+         * Lowered from 20 to 19 when the voice-input branch was deleted on 02.08.2026 and
+         * `AndroidSpeechRecognizerManager` went with it. The ceiling is the count as it
+         * stands, not a target to grow into — leaving it at 20 would have left one free slot
+         * for the next unstable class to arrive in unnoticed, which is the whole failure
+         * this gate exists to catch.
+         *
+         * Raised back to 20 on 03.08.2026 by the MVI refactor: `SovereigntyViewModel` became
+         * an `MviViewModel` and so gained a `SovereigntyState`, which holds the `RegionMap`
+         * that was already unstable and is unstable for the same reason — see the note on
+         * [stateClassesThatMustBeStable]. It is a state class arriving in this count, which is
+         * normally exactly the regression the gate exists to catch; it is accepted here only
+         * because this state is never passed to a composable and changes once in the screen's
+         * life. Nothing else may use that as a precedent.
          */
         const val UNSTABLE_CLASS_CEILING = 20
 

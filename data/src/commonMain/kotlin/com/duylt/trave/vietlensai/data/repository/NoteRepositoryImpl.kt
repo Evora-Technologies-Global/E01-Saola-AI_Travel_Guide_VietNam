@@ -10,6 +10,7 @@ import com.duylt.trave.vietlensai.domain.repository.NoteRepository
 import com.duylt.trave.vietlensai.domain.util.AppResult
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import kotlin.time.Clock
@@ -31,6 +32,7 @@ internal class NoteRepositoryImpl(
     override fun observeNote(discoveryId: String): Flow<DiscoveryNote?> =
         noteDao.observeByDiscovery(discoveryId)
             .map { it?.toDomain() }
+            .flowOn(ioDispatcher)
             .fallbackOnFailure(null, what = "observe the note for $discoveryId")
 
     override suspend fun save(

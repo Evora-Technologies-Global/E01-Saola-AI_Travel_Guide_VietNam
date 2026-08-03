@@ -29,7 +29,7 @@ plugins {
  *
  * `:app` is a thin Android host that sets a theme and calls into here, and `iosApp` is
  * an Xcode project that links the framework this module produces. Anything that genuinely
- * differs per platform (the camera, the voice engines, the permission prompts) is an
+ * differs per platform (the camera, the narration engine, the permission prompts) is an
  * `expect` declaration with an actual in androidMain and iosMain.
  */
 /*
@@ -257,6 +257,13 @@ tasks.withType<Test>().configureEach {
     systemProperty(
         "vietlens.composeReportsDir",
         layout.buildDirectory.dir("compose-reports").get().asFile.absolutePath,
+    )
+    // `DesignTokenTest` reads the shared sources as text rather than as compiled classes:
+    // a hardcoded radius and a `Spacing.lg` compile to the same bytecode, so the only
+    // place the difference still exists is the file.
+    systemProperty(
+        "vietlens.commonMainDir",
+        layout.projectDirectory.dir("src/commonMain/kotlin").asFile.absolutePath,
     )
 }
 
