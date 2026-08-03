@@ -10,6 +10,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,7 +18,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -47,8 +47,8 @@ import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
@@ -67,19 +67,35 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.clipRect
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.ui.input.pointer.pointerInput
-import com.duylt.trave.vietlensai.core.designsystem.component.AppAsyncImage
-import org.jetbrains.compose.resources.pluralStringResource
-import org.jetbrains.compose.resources.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import org.koin.compose.viewmodel.koinViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.duylt.trave.vietlensai.core.designsystem.component.AccentChip
+import com.duylt.trave.vietlensai.core.designsystem.component.AppAsyncImage
+import com.duylt.trave.vietlensai.core.designsystem.component.BackChip
+import com.duylt.trave.vietlensai.core.designsystem.component.EmptyState
+import com.duylt.trave.vietlensai.core.designsystem.component.FillGauge
+import com.duylt.trave.vietlensai.core.designsystem.component.Kicker
+import com.duylt.trave.vietlensai.core.designsystem.component.SovereigntyBanner
+import com.duylt.trave.vietlensai.core.designsystem.theme.FlagRed
+import com.duylt.trave.vietlensai.core.designsystem.theme.FlagYellow
+import com.duylt.trave.vietlensai.core.designsystem.theme.Marigold
+import com.duylt.trave.vietlensai.core.designsystem.theme.PaperCream
+import com.duylt.trave.vietlensai.core.designsystem.theme.ScreenGutter
+import com.duylt.trave.vietlensai.core.designsystem.theme.Vermilion
+import com.duylt.trave.vietlensai.core.designsystem.theme.screenInsetsPadding
+import com.duylt.trave.vietlensai.core.util.asJournalHeading
+import com.duylt.trave.vietlensai.core.util.formatDate
+import com.duylt.trave.vietlensai.core.util.stampLabel
+import com.duylt.trave.vietlensai.domain.model.AppLanguage
+import com.duylt.trave.vietlensai.domain.model.Discovery
+import com.duylt.trave.vietlensai.domain.model.PassportStamp
+import com.duylt.trave.vietlensai.domain.model.TravelPassport
 import com.duylt.trave.vietlensai.resources.Res
 import com.duylt.trave.vietlensai.resources.passport_administers
 import com.duylt.trave.vietlensai.resources.passport_discovery_count
@@ -105,31 +121,14 @@ import com.duylt.trave.vietlensai.resources.passport_subtitle
 import com.duylt.trave.vietlensai.resources.passport_title
 import com.duylt.trave.vietlensai.resources.passport_unavailable_body
 import com.duylt.trave.vietlensai.resources.passport_unavailable_title
-import com.duylt.trave.vietlensai.core.designsystem.component.AccentChip
-import com.duylt.trave.vietlensai.core.designsystem.component.BackChip
-import com.duylt.trave.vietlensai.core.designsystem.component.EmptyState
-import com.duylt.trave.vietlensai.core.designsystem.component.FillGauge
-import com.duylt.trave.vietlensai.core.designsystem.component.Kicker
-import com.duylt.trave.vietlensai.core.designsystem.component.SovereigntyBanner
-import com.duylt.trave.vietlensai.core.designsystem.theme.FlagRed
-import com.duylt.trave.vietlensai.core.designsystem.theme.FlagYellow
-import com.duylt.trave.vietlensai.core.designsystem.theme.Marigold
-import com.duylt.trave.vietlensai.core.designsystem.theme.PaperCream
-import com.duylt.trave.vietlensai.core.designsystem.theme.ScreenGutter
-import com.duylt.trave.vietlensai.core.designsystem.theme.Vermilion
-import com.duylt.trave.vietlensai.core.designsystem.theme.screenInsetsPadding
-import com.duylt.trave.vietlensai.core.util.asJournalHeading
-import com.duylt.trave.vietlensai.core.util.formatDate
-import com.duylt.trave.vietlensai.core.util.stampLabel
-import com.duylt.trave.vietlensai.domain.model.AppLanguage
-import com.duylt.trave.vietlensai.domain.model.Discovery
-import com.duylt.trave.vietlensai.domain.model.PassportStamp
-import com.duylt.trave.vietlensai.domain.model.TravelPassport
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import org.jetbrains.compose.resources.pluralStringResource
+import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.viewmodel.koinViewModel
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
@@ -435,7 +434,9 @@ private fun PassportProgress(passport: TravelPassport) {
     )
     val percent = (passport.progress * 100).toInt()
 
-    Column(modifier = Modifier.fillMaxWidth().padding(horizontal = ScreenGutter, vertical = 14.dp)) {
+    Column(
+        modifier = Modifier.fillMaxWidth().padding(horizontal = ScreenGutter, vertical = 14.dp)
+    ) {
         Row(verticalAlignment = Alignment.Bottom) {
             Text(
                 text = passport.unlockedCount.toString(),
@@ -537,7 +538,10 @@ private fun EmptyHint(noLocation: Boolean, onOpenLens: () -> Unit) {
         }
         if (!noLocation) {
             Spacer(Modifier.width(14.dp))
-            LensButton(onClick = onOpenLens, label = stringResource(Res.string.passport_empty_action))
+            LensButton(
+                onClick = onOpenLens,
+                label = stringResource(Res.string.passport_empty_action)
+            )
         }
     }
 }
@@ -703,7 +707,14 @@ private fun ProvinceHead(
                     // The rank is only ever missing for a stamp whose discoveries all
                     // predate the passport and were backfilled without a timestamp.
                     unlockOrder
-                        ?.let { "$tally · ${stringResource(Res.string.passport_sheet_unlock_order, it)}" }
+                        ?.let {
+                            "$tally · ${
+                                stringResource(
+                                    Res.string.passport_sheet_unlock_order,
+                                    it
+                                )
+                            }"
+                        }
                         ?: tally
                 } else {
                     stringResource(Res.string.passport_sheet_no_stamp)
@@ -743,7 +754,10 @@ private fun ProvinceStamp(stamp: PassportStamp, accent: Color) {
                 val inset = StampInnerInset.toPx()
                 val radius = CornerRadius(corner, corner)
                 if (stamp.isUnlocked) {
-                    drawRoundRect(color = accent.copy(alpha = STAMP_FILL_ALPHA), cornerRadius = radius)
+                    drawRoundRect(
+                        color = accent.copy(alpha = STAMP_FILL_ALPHA),
+                        cornerRadius = radius
+                    )
                 }
                 drawRoundRect(
                     color = accent,
