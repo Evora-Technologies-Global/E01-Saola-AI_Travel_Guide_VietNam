@@ -772,6 +772,59 @@ Other performance rules that follow from MVI:
 - Split large states only if a genuinely independent region recomposes on unrelated
   changes. Prefer one state class; reach for `derivedStateOf` in the composable first.
 
+### `skippable` is a promise the route can break
+
+Every composable in this project is marked `skippable`, and most of them still recompose
+on every emission. The mark says the compiler *may* skip the call; it skips only when
+every argument is `equals` its predecessor — and `onIntent = viewModel::onIntent`, written
+at the call site, is not.
+
+A bound callable reference captures its receiver, and **every ViewModel is `unstable`** —
+the compose report says so, because a `ViewModel` is a class with mutable fields. The
+compiler will not memoise a lambda over an unstable capture, so the expression allocates a
+new `Function1` on every recomposition of the route, every child taking it is unequal to
+its predecessor, and the skip never happens. It cascades: the derived
+`{ id -> onIntent(SelectPlace(id)) }` in the child cannot be memoised either, so *its*
+children are denied their skip too.
+
+```kotlin
+// XRoute — hold it steady when the subtree below is expensive to re-run
+val onIntent = remember(viewModel) { viewModel::onIntent }
+```
+
+Cheap subtrees do not need this and most screens here do not do it. Reach for it when the
+tree below contains something that costs more than a layout pass — a map, a camera
+preview, a `Canvas` that projects geometry. On `ExploreScreen` re-running `PlaceMap`
+means crossing into the Maps SDK once per marker on Android and re-running the whole
+`UIKitView` update on iOS, and it was doing that for emissions that only moved a spinner.
+
+### Warm a heavy platform engine before its composable needs it
+
+An SDK-backed view is not free to create, and the bill is presented on the **first** frame
+that composes it. The Maps SDK fetches and links its renderer out of Play services;
+MapKit builds a tile pipeline. Both are synchronous, both run on the thread that asked,
+and inside a composable that thread is the main one.
+
+Composed inside a `when` arm that only becomes true when the data lands, the cost falls on
+the exact frame the traveller is watching. Two halves to the fix, and it needs both:
+
+1. **Start the engine off the main thread and gate the composable on it.** `PlaceMap` on
+   Android runs `MapsInitializer.initialize` on `Dispatchers.IO` behind a process-wide
+   flag and draws a plain surface until it returns. The method is `static synchronized`,
+   so this is the identical work moved somewhere it does not show.
+2. **Compose the view early, behind an opaque cover**, rather than swapping it in when the
+   data arrives. `ExploreScreen` composes the map as soon as the permission is answered
+   and draws the loading and failure states *over* it — so the engine starts while the
+   fix and the search are still in flight, and the cover lifts onto a map that is warm.
+
+A cover over a live view has to **swallow touches** as well as be opaque, or the drag goes
+straight through to a map nobody can see. An empty `Modifier.pointerInput(Unit) {}` is
+hit-tested like any other pointer node and stops the sibling below being tested at all.
+
+Composing early also means the view is created before the first camera target exists, so
+it opens on a fallback. **Apply the first camera move without an animation** — otherwise
+every visit to the tab begins by flying the traveller in from the fallback city.
+
 ---
 
 ## 9. Checklist — run this before opening a PR

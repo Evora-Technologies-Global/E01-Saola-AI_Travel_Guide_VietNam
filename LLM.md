@@ -358,6 +358,23 @@ Do not "improve" these; they are deliberate and documented in the code:
 - `SHUTTER_INSET`, `COMPOSER_CLEARANCE`, `SheetPeekHeight` and the stamp geometry are
   *measured positions*, not gaps. They are named `private val`s on purpose and must not be
   snapped onto the `Spacing` scale; the shutter one is a hit target nothing covers.
+- **The Explore map's four warm-up pieces.** They look like ceremony and each one is a
+  measured frame budget — see `docs/android-mvi-best-practices.md` §8 for the full
+  argument. (a) `PlaceMap.android.kt` loads the Maps renderer on `Dispatchers.IO` behind a
+  process-wide flag and gates `GoogleMap` on it; deleting the gate puts most of a second
+  of Play-services work back on the main thread, once per process, on the frame the tab
+  opens. (b) `ExploreScreen` composes the map as soon as the *permission* is answered, not
+  when the first fix lands, and draws its loading and failure states over it as opaque
+  covers — that is what buys the engine its head start. (c) `Modifier.mapCover()` carries
+  an empty `pointerInput`, without which a drag on the cover pans the map underneath it.
+  (d) Both platforms apply the **first** camera request without animating; composing early
+  means the map opens on the Hanoi fallback, and animating that flies the traveller in
+  from the capital every time they open the tab.
+- `val onIntent = remember(viewModel) { viewModel::onIntent }` in `ExploreRoute`, and only
+  there. A ViewModel is `unstable`, so the bound reference cannot be memoised and is a new
+  object every recomposition — which denies every child below it the skip its `skippable`
+  mark promises. Worth the line only where the subtree is expensive; on Explore it is a
+  map. MVI doc §8.
 
 ---
 

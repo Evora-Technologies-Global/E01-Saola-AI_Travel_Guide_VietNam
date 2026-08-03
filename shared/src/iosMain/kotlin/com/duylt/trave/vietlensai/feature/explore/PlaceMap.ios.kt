@@ -1,16 +1,20 @@
 package com.duylt.trave.vietlensai.feature.explore
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.viewinterop.UIKitView
 import com.duylt.trave.vietlensai.domain.model.GeoPoint
 import com.duylt.trave.vietlensai.domain.model.NearbyPlace
+import kotlinx.cinterop.CValue
 import kotlinx.cinterop.ExperimentalForeignApi
+import platform.CoreLocation.CLLocationCoordinate2D
 import platform.CoreLocation.CLLocationCoordinate2DMake
 import platform.MapKit.MKAnnotationProtocol
 import platform.MapKit.MKAnnotationView
+import platform.MapKit.MKCoordinateRegion
 import platform.MapKit.MKCoordinateRegionMakeWithDistance
 import platform.MapKit.MKFeatureDisplayPriorityDefaultHigh
 import platform.MapKit.MKFeatureDisplayPriorityRequired
@@ -39,6 +43,12 @@ import platform.darwin.NSObject
  * it first, and the sheet's scrim lies directly on top of this view. Losing the ability
  * to dismiss the sheet by tapping beside it is a worse trade than a barely perceptible
  * delay when starting to drag the map.
+ *
+ * **The `update` block is on the hot path.** It runs on every recomposition that reaches
+ * this composable, and every line of it crosses into Objective-C. Each `sync` below is
+ * therefore guarded by what it last applied, so an update that changed nothing this view
+ * cares about — a sheet opening, an article arriving — costs four comparisons instead of
+ * a diff over forty places and a sweep of every annotation on screen.
  */
 @OptIn(ExperimentalForeignApi::class)
 @Composable
@@ -60,34 +70,47 @@ actual fun PlaceMap(
     // Re-read rather than captured: the delegate outlives any one composition, and a
     // callback captured at construction would keep calling the first composition's
     // view model long after the screen had been recreated.
-    controller.onPlaceSelected = onPlaceSelected
-    controller.onCameraApplied = onCameraApplied
+    //
+    // In a `SideEffect` rather than straight in the composition body, because a
+    // composition can be started and then abandoned — and an assignment made in one that
+    // was thrown away would leave the map reporting taps to a screen that never appeared.
+    SideEffect {
+        controller.onPlaceSelected = onPlaceSelected
+        controller.onCameraApplied = onCameraApplied
+    }
 
     UIKitView(
         factory = {
+            // Recorded where the decision is made. With neither a request nor a fix to
+            // open on, the map opens on the fallback below and the first request to
+            // arrive is a correction rather than a journey — see `syncCamera`.
+            controller.isAwaitingFirstFix = camera == null && userLocation == null
             MKMapView().apply {
                 delegate = controller
                 showsCompass = true
                 showsScale = false
-                // MapKit's own control, unlike Android where the SDK's button is turned
-                // off in favour of the screen's. Apple's sits top-right, clear of where
-                // this screen puts anything of its own.
-                showsUserLocation = true
+                // Off until a fix exists, matching Android; `syncChrome` turns it on.
+                // Switching it on earlier makes MapKit raise its own permission prompt,
+                // and the screen has already asked in the app's own words.
+                showsUserLocation = false
                 pitchEnabled = false
+                // An MKMapView with no region set opens on the whole globe and starts
+                // fetching tiles for it. This view is now created before the first fix
+                // arrives — see `ExploreScreen`, which composes the map while its loading
+                // cover is still up — so without this the head start would be spent
+                // downloading a picture of the Pacific. The same fallback Android opens on.
+                setRegion(
+                    regionAround(
+                        center = camera?.target ?: userLocation ?: GeoPoint.HANOI_CENTER,
+                        zoom = camera?.zoom ?: MapZoom.NEIGHBOURHOOD,
+                    ),
+                    animated = false,
+                )
             }
         },
         modifier = modifier,
         update = { mapView ->
-            mapView.overrideUserInterfaceStyle = if (isDarkTheme) {
-                UIUserInterfaceStyle.UIUserInterfaceStyleDark
-            } else {
-                UIUserInterfaceStyle.UIUserInterfaceStyleLight
-            }
-            // Only once a fix exists, matching Android: switching it on earlier makes
-            // MapKit raise its own permission prompt, and the screen has already asked
-            // in the app's own words.
-            mapView.showsUserLocation = userLocation != null
-
+            controller.syncChrome(mapView, isDarkTheme = isDarkTheme, hasFix = userLocation != null)
             controller.syncAnnotations(mapView, places)
             controller.syncSelection(mapView, selectedPlaceId)
             controller.syncCamera(mapView, camera)
@@ -132,7 +155,42 @@ private class PlaceMapController : NSObject(), MKMapViewDelegateProtocol {
     private var selectedId: String? = null
     private var lastCameraRequestId: Long? = null
 
+    /** Set by the factory: this map opened on the fallback region. See [syncCamera]. */
+    var isAwaitingFirstFix = false
+
+    /** What each `sync` last pushed into MapKit, so it can decline to push it twice. */
+    private var lastPlaces: List<NearbyPlace>? = null
+    private var lastDarkTheme: Boolean? = null
+    private var lastShowsUserLocation: Boolean? = null
+
+    fun syncChrome(mapView: MKMapView, isDarkTheme: Boolean, hasFix: Boolean) {
+        if (lastDarkTheme != isDarkTheme) {
+            lastDarkTheme = isDarkTheme
+            mapView.overrideUserInterfaceStyle = if (isDarkTheme) {
+                UIUserInterfaceStyle.UIUserInterfaceStyleDark
+            } else {
+                UIUserInterfaceStyle.UIUserInterfaceStyleLight
+            }
+        }
+        if (lastShowsUserLocation != hasFix) {
+            lastShowsUserLocation = hasFix
+            // Only once a fix exists, matching Android: switching it on earlier makes
+            // MapKit raise its own permission prompt, and the screen has already asked
+            // in the app's own words.
+            mapView.showsUserLocation = hasFix
+        }
+    }
+
     fun syncAnnotations(mapView: MKMapView, places: List<NearbyPlace>) {
+        // Reference identity, not equality, and it is exact rather than a heuristic: the
+        // view model replaces this list wholesale on every load, so the same instance is
+        // the same markers. Without the guard the work below — a map allocation, two set
+        // differences, and a `UIColor` plus a bridged `setCoordinate` per place — ran on
+        // every recomposition that reached the update block, which includes every one
+        // that only moved a spinner or filled in a sheet.
+        if (places === lastPlaces) return
+        lastPlaces = places
+
         val desired = places.associateBy { it.id }
 
         (annotations.keys - desired.keys).forEach { goneId ->
@@ -145,12 +203,7 @@ private class PlaceMapController : NSObject(), MKMapViewDelegateProtocol {
             val existing = annotations[id]
             if (existing == null) {
                 val annotation = PlaceAnnotation(id).apply {
-                    setCoordinate(
-                        CLLocationCoordinate2DMake(
-                            place.location.latitude,
-                            place.location.longitude,
-                        ),
-                    )
+                    setCoordinate(place.location.toCoordinate())
                     setTitle(place.name)
                 }
                 annotations[id] = annotation
@@ -158,12 +211,7 @@ private class PlaceMapController : NSObject(), MKMapViewDelegateProtocol {
             } else {
                 // A place does not move, but the same id can come back from a refresh
                 // with a corrected position, and re-adding would duplicate the pin.
-                existing.setCoordinate(
-                    CLLocationCoordinate2DMake(
-                        place.location.latitude,
-                        place.location.longitude,
-                    ),
-                )
+                existing.setCoordinate(place.location.toCoordinate())
             }
         }
     }
@@ -195,19 +243,16 @@ private class PlaceMapController : NSObject(), MKMapViewDelegateProtocol {
     fun syncCamera(mapView: MKMapView, camera: MapCamera?) {
         val request = camera ?: return
         if (request.requestId == lastCameraRequestId) return
+        // A map that opened on the fallback is being corrected, not travelled: this view
+        // is built before the first fix arrives, and flying there would carry the
+        // traveller in from Hanoi over a city they may be nowhere near. Every request
+        // after it — and every request at all when the tab is reopened with a fix already
+        // in state — is a move they asked for, and those still animate.
+        val isCorrection = isAwaitingFirstFix
+        isAwaitingFirstFix = false
         lastCameraRequestId = request.requestId
 
-        mapView.setRegion(
-            MKCoordinateRegionMakeWithDistance(
-                centerCoordinate = CLLocationCoordinate2DMake(
-                    request.target.latitude,
-                    request.target.longitude,
-                ),
-                latitudinalMeters = request.zoom.spanMeters,
-                longitudinalMeters = request.zoom.spanMeters,
-            ),
-            animated = true,
-        )
+        mapView.setRegion(regionAround(request.target, request.zoom), animated = !isCorrection)
         // `setRegion` has no completion callback, and the animation is cosmetic — the
         // request is carried out the moment the region is set, so retiring it here is
         // both correct and the only option MapKit offers.
@@ -289,6 +334,19 @@ private val MapZoom.spanMeters: Double
         MapZoom.NEIGHBOURHOOD -> 6_000.0
         MapZoom.PLACE -> 900.0
     }
+
+/** The square of ground MapKit should frame around a point. */
+@OptIn(ExperimentalForeignApi::class)
+private fun regionAround(center: GeoPoint, zoom: MapZoom): CValue<MKCoordinateRegion> =
+    MKCoordinateRegionMakeWithDistance(
+        centerCoordinate = center.toCoordinate(),
+        latitudinalMeters = zoom.spanMeters,
+        longitudinalMeters = zoom.spanMeters,
+    )
+
+@OptIn(ExperimentalForeignApi::class)
+private fun GeoPoint.toCoordinate(): CValue<CLLocationCoordinate2D> =
+    CLLocationCoordinate2DMake(latitude, longitude)
 
 private fun Color.toUIColor(): UIColor = UIColor(
     red = red.toDouble(),
