@@ -23,21 +23,28 @@ import com.duylt.trave.vietlensai.data.local.db.entity.TripSummaryEntity
         TranslationEntity::class,
         TripSummaryEntity::class,
     ],
-    // Back to 1, and there are no migrations. The schema reached 3 by adding `provinceId`
-    // and then `discovery_notes`, but the app has never been published, so there is no
-    // install anywhere holding a v1 or v2 file worth migrating — carrying the two
-    // migrations forward would mean maintaining upgrade paths from shapes that only ever
-    // existed on a developer's phone.
+    // 2, and there are still no migrations. It had been reset to 1 once already, for the
+    // reason below; the bump to 2 exists because `imagePath` became `imageName` and
+    // `photoPathsJson` became `photoNamesJson` — and those are not renames for tidiness.
+    // The columns used to hold absolute paths, which on iOS name a container directory
+    // that does not survive an install, an update or a restore. Every row written before
+    // this version points somewhere that no longer exists, so there is nothing in one
+    // worth carrying over even if a migration were written. Destroying them is the fix.
+    //
+    // A bump is what makes that happen: renaming a column does not change the *version*,
+    // and destructive fallback only runs on a version change — same-version schema drift
+    // is an integrity failure Room throws on instead.
     //
     // What this does to a phone that already has the v3 file is worth being exact about,
     // because it is not a crash: `applySharedConfiguration` calls
     // `fallbackToDestructiveMigration(dropAllTables = true)`, and that setter also sets
-    // `allowDestructiveMigrationOnDowngrade`. Room therefore treats 3 -> 1 as "no migration
-    // required", drops every table and recreates them empty. The database opens, the app
-    // starts, and the journal, notes, translations and passport stamps on that device are
-    // simply gone — silently, with nothing shown to the user. Acceptable only because
-    // nothing is published; a device carrying demo data has to be re-seeded.
-    version = 1,
+    // `allowDestructiveMigrationOnDowngrade`. Room therefore treats any version it has no
+    // migration for — in either direction — as "no migration required", drops every table
+    // and recreates them empty. The database opens, the app starts, and the journal, notes,
+    // translations and passport stamps on that device are simply gone — silently, with
+    // nothing shown to the user. Acceptable only because nothing is published; a device
+    // carrying demo data has to be re-seeded.
+    version = 2,
     exportSchema = true,
 )
 // Room generates the implementation per target rather than through reflection, so

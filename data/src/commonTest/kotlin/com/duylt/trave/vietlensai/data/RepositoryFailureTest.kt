@@ -267,6 +267,7 @@ class RepositoryFailureTest {
                     sourceLanguage: TranslateLanguage?,
                 ): AppResult<List<RecognizedLine>> = AppResult.Failure(AppError.NotRecognized(null))
             },
+            captureStore = FakeCaptureStore(),
             settingsRepository = workingSettings(),
             ioDispatcher = Dispatchers.Unconfined,
         )
@@ -318,7 +319,7 @@ class RepositoryFailureTest {
     @Test
     fun `the orphan sweep deletes nothing when it cannot tell what is referenced`() = runTest {
         val captureStore = FakeCaptureStore(
-            captures = listOf("/captures/capture_1.jpg", "/captures/capture_2.jpg"),
+            captures = listOf("capture_1.jpg", "capture_2.jpg"),
         )
         val maintenance = CaptureMaintenanceImpl(
             discoveryDao = FakeDiscoveryDao(),
@@ -330,6 +331,66 @@ class RepositoryFailureTest {
 
         assertEquals(0, maintenance.sweepOrphans())
         assertEquals(emptyList(), captureStore.deleted)
+    }
+
+    /**
+     * The bug this guard was written for, reproduced exactly.
+     *
+     * iOS re-homes an app's container under a fresh UUID on reinstall, update or restore,
+     * so a database that had stored absolute paths came back naming a directory that no
+     * longer existed. Every file on disk was then unreferenced, every one of them was older
+     * than the grace period, and the sweep deleted the traveller's entire history of
+     * photographs on the first launch after an update.
+     *
+     * Both sides now speak in names, so this cannot arise the same way again — but the two
+     * are still only `String`, and the assertion worth keeping is the behavioural one: when
+     * the sweep can see references and recognises none of the files, it is looking at a bug
+     * and not at rubbish, and it must not delete.
+     */
+    @Test
+    fun `the orphan sweep deletes nothing when no file on disk matches any reference`() = runTest {
+        val captureStore = FakeCaptureStore(
+            captures = listOf("capture_1.jpg", "capture_2.jpg"),
+        )
+        val maintenance = CaptureMaintenanceImpl(
+            // Stale in the way a moved container made every row stale: a reference that
+            // names no file the store can see.
+            discoveryDao = FakeDiscoveryDao(
+                rows = listOf(discoveryEntity("d-1").copy(imageName = "capture_9.jpg")),
+            ),
+            noteDao = FakeNoteDao(),
+            translationDao = FakeTranslationDao(),
+            captureStore = captureStore,
+            ioDispatcher = Dispatchers.Unconfined,
+        )
+
+        assertEquals(0, maintenance.sweepOrphans())
+        assertEquals(emptyList(), captureStore.deleted)
+    }
+
+    /**
+     * The guard above must not cost the sweep its actual job.
+     *
+     * One reference that does match is enough to prove the two sides are comparable, and
+     * from there a genuinely unreferenced capture is still swept.
+     */
+    @Test
+    fun `the orphan sweep still deletes an unreferenced capture`() = runTest {
+        val captureStore = FakeCaptureStore(
+            captures = listOf("capture_1.jpg", "capture_2.jpg"),
+        )
+        val maintenance = CaptureMaintenanceImpl(
+            discoveryDao = FakeDiscoveryDao(
+                rows = listOf(discoveryEntity("d-1").copy(imageName = "capture_1.jpg")),
+            ),
+            noteDao = FakeNoteDao(),
+            translationDao = FakeTranslationDao(),
+            captureStore = captureStore,
+            ioDispatcher = Dispatchers.Unconfined,
+        )
+
+        assertEquals(1, maintenance.sweepOrphans())
+        assertEquals(listOf("capture_2.jpg"), captureStore.deleted)
     }
 
     // ---------------------------------------------------------------------------------
@@ -445,6 +506,7 @@ class RepositoryFailureTest {
     private fun provinceRepository(discoveryDao: DiscoveryDao) = ProvinceRepositoryImpl(
         assetSource = ProvinceAssetSource(BundledAssets { ONE_PROVINCE_ASSET }, Dispatchers.Unconfined),
         discoveryDao = discoveryDao,
+        captureStore = FakeCaptureStore(),
         ioDispatcher = Dispatchers.Unconfined,
     )
 
@@ -456,6 +518,7 @@ class RepositoryFailureTest {
         summaryDao = summaryDao,
         noteDao = FakeNoteDao(),
         remote = unusedRemote(),
+        captureStore = FakeCaptureStore(),
         settingsRepository = workingSettings(),
         timeZone = TimeZone.UTC,
         ioDispatcher = Dispatchers.Unconfined,
@@ -500,7 +563,7 @@ class RepositoryFailureTest {
         title = "Văn Miếu",
         localName = null,
         category = "ARCHITECTURE",
-        imagePath = "/captures/capture_1.jpg",
+        imageName = "capture_1.jpg",
         summary = "Trường đại học đầu tiên của Việt Nam.",
         sectionsJson = "[]",
         funFactsJson = "[]",
@@ -568,7 +631,7 @@ private class FakeDiscoveryDao(
     ): List<DiscoveryEntity> = answer(rows)
 
     override suspend fun getUnstamped(): List<UnstampedRow> = answer(emptyList())
-    override suspend fun getAllImagePaths(): List<String> = answer(rows.mapNotNull { it.imagePath })
+    override suspend fun getAllImageNames(): List<String> = answer(rows.mapNotNull { it.imageName })
     override suspend fun upsert(entity: DiscoveryEntity) = answer(Unit)
     override suspend fun toggleFavorite(id: String) = answer(Unit)
     override suspend fun setProvinceId(id: String, provinceId: String?) = answer(Unit)
@@ -626,7 +689,7 @@ private class FakeTranslationDao(
     override fun observeById(id: String): Flow<TranslationEntity?> =
         flow { emit(answer(rows.firstOrNull { it.id == id })) }
 
-    override suspend fun getAllImagePaths(): List<String> = answer(rows.mapNotNull { it.imagePath })
+    override suspend fun getAllImageNames(): List<String> = answer(rows.mapNotNull { it.imageName })
     override suspend fun upsert(entity: TranslationEntity) = answer(Unit)
     override suspend fun deleteById(id: String) = answer(Unit)
     override suspend fun deleteAll() = answer(Unit)
@@ -655,6 +718,10 @@ private class FakeCaptureStore(
     val deleted = mutableListOf<String>()
 
     override fun newCapturePath(): String = "/captures/capture_0.jpg"
+
+    override fun nameOf(nameOrPath: String): String = nameOrPath.substringAfterLast('/')
+
+    override fun resolve(nameOrPath: String): String = "/captures/${nameOf(nameOrPath)}"
 
     override suspend fun read(path: String): AppResult<CaptureImage> =
         AppResult.Failure(AppError.ImageUnavailable(path))

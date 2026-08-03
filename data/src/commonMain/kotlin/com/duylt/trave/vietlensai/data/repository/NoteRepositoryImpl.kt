@@ -31,7 +31,7 @@ internal class NoteRepositoryImpl(
 
     override fun observeNote(discoveryId: String): Flow<DiscoveryNote?> =
         noteDao.observeByDiscovery(discoveryId)
-            .map { it?.toDomain() }
+            .map { it?.toDomain(captureStore::resolve) }
             .flowOn(ioDispatcher)
             .fallbackOnFailure(null, what = "observe the note for $discoveryId")
 
@@ -41,7 +41,9 @@ internal class NoteRepositoryImpl(
         photoPaths: List<String>,
     ): AppResult<Unit> = withContext(ioDispatcher) {
         val trimmed = body.trim()
-        val photos = photoPaths.distinct().take(DiscoveryNote.MAX_PHOTOS)
+        // Names, not paths: what the composer hands over are live paths, and the
+        // directory around them does not survive a reinstall. See `CaptureStore.nameOf`.
+        val photos = photoPaths.map(captureStore::nameOf).distinct().take(DiscoveryNote.MAX_PHOTOS)
 
         // Clearing the text and removing every photo is how a traveller deletes a note;
         // storing the blank row instead would leave the screen showing an empty card
@@ -60,7 +62,7 @@ internal class NoteRepositoryImpl(
                 DiscoveryNoteEntity(
                     discoveryId = discoveryId,
                     body = trimmed,
-                    photoPathsJson = Converters.encodeStrings(photos),
+                    photoNamesJson = Converters.encodeStrings(photos),
                     // Rewriting a note does not change when the memory was written down.
                     createdAt = existing?.createdAt ?: now,
                     updatedAt = now,
@@ -76,7 +78,7 @@ internal class NoteRepositoryImpl(
         // Only after the write lands: a photo dropped from an edit that failed to save is
         // still referenced by the row on disk, and deleting it first would leave the note
         // pointing at a file that no longer exists.
-        existing?.photoPaths()
+        existing?.photoNames()
             ?.filterNot { it in photos }
             ?.forEach { captureStore.delete(it) }
 
@@ -91,9 +93,10 @@ internal class NoteRepositoryImpl(
         runCatchingStorage(what = "delete the note for $discoveryId") {
             val existing = noteDao.getByDiscovery(discoveryId)
             noteDao.deleteByDiscovery(discoveryId)
-            existing?.photoPaths()?.forEach { captureStore.delete(it) }
+            existing?.photoNames()?.forEach { captureStore.delete(it) }
         }
 }
 
-internal fun DiscoveryNoteEntity.photoPaths(): List<String> =
-    Converters.decodeStrings(photoPathsJson)
+/** The stored capture **names**, exactly as written — resolve before opening one. */
+internal fun DiscoveryNoteEntity.photoNames(): List<String> =
+    Converters.decodeStrings(photoNamesJson)

@@ -95,7 +95,9 @@ internal class DiscoveryRepositoryImpl(
 
         val entity = payload.toEntity(
             id = Uuid.random().toString(),
-            imagePath = imagePath,
+            // The name, not the path the camera just wrote to: the directory around it is
+            // not stable for the life of the install. See `CaptureStore.nameOf`.
+            imageName = captureStore.nameOf(imagePath),
             location = location,
             provinceId = provinceId,
             modelUsed = response.modelUsed,
@@ -108,7 +110,7 @@ internal class DiscoveryRepositoryImpl(
         // of a method that returns AppResult as a SerializationException instead.
         val stored = runCatchingStorage(what = "persist discovery ${entity.id}") {
             discoveryDao.upsert(entity)
-            discoveryDao.getById(entity.id)?.toDomain()
+            discoveryDao.getById(entity.id)?.toDomain(captureStore::resolve)
         }
         when (stored) {
             is AppResult.Failure -> stored
@@ -133,25 +135,25 @@ internal class DiscoveryRepositoryImpl(
      */
     override fun observeDiscoveries(): Flow<List<Discovery>> =
         discoveryDao.observeAll()
-            .map { entities -> entities.map { it.toDomain() } }
+            .map { entities -> entities.map { it.toDomain(captureStore::resolve) } }
             .flowOn(ioDispatcher)
             .fallbackOnFailure(emptyList(), what = "observe discoveries")
 
     override fun observeFavorites(): Flow<List<Discovery>> =
         discoveryDao.observeFavorites()
-            .map { entities -> entities.map { it.toDomain() } }
+            .map { entities -> entities.map { it.toDomain(captureStore::resolve) } }
             .flowOn(ioDispatcher)
             .fallbackOnFailure(emptyList(), what = "observe favourites")
 
     override fun observeByProvince(provinceId: String): Flow<List<Discovery>> =
         discoveryDao.observeByProvince(provinceId)
-            .map { entities -> entities.map { it.toDomain() } }
+            .map { entities -> entities.map { it.toDomain(captureStore::resolve) } }
             .flowOn(ioDispatcher)
             .fallbackOnFailure(emptyList(), what = "observe discoveries in $provinceId")
 
     override fun observeDiscovery(id: String): Flow<Discovery?> =
         discoveryDao.observeById(id)
-            .map { it?.toDomain() }
+            .map { it?.toDomain(captureStore::resolve) }
             .flowOn(ioDispatcher)
             .fallbackOnFailure(null, what = "observe discovery $id")
 
@@ -163,7 +165,7 @@ internal class DiscoveryRepositoryImpl(
      */
     override suspend fun getDiscovery(id: String): Discovery? = withContext(ioDispatcher) {
         runCatchingStorageOr(what = "read discovery $id", fallback = null) {
-            discoveryDao.getById(id)?.toDomain()
+            discoveryDao.getById(id)?.toDomain(captureStore::resolve)
         }
     }
 
@@ -182,18 +184,18 @@ internal class DiscoveryRepositoryImpl(
      */
     override suspend fun delete(id: String): AppResult<Unit> = withContext(ioDispatcher) {
         runCatchingStorage(what = "delete discovery $id") {
-            val imagePath = discoveryDao.getById(id)?.imagePath
-            val notePhotos = noteDao.getByDiscovery(id)?.photoPaths().orEmpty()
+            val imageName = discoveryDao.getById(id)?.imageName
+            val notePhotos = noteDao.getByDiscovery(id)?.photoNames().orEmpty()
             discoveryDao.deleteById(id)
-            captureStore.delete(imagePath)
+            captureStore.delete(imageName)
             notePhotos.forEach { captureStore.delete(it) }
         }
     }
 
     override suspend fun deleteAll(): AppResult<Unit> = withContext(ioDispatcher) {
         runCatchingStorage(what = "delete every discovery") {
-            discoveryDao.getRecent(Int.MAX_VALUE).forEach { captureStore.delete(it.imagePath) }
-            noteDao.getAll().forEach { note -> note.photoPaths().forEach { captureStore.delete(it) } }
+            discoveryDao.getRecent(Int.MAX_VALUE).forEach { captureStore.delete(it.imageName) }
+            noteDao.getAll().forEach { note -> note.photoNames().forEach { captureStore.delete(it) } }
             discoveryDao.deleteAll()
         }
     }

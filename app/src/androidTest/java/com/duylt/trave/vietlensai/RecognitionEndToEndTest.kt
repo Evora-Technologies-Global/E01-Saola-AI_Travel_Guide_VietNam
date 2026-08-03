@@ -2,13 +2,11 @@ package com.duylt.trave.vietlensai
 
 import androidx.test.platform.app.InstrumentationRegistry
 import com.duylt.trave.vietlensai.domain.repository.CaptureStore
-import com.duylt.trave.vietlensai.domain.model.AppLanguage
 import com.duylt.trave.vietlensai.domain.model.DiscoveryCategory
 import com.duylt.trave.vietlensai.domain.model.LensMode
 import com.duylt.trave.vietlensai.domain.model.TranslateLanguage
 import com.duylt.trave.vietlensai.domain.repository.ChatRepository
 import com.duylt.trave.vietlensai.domain.repository.DiscoveryRepository
-import com.duylt.trave.vietlensai.domain.repository.SettingsRepository
 import com.duylt.trave.vietlensai.domain.repository.TranslationRepository
 import com.duylt.trave.vietlensai.domain.util.AppError
 import com.duylt.trave.vietlensai.domain.util.AppResult
@@ -32,6 +30,13 @@ import java.io.File
  * Because it costs real quota and needs a network, every case skips (rather than
  * fails) when the model is genuinely unreachable, so a busy Gemini or an offline
  * CI box never produces a misleading red build.
+ *
+ * **Every assertion here is language-agnostic, and has to be.** The guide answers in the
+ * phone's language and that is not settable — `SettingsRepository` has no `setLanguage`,
+ * because `AppSettings.language` is read from the device. So each case matches its subject
+ * across both the English and the Vietnamese name rather than pinning one: run on a
+ * Vietnamese emulator the landmark comes back as "Văn Miếu", on an English one as "Temple
+ * of Literature", and neither is the wrong answer.
  */
 class RecognitionEndToEndTest : KoinComponent {
 
@@ -48,12 +53,10 @@ class RecognitionEndToEndTest : KoinComponent {
     private val discoveryRepository: DiscoveryRepository by inject()
     private val translationRepository: TranslationRepository by inject()
     private val chatRepository: ChatRepository by inject()
-    private val settingsRepository: SettingsRepository by inject()
     private val captureStore: CaptureStore by inject()
 
     @Test
     fun recognisesAVietnameseLandmarkAndStoresIt() = runTest(timeout = TEST_TIMEOUT) {
-        settingsRepository.setLanguage(AppLanguage.ENGLISH)
         val path = copyAssetToStorage("temple_of_literature.jpg")
 
         val result = discoveryRepository.recognize(
@@ -97,7 +100,6 @@ class RecognitionEndToEndTest : KoinComponent {
 
     @Test
     fun recognisesAVietnameseDishAsFood() = runTest(timeout = TEST_TIMEOUT) {
-        settingsRepository.setLanguage(AppLanguage.ENGLISH)
         val path = copyAssetToStorage("pho.jpg")
 
         val result = discoveryRepository.recognize(
@@ -109,9 +111,9 @@ class RecognitionEndToEndTest : KoinComponent {
 
         assertEquals(DiscoveryCategory.FOOD, discovery.category)
 
-        // With the guide set to English the title is the English name ("Beef
-        // Noodle Soup"), and the Vietnamese name lands in localName — so the dish
-        // has to be identified across the record, not from the title alone.
+        // Which field holds which name depends on the phone: in English the title is
+        // "Beef Noodle Soup" and "phở" lands in localName, in Vietnamese they swap. The
+        // dish therefore has to be identified across the record, not from the title alone.
         val haystack = listOfNotNull(discovery.title, discovery.localName, discovery.summary)
             .joinToString(" ")
         assertTrue(
@@ -123,7 +125,6 @@ class RecognitionEndToEndTest : KoinComponent {
 
     @Test
     fun answersAFollowUpQuestionInContext() = runTest(timeout = TEST_TIMEOUT) {
-        settingsRepository.setLanguage(AppLanguage.ENGLISH)
         val path = copyAssetToStorage("temple_of_literature.jpg")
 
         val discovery = discoveryRepository

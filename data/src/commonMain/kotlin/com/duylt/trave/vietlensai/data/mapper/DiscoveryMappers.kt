@@ -23,7 +23,8 @@ import kotlin.time.Instant
  */
 internal fun DiscoveryPayload.toEntity(
     id: String,
-    imagePath: String?,
+    /** A capture **name**, never a path — see `CaptureStore.nameOf`. */
+    imageName: String?,
     location: GeoPoint?,
     provinceId: String?,
     modelUsed: String?,
@@ -33,7 +34,7 @@ internal fun DiscoveryPayload.toEntity(
     title = title.trim(),
     localName = localName?.trim()?.takeIf { it.isNotEmpty() },
     category = DiscoveryCategory.fromWire(category).wireName,
-    imagePath = imagePath,
+    imageName = imageName,
     summary = summary.trim(),
     sectionsJson = Converters.encodeSections(
         sections
@@ -67,12 +68,18 @@ internal fun DiscoveryPayload.toEntity(
     createdAt = createdAt.toEpochMilliseconds(),
 )
 
-internal fun DiscoveryEntity.toDomain(): Discovery = Discovery(
+/**
+ * @param resolveCapture turns the stored file name into a path that can be opened on this
+ *   launch. Passed in rather than looked up because the answer belongs to the platform's
+ *   `CaptureStore`, and it must be asked again every time — `imageName` on the entity is
+ *   only a name, and the directory it sits in moves. See `CaptureStore.nameOf`.
+ */
+internal fun DiscoveryEntity.toDomain(resolveCapture: (String) -> String): Discovery = Discovery(
     id = id,
     title = title,
     localName = localName,
     category = DiscoveryCategory.fromWire(category),
-    imagePath = imagePath,
+    imagePath = imageName?.let(resolveCapture),
     summary = summary,
     sections = Converters.decodeSections(sectionsJson)
         .map { DiscoverySection(title = it.title, body = it.body) },

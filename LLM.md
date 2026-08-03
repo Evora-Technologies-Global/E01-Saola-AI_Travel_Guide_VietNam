@@ -333,6 +333,7 @@ the file.
 | 10 | No shared effect-collection helper | MVI refactor — `core/mvi/CollectEffects.kt`. It is the only place `effects.collect` appears. |
 | 12 | Unused `import kotlinx.coroutines.launch` | MVI refactor — removed from the Journal, Settings, Explore and Translation ViewModels. Chat's had already gone with the voice branch. |
 | 15 | **A failed day summary told the traveller nothing.** `JournalEffect.ShowMessage` was emitted and collected, then dropped: the route resolved the text as `state.error?.toUserMessage()` during composition and the handler did `errorMessage ?: return@launch`, but the effect is handled one main-queue turn after `sendEffect` — before the frame that would have produced the string. Found by running the app offline on a device; reproduced identically on a build of `dcdb958`, so it pre-dated the MVI refactor. **Fixed 03.08.2026:** `AppError.userMessage()` is a `suspend` twin of `toUserMessage()` that resolves outside composition, so the three routes that collect a message effect — Journal, Settings, Explore — now read it off the effect's own payload. `JournalState.error` and `SettingsState.error` are gone with it: neither screen draws a failure inline, so a failure belongs entirely to the effect. Journal's `launchSafely(onError = …)` now raises the effect too, so an unwrapped throw reports rather than just lowering the spinner. Covered by `JournalViewModelTest`. |
+| 23 | **`:app`'s instrumented suite did not compile.** `RecognitionEndToEndTest` called `settingsRepository.setLanguage(AppLanguage.ENGLISH)` at the head of three cases, and that method was deliberately deleted in `ef5c6a9` when narration started following the phone's own language — `SettingsRepository:35` carries a comment saying there is no `setLanguage` and why. The test file was unchanged since `09401ed`, so this was drift left by the i18n change. Distinct from row #18, which is about those tests being unrunnable on API 35+; this one was a compile failure. | **Fixed 03.08.2026:** the three calls are gone, along with the now-unused `settingsRepository` field and two imports. Nothing else had to change — every assertion in the file was already written to match its subject across both the English and the Vietnamese name ("temple of literature" *or* "văn miếu"; "noodle soup" *or* "phở"), because a title-only assertion would have punished the more precise answer. That is now stated in the class KDoc as a rule rather than left as a property the next edit could quietly break. Verified by `:app:compileDebugAndroidTestKotlin --rerun-tasks`; running the suite still needs an API 34 AVD, per row #18. |
 | 20 | **Five strings rendered their own escape characters** — `100%% MATCH` on the discovery badge, `N%% collected` / `N%% explored`, and `Turn today\'s one find into a story` on the journal card. `strings.xml` was written in Android `aapt` conventions, where `\'` is unescaped at build time and `String.format` collapses `%%` to `%`; Compose Multiplatform's resource reader substitutes positional arguments but does neither. The Vietnamese file already had it right — `Khớp %1$d%` with one percent — which is what confirmed the English was the anomaly rather than the renderer. | **Fixed 03.08.2026:** write `%` and `'` directly. `\n` is **not** part of this — it *is* unescaped by Compose Multiplatform, proven on device by `sovereignty_seal` rendering "CHỦ / QUYỀN / VN" on three lines, so `discovery_share_body:119` and `sovereignty_seal:348` were deliberately left alone. All four visible cases re-checked on device. |
 
 ---
@@ -354,6 +355,19 @@ Do not "improve" these; they are deliberate and documented in the code:
 - Structural job ownership: the stage ticker is a *child* of the analysis job, not a field.
 - Cancel-and-replace for superseding requests (`analysisJob?.cancel()`, `detailsJob?.cancel()`).
 - `AppResult` / `AppError` all the way up; no exceptions across layer boundaries.
+- **A capture is stored by name, never by path.** `discoveries.imageName`,
+  `translations.imageName` and `discovery_notes.photoNamesJson` hold a bare
+  `capture_<millis>.jpg`; `CaptureStore.nameOf` strips a path down to one on the way in and
+  `CaptureStore.resolve` rebuilds an openable path on the way out, in the entity → domain
+  mappers. Resolve late and never store the answer: on iOS the app's container is re-homed
+  under a fresh UUID on reinstall, update or restore, so a path written yesterday names a
+  directory that is gone. This is not theoretical and it did not merely break image
+  loading — `CaptureMaintenanceImpl` compares disk against database, found the two sides
+  had no name in common, and deleted every photograph in the app. The sweep now works in
+  names on both sides and refuses to delete anything when it recognises none of the files;
+  `RepositoryFailureTest` holds it to both. Android is not exposed (`context.filesDir` is
+  fixed by package name) but implements the same contract, because one port with two
+  meanings is how this comes back.
 - Two headers and no third: `PageHeader` and `OverlayHeader`. The temptation is a
   `titleStyle` parameter — that is how the five hand-rolled headers came back last time.
 - `SHUTTER_INSET`, `COMPOSER_CLEARANCE`, `SheetPeekHeight` and the stamp geometry are

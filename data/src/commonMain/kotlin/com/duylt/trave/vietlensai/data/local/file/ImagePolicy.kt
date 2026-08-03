@@ -87,6 +87,17 @@ internal object ImagePolicy {
         "$CAPTURE_PREFIX$epochMillis$CAPTURE_EXTENSION"
 
     /**
+     * The bare file name of [nameOrPath], whichever of the two it already was.
+     *
+     * Both platforms strip a directory the same way, so the rule lives here beside the
+     * naming it undoes rather than twice in the two stores. `file://` is trimmed first
+     * because the iOS picker hands back a URL, and a scheme left on the front would be
+     * stored as part of the name.
+     */
+    fun fileNameOf(nameOrPath: String): String =
+        nameOrPath.removePrefix("file://").substringAfterLast('/')
+
+    /**
      * When the capture at [path] was created, or null if the name did not come from
      * [captureFileName].
      *

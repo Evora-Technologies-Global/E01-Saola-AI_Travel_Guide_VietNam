@@ -231,6 +231,10 @@ class FakeCaptureStore : CaptureStore {
 
     override fun newCapturePath(): String = nextPath
 
+    override fun nameOf(nameOrPath: String): String = nameOrPath.substringAfterLast('/')
+
+    override fun resolve(nameOrPath: String): String = "/captures/${nameOf(nameOrPath)}"
+
     override suspend fun read(path: String): AppResult<CaptureImage> {
         throwOnRead?.let { throw it }
         return AppResult.Success(CaptureImage(bytes = ByteArray(8), widthPx = 4, heightPx = 2))

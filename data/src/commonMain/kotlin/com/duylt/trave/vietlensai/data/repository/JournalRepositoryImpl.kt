@@ -12,6 +12,7 @@ import com.duylt.trave.vietlensai.domain.model.Discovery
 import com.duylt.trave.vietlensai.domain.model.JournalDay
 import com.duylt.trave.vietlensai.domain.model.JournalStats
 import com.duylt.trave.vietlensai.domain.model.TripSummary
+import com.duylt.trave.vietlensai.domain.repository.CaptureStore
 import com.duylt.trave.vietlensai.domain.repository.JournalRepository
 import com.duylt.trave.vietlensai.domain.repository.SettingsRepository
 import com.duylt.trave.vietlensai.domain.util.AppError
@@ -43,6 +44,7 @@ internal class JournalRepositoryImpl(
     private val summaryDao: TripSummaryDao,
     private val noteDao: NoteDao,
     private val remote: GeminiRemoteDataSource,
+    private val captureStore: CaptureStore,
     private val settingsRepository: SettingsRepository,
     private val timeZone: TimeZone,
     private val ioDispatcher: CoroutineDispatcher,
@@ -54,7 +56,7 @@ internal class JournalRepositoryImpl(
     ) { discoveries, summaries ->
         val summariesByDate = summaries.associate { it.date to it.toDomain() }
         discoveries
-            .map { it.toDomain() }
+            .map { it.toDomain(captureStore::resolve) }
             .groupBy { it.createdAt.toLocalDate() }
             // `toSortedMap` is java.util-only. Sorting the entries and keeping the
             // result a List is what the caller wanted anyway — the map was never read
@@ -84,7 +86,7 @@ internal class JournalRepositoryImpl(
     override fun observeStats(): Flow<JournalStats> =
         discoveryDao.observeAll()
             .map { entities ->
-                val discoveries = entities.map { it.toDomain() }
+                val discoveries = entities.map { it.toDomain(captureStore::resolve) }
                 JournalStats(
                     totalDiscoveries = discoveries.size,
                     totalDays = discoveries.mapTo(mutableSetOf()) { it.createdAt.toLocalDate() }.size,
@@ -114,7 +116,7 @@ internal class JournalRepositoryImpl(
 
             val discoveries = when (
                 val read = runCatchingStorage(what = "read the discoveries for $date") {
-                    discoveryDao.getBetween(dayStart, dayEnd).map { it.toDomain() }
+                    discoveryDao.getBetween(dayStart, dayEnd).map { it.toDomain(captureStore::resolve) }
                 }
             ) {
                 is AppResult.Failure -> return@withContext read
@@ -190,7 +192,7 @@ internal class JournalRepositoryImpl(
             append('"')
             // How many photos they kept is a measure of how much the moment mattered,
             // which the note text alone does not always carry.
-            val photoCount = note.photoPaths().size
+            val photoCount = note.photoNames().size
             if (photoCount > 0) {
                 append(", and kept ").append(photoCount).append(" photo")
                 if (photoCount > 1) append('s')

@@ -8,6 +8,7 @@ import com.duylt.trave.vietlensai.domain.model.GeoPoint
 import com.duylt.trave.vietlensai.domain.model.PassportStamp
 import com.duylt.trave.vietlensai.domain.model.Province
 import com.duylt.trave.vietlensai.domain.model.TravelPassport
+import com.duylt.trave.vietlensai.domain.repository.CaptureStore
 import com.duylt.trave.vietlensai.domain.repository.ProvinceRepository
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
@@ -28,6 +29,7 @@ import kotlin.time.Instant
 internal class ProvinceRepositoryImpl(
     private val assetSource: ProvinceAssetSource,
     private val discoveryDao: DiscoveryDao,
+    private val captureStore: CaptureStore,
     private val ioDispatcher: CoroutineDispatcher,
 ) : ProvinceRepository {
 
@@ -56,7 +58,7 @@ internal class ProvinceRepositoryImpl(
                         PassportStamp(
                             province = province,
                             discoveryCount = row?.discoveryCount ?: 0,
-                            coverImagePath = row?.coverImagePath,
+                            coverImagePath = row?.coverImageName?.let(captureStore::resolve),
                             firstVisitAt = row?.firstVisitAt?.let(Instant::fromEpochMilliseconds),
                             lastVisitAt = row?.lastVisitAt?.let(Instant::fromEpochMilliseconds),
                         )

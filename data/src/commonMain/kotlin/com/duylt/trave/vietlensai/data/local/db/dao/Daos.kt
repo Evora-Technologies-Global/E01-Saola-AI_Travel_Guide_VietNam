@@ -73,11 +73,11 @@ interface DiscoveryDao {
                MIN(d.createdAt) AS firstVisitAt,
                MAX(d.createdAt) AS lastVisitAt,
                (
-                   SELECT cover.imagePath FROM discoveries AS cover
-                   WHERE cover.provinceId = d.provinceId AND cover.imagePath IS NOT NULL
+                   SELECT cover.imageName FROM discoveries AS cover
+                   WHERE cover.provinceId = d.provinceId AND cover.imageName IS NOT NULL
                    ORDER BY cover.isFavorite DESC, cover.createdAt DESC
                    LIMIT 1
-               ) AS coverImagePath
+               ) AS coverImageName
         FROM discoveries AS d
         WHERE d.provinceId IS NOT NULL
         GROUP BY d.provinceId
@@ -102,8 +102,8 @@ interface DiscoveryDao {
     suspend fun setProvinceId(id: String, provinceId: String?)
 
     /** Every capture still spoken for by a discovery, for the orphan sweep. */
-    @Query("SELECT imagePath FROM discoveries WHERE imagePath IS NOT NULL")
-    suspend fun getAllImagePaths(): List<String>
+    @Query("SELECT imageName FROM discoveries WHERE imageName IS NOT NULL")
+    suspend fun getAllImageNames(): List<String>
 }
 
 /** Roll-up of everything found in one province. */
@@ -112,7 +112,7 @@ data class ProvinceStampRow(
     val discoveryCount: Int,
     val firstVisitAt: Long,
     val lastVisitAt: Long,
-    val coverImagePath: String?,
+    val coverImageName: String?,
 )
 
 /** A located discovery that has not been assigned to a province yet. */
@@ -197,8 +197,8 @@ interface TranslationDao {
      * Easy to forget that translations hold captures too — the sweep that omitted this
      * would quietly delete the photo behind every saved menu translation.
      */
-    @Query("SELECT imagePath FROM translations WHERE imagePath IS NOT NULL")
-    suspend fun getAllImagePaths(): List<String>
+    @Query("SELECT imageName FROM translations WHERE imageName IS NOT NULL")
+    suspend fun getAllImageNames(): List<String>
 }
 
 @Dao
