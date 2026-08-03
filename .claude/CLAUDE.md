@@ -4,9 +4,60 @@ Reusable `.claude/` setup for **mobile app** projects: skills, agents, and rules
 
 Derived from ClaudeKit and trimmed from 73 skills down to **28**, keeping what serves mobile app work plus what the bundled agents actually call. Vendor-neutral: no dependency on any organization's private template or SDK.
 
-To start a real project: copy `.claude/` over, then replace this file with that project's description.
+To start a real project: copy `.claude/` over **together with `LLM.md` and `docs/android-mvi-best-practices.md` at the repo root**, then replace this file with that project's description.
 
-> **Current state of this working copy:** the repo root also contains `docs/SRS.md` and `prototype/index.html` for a product called **OneRoll** (a disposable film camera app). That content is unrelated to the reusable config below — either move it to its own project or rewrite this file to describe OneRoll.
+---
+
+## MANDATORY: read before writing code
+
+**These two files are the architecture contract. Read them BEFORE writing or modifying any application code — no exceptions, including for a one-line change.**
+
+| File | What it is | Read it before |
+|---|---|---|
+| [`LLM.md`](../LLM.md) | The code-structure map: module graph, package layout, layer boundaries, where a new file goes, and §11 the list of known deviations | Any code change. Always first. |
+| [`docs/android-mvi-best-practices.md`](../docs/android-mvi-best-practices.md) | How to write an MVI screen: the base class, Contract/ViewModel/Screen rules, concurrency, testing, Compose stability, and the pre-PR checklist | Touching any ViewModel, Contract, or screen composable |
+
+### Reading rules
+
+1. **`LLM.md` first, then the relevant section of the MVI doc.** `LLM.md` says *where*; the MVI doc says *how*.
+2. **Check `LLM.md` §10 before creating a file.** Do not invent a package.
+3. **Check `LLM.md` §11 before copying a pattern from an existing file.** Twelve known deviations are listed there — two of them are live bugs. Never propagate a pattern from a file named in that section.
+4. **Check `LLM.md` §12 before "improving" something.** Those patterns are deliberate and documented in the code.
+5. **Run the checklist in MVI doc §9 before reporting a code change as done.**
+
+### Update rules
+
+Documentation drift is a defect, and it is fixed in the same change that caused it — never deferred.
+
+| Change you made | Update this, in the same commit |
+|---|---|
+| Added/moved/renamed/deleted a package, module or source set | `LLM.md` §3 |
+| Added a feature (Contract + ViewModel + Screen) | `LLM.md` §3 tree if the package layout is new |
+| Changed a layer boundary or a dependency direction | `LLM.md` §2 |
+| Changed the DI wiring convention | `LLM.md` §6 |
+| Changed a navigation or route convention | `LLM.md` §7 |
+| Changed `compose-stability.conf` or the stability gate | `LLM.md` §8 **and** MVI doc §8 |
+| Changed a testing convention | `LLM.md` §9 **and** MVI doc §7 |
+| Introduced a new architectural pattern | MVI doc — add the rule, with the reason and the cost of getting it wrong |
+| Fixed a deviation listed in `LLM.md` §11 | Move that row from "Open" to "Fixed" with the commit reference |
+| Found a NEW deviation you are not fixing now | Add a row to `LLM.md` §11 "Open" |
+
+**Style for both files:** state the rule, then the concrete cost of breaking it. Snippets must be real code from the codebase, not invented examples. A rule with no stated reason gets ignored and eventually deleted.
+
+### Non-negotiable MVI rules
+
+The full set is in the MVI doc. These are the ones that have already cost real bugs — a code review must reject a violation:
+
+- Every screen ViewModel extends `MviViewModel<S, I, E>`. No plain `ViewModel`.
+- `onIntent` is the **only** public method on a ViewModel. No escape hatches.
+- State/Intent/Effect live in `XContract.kt` — never inline in the ViewModel file.
+- Every coroutine goes through `launchSafely`; `CancellationException` is rethrown.
+- Every declared Effect is collected by a screen, with `collect` (never `collectLatest`), lifecycle-aware.
+- Navigation is an Effect. Never a flag in state.
+- Sub-jobs are structural children of their parent job, never fields cancelled by hand.
+- No Compose or platform import inside a ViewModel.
+
+---
 
 ## Skills
 
@@ -197,6 +248,7 @@ A few agents and rules still mention skills that were deliberately dropped. They
 
 ## Notes when copying to a new project
 
+- Copy `LLM.md` and `docs/android-mvi-best-practices.md` along with `.claude/`, then rewrite `LLM.md` §2–§11 to describe the new project's actual modules and packages. The MVI doc is project-independent and usually needs no change; §11 of `LLM.md` starts empty.
 - Script paths inside `SKILL.md` files are **relative to the project root** — run them from the root, not from inside the skill directory.
 - `ui-design-pencil` needs the Pencil MCP server configured for the session.
 - `ai-multimodal` and `research` (Gemini mode) need `GEMINI_API_KEY`; `docs-seeker` optionally uses `CONTEXT7_API_KEY`.

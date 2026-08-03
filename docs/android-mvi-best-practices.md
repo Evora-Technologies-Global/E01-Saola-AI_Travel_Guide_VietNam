@@ -1,0 +1,754 @@
+# Android / KMP MVI — Best Practices
+
+> Companion to [`../LLM.md`](../LLM.md). `LLM.md` says **where** code goes; this file says
+> **how** to write an MVI screen. Read the relevant section before writing a ViewModel or a
+> screen composable.
+
+Every rule below is derived from the `VietLensAI` codebase (Kotlin Multiplatform + Compose
+Multiplatform, Android + iOS). Snippets are real, not illustrative. Applies unchanged to a
+pure-Android Jetpack Compose project — drop the `expect/actual` parts.
+
+---
+
+## 0. The one-paragraph version
+
+State flows down, intents flow up, effects fire once. A screen has exactly one
+`StateFlow<S>` and exactly one write entry point, `onIntent(I)`. Anything that must happen
+*to* the UI rather than *be rendered by* it — navigate, snackbar, scroll, request a
+permission — is an `Effect` delivered through a `Channel`. The ViewModel never touches
+Compose, Android, or a platform API; the composable never touches a repository.
+
+```
+┌──────────┐  state: StateFlow<S>   ┌──────────────┐  UseCase   ┌────────────┐
+│  Screen  │ ←───────────────────── │  ViewModel   │ ─────────→ │   Domain   │
+│(stateless)│  onIntent(I) ────────→ │  (MviVM<S,I,E>)│ ←────────  │            │
+└──────────┘                        └──────────────┘  AppResult └────────────┘
+     ↑  effects: Flow<E>  (Channel, exactly-once)  │
+     └───────────────────────────────────────────── ┘
+```
+
+---
+
+## 1. The base class
+
+Put this in `core/mvi/MviViewModel.kt` and extend it from **every** screen ViewModel.
+
+```kotlin
+/** Everything a screen renders, in one immutable snapshot. */
+interface UiState
+
+/** Something the user did. */
+interface UiIntent
+
+/** A one-shot instruction to the UI: navigate, show a snackbar, speak a sentence. */
+interface UiEffect
+
+abstract class MviViewModel<S : UiState, I : UiIntent, E : UiEffect>(
+    initialState: S,
+) : ViewModel() {
+
+    private val _state = MutableStateFlow(initialState)
+    val state: StateFlow<S> = _state.asStateFlow()
+
+    private val _effects = Channel<E>(Channel.BUFFERED)
+    val effects = _effects.receiveAsFlow()
+
+    protected val currentState: S get() = _state.value
+
+    abstract fun onIntent(intent: I)
+
+    protected fun setState(reducer: S.() -> S) = _state.update { it.reducer() }
+
+    protected fun sendEffect(effect: E) {
+        viewModelScope.launch { _effects.send(effect) }
+    }
+
+    protected fun launchSafely(
+        onError: (AppError) -> Unit = {},
+        block: suspend CoroutineScope.() -> Unit,
+    ): Job = viewModelScope.launch {
+        try {
+            block()
+        } catch (cancellation: CancellationException) {
+            throw cancellation          // NEVER swallow this
+        } catch (throwable: Throwable) {
+            log.e(throwable) { "Unhandled failure in ${this@MviViewModel::class.simpleName}" }
+            onError(AppError.Unexpected(throwable.message))
+        }
+    }
+}
+```
+
+### Why `Channel`, not `SharedFlow`, for effects
+
+| | Behaviour when the screen is backgrounded |
+|---|---|
+| `MutableSharedFlow(replay = 0)` | **Drops** the event. A navigation raised while the screen was stopped never happens. |
+| `MutableSharedFlow(replay = 1)` | **Re-fires** on every config change / re-subscription. You then need a `consumed` flag, which is state pretending not to be. |
+| `Channel(BUFFERED).receiveAsFlow()` | **Buffers**, delivers exactly once when a collector returns. ✅ |
+
+This is testable, and it should be tested:
+
+```kotlin
+@Test
+fun `effects raised with no collector are delivered exactly once`() = runTest {
+    val vm = viewModel()
+    vm.onIntent(LensIntent.PhotoCaptured("/captures/capture_1.jpg"))
+    settle()
+
+    vm.effects.test {
+        assertTrue(awaitItem() is LensEffect.OpenDiscovery)
+        expectNoEvents()
+    }
+}
+```
+
+### Why `launchSafely`, not `viewModelScope.launch`
+
+`viewModelScope` carries a `SupervisorJob` but **no `CoroutineExceptionHandler`**. An
+exception escaping a plain `viewModelScope.launch` reaches the platform default handler —
+on Android that is the process dying.
+
+This is a floor, not a licence. The layer below already returns `AppResult` and folds its
+own failures into `AppError`. `launchSafely` catches the gap between that promise and
+reality: an unwrapped Room read, a DataStore file the OS could not open, a mapper meeting a
+column written by an older version.
+
+```kotlin
+// ✅ user is waiting on this — give them an error to look at
+launchSafely(onError = { setState { copy(isLoading = false, error = it) } }) { … }
+
+// ✅ background work they never asked for — log only, do not interrupt them
+launchSafely { markLocationAsked() }
+
+// ❌ never
+viewModelScope.launch { repository.doSomething() }
+```
+
+**`CancellationException` must be rethrown.** It is how a coroutine is *told to stop* — a
+superseded request, a screen that has left. Swallowing it turns every ordinary cancellation
+into a spurious error banner and breaks structured concurrency.
+
+---
+
+## 2. The Contract file
+
+One file per feature: `XContract.kt`. **State, Intent, Effect — nothing else.** No logic,
+no ViewModel, no composables. This is the first file anyone reads to understand a screen.
+
+Mandatory even when a set is empty:
+
+```kotlin
+/**
+ * Nothing to emit.
+ *
+ * The screen reads, and the three things it can do — go back, open a discovery, open the
+ * lens — are navigation the route already owns. Declared rather than removed because
+ * MviViewModel is typed on an effect, and a sealed interface with no cases states exactly
+ * what is true.
+ */
+sealed interface CollectionEffect : UiEffect
+```
+
+### State
+
+```kotlin
+data class LensState(
+    val mode: LensMode = LensMode.AUTO,
+    val isAnalysing: Boolean = false,
+    val isCapturing: Boolean = false,
+    val countdown: Int = 0,
+    val recentDiscoveries: List<Discovery> = emptyList(),
+    val error: AppError? = null,
+) : UiState {
+    val isCountingDown: Boolean get() = countdown > 0
+
+    /** True whenever a second shutter press would be wrong rather than merely early. */
+    val isBusy: Boolean get() = isAnalysing || isCountingDown || isCapturing
+}
+```
+
+**Rules**
+
+- `data class`, all `val`, every field defaulted. The defaults *are* the initial state.
+- One state class per screen. Never two StateFlows on one ViewModel.
+- **Derive, don't duplicate.** Anything computable from other fields is a computed `val`,
+  not a stored field. Two fields that can disagree will disagree.
+- **Hold ids, not objects,** for "which thing is selected":
+
+  ```kotlin
+  val selectedItemId: String? = null              // ✅
+  val selected: CollectionEntry? get() = selectedItemId?.let { id -> … }
+
+  val selectedItem: CollectionEntry? = null       // ❌ goes stale on refresh
+  ```
+  A background refresh then re-renders the open sheet with fresh data instead of leaving a
+  stale copy on screen.
+- **Model the states that actually differ.** `isCapturing` is separate from `isAnalysing`
+  because analysis only starts once there is a file — the few hundred milliseconds between
+  them is exactly when a second shutter press starts a second capture.
+- **Comment a default that is not the obvious one:**
+
+  ```kotlin
+  /**
+   * Defaults to true, the opposite of the stored default on purpose: settings arrive one
+   * emission after the first frame, and starting at false would flash the location card
+   * onto the viewfinder on every single launch.
+   */
+  val hasAskedLocation: Boolean = true,
+  ```
+- Every type on a state class must be **stable** for Compose. Domain types come from a
+  Compose-free module, so they must be listed in `compose-stability.conf` — see §8.
+
+### Intent
+
+```kotlin
+sealed interface LensIntent : UiIntent {
+    data class SelectMode(val mode: LensMode) : LensIntent
+    data class PhotoCaptured(val path: String) : LensIntent
+    data object ShutterPressed : LensIntent
+    data object ScreenStarted : LensIntent
+    data object ScreenStopped : LensIntent
+}
+```
+
+**Rules**
+
+- `sealed interface` + `data object` for no-payload, `data class` for payload. Never an enum.
+- **Name the event, not the mutation.** `ShutterPressed`, not `SetCapturing(true)`. The
+  ViewModel decides what a press means — with a self-timer running it means *cancel*.
+- **One intent per user meaning, not per call site.** Toolbar back and system back are the
+  same `BackPressed`; whether leaving is free or costs an unfinished translation is not
+  something two call sites should each work out.
+- **Distinguish outcomes that need different handling.** `CaptureFailed` (apologise) vs
+  `CaptureAborted` (the screen left mid-capture — nothing to apologise for, and no error
+  banner waiting on the way back).
+- Lifecycle is an intent when it changes behaviour: `ScreenStarted` / `ScreenStopped`.
+
+### Effect
+
+```kotlin
+sealed interface LensEffect : UiEffect {
+    data class OpenDiscovery(val id: String) : LensEffect
+    data class ShowMessage(val error: AppError) : LensEffect
+    data object TakePhoto : LensEffect
+}
+```
+
+**State or Effect?**
+
+| Question | Answer |
+|---|---|
+| Should it survive a config change and be re-rendered? | **State** |
+| Should it happen exactly once and then be gone? | **Effect** |
+
+Navigation, snackbars, scroll-to-bottom, permission requests, "fire the shutter now",
+opening an external URL → Effect. A loading spinner, an inline error banner, a selected tab
+→ State.
+
+**A failure can legitimately be both.** Keep it in state when the screen renders it inline,
+*and* raise an effect only in the case where there is nowhere on screen to draw it:
+
+```kotlin
+is AppResult.Failure -> {
+    setState { copy(isLoading = false, error = result.error) }
+    // Over a map that already has markers the failure has nowhere to be drawn, so it is
+    // spoken instead. With an empty map the screen renders state.error as a card and this
+    // would be the same news twice.
+    if (currentState.places.isNotEmpty()) sendEffect(ExploreEffect.ShowError(result.error))
+}
+```
+
+---
+
+## 3. The ViewModel
+
+```kotlin
+class LensViewModel(
+    private val recognizeImage: RecognizeImageUseCase,
+    private val markLocationAsked: MarkLocationAskedUseCase,
+    observeDiscoveries: ObserveDiscoveriesUseCase,      // no `private val` — init-only
+    observeSettings: ObserveSettingsUseCase,
+) : MviViewModel<LensState, LensIntent, LensEffect>(LensState()) {
+
+    private var analysisJob: Job? = null
+    private var countdownJob: Job? = null
+
+    init {
+        observeDiscoveries()
+            .map { it.take(RECENT_COUNT) }
+            .onEach { recent -> setState { copy(recentDiscoveries = recent) } }
+            .launchIn(viewModelScope)
+
+        observeSettings()
+            .onEach { s -> setState { copy(hasAskedLocation = s.hasAskedLocation) } }
+            .launchIn(viewModelScope)
+    }
+
+    override fun onIntent(intent: LensIntent) {
+        when (intent) {
+            is LensIntent.SelectMode      -> setState { copy(mode = intent.mode, error = null) }
+            is LensIntent.ShutterPressed  -> onShutterPressed()
+            is LensIntent.PhotoCaptured   -> { setState { copy(isCapturing = false) }; analyse(intent.path) }
+            is LensIntent.LocationAsked   -> launchSafely { markLocationAsked() }
+            // …exhaustive, no `else`
+        }
+    }
+}
+```
+
+### Hard rules
+
+1. **`onIntent` is the only public method.** No other public function, no public property
+   besides `state` and `effects`.
+
+   ```kotlin
+   fun newCapturePath(): String = captureStore.newCapturePath()   // ❌ escape hatch
+   fun onMicPermissionGranted() { … }                             // ❌ should be an Intent
+   ```
+   If the composable needs a value the VM has, either raise it in an Effect or let the
+   Route get the collaborator from DI directly.
+
+2. **The `when` must be exhaustive with no `else`.** That is the entire reason Intent is a
+   sealed interface: adding a case becomes a compile error at every reducer.
+
+3. **`init` observes; it does not act.** Wire up `observeX().onEach { setState { … } }
+   .launchIn(viewModelScope)` and stop. Work that needs a permission or a user decision
+   starts from an intent — `ExploreIntent.PermissionResolved` — because the permission is
+   the screen's to ask for.
+
+4. **Constructor arguments used only in `init` are not `private val`.** Keeping a reference
+   to a use case you never call again is a needless retention.
+
+5. **Route arguments are read from `SavedStateHandle` into the initial state**, not copied
+   in a frame later:
+
+   ```kotlin
+   ) : MviViewModel<TranslationState, …>(
+       // The arguments ARE the initial state. A `setState { copy(imagePath = imagePath) }`
+       // in init silently reads the state's own property instead of the field beside it.
+       TranslationState(imagePath = savedStateHandle[Routes.ARG_IMAGE_PATH] ?: ""),
+   )
+   ```
+
+6. **Never import anything from `androidx.compose.*` or a platform SDK** into a ViewModel.
+   The one exception in this codebase is `ImageBitmap` on `PassportState`, and it costs a
+   line in `compose-stability.conf`.
+
+7. **No business rules in the ViewModel.** It orchestrates use cases and reduces state. A
+   rule that could be unit-tested without a `StateFlow` belongs in `:domain`.
+
+### Concurrency
+
+**Cancel and replace, don't queue.** A second request usually means "that one, now", not
+"both of them":
+
+```kotlin
+private fun analyse(imagePath: String) {
+    // A second capture while one is in flight replaces it: the traveller has moved on, and
+    // finishing the old request would navigate them somewhere they no longer care about.
+    analysisJob?.cancel()
+    analysisJob = launchSafely(onError = { setState { copy(isAnalysing = false, error = it) } }) { … }
+}
+```
+
+**Guard re-entrancy in the reducer, not in the UI:**
+
+```kotlin
+private fun generate(date: LocalDate) {
+    // One at a time: each is a full model call, and two in flight would let a slow one
+    // overwrite a fresh one when it lands.
+    if (currentState.generatingDate != null) return
+    …
+}
+```
+
+**Own sub-jobs structurally, never as a field you must remember to cancel.** This is the
+single highest-value rule in this document — it is a real bug that shipped:
+
+```kotlin
+analysisJob = launchSafely(…) {
+    // A CHILD of this job, not a `stageJob` field.
+    //
+    // As a field it had to be cancelled by hand at each of the four places a request can
+    // end, and two were missed: the early-return translate branch, and any exception. That
+    // left a `while (isActive)` loop writing state every 1.8s for the rest of the
+    // ViewModel's life, recomposing a screen the user had left.
+    val ticker = launch {
+        var stage = 0
+        while (isActive) { delay(STAGE_INTERVAL_MILLIS); setState { copy(analysisStage = ++stage) } }
+    }
+    try {
+        val result = withTimeoutOrNull(DETECT_TIMEOUT_MILLIS) { recognizeImage(imagePath, currentState.mode) }
+        when (result) { … }
+    } finally {
+        ticker.cancel()   // an infinite child would keep the parent from ever completing
+    }
+}
+```
+
+**Bound every wait.** `withTimeoutOrNull(DETECT_TIMEOUT_MILLIS)` rather than
+`withTimeout`, so the expiry lands in the same `when` as every other outcome instead of in
+a `catch` that must be careful not to swallow the screen's own cancellation.
+
+**Guard late results against a changed selection:**
+
+```kotlin
+is AppResult.Success -> setState {
+    // A slow response for a place the traveller has since closed must not reopen it.
+    if (selectedPlaceId == placeId) copy(details = result.data, isLoadingDetails = false) else this
+}
+```
+
+**Release what you claimed, in `onCleared`:**
+
+```kotlin
+override fun onCleared() {
+    super.onCleared()
+    volumeShutter.disarm()
+    analysisJob?.cancel()
+    countdownJob?.cancel()
+}
+```
+
+### Room / DataStore is the single source of truth
+
+After a write, do **not** copy the result into state. Let the observed flow re-emit:
+
+```kotlin
+is AppResult.Success -> setState { copy(generatingDate = null) }
+// The written summary arrives through observeJournal(), so there is nothing to assign
+// here — Room stays the single source of truth.
+```
+
+---
+
+## 4. The screen
+
+Two composables, always. `XRoute` is public and stateful; `XScreen` is private and pure.
+
+```kotlin
+@Composable
+fun LensRoute(
+    onDiscoveryCaptured: (String) -> Unit,
+    onOpenSettings: () -> Unit,
+    modifier: Modifier = Modifier,
+    viewModel: LensViewModel = koinViewModel(),
+) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
+    CollectEffects(viewModel.effects) { effect ->
+        when (effect) {
+            is LensEffect.OpenDiscovery -> onDiscoveryCaptured(effect.id)
+            is LensEffect.ShowMessage   -> Unit   // rendered inline by the error banner
+        }
+    }
+
+    LensScreen(state = state, onIntent = viewModel::onIntent, modifier = modifier)
+}
+
+@Composable
+private fun LensScreen(
+    state: LensState,
+    onIntent: (LensIntent) -> Unit,
+    modifier: Modifier = Modifier,
+) { … }
+```
+
+### The effect collector — write it once, in `core/mvi/`
+
+Five screens hand-rolling this block is how two of them ended up forgetting it entirely.
+
+```kotlin
+// core/mvi/CollectEffects.kt
+@Composable
+fun <E : UiEffect> CollectEffects(effects: Flow<E>, onEffect: suspend (E) -> Unit) {
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val handler by rememberUpdatedState(onEffect)
+    LaunchedEffect(effects, lifecycleOwner) {
+        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            effects.collect { handler(it) }
+        }
+    }
+}
+```
+
+- **`collect`, never `collectLatest`.** `collectLatest` cancels the handling of the
+  previous effect the moment the next arrives — a navigation half-performed.
+- **`repeatOnLifecycle(STARTED)`,** so nothing is handled while the screen is not visible.
+  The channel buffers meanwhile; nothing is lost.
+- **If a ViewModel declares an Effect, some screen must collect it.** An uncollected
+  `Channel(BUFFERED)` fills at 64 and every subsequent `send` suspends forever inside
+  `viewModelScope` — one leaked coroutine per emission, and the feature silently dead.
+  This is currently true of `ChatScreen` and `JournalScreen`.
+- Work that must outlive the collector (a capture in flight) is `scope.launch { … }` from a
+  `rememberCoroutineScope()` **outside** the collector.
+
+### Rules for `XScreen` and below
+
+- Takes `state: XState` and `onIntent: (XIntent) -> Unit`. Never the ViewModel.
+- **Never derives business truth.** `if (state.isBusy)`, not
+  `if (state.isAnalysing || state.countdown > 0 || state.isCapturing)`. That expression
+  belongs on the state class.
+- No `remember { mutableStateOf(…) }` for anything the ViewModel should own. Purely visual
+  local state (a `SnackbarHostState`, a `LazyListState`, an animation target) is fine.
+- Every parameter must be **stable**, or the composable can never skip and re-executes on
+  every parent recomposition.
+- Passes `onIntent` down as-is. Do not wrap it in a new lambda per item in a list — that
+  allocates a new instance each recomposition and defeats skipping.
+
+### Platform state lives in the composable, and reports upward
+
+Permissions need an Activity result launcher on Android and a `CLLocationManager` on iOS.
+Neither belongs in a ViewModel:
+
+```kotlin
+val permission = rememberLocationPermissionState()
+LaunchedEffect(permission.isGranted) {
+    viewModel.onIntent(ExploreIntent.PermissionResolved(permission.isGranted))
+}
+```
+
+Same shape for lifecycle events the VM must react to:
+
+```kotlin
+DisposableEffect(lifecycleOwner, viewModel) {
+    val observer = LifecycleEventObserver { _, event ->
+        when (event) {
+            Lifecycle.Event.ON_START -> viewModel.onIntent(LensIntent.ScreenStarted)
+            Lifecycle.Event.ON_STOP  -> viewModel.onIntent(LensIntent.ScreenStopped)
+            else -> Unit
+        }
+    }
+    lifecycleOwner.lifecycle.addObserver(observer)
+    onDispose {
+        lifecycleOwner.lifecycle.removeObserver(observer)
+        viewModel.onIntent(LensIntent.ScreenStopped)
+    }
+}
+```
+
+### File size
+
+Target **under 200 lines**. Past ~150 lines a private composable moves to
+`XComponents.kt` in the same package. Screens in this codebase currently run to 2170 lines
+— that is the backlog, not the pattern.
+
+---
+
+## 5. Consuming the domain layer
+
+The repository contract is `AppResult<T>` + `AppError`. **Exceptions never cross a layer
+boundary** — `launchSafely` exists only because reality occasionally disagrees.
+
+```kotlin
+when (val result = generateDaySummary(date)) {
+    is AppResult.Failure -> {
+        setState { copy(generatingDate = null, error = result.error) }
+        sendEffect(JournalEffect.ShowMessage(result.error))
+    }
+    is AppResult.Success -> setState { copy(generatingDate = null) }
+}
+```
+
+`AppError` is a sealed hierarchy, not a `String`. The screen maps it to a localised message
+at render time (`core/util/ErrorMessages.kt`) — the ViewModel must never build user-facing
+copy, because it has no access to the string resources and no business being in the
+translation pipeline.
+
+**Observe, don't fetch,** wherever a Flow exists. Every `observeX()` re-emits on write, so
+the screen is correct after a change made from anywhere else in the app.
+
+---
+
+## 6. Dependency injection (Koin)
+
+```kotlin
+val presentationModule = module {
+    viewModel { LensViewModel(recognizeImage = get(), observeSettings = get()) }
+
+    // Reads route arguments → needs SavedStateHandle from the nav back-stack entry
+    viewModel { params -> ChatViewModel(savedStateHandle = params.get(), observeChat = get()) }
+}
+```
+
+- `viewModel { }`, never `single { }`. A `single` ViewModel outlives its screen, keeps its
+  state and its jobs forever, and is the classic "why is the old data still there" bug.
+- Constructor injection only. No `by inject()` inside a ViewModel body.
+- Register the use case in `useCaseModule` and the ViewModel in `presentationModule` in the
+  same change that adds them.
+
+---
+
+## 7. Testing an MVI ViewModel
+
+The ViewModel is the only part of the presentation layer worth unit-testing, and with this
+architecture it is fully testable: no Android, no Compose, no `Context`.
+
+```kotlin
+@BeforeTest fun setUp() {
+    // viewModelScope is hard-wired to Dispatchers.Main.immediate, which does not exist on a
+    // plain JVM runtime. Unconfined so a launch inside init has run by the time the
+    // constructor returns — which is what the screen sees too.
+    Dispatchers.setMain(UnconfinedTestDispatcher())
+}
+@AfterTest fun tearDown() = Dispatchers.resetMain()
+```
+
+**Cover these five categories:**
+
+| Category | Assert |
+|---|---|
+| Reducers | `vm.onIntent(X); assertEquals(expected, vm.state.value.field)` |
+| Effects | `vm.effects.test { assertTrue(awaitItem() is XEffect.Y); expectNoEvents() }` |
+| Crash containment | a fake that throws → `state.error is AppError.Unexpected`, **not** a thrown test |
+| Stuck states | a request that never answers → the spinner **must** come down at the timeout |
+| Unbounded growth | 500 rows in the fake → `assertEquals(5, state.recent.size)` |
+
+**Intent fuzzing** is the standard for any ViewModel with more than two concurrent jobs.
+Exhaustive `when` proves you handled every intent; it proves nothing about *combinations*:
+
+```kotlin
+@Test fun `no ordering of intents throws`() = runTest(timeout = 30.seconds) {
+    val random = Random(seed = 20260802)          // fixed → reproducible
+    repeat(FUZZ_ROUNDS) {
+        val vm = viewModel()
+        repeat(20) {
+            vm.onIntent(intents[random.nextInt(intents.size)])
+            // Let that make progress, so the next intent lands on a ViewModel mid-flight.
+            if (random.nextBoolean()) advanceTimeBy(random.nextLong(1, 2_000))
+            runCurrent()
+        }
+        settle()
+        vm.clearAsFrameworkWould()
+    }
+}
+```
+
+This is what found the leaked stage ticker — and it found it by *hanging*, which is why:
+
+> **Never use `advanceUntilIdle` on a ViewModel with a `while (isActive)` loop.** The
+> scheduler holding a leaked one never becomes idle, so the call hangs the suite instead of
+> failing it. Use a bounded advance:
+> ```kotlin
+> private fun TestScope.settle(horizonMillis: Long = 120_000) {
+>     advanceTimeBy(horizonMillis); runCurrent()
+> }
+> ```
+
+Fakes live in `commonTest/testing/Fakes.kt` with switchable failure modes
+(`throwOnRecognize`, `recognizeDelayMillis`) plus `clearAsFrameworkWould()` to invoke
+`onCleared()`. No mocking library — a fake you can read beats a mock you have to decode,
+and MockK does not work on Kotlin/Native anyway.
+
+---
+
+## 8. Compose performance — the part MVI makes or breaks
+
+Every `setState { copy(…) }` creates a new state object. If any type on that object is
+**unstable**, the composable taking it compares by reference, can never skip, and the whole
+subtree re-executes on every emission. On a screen with a 1-second timer tick that is the
+entire viewfinder repainting once a second.
+
+Domain types come from a module compiled **without** the Compose plugin, so they are all
+inferred unstable regardless of being immutable `data class`es. Fix it by declaring them,
+not by putting a Compose dependency in `:domain`:
+
+```conf
+// compose-stability.conf   (// comments only — a # breaks the parse)
+kotlin.collections.List
+kotlin.collections.Map
+kotlin.collections.Set
+kotlin.ranges.IntRange
+kotlin.time.Instant
+kotlinx.datetime.LocalDate
+androidx.compose.ui.graphics.ImageBitmap
+com.duylt.trave.vietlensai.domain.model.*
+com.duylt.trave.vietlensai.domain.util.*
+```
+
+Wire the reports and gate on them:
+
+```kotlin
+composeCompiler {
+    reportsDestination.set(layout.buildDirectory.dir("compose-reports"))
+    metricsDestination.set(layout.buildDirectory.dir("compose-reports"))
+    stabilityConfigurationFiles.add(layout.projectDirectory.file("compose-stability.conf"))
+}
+```
+
+`ComposeStabilityReportTest` then asserts against those reports on every build, so a class
+added to the conf file that is not actually immutable is caught rather than assumed.
+**Everything listed must be genuinely immutable after construction** — `val`-only, stable
+property types, no collection ever mutated in place.
+
+Other performance rules that follow from MVI:
+- Cap anything unbounded **in the ViewModel**, not in the UI: `.map { it.take(5) }` before
+  it reaches state. A `LazyColumn` rendering 5 of 500 still retains all 500.
+- Split large states only if a genuinely independent region recomposes on unrelated
+  changes. Prefer one state class; reach for `derivedStateOf` in the composable first.
+
+---
+
+## 9. Checklist — run this before opening a PR
+
+**Contract**
+- [ ] `XContract.kt` exists and holds State + Intent + Effect only
+- [ ] State is a `data class`, all `val`, every field defaulted
+- [ ] No field derivable from another field; derived values are computed `val`s
+- [ ] Selections are held as ids, not as objects
+- [ ] Intent is a sealed interface named after user events, not mutations
+- [ ] Every Effect is one-shot; nothing renderable is an Effect
+- [ ] New domain types on the state are in `compose-stability.conf`
+
+**ViewModel**
+- [ ] Extends `MviViewModel<S, I, E>`
+- [ ] `onIntent` is the **only** public method
+- [ ] The `when` is exhaustive with no `else`
+- [ ] Every coroutine goes through `launchSafely`; `CancellationException` is rethrown
+- [ ] Every network/IO wait is bounded (`withTimeoutOrNull`)
+- [ ] Superseding requests cancel the previous job
+- [ ] Sub-jobs are structural children, not fields
+- [ ] Late results are guarded against a changed selection
+- [ ] `onCleared` releases everything claimed
+- [ ] No Compose / Android / platform import
+- [ ] No business rule that belongs in a use case
+- [ ] Registered in `presentationModule` as `viewModel { }`
+
+**Screen**
+- [ ] `XRoute` (public, stateful) + `XScreen` (private, stateless) split
+- [ ] `collectAsStateWithLifecycle()`, not `collectAsState()`
+- [ ] Effects collected via `CollectEffects` — `collect`, lifecycle-aware
+- [ ] **Every** declared Effect has a branch
+- [ ] Nothing below `XRoute` sees the ViewModel
+- [ ] No business logic in a composable
+- [ ] File under 200 lines
+
+**Tests**
+- [ ] Reducer test per intent that changes state
+- [ ] Effect test per effect
+- [ ] Crash-containment test for every throwing collaborator
+- [ ] Timeout test for every unbounded wait
+- [ ] Intent fuzz test if the VM has >2 concurrent jobs
+- [ ] `Dispatchers.setMain` / `resetMain`; no real delays; no `advanceUntilIdle`
+
+---
+
+## 10. Anti-patterns — with the real cost
+
+| Anti-pattern | What it actually costs |
+|---|---|
+| Effect declared but never collected | `Channel(BUFFERED)` fills at 64, `send` suspends forever, one leaked coroutine per emission, feature silently dead. **Live in `ChatScreen` and `JournalScreen`.** |
+| Public method on a VM besides `onIntent` | The screen can drive the VM out of band; the reducer stops being the whole story. **Live: `newCapturePath()`, `onMicPermissionGranted()`.** |
+| `effects.collectLatest { }` | The next effect cancels the handling of the previous one. **Live in three screens.** |
+| Contract inline in the ViewModel file | The state class is buried; nobody reads it; fields get duplicated. **Live in four features.** |
+| `viewModelScope.launch` without a handler | No `CoroutineExceptionHandler` on `viewModelScope` → process death on Android. |
+| Swallowing `CancellationException` | Every ordinary cancellation becomes an error banner; structured concurrency breaks. |
+| `SharedFlow` for effects | Drops the event (replay 0) or re-fires it (replay 1). |
+| Navigation flag in state | Re-navigates on every config change; needs a `consumed` flag, which is state pretending not to be. |
+| Storing the selected *object* | A refresh leaves a stale copy on screen behind an open sheet. |
+| Sub-job as a field | Missed cancel → `while (isActive)` loop writing state forever. **Cost a real bug.** |
+| `advanceUntilIdle` with a ticker | The suite hangs instead of failing. |
+| Domain types not in `compose-stability.conf` | Every composable taking one becomes non-skippable; whole screens repaint per tick. |
+| `single { }` for a ViewModel | It outlives its screen with all its state and jobs. |
+| Plain `ViewModel` instead of `MviViewModel` | No effect channel, no crash floor, untestable in the same way as everything else. **Live: `SovereigntyViewModel`.** |
