@@ -1,17 +1,12 @@
 package com.duylt.trave.vietlensai.feature.sovereignty
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import com.duylt.trave.vietlensai.core.mvi.MviViewModel
 import com.duylt.trave.vietlensai.core.util.log
+import com.duylt.trave.vietlensai.resources.Res
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.ExperimentalResourceApi
-import com.duylt.trave.vietlensai.resources.Res
 
 /**
  * Holds the locator map the statement is built around.
@@ -20,17 +15,27 @@ import com.duylt.trave.vietlensai.resources.Res
  * UI figure, it is only ever read by this screen, and `Res.readBytes` packages and reads it
  * identically on both platforms — no asset manager on one side and no bundle lookup on the
  * other.
+ *
+ * On [MviViewModel] like every other screen even though nothing is ever sent to it and nothing
+ * is ever emitted from it. The value is not the empty channel — it is that ten feature packages
+ * present ten identical shapes, so a reader arriving at this one has no exception to reason
+ * about. `CollectionEffect` already sets that precedent for an empty effect set.
  */
-class SovereigntyViewModel : ViewModel() {
-
-    private val _map = MutableStateFlow<RegionMap?>(null)
-
-    /** Null until the asset has been read; the page draws its prose meanwhile. */
-    val map: StateFlow<RegionMap?> = _map.asStateFlow()
+class SovereigntyViewModel :
+    MviViewModel<SovereigntyState, SovereigntyIntent, SovereigntyEffect>(SovereigntyState()) {
 
     init {
-        viewModelScope.launch { _map.value = load() }
+        // Through `launchSafely` rather than a bare `viewModelScope.launch`, so the floor under
+        // it is the same one every other screen has: `load` answers for the parse itself, and
+        // this catches whatever it did not — a resource the platform could not open at all.
+        launchSafely(onError = { setState { copy(isLoading = false) } }) {
+            val parsed = load()
+            setState { copy(isLoading = false, map = parsed) }
+        }
     }
+
+    /** Read-only screen: there is nothing the traveller can send. */
+    override fun onIntent(intent: SovereigntyIntent) = Unit
 
     /**
      * Reads and parses the figure off the main thread.
@@ -54,7 +59,9 @@ class SovereigntyViewModel : ViewModel() {
             throw cancellation
         } catch (e: Exception) {
             // The words are the point of this screen and they are in the string table.
-            // A map that will not parse costs the figure, not the statement.
+            // A map that will not parse costs the figure, not the statement. Logged here
+            // rather than left to `launchSafely`, which would name the ViewModel instead of
+            // the asset — and the asset is the only useful thing to know.
             log.e(e) { "Could not read $ASSET_PATH" }
             null
         }

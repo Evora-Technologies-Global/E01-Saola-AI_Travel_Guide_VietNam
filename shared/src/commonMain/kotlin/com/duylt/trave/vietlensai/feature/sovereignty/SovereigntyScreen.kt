@@ -81,7 +81,7 @@ fun SovereigntyRoute(
     modifier: Modifier = Modifier,
     viewModel: SovereigntyViewModel = koinViewModel(),
 ) {
-    val map by viewModel.map.collectAsStateWithLifecycle()
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
     // Deep red under the bars in either theme, so the icons have to be light in both.
     PinSystemBarIcons(darkIcons = false)
@@ -124,7 +124,7 @@ fun SovereigntyRoute(
         )
 
         Spacer(Modifier.height(20.dp))
-        MapCard(map)
+        MapCard(state.map)
 
         Spacer(Modifier.height(22.dp))
         Statement()

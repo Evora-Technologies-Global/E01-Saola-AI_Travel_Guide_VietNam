@@ -17,6 +17,15 @@ import kotlinx.coroutines.launch
 /**
  * Owns the settings the whole window depends on — theme and dynamic colour —
  * and gates the splash screen until they have been read from disk.
+ *
+ * The one ViewModel in this project that is a plain [ViewModel] rather than an
+ * [com.duylt.trave.vietlensai.core.mvi.MviViewModel], and deliberately so.
+ * `MviViewModel` is for **screens**: something with a route and a back-stack entry, a user
+ * who acts on it, and a state to render. This is the **window host** — no route, read by the
+ * Android Activity and by `MainViewController` on iOS before any screen exists. An intent
+ * channel with no sender and an effect channel with no collector would be ceremony, so the
+ * two StateFlows above are the exception the rule is stated against rather than a deviation
+ * from it. Anything reached by navigation extends `MviViewModel`, without exception.
  */
 class MainViewModel(
     private val observeSettings: ObserveSettingsUseCase,

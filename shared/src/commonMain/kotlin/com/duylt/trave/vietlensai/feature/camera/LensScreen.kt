@@ -187,6 +187,7 @@ import com.duylt.trave.vietlensai.core.designsystem.theme.PaperCream
 import com.duylt.trave.vietlensai.core.designsystem.theme.ScreenGutter
 import com.duylt.trave.vietlensai.core.designsystem.theme.Vermilion
 import com.duylt.trave.vietlensai.core.designsystem.theme.screenInsetsPadding
+import com.duylt.trave.vietlensai.core.mvi.CollectEffects
 import com.duylt.trave.vietlensai.core.util.rememberCameraPermissionState
 import com.duylt.trave.vietlensai.core.util.rememberLocationPermissionState
 import com.duylt.trave.vietlensai.core.util.toUserMessage
@@ -200,7 +201,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.ensureActive
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlin.math.PI
@@ -244,38 +244,41 @@ fun LensRoute(
     val controller = rememberCameraController()
     val scope = rememberCoroutineScope()
 
-    LaunchedEffect(viewModel) {
-        viewModel.effects.collectLatest { effect ->
-            when (effect) {
-                is LensEffect.OpenDiscovery -> onDiscoveryCaptured(effect.id)
-                is LensEffect.OpenTranslation -> onTranslationCaptured(
-                    effect.imagePath,
-                    effect.from?.code.orEmpty(),
-                    effect.to.code,
-                )
-                is LensEffect.ShowMessage -> Unit // rendered inline by ErrorBanner
-                is LensEffect.TakePhoto -> scope.launch {
-                    // Launched outside the collector: collectLatest would cancel a
-                    // capture in flight the moment the next effect arrives.
-                    var path: String? = null
-                    try {
-                        // Wrapped because takePicture throws outright if the use case
-                        // was unbound between the timer firing and this frame.
-                        path = runCatching { controller.capture(viewModel.newCapturePath()) }
-                            .getOrNull()
-                    } finally {
-                        // Reported from a finally because this scope dies with the
-                        // composition: a capture the screen outlived must still
-                        // release the shutter, without looking like a failure.
-                        val captured = path
-                        viewModel.onIntent(
-                            when {
-                                captured != null -> LensIntent.PhotoCaptured(captured)
-                                isActive -> LensIntent.CaptureFailed(null)
-                                else -> LensIntent.CaptureAborted
-                            },
-                        )
-                    }
+    CollectEffects(viewModel.effects) { effect ->
+        when (effect) {
+            is LensEffect.OpenDiscovery -> onDiscoveryCaptured(effect.id)
+            is LensEffect.OpenTranslation -> onTranslationCaptured(
+                effect.imagePath,
+                effect.from?.code.orEmpty(),
+                effect.to.code,
+            )
+            is LensEffect.ShowMessage -> Unit // rendered inline by ErrorBanner
+            is LensEffect.TakePhoto -> scope.launch {
+                // Launched outside the collector, which is now lifecycle-scoped and is
+                // cancelled at ON_STOP. A capture already in flight has to reach its
+                // `finally` whatever the screen does — that is what raises PhotoCaptured
+                // / CaptureFailed / CaptureAborted and releases the shutter, and a
+                // capture killed silently mid-write would leave `isCapturing` true with
+                // nothing left to clear it. `rememberCoroutineScope()` lives until the
+                // composable leaves composition, which is the lifetime this needs.
+                var path: String? = null
+                try {
+                    // Wrapped because takePicture throws outright if the use case
+                    // was unbound between the timer firing and this frame.
+                    path = runCatching { controller.capture(effect.outputPath) }
+                        .getOrNull()
+                } finally {
+                    // Reported from a finally because this scope dies with the
+                    // composition: a capture the screen outlived must still
+                    // release the shutter, without looking like a failure.
+                    val captured = path
+                    viewModel.onIntent(
+                        when {
+                            captured != null -> LensIntent.PhotoCaptured(captured)
+                            isActive -> LensIntent.CaptureFailed(null)
+                            else -> LensIntent.CaptureAborted
+                        },
+                    )
                 }
             }
         }

@@ -99,6 +99,7 @@ import com.duylt.trave.vietlensai.core.designsystem.component.AppSnackbarHost
 import com.duylt.trave.vietlensai.core.designsystem.component.showMessage
 import com.duylt.trave.vietlensai.core.designsystem.theme.ScreenGutter
 import com.duylt.trave.vietlensai.core.designsystem.theme.screenInsetsPadding
+import com.duylt.trave.vietlensai.core.mvi.CollectEffects
 import com.duylt.trave.vietlensai.core.util.toUserMessage
 import com.duylt.trave.vietlensai.domain.model.TranslationBlock
 import kotlinx.coroutines.launch
@@ -125,11 +126,9 @@ fun TranslationRoute(
     // Leaving is an effect rather than a button's own business: whether the arrow
     // closes the screen or asks a question first depends on work only the ViewModel
     // can see.
-    LaunchedEffect(viewModel) {
-        viewModel.effects.collect { effect ->
-            when (effect) {
-                is TranslationEffect.Close -> onBack()
-            }
+    CollectEffects(viewModel.effects) { effect ->
+        when (effect) {
+            is TranslationEffect.Close -> onBack()
         }
     }
 

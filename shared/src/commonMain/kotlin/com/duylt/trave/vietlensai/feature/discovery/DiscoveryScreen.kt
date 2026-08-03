@@ -114,6 +114,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.duylt.trave.vietlensai.resources.Res
@@ -179,6 +180,7 @@ import com.duylt.trave.vietlensai.core.designsystem.theme.Motion
 import com.duylt.trave.vietlensai.core.designsystem.theme.PaperCream
 import com.duylt.trave.vietlensai.core.designsystem.theme.ScreenGutter
 import com.duylt.trave.vietlensai.core.designsystem.theme.Vermilion
+import com.duylt.trave.vietlensai.core.mvi.CollectEffects
 import com.duylt.trave.vietlensai.core.util.accentColor
 import com.duylt.trave.vietlensai.core.util.asRelativeTime
 import com.duylt.trave.vietlensai.core.util.label
@@ -186,7 +188,7 @@ import com.duylt.trave.vietlensai.domain.model.AppLanguage
 import com.duylt.trave.vietlensai.domain.model.Discovery
 import com.duylt.trave.vietlensai.domain.model.DiscoveryNote
 import com.duylt.trave.vietlensai.domain.model.NearbySuggestion
-import kotlinx.coroutines.flow.collectLatest
+import com.duylt.trave.vietlensai.domain.repository.CaptureStore
 import kotlinx.coroutines.launch
 import com.duylt.trave.vietlensai.platform.rememberPhotoPicker
 import com.duylt.trave.vietlensai.platform.rememberTextSharer
@@ -200,12 +202,10 @@ fun DiscoveryRoute(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    LaunchedEffect(viewModel) {
-        viewModel.effects.collectLatest { effect ->
-            when (effect) {
-                DiscoveryEffect.NavigateBack -> onBack()
-                is DiscoveryEffect.OpenChat -> onOpenChat(effect.discoveryId)
-            }
+    CollectEffects(viewModel.effects) { effect ->
+        when (effect) {
+            DiscoveryEffect.NavigateBack -> onBack()
+            is DiscoveryEffect.OpenChat -> onOpenChat(effect.discoveryId)
         }
     }
 
@@ -214,7 +214,6 @@ fun DiscoveryRoute(
         onIntent = viewModel::onIntent,
         onBack = onBack,
         onOpenChat = onOpenChat,
-        newCapturePath = viewModel::newCapturePath,
         modifier = modifier,
     )
 }
@@ -233,7 +232,6 @@ private fun DiscoveryScreen(
     onIntent: (DiscoveryIntent) -> Unit,
     onBack: () -> Unit,
     onOpenChat: (String) -> Unit,
-    newCapturePath: () -> String,
     modifier: Modifier = Modifier,
 ) {
     val discovery = state.discovery
@@ -308,7 +306,6 @@ private fun DiscoveryScreen(
                 // Ahead of the page, not on top of it: a viewfinder drawn over a scrollable
                 // sheet still lets the sheet scroll underneath the finger.
                 DiscoveryPage.VIEWFINDER -> NoteCameraOverlay(
-                    newCapturePath = newCapturePath,
                     onCaptured = { path ->
                         showCamera = false
                         onIntent(DiscoveryIntent.NotePhotoCaptured(path))
@@ -1628,13 +1625,20 @@ private fun ZoomablePhoto(path: String, isSettled: Boolean) {
  * Deliberately not the lens screen: that one is an instrument for pointing at a thing and
  * asking what it is, with zoom, flash, timers and modes to match. This is a shutter and a
  * way to turn the camera around, because the traveller already knows what they are looking at.
+ *
+ * [CaptureStore] is taken from Koin here rather than reached through the ViewModel. Unlike the
+ * lens, this shutter is pressed inside the overlay and the ViewModel never learns of the press,
+ * so there is no effect for a path to travel on — and the alternative was a `newCapturePath`
+ * lambda threaded down five levels from the route, plus a second public method on a ViewModel
+ * whose only entry point is meant to be `onIntent`. It is the store, not the ViewModel: nothing
+ * below the route sees the ViewModel, and where captures are written stays the store's business.
  */
 @Composable
 private fun NoteCameraOverlay(
-    newCapturePath: () -> String,
     onCaptured: (String) -> Unit,
     onClose: () -> Unit,
 ) {
+    val captureStore: CaptureStore = koinInject()
     val controller = rememberCameraController()
     val capabilities by controller.capabilities.collectAsStateWithLifecycle()
     val scope = rememberCoroutineScope()
@@ -1704,7 +1708,7 @@ private fun NoteCameraOverlay(
                 .clickable(enabled = !isCapturing) {
                     isCapturing = true
                     scope.launch {
-                        val path = controller.capture(newCapturePath())
+                        val path = controller.capture(captureStore.newCapturePath())
                         isCapturing = false
                         if (path != null) onCaptured(path) else onClose()
                     }
