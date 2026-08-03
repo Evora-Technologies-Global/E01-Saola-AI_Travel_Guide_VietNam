@@ -65,8 +65,11 @@ src/
 │   │   ├── mvi/MviViewModel.kt       THE MVI CONTRACT — read this first
 │   │   ├── mvi/CollectEffects.kt     The one effect collector every XRoute uses
 │   │   ├── designsystem/
-│   │   │   ├── theme/                Color, Type, Dimens, Motion, Insets, Theme
-│   │   │   └── component/            Reusable composables (AppSnackbar, PermissionSheet…)
+│   │   │   ├── theme/                Color, Type (+ StampType, VietLensShapes), Dimens
+│   │   │   │                         (Spacing, PageSpacing), Motion, Insets, Theme
+│   │   │   └── component/            PageHeader, OverlayHeader, Components, AppSnackbar,
+│   │   │                             AppAsyncImage, PermissionSheet, SovereigntyBanner,
+│   │   │                             SystemBars
 │   │   └── util/                     Log, Formatters, Permissions, DateTimeFormat,
 │   │                                 ErrorMessages, VolumeShutterBus, DetectTimeout
 │   ├── feature/<name>/               ONE PACKAGE PER SCREEN — see §5
@@ -87,7 +90,8 @@ src/
 ├── iosMain/kotlin/…                  actual: AVFoundation, MapKit, AVSpeech,
 │                                     MainViewController (the framework entry point)
 ├── commonTest/                       ViewModel tests + testing/Fakes.kt
-├── androidHostTest/                  ComposeStabilityReportTest (needs java.io.File)
+├── androidHostTest/                  ComposeStabilityReportTest + DesignTokenTest
+│                                     (both need java.io.File)
 └── androidDeviceTest/                Gesture/recomposition tests (need a real device)
 ```
 
@@ -255,8 +259,16 @@ Conventions, from `LensViewModelCrashTest`:
   every intent in N shuffled orders with a fixed seed and assert nothing throws. This is
   what found the leaked stage ticker.
 
+Two source-reading gates live in `androidHostTest`, because both need `java.io.File`:
+
+- `ComposeStabilityReportTest` — asserts against the Compose compiler's own reports (§8).
+- `DesignTokenTest` — asserts against the `commonMain` **sources**, as text. A hardcoded
+  radius and `MaterialTheme.shapes.large` compile to identical bytecode, so the file is the
+  only place the difference still exists. See §13.
+
 Build gates: `tasks.withType<Test>` depends on `compileAndroidMain` so the Compose reports
-exist before the stability test reads them.
+exist before the stability test reads them, and sets `vietlens.commonMainDir` so the token
+test can find the sources.
 
 ---
 
@@ -269,7 +281,9 @@ exist before the stability test reads them.
 | A data model | `:domain/model/` | Immutable `data class`. Add its package to `compose-stability.conf` if new |
 | A repository | Interface in `:domain/repository/`, impl in `:data/` | ViewModels depend on the interface |
 | A reusable composable | `core/designsystem/component/` | Only if used by ≥2 features |
-| A colour / dimension / duration | `core/designsystem/theme/` | Never a magic number in a screen |
+| A page header | Nothing — call `PageHeader` or `OverlayHeader` | §13. A screen never writes its own; `DesignTokenTest` fails the build |
+| A colour / dimension / duration | `core/designsystem/theme/` | Never a magic number in a screen. §13 |
+| A text style | `theme/Type.kt` — a scale, or `StampType` | Never a `.copy()` or a `fontWeight` at a call site |
 | A string | `composeResources/values/strings.xml` **and** `values-vi/` | Both, always |
 | A platform capability | `expect` in `commonMain`, `actual` in both platform source sets | + a Koin binding in `platformUiModule` if it needs `Context` |
 | A pure helper | `core/util/` | Must be testable without Compose |
@@ -297,6 +311,10 @@ the file.
 | 13 | `SovereigntyRoute` renders the page itself — there is no private stateless `SovereigntyScreen`. The only feature without the Route/Screen split, so the page cannot be previewed. Not fixed with the MVI conversion because extracting a composable changes its recomposition scope, which is feature work rather than a structural rename. | `feature/sovereignty/SovereigntyScreen.kt:79` |
 | 14 | `commonTest` does not compile for Kotlin/Native: `LensViewModelCrashTest.kt:187` uses `SecurityException`, which is a JVM class. `:shared:allTests` therefore fails at `compileTestKotlinIosSimulatorArm64`; only the Android host run is green. Pre-dates this refactor — the file is unchanged since `09401ed`. | `commonTest/…/LensViewModelCrashTest.kt:187` |
 | 15 | `docs/bug-report-effect-collection.md` does not exist, but `plans/260802-2103-mvi-refactor/plan.md` refers to it four times as the home for the deferred UI work. Either write it or drop the references. | `plans/260802-2103-mvi-refactor/plan.md` |
+| 16 | **The chat screen still ignores dark mode**, and deliberately so for now. `plans/260803-1118-ui-standardisation/plan.md` phase 3.6 called for deleting `HeaderBackground` / `InkMuted` and taking the header's colours from the scheme. The header was only ever half the story: `PageBackground`, `ComposerBackground`, `GuideCard` and the bubbles are fixed to the lens palette too, and the screen pins the system bar icons to dark to match — argued in `ChatScreen.kt:85-91` and protected by §12. Converting the header alone would put a scheme-dark bar on a cream page. The UI standardisation therefore took the header's *structure* (it is a `PageHeader` now) and left its palette, which is a colour-system decision and out of that plan's scope. Either convert the whole screen or write the fixed palette up in `Color.kt` beside the lens and sovereignty ones. | `feature/chat/ChatScreen.kt:92-98` |
+| 17 | `TranslationScreen` is allowlisted in `DesignTokenTest` for `.sp` alongside the two map canvases. Its use is legitimate — `autoSize` steps a translated block's type down to fit the Vietnamese line it covers — but the allowlist is per *file*, so a genuine hardcoded size added anywhere else in those 700 lines would pass. Narrow it to the composable if the file is ever split. | `feature/translate/TranslationScreen.kt:405-415` |
+| 18 | **`androidDeviceTest` cannot run on Android 15 or newer.** All nine instrumented tests fail in `Espresso.onIdle` with `NoSuchMethodException: android.hardware.input.InputManager.getInstance` — a reflection call Espresso makes that the platform removed. It is not a project defect and not a regression: `RecompositionTest.theChatStateIsComparedByValue` only compares two `ChatState` instances and fails identically. The only emulator on this machine is API 37, so the device leg of any verification is currently unrunnable. Fix by upgrading `androidx.compose.ui:ui-test-junit4` and its transitive `androidx.test:runner`/`espresso-core`, or by keeping an API 34 AVD for this suite. | `androidDeviceTest/` |
+| 19 | **`DesignTokenTest` scans `feature/` for four of its six rules** — gap, corner, weight and type size — while only the inset rule walks all of `commonMain`. A literal radius or a call-site `fontWeight` added under `core/designsystem/component/` is therefore invisible to the gate, which is the one place a bad value would spread furthest. The narrow scope was deliberate (a design-system component owns its own internal geometry, per `Dimens.kt`), but *internal padding* and *a sixth corner radius* are not the same exemption. Verified clean by hand on 03.08.2026 — zero corner literals, zero call-site weights, zero `.sp` outside `Type.kt` — so this is a latent hole, not a live one. Fix by scanning `designsystem/` for corner and weight while leaving the gap rule at `feature/`. | `androidHostTest/…/DesignTokenTest.kt:290` |
 
 ### Fixed
 
@@ -334,3 +352,128 @@ Do not "improve" these; they are deliberate and documented in the code:
 - Structural job ownership: the stage ticker is a *child* of the analysis job, not a field.
 - Cancel-and-replace for superseding requests (`analysisJob?.cancel()`, `detailsJob?.cancel()`).
 - `AppResult` / `AppError` all the way up; no exceptions across layer boundaries.
+- Two headers and no third: `PageHeader` and `OverlayHeader`. The temptation is a
+  `titleStyle` parameter — that is how the five hand-rolled headers came back last time.
+- `SHUTTER_INSET`, `COMPOSER_CLEARANCE`, `SheetPeekHeight` and the stamp geometry are
+  *measured positions*, not gaps. They are named `private val`s on purpose and must not be
+  snapped onto the `Spacing` scale; the shutter one is a hit target nothing covers.
+
+---
+
+## 13. The UI standard
+
+> Full rationale and the pre-PR checklist: `docs/android-mvi-best-practices.md` §11.
+> Enforced by `DesignTokenTest` (androidHostTest), which reads the sources as text.
+
+**Every screen draws its text, its gaps and its corners from the same named set of values,
+and every screen's header is one of two components.** Nothing is measured at the call site.
+
+### 13.1 Typography — `theme/Type.kt`
+
+All fifteen Material scales are declared, and that is the point: the six that used to be
+left at the default did not carry `LineHeightStyle.Trim.None`, which is what keeps
+Vietnamese stacked diacritics (ề, ộ, ữ) from being clipped. They were used 44 times.
+
+Weight is baked in — display **Bold**, `headlineLarge` and `headlineMedium` **Bold**,
+`headlineSmall` **SemiBold** where it meets the titles, title **SemiBold**, label
+**SemiBold** then **Medium**, body **Normal**. Body sizes sit one step above Material (17 / 15 / 13)
+because they carry the reading; the label ladder (14 / 12 / 11) does not, because labels
+are chrome.
+
+| Role | Scale |
+|---|---|
+| Page title, document screens | `headlineMedium` — set by `PageHeader` |
+| Page subtitle | `bodyMedium` on `onSurfaceVariant` — set by `PageHeader` |
+| Overlay title, over a photo or the camera | `titleLarge` — set by `OverlayHeader` |
+| Eyebrow / kicker / section label | `StampType.kicker`, drawn through the `Kicker` composable |
+| Card / row title | `titleMedium` |
+| Reading body | `bodyLarge` (17 / 27) |
+| Secondary body | `bodyMedium` (15 / 23) |
+| Metadata / caption | `bodySmall` (13 / 20) |
+| Button | `labelLarge` |
+
+`StampType` holds the monospace chrome — `kicker`, `ordinal`, `caption`, `seal` — which
+used to be re-derived at four separate call sites, one of them inside a component file.
+
+**No `fontWeight`, no `fontSize`, no size-changing `.copy()` inside `feature/`.** A variant
+is a scale and it lives in `Type.kt`.
+
+### 13.2 Spacing — `theme/Dimens.kt`
+
+```kotlin
+object Spacing     { xxs 2 · xs 4 · sm 8 · md 12 · lg 16 · xl 24 · xxl 32 }
+object PageSpacing { headerTop 12 · headerToContent 16 · sectionGap 24 · listBottom 32 · snackbarLift 96 }
+val ScreenGutter = Spacing.lg
+```
+
+`PageSpacing` holds the gaps that have to agree *across* screens. `ScreenGutter` keeps its
+name and its KDoc argument; **a screen may not adjust it** — `ScreenGutter + 4.dp` is a
+token being locally corrected, which is a token that has stopped meaning anything.
+
+A number that is a *position* rather than a gap is not on this scale. Name it, and say what
+it was measured against.
+
+### 13.3 Shape — `theme/Type.kt`
+
+`MaterialTheme.shapes` was declared, passed to the theme, and referenced zero times; the
+app drew 57 literals at twelve radii instead, seven of them values the theme did not have.
+
+| Slot | Radius | Absorbed | For |
+|---|---|---|---|
+| `extraSmall` | 6 | 4, 6 | tags, tiny chips, the chat bubble's tail |
+| `small` | 10 | 12 | inline controls, thumbnails |
+| `medium` | 16 | 14, 16, 18 | cards, sheets-in-page |
+| `large` | 24 | 20, 24 | big cards, the camera frame |
+| `extraLarge` | 32 | 28 | the passport sheet, the chat composer |
+
+Plus `Pill` (`RoundedCornerShape(percent = 50)`) and `CircleShape`. The app's only 3 dp
+corner — the journal's 6 dp-tall progress bar — became `Pill`, which is what it always
+meant.
+
+`Corner` holds the same five as **numbers**, for everything that traces a corner by hand
+and so cannot be handed a `Shape`: a `dashedBorder` stroking an outline, the passport
+sheet's hairline, the chat bubble's two radii. Those must agree with the `clip` on the same
+node to the pixel — an outline drawn at 20 inside a box clipped at 24 has its corner arcs
+sliced off, which is what happened to two discovery cards during this refactor.
+
+### 13.4 `PageHeader` — journal, settings, collection, passport, chat
+
+```kotlin
+PageHeader(title, kicker?, subtitle?, onBack?, trailing?, colors)
+```
+
+One box: `ScreenGutter` either side, `PageSpacing.headerTop` above,
+`PageSpacing.headerToContent` below. Title always `headlineMedium`.
+
+**It does not apply the top inset** — that stays on the screen's outermost container, which
+is what `Insets.kt` argues: in landscape the cutout moves to one side and the whole page
+has to move with it, not just its heading.
+
+`colors` is the one override, and only because chat is fixed to the lacquer palette by
+design (§11 row #16, §12). There is no `titleStyle` and there will not be one.
+
+### 13.5 `OverlayHeader` — discovery, translation, explore
+
+```kotlin
+OverlayHeader(title?, subtitle?, style, busy, leading?, trailing?)
+```
+
+`OverlayHeaderStyle.Scrim` (white on a gradient — photos, camera), `Card` (a translucent
+surface in scheme colours — the map, which a black gradient would bruise), or `Plain`
+(nothing behind it — the discovery photo already draws its own three-stop gradient).
+
+**It does apply `screenInsetsPadding()`**, because it floats over content and nothing else
+is in a position to. That is what removed all five raw `statusBarsPadding()` calls in
+`DiscoveryScreen` — the page's close and delete, the photo viewer's close, and the note
+camera's close and flip — every one of which sat under the notch.
+
+`OverlayIconButton` is now the app's one overlay affordance. Three components were deleted
+into it: `GlassButton` (translation), `CloseChip` (sovereignty) and a private copy inside
+`DiscoveryScreen`. `BackChip` survives for `PageHeader` only — a chip on a page and a disc
+over a photograph are genuinely two things.
+
+`LensScreen` and `SovereigntyScreen` render neither header, deliberately — the camera tool
+row is a line of switches, and the sovereignty statement is a scrolling document whose own
+column takes the inset. `DesignTokenTest.HEADER_OWNERS` lists the eight screens that must
+comply and states both exclusions in its KDoc; the test also fails if a name in that list
+stops matching a file, so renaming a screen cannot quietly drop it from the check.

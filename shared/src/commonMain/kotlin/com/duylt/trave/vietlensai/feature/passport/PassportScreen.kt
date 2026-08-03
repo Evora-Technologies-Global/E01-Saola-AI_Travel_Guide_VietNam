@@ -68,25 +68,26 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.clipRect
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.duylt.trave.vietlensai.core.designsystem.component.AccentChip
 import com.duylt.trave.vietlensai.core.designsystem.component.AppAsyncImage
-import com.duylt.trave.vietlensai.core.designsystem.component.BackChip
 import com.duylt.trave.vietlensai.core.designsystem.component.EmptyState
+import com.duylt.trave.vietlensai.core.designsystem.component.PageHeader
 import com.duylt.trave.vietlensai.core.designsystem.component.FillGauge
 import com.duylt.trave.vietlensai.core.designsystem.component.Kicker
 import com.duylt.trave.vietlensai.core.designsystem.component.SovereigntyBanner
 import com.duylt.trave.vietlensai.core.designsystem.theme.FlagRed
 import com.duylt.trave.vietlensai.core.designsystem.theme.FlagYellow
+import com.duylt.trave.vietlensai.core.designsystem.theme.Corner
 import com.duylt.trave.vietlensai.core.designsystem.theme.Marigold
 import com.duylt.trave.vietlensai.core.designsystem.theme.PaperCream
+import com.duylt.trave.vietlensai.core.designsystem.theme.PageSpacing
 import com.duylt.trave.vietlensai.core.designsystem.theme.ScreenGutter
+import com.duylt.trave.vietlensai.core.designsystem.theme.Spacing
+import com.duylt.trave.vietlensai.core.designsystem.theme.StampType
 import com.duylt.trave.vietlensai.core.designsystem.theme.Vermilion
 import com.duylt.trave.vietlensai.core.designsystem.theme.screenInsetsPadding
 import com.duylt.trave.vietlensai.core.util.asJournalHeading
@@ -209,6 +210,9 @@ fun PassportRoute(
         scaffoldState = scaffoldState,
         modifier = modifier.fillMaxSize(),
         sheetPeekHeight = SheetPeekHeight,
+        // Squared off at the bottom, where the edge is off screen anyway. Built from
+        // `ExtraLargeCorner` rather than from `MaterialTheme.shapes` because `SheetEdge`
+        // traces this same curve by hand and the two have to agree to the pixel.
         sheetShape = RoundedCornerShape(topStart = SheetCorner, topEnd = SheetCorner),
         // Explicit: the scheme leaves `surfaceContainerLow` at the M3 baseline, which
         // is tinted violet and reads as a different app sliding up over the warm cream
@@ -251,7 +255,11 @@ fun PassportRoute(
                 .navigationBarsPadding(),
         ) {
             Column(modifier = Modifier.fillMaxSize()) {
-                PassportHeader(onBack = onBack)
+                PageHeader(
+                    title = stringResource(Res.string.passport_title),
+                    subtitle = stringResource(Res.string.passport_subtitle),
+                    onBack = onBack,
+                )
 
                 when {
                     state.isLoading -> Box(
@@ -294,8 +302,8 @@ fun PassportRoute(
                     modifier = Modifier.padding(
                         start = ScreenGutter,
                         end = ScreenGutter,
-                        top = 14.dp,
-                        bottom = 16.dp,
+                        top = Spacing.md,
+                        bottom = Spacing.lg,
                     ),
                 )
             }
@@ -395,30 +403,6 @@ private fun rememberLastSelection(state: PassportState): ProvinceSheetData? {
     return holder.value
 }
 
-@Composable
-private fun PassportHeader(onBack: () -> Unit) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = ScreenGutter, end = ScreenGutter, top = 12.dp, bottom = 4.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        BackChip(onClick = onBack)
-        Spacer(Modifier.width(14.dp))
-        Column {
-            Text(
-                text = stringResource(Res.string.passport_title),
-                style = MaterialTheme.typography.headlineMedium,
-            )
-            Text(
-                text = stringResource(Res.string.passport_subtitle),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-        }
-    }
-}
-
 /**
  * The count, the share, and the bar.
  *
@@ -435,29 +419,27 @@ private fun PassportProgress(passport: TravelPassport) {
     val percent = (passport.progress * 100).toInt()
 
     Column(
-        modifier = Modifier.fillMaxWidth().padding(horizontal = ScreenGutter, vertical = 14.dp)
+        modifier = Modifier.fillMaxWidth().padding(horizontal = ScreenGutter, vertical = Spacing.md)
     ) {
         Row(verticalAlignment = Alignment.Bottom) {
             Text(
                 text = passport.unlockedCount.toString(),
                 style = MaterialTheme.typography.displaySmall,
-                fontWeight = FontWeight.Bold,
                 color = Vermilion,
             )
             Text(
                 text = stringResource(Res.string.passport_progress_of, passport.totalCount),
                 style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(start = 8.dp, bottom = 4.dp),
+                modifier = Modifier.padding(start = Spacing.sm, bottom = Spacing.xs),
             )
             Spacer(Modifier.weight(1f))
             Kicker(
                 text = stringResource(Res.string.passport_explored, percent),
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(bottom = 6.dp),
+                modifier = Modifier.padding(bottom = Spacing.xs),
             )
         }
-        Spacer(Modifier.height(10.dp))
+        Spacer(Modifier.height(Spacing.sm))
         FillGauge(progress = progress)
     }
 }
@@ -475,7 +457,7 @@ private fun PassportMap(
     onSelect: (String?) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val shape = RoundedCornerShape(24.dp)
+    val shape = MaterialTheme.shapes.large
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -483,7 +465,7 @@ private fun PassportMap(
             .clip(shape)
             .background(MaterialTheme.colorScheme.surfaceContainer)
             .border(1.dp, Marigold.copy(alpha = BORDER_ALPHA), shape)
-            .padding(2.dp),
+            .padding(Spacing.xxs),
     ) {
         VietnamMapCanvas(
             stamps = state.passport.stamps,
@@ -511,11 +493,11 @@ private fun EmptyHint(noLocation: Boolean, onOpenLens: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = ScreenGutter, end = ScreenGutter, top = 16.dp)
-            .clip(RoundedCornerShape(20.dp))
+            .padding(start = ScreenGutter, end = ScreenGutter, top = Spacing.lg)
+            .clip(MaterialTheme.shapes.large)
             .background(MaterialTheme.colorScheme.surfaceContainer)
-            .border(1.dp, Marigold.copy(alpha = BORDER_ALPHA), RoundedCornerShape(20.dp))
-            .padding(16.dp),
+            .border(1.dp, Marigold.copy(alpha = BORDER_ALPHA), MaterialTheme.shapes.large)
+            .padding(Spacing.lg),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Column(modifier = Modifier.weight(1f)) {
@@ -526,7 +508,7 @@ private fun EmptyHint(noLocation: Boolean, onOpenLens: () -> Unit) {
                 ),
                 color = Vermilion,
             )
-            Spacer(Modifier.height(6.dp))
+            Spacer(Modifier.height(Spacing.xs))
             Text(
                 text = stringResource(
                     if (noLocation) Res.string.passport_no_location_body
@@ -537,7 +519,7 @@ private fun EmptyHint(noLocation: Boolean, onOpenLens: () -> Unit) {
             )
         }
         if (!noLocation) {
-            Spacer(Modifier.width(14.dp))
+            Spacer(Modifier.width(Spacing.md))
             LensButton(
                 onClick = onOpenLens,
                 label = stringResource(Res.string.passport_empty_action)
@@ -599,7 +581,7 @@ private fun ProvinceSheet(
                 // reader announcing the whole panel as tappable would be a lie.
                 .pointerInput(Unit) { detectTapGestures { } }
                 .navigationBarsPadding()
-                .padding(bottom = 28.dp),
+                .padding(bottom = PageSpacing.listBottom),
         ) {
             ProvinceHead(
                 stamp = stamp,
@@ -609,9 +591,9 @@ private fun ProvinceSheet(
             )
 
             if (stamp.isUnlocked) {
-                Spacer(Modifier.height(14.dp))
+                Spacer(Modifier.height(Spacing.md))
                 DiscoveryStrip(discoveries = data.discoveries, onOpen = onOpenDiscovery)
-                Spacer(Modifier.height(20.dp))
+                Spacer(Modifier.height(Spacing.xl))
                 DashedRule(
                     color = Marigold.copy(alpha = BORDER_ALPHA),
                     modifier = Modifier.fillMaxWidth().padding(horizontal = ScreenGutter),
@@ -622,19 +604,19 @@ private fun ProvinceSheet(
                     modifier = Modifier.fillMaxWidth().padding(horizontal = ScreenGutter),
                 )
             } else {
-                Spacer(Modifier.height(12.dp))
+                Spacer(Modifier.height(Spacing.md))
                 DashedRule(
                     color = Marigold.copy(alpha = BORDER_ALPHA),
                     modifier = Modifier.fillMaxWidth().padding(horizontal = ScreenGutter),
                 )
-                Spacer(Modifier.height(16.dp))
+                Spacer(Modifier.height(Spacing.lg))
                 Text(
                     text = stringResource(Res.string.passport_province_locked),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(horizontal = ScreenGutter),
                 )
-                Spacer(Modifier.height(18.dp))
+                Spacer(Modifier.height(Spacing.lg))
                 LensButton(
                     onClick = onOpenLens,
                     label = stringResource(Res.string.passport_province_locked_action),
@@ -676,11 +658,11 @@ private fun ProvinceHead(
                 onClickLabel = stringResource(Res.string.passport_sheet_expand),
                 onClick = onExpand,
             )
-            .padding(horizontal = ScreenGutter, vertical = 8.dp),
+            .padding(horizontal = ScreenGutter, vertical = Spacing.sm),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         ProvinceStamp(stamp = stamp, accent = accent)
-        Spacer(Modifier.width(18.dp))
+        Spacer(Modifier.width(Spacing.lg))
         Column(modifier = Modifier.weight(1f)) {
             Kicker(
                 text = stringResource(
@@ -689,14 +671,14 @@ private fun ProvinceHead(
                 ),
                 color = accent,
             )
-            Spacer(Modifier.height(6.dp))
+            Spacer(Modifier.height(Spacing.xs))
             Text(
                 text = stamp.province.displayName,
                 style = MaterialTheme.typography.headlineSmall,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
             )
-            Spacer(Modifier.height(6.dp))
+            Spacer(Modifier.height(Spacing.xs))
             Text(
                 text = if (stamp.isUnlocked) {
                     val tally = pluralStringResource(
@@ -774,31 +756,27 @@ private fun ProvinceStamp(stamp: PassportStamp, accent: Color) {
                     style = Stroke(width = StampInnerBorder.toPx(), pathEffect = dashes),
                 )
             }
-            .padding(horizontal = 12.dp, vertical = 11.dp),
+            .padding(horizontal = Spacing.md, vertical = Spacing.md),
         contentAlignment = Alignment.Center,
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             VietnamFlag()
-            Spacer(Modifier.height(7.dp))
+            Spacer(Modifier.height(Spacing.sm))
             Text(
                 text = stamp.province.name.uppercase(),
-                style = MaterialTheme.typography.labelMedium,
-                fontFamily = FontFamily.Monospace,
-                fontWeight = FontWeight.Bold,
+                style = StampType.ordinal,
                 color = accent,
                 textAlign = TextAlign.Center,
-                lineHeight = 15.sp,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
             )
-            Spacer(Modifier.height(5.dp))
+            Spacer(Modifier.height(Spacing.xs))
             Text(
                 // An em dash where the date goes: the record keeps its shape whether or
                 // not it has been earned, which is what a blank page in a passport looks
                 // like — a frame waiting for a date, not an absence.
                 text = date ?: "—",
-                style = MaterialTheme.typography.labelSmall,
-                fontFamily = FontFamily.Monospace,
+                style = StampType.caption,
                 color = accent.copy(alpha = STAMP_DATE_ALPHA),
                 maxLines = 1,
             )
@@ -860,7 +838,7 @@ private fun VisitRow(stamp: PassportStamp, language: AppLanguage) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = ScreenGutter, vertical = 14.dp),
+            .padding(horizontal = ScreenGutter, vertical = Spacing.md),
     ) {
         VisitCell(
             label = stringResource(Res.string.passport_sheet_first_visit),
@@ -879,7 +857,7 @@ private fun VisitRow(stamp: PassportStamp, language: AppLanguage) {
 private fun VisitCell(label: String, value: String, modifier: Modifier = Modifier) {
     Column(modifier = modifier) {
         Kicker(text = label, color = MaterialTheme.colorScheme.onSurfaceVariant)
-        Spacer(Modifier.height(5.dp))
+        Spacer(Modifier.height(Spacing.xs))
         Text(
             text = value,
             style = MaterialTheme.typography.titleSmall,
@@ -910,7 +888,7 @@ private fun DiscoveryStrip(discoveries: List<Discovery>, onOpen: (String) -> Uni
     LazyRow(
         modifier = Modifier.fillMaxWidth().height(StripHeight),
         contentPadding = PaddingValues(horizontal = ScreenGutter),
-        horizontalArrangement = Arrangement.spacedBy(10.dp),
+        horizontalArrangement = Arrangement.spacedBy(Spacing.sm),
     ) {
         items(discoveries, key = { it.id }) { discovery ->
             DiscoveryTile(discovery = discovery, onClick = { onOpen(discovery.id) })
@@ -927,11 +905,11 @@ private fun DiscoveryTile(discovery: Discovery, onClick: () -> Unit) {
                 Res.string.passport_sheet_open_discovery,
                 discovery.title,
             ),
-            shape = RoundedCornerShape(16.dp),
+            shape = MaterialTheme.shapes.medium,
             onClick = onClick,
             modifier = Modifier.fillMaxWidth().aspectRatio(1f),
         )
-        Spacer(Modifier.height(7.dp))
+        Spacer(Modifier.height(Spacing.sm))
         Text(
             text = discovery.title,
             style = MaterialTheme.typography.bodySmall,
@@ -955,7 +933,7 @@ private fun ProvinceFootnotes(stamp: PassportStamp) {
     val archipelagos = stamp.province.archipelagos
     if (merged.isEmpty() && archipelagos.isEmpty()) return
 
-    Spacer(Modifier.height(18.dp))
+    Spacer(Modifier.height(Spacing.lg))
     Column(modifier = Modifier.fillMaxWidth().padding(horizontal = ScreenGutter)) {
         // The 2025 reorganisation folded 63 units into 34, so a traveller looking for
         // "Kiên Giang" needs to be told it is part of An Giang now.
@@ -971,7 +949,7 @@ private fun ProvinceFootnotes(stamp: PassportStamp) {
         // right belongs to — otherwise those boxes are a map decoration with no
         // stated connection to anything the traveller can collect.
         if (archipelagos.isNotEmpty()) {
-            if (merged.isNotEmpty()) Spacer(Modifier.height(10.dp))
+            if (merged.isNotEmpty()) Spacer(Modifier.height(Spacing.sm))
             AccentChip(
                 text = stringResource(
                     Res.string.passport_administers,
@@ -1009,10 +987,10 @@ private fun LensButton(onClick: () -> Unit, label: String, modifier: Modifier = 
             containerColor = Vermilion,
             contentColor = PaperCream,
         ),
-        contentPadding = PaddingValues(horizontal = 20.dp, vertical = 12.dp),
+        contentPadding = PaddingValues(horizontal = Spacing.xl, vertical = Spacing.md),
     ) {
         Icon(Icons.Outlined.CameraAlt, contentDescription = null, modifier = Modifier.size(18.dp))
-        Spacer(Modifier.width(8.dp))
+        Spacer(Modifier.width(Spacing.sm))
         Text(text = label, style = MaterialTheme.typography.labelLarge)
     }
 }
@@ -1033,7 +1011,9 @@ private const val BORDER_ALPHA = 0.35f
  */
 private val SheetPeekHeight = 224.dp
 
-private val SheetCorner = 28.dp
+/** The app's `extraLarge` corner. [SheetEdge] redraws this curve, so it is shared. */
+private val SheetCorner = Corner.extraLarge
+
 private val SheetHairline = 1.dp
 
 /**

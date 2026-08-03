@@ -258,6 +258,13 @@ tasks.withType<Test>().configureEach {
         "vietlens.composeReportsDir",
         layout.buildDirectory.dir("compose-reports").get().asFile.absolutePath,
     )
+    // `DesignTokenTest` reads the shared sources as text rather than as compiled classes:
+    // a hardcoded radius and a `Spacing.lg` compile to the same bytecode, so the only
+    // place the difference still exists is the file.
+    systemProperty(
+        "vietlens.commonMainDir",
+        layout.projectDirectory.dir("src/commonMain/kotlin").asFile.absolutePath,
+    )
 }
 
 /*

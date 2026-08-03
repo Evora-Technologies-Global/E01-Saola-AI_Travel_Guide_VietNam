@@ -808,6 +808,11 @@ Other performance rules that follow from MVI:
 - [ ] No business logic in a composable
 - [ ] File under 200 lines
 
+**Screen chrome** (§11)
+- [ ] The screen renders `PageHeader` or `OverlayHeader`, never a header of its own
+- [ ] No `.dp` in a `Spacer`, a `padding` or a `RoundedCornerShape`; no `.sp` or
+      `fontWeight` anywhere under `feature/`
+
 **Tests**
 - [ ] Reducer test per intent that changes state
 - [ ] Effect test per effect
@@ -839,3 +844,65 @@ Other performance rules that follow from MVI:
 | Domain types not in `compose-stability.conf` | Every composable taking one becomes non-skippable; whole screens repaint per tick. |
 | `single { }` for a ViewModel | It outlives its screen with all its state and jobs. |
 | Plain `ViewModel` instead of `MviViewModel` for a **screen** | No effect channel, no crash floor, untestable in the same way as everything else. *Was* live: `SovereigntyViewModel`. The window host is the one stated exception — see §3. |
+| A screen building its own header | Five screens did, and produced five header boxes and four title sizes for one job. Nothing looked wrong on any single screen. See §11. |
+| `statusBarsPadding()` on a screen | The app hides the system bars, so the inset is **zero** and the notch is still there. **Cost a real defect**: five controls on the discovery page sat under the cutout. Use `screenInsetsPadding()` or `OverlayHeader`. |
+| A `.dp` or `.sp` literal in `feature/` | It compiles to the same bytecode as the token, so no reviewer and no other test can see it. There were 57 hardcoded radii at twelve values and 195 spacing literals at nineteen before `DesignTokenTest`. |
+
+---
+
+## 11. Screen chrome — the header and the tokens
+
+The MVI rules above say how a screen *behaves*. This section says what it is allowed to
+decide about how it *looks*, and the answer is: less than you would expect.
+
+### `XScreen` renders one of two headers. It never writes its own.
+
+| Component | For | Applies the top inset? |
+|---|---|---|
+| `PageHeader` | a document screen — journal, settings, collection, passport, chat | **No.** The screen's outermost container does, because in landscape the display cutout moves to one side and the whole page has to move with it |
+| `OverlayHeader` | an immersive screen — one drawing over a photograph, a camera feed or a map | **Yes**, itself. It floats over content, so nothing else is in a position to |
+
+Both take strings and lambdas. Neither takes a text style, and `PageHeader` takes colours
+only because two screens are fixed to the lacquer palette by design (`LLM.md` §12).
+
+**The cost of writing your own.** Five screens used to. Their header boxes ran 0/16, 0/4,
+12/4, 12/4 and 10/12 top-and-bottom, and their titles were set at `headlineLarge`,
+`headlineMedium`, `headlineMedium`, `headlineMedium` and `titleLarge` — five titles, four
+sizes. Nothing on any one screen looked wrong. The app looked wrong, because a traveller
+crosses three of them in about four seconds and the heading moved every time.
+
+**And a real defect, not just an inconsistency.** The discovery page reached for
+`statusBarsPadding()` in five places instead of `screenInsetsPadding()`. This app hides the
+system bars, so that inset is zero — and the notch is still a hole in the glass. The page's
+close and delete, the photo viewer's close and the note camera's close and flip all sat
+under the cutout on every phone that has one. `OverlayHeader` owning the inset is what stops
+the next screen repeating it.
+
+**A second inset trap, found while reviewing this refactor.** Material3's `Surface` chains
+the caller's `modifier` *ahead of* its own `.background(...)`, so an inset passed to a
+`Surface` shrinks the painted area rather than the content inside it. The chat header did
+exactly that for one revision and left a bare strip above its own coloured band. Put the
+inset on the content, and leave the surface full-bleed.
+
+Two screens are deliberately outside this rule, and `DesignTokenTest` records both:
+`LensScreen`, whose camera tool row is a line of switches rather than a header, and
+`SovereigntyScreen`, a scrolling document whose own column already takes the inset.
+
+### Nothing is measured at the call site
+
+| You want | Use | Never |
+|---|---|---|
+| A gap | `Spacing.xxs…xxl` (2/4/8/12/16/24/32) | `Spacer(Modifier.height(12.dp))` |
+| A gap that must agree across screens | `PageSpacing.headerTop`, `headerToContent`, `sectionGap`, `listBottom`, `snackbarLift` | a literal repeated on three screens |
+| The page edge | `ScreenGutter` | `ScreenGutter + 4.dp` |
+| A corner | `MaterialTheme.shapes.X`, `Pill`, `CircleShape` | `RoundedCornerShape(20.dp)` |
+| A text style | one of the fifteen scales, or `StampType` | `.copy(fontSize = …)`, or a call-site `fontWeight` |
+| The top edge | `screenInsetsPadding()`, or `OverlayHeader` | `statusBarsPadding()` |
+
+A value that is a *position* rather than a gap — how much room a floating composer takes,
+where the shutter sits above the navigation bar — is not on the 4 dp scale at all. Give it
+a named `private val` and a sentence saying what it was measured against.
+
+`DesignTokenTest` (androidHostTest) enforces every row of that table by reading the sources
+as text, because a literal and a token compile to identical bytecode and the difference
+survives nowhere else. Its failure messages state the cost, not just the line.

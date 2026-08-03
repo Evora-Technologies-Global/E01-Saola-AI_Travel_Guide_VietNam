@@ -18,7 +18,6 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MyLocation
 import androidx.compose.material.icons.filled.Refresh
@@ -45,16 +44,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.duylt.trave.vietlensai.core.designsystem.component.AppAsyncImage
 import com.duylt.trave.vietlensai.core.designsystem.component.AppSnackbarHost
+import com.duylt.trave.vietlensai.core.designsystem.component.OverlayHeader
+import com.duylt.trave.vietlensai.core.designsystem.component.OverlayHeaderStyle
 import com.duylt.trave.vietlensai.core.designsystem.component.EmptyState
-import com.duylt.trave.vietlensai.core.designsystem.component.Kicker
 import com.duylt.trave.vietlensai.core.designsystem.component.showError
+import com.duylt.trave.vietlensai.core.designsystem.theme.PageSpacing
 import com.duylt.trave.vietlensai.core.designsystem.theme.ScreenGutter
+import com.duylt.trave.vietlensai.core.designsystem.theme.Spacing
 import com.duylt.trave.vietlensai.core.designsystem.theme.screenInsetsPadding
 import com.duylt.trave.vietlensai.core.mvi.CollectEffects
 import com.duylt.trave.vietlensai.core.util.rememberLocationPermissionState
@@ -140,7 +141,10 @@ fun ExploreRoute(
     // Over the map, above the bottom bar. The host is placed last so it draws on top of
     // the map and the strip alike.
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
-        AppSnackbarHost(snackbarHostState, modifier = Modifier.padding(bottom = 96.dp))
+        AppSnackbarHost(
+            snackbarHostState,
+            modifier = Modifier.padding(bottom = PageSpacing.snackbarLift),
+        )
     }
 }
 
@@ -211,30 +215,33 @@ private fun MapWithPlaces(
             modifier = Modifier.fillMaxSize(),
         )
 
-        MapHeader(
-            count = state.places.size,
-            isRefreshing = state.isRefreshing || state.isLoading,
-            modifier = Modifier.align(Alignment.TopStart),
+        // Title and controls in one header, so the notch inset is applied once. They used
+        // to be two siblings that each called `screenInsetsPadding()` — which worked only
+        // because both happened to want the same edge, and would have drifted the moment
+        // one of them moved.
+        OverlayHeader(
+            title = stringResource(Res.string.explore_title),
+            subtitle = stringResource(Res.string.explore_nearby_count, state.places.size),
+            busy = state.isRefreshing || state.isLoading,
+            // Not a scrim: a map is pale and already full of its own labels, and a black
+            // gradient laid over it reads as a bruise.
+            style = OverlayHeaderStyle.Card,
+            modifier = Modifier.align(Alignment.TopCenter),
+            trailing = {
+                Column(verticalArrangement = Arrangement.spacedBy(Spacing.sm)) {
+                    MapControl(
+                        icon = Icons.Filled.MyLocation,
+                        contentDescription = stringResource(Res.string.explore_recenter),
+                        onClick = { onIntent(ExploreIntent.RecenterOnUser) },
+                    )
+                    MapControl(
+                        icon = Icons.Filled.Refresh,
+                        contentDescription = stringResource(Res.string.explore_refresh),
+                        onClick = { onIntent(ExploreIntent.Refresh(force = true)) },
+                    )
+                }
+            },
         )
-
-        Column(
-            modifier = Modifier
-                .align(Alignment.TopEnd)
-                .screenInsetsPadding()
-                .padding(ScreenGutter),
-            verticalArrangement = Arrangement.spacedBy(10.dp),
-        ) {
-            MapControl(
-                icon = Icons.Filled.MyLocation,
-                contentDescription = stringResource(Res.string.explore_recenter),
-                onClick = { onIntent(ExploreIntent.RecenterOnUser) },
-            )
-            MapControl(
-                icon = Icons.Filled.Refresh,
-                contentDescription = stringResource(Res.string.explore_refresh),
-                onClick = { onIntent(ExploreIntent.Refresh(force = true)) },
-            )
-        }
 
         // All three of these sit *over* the map rather than instead of it. The traveller
         // is still somewhere, and being shown where they are while being told the search
@@ -273,26 +280,25 @@ private fun MapNotice(
     modifier: Modifier = Modifier,
 ) {
     Surface(
-        modifier = modifier.padding(horizontal = 32.dp),
-        shape = RoundedCornerShape(20.dp),
+        modifier = modifier.padding(horizontal = Spacing.xxl),
+        shape = MaterialTheme.shapes.large,
         color = MaterialTheme.colorScheme.surface,
         tonalElevation = 3.dp,
         shadowElevation = 6.dp,
     ) {
-        Column(modifier = Modifier.padding(20.dp)) {
+        Column(modifier = Modifier.padding(Spacing.xl)) {
             Text(
                 text = title,
                 style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
             )
-            Spacer(Modifier.height(6.dp))
+            Spacer(Modifier.height(Spacing.xs))
             Text(
                 text = body,
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             if (onRetry != null) {
-                Spacer(Modifier.height(14.dp))
+                Spacer(Modifier.height(Spacing.md))
                 FilledTonalButton(onClick = onRetry) {
                     Text(stringResource(Res.string.action_retry))
                 }
@@ -328,8 +334,8 @@ private fun PlaceStrip(
     LazyRow(
         modifier = modifier.fillMaxWidth(),
         state = listState,
-        contentPadding = PaddingValues(horizontal = ScreenGutter, vertical = 16.dp),
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
+        contentPadding = PaddingValues(horizontal = ScreenGutter, vertical = Spacing.lg),
+        horizontalArrangement = Arrangement.spacedBy(Spacing.md),
     ) {
         items(items = places, key = { it.id }) { place ->
             PlaceCard(
@@ -350,25 +356,24 @@ private fun PlaceCard(
     val accent = markerColor(place.category)
     Surface(
         modifier = Modifier.width(240.dp).clickable(onClick = onClick),
-        shape = RoundedCornerShape(18.dp),
+        shape = MaterialTheme.shapes.medium,
         color = MaterialTheme.colorScheme.surface,
         // Raised rather than outlined when selected: the card sits on a map whose colour
         // under it is unknown, and a border competes with whatever is behind it.
         tonalElevation = if (isSelected) 6.dp else 1.dp,
         shadowElevation = if (isSelected) 8.dp else 2.dp,
     ) {
-        Row(modifier = Modifier.padding(10.dp), verticalAlignment = Alignment.CenterVertically) {
+        Row(modifier = Modifier.padding(Spacing.sm), verticalAlignment = Alignment.CenterVertically) {
             PlaceThumbnail(place = place, accent = accent, modifier = Modifier.size(64.dp))
-            Spacer(Modifier.width(10.dp))
+            Spacer(Modifier.width(Spacing.sm))
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = place.name,
                     style = MaterialTheme.typography.titleSmall,
-                    fontWeight = FontWeight.SemiBold,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
                 )
-                Spacer(Modifier.height(4.dp))
+                Spacer(Modifier.height(Spacing.xs))
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         text = place.distanceMeters.asDistanceLabel(),
@@ -380,14 +385,14 @@ private fun PlaceCard(
                     // silence, not a score of zero, and a card that said "0" about a
                     // temple would be worse than saying nothing.
                     place.monthlyReaders?.takeIf { it > 0 }?.let { readers ->
-                        Spacer(Modifier.width(8.dp))
+                        Spacer(Modifier.width(Spacing.sm))
                         Icon(
                             imageVector = Icons.Outlined.Visibility,
                             contentDescription = null,
                             tint = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.size(13.dp),
                         )
-                        Spacer(Modifier.width(3.dp))
+                        Spacer(Modifier.width(Spacing.xxs))
                         Text(
                             text = readers.compact(),
                             style = MaterialTheme.typography.labelMedium,
@@ -413,13 +418,13 @@ private fun PlaceThumbnail(place: NearbyPlace, accent: Color, modifier: Modifier
             model = place.photoUrl,
             contentDescription = null,
             modifier = modifier,
-            shape = RoundedCornerShape(12.dp),
+            shape = MaterialTheme.shapes.small,
         )
         return
     }
     Box(
         modifier = modifier
-            .clip(RoundedCornerShape(12.dp))
+            .clip(MaterialTheme.shapes.small)
             .background(accent.copy(alpha = CATEGORY_TILE_ALPHA)),
         contentAlignment = Alignment.Center,
     ) {
@@ -429,44 +434,6 @@ private fun PlaceThumbnail(place: NearbyPlace, accent: Color, modifier: Modifier
             tint = accent,
             modifier = Modifier.size(26.dp),
         )
-    }
-}
-
-/** The screen's own title, floating on the map because the map has no room for a bar. */
-@Composable
-private fun MapHeader(count: Int, isRefreshing: Boolean, modifier: Modifier = Modifier) {
-    Column(
-        modifier = modifier
-            .screenInsetsPadding()
-            .padding(ScreenGutter),
-    ) {
-        Surface(
-            shape = RoundedCornerShape(14.dp),
-            color = MaterialTheme.colorScheme.surface.copy(alpha = HEADER_SCRIM_ALPHA),
-            tonalElevation = 2.dp,
-        ) {
-            Column(modifier = Modifier.padding(horizontal = 14.dp, vertical = 10.dp)) {
-                Text(
-                    text = stringResource(Res.string.explore_title),
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                )
-                Spacer(Modifier.height(2.dp))
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Kicker(
-                        text = stringResource(Res.string.explore_nearby_count, count),
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
-                    if (isRefreshing) {
-                        Spacer(Modifier.width(8.dp))
-                        CircularProgressIndicator(
-                            modifier = Modifier.size(12.dp),
-                            strokeWidth = 1.5.dp,
-                        )
-                    }
-                }
-            }
-        }
     }
 }
 
@@ -502,7 +469,7 @@ private fun LoadingMap() {
         verticalArrangement = Arrangement.Center,
     ) {
         CircularProgressIndicator(modifier = Modifier.size(40.dp), strokeWidth = 3.dp)
-        Spacer(Modifier.height(20.dp))
+        Spacer(Modifier.height(Spacing.xl))
         Text(
             text = stringResource(Res.string.explore_loading),
             style = MaterialTheme.typography.titleMedium,
@@ -580,7 +547,6 @@ private const val LUMINANCE_GREEN = 0.587f
 private const val LUMINANCE_BLUE = 0.114f
 
 /** Enough to read the title over a map, little enough to keep the map legible behind it. */
-private const val HEADER_SCRIM_ALPHA = 0.92f
 
 /** Enough tint to read as a filled tile, little enough to keep the glyph legible. */
 private const val CATEGORY_TILE_ALPHA = 0.16f

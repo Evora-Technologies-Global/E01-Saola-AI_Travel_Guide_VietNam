@@ -49,7 +49,6 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -109,8 +108,6 @@ import androidx.compose.ui.layout.onSizeChanged
 import com.duylt.trave.vietlensai.core.designsystem.component.AppAsyncImage
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
@@ -168,6 +165,9 @@ import com.duylt.trave.vietlensai.resources.discovery_stop
 import com.duylt.trave.vietlensai.resources.discovery_walk_minutes
 import com.duylt.trave.vietlensai.core.designsystem.component.ErrorState
 import com.duylt.trave.vietlensai.core.designsystem.component.Kicker
+import com.duylt.trave.vietlensai.core.designsystem.component.OverlayHeader
+import com.duylt.trave.vietlensai.core.designsystem.component.OverlayHeaderStyle
+import com.duylt.trave.vietlensai.core.designsystem.component.OverlayIconButton
 import com.duylt.trave.vietlensai.core.designsystem.component.LoadingState
 import com.duylt.trave.vietlensai.core.designsystem.component.PermissionSheet
 import com.duylt.trave.vietlensai.core.util.rememberCameraPermissionState
@@ -178,7 +178,11 @@ import com.duylt.trave.vietlensai.core.designsystem.theme.InkBrown
 import com.duylt.trave.vietlensai.core.designsystem.theme.Marigold
 import com.duylt.trave.vietlensai.core.designsystem.theme.Motion
 import com.duylt.trave.vietlensai.core.designsystem.theme.PaperCream
+import com.duylt.trave.vietlensai.core.designsystem.theme.Corner
+import com.duylt.trave.vietlensai.core.designsystem.theme.Pill
 import com.duylt.trave.vietlensai.core.designsystem.theme.ScreenGutter
+import com.duylt.trave.vietlensai.core.designsystem.theme.Spacing
+import com.duylt.trave.vietlensai.core.designsystem.theme.StampType
 import com.duylt.trave.vietlensai.core.designsystem.theme.Vermilion
 import com.duylt.trave.vietlensai.core.mvi.CollectEffects
 import com.duylt.trave.vietlensai.core.util.accentColor
@@ -339,7 +343,7 @@ private fun DiscoveryScreen(
                             // resizing the window, so the list has to give way itself — without
                             // this the note composer is typed into from behind the keyboard.
                             modifier = Modifier.fillMaxSize().imePadding(),
-                            contentPadding = PaddingValues(bottom = 132.dp),
+                            contentPadding = PaddingValues(bottom = COMPOSER_CLEARANCE),
                         ) {
                             item { PhotoHeader(discovery = shown) }
 
@@ -441,33 +445,41 @@ private fun DiscoveryScreen(
         // blink out, so the swap reads as the same buttons stepping aside.
         val pageControls = !showCamera && openPhotos == null
 
-        AnimatedVisibility(
-            visible = pageControls,
-            enter = fadeIn(Motion.enter(Motion.QUICK_MILLIS)) +
-                scaleIn(Motion.enter(Motion.QUICK_MILLIS), initialScale = 0.8f),
-            exit = fadeOut(Motion.exit()) + scaleOut(Motion.exit(), targetScale = 0.8f),
-            modifier = Modifier.align(Alignment.TopStart).statusBarsPadding().padding(ScreenGutter),
-        ) {
-            OverlayIconButton(
-                icon = Icons.Filled.Close,
-                contentDescription = stringResource(Res.string.action_close),
-                onClick = onBack,
-            )
-        }
-
-        AnimatedVisibility(
-            visible = pageControls && discovery != null,
-            enter = fadeIn(Motion.enter(Motion.QUICK_MILLIS)) +
-                scaleIn(Motion.enter(Motion.QUICK_MILLIS), initialScale = 0.8f),
-            exit = fadeOut(Motion.exit()) + scaleOut(Motion.exit(), targetScale = 0.8f),
-            modifier = Modifier.align(Alignment.TopEnd).statusBarsPadding().padding(ScreenGutter),
-        ) {
-            OverlayIconButton(
-                icon = Icons.Filled.Delete,
-                contentDescription = stringResource(Res.string.discovery_delete),
-                onClick = { onIntent(DiscoveryIntent.RequestDelete) },
-            )
-        }
+        // One header rather than two corner-pinned buttons, so the notch inset is taken
+        // once, by the component that owns it. Each button keeps its own animation: they
+        // come and go independently, which a typed action list could not express.
+        OverlayHeader(
+            style = OverlayHeaderStyle.Plain,
+            modifier = Modifier.align(Alignment.TopCenter),
+            leading = {
+                AnimatedVisibility(
+                    visible = pageControls,
+                    enter = fadeIn(Motion.enter(Motion.QUICK_MILLIS)) +
+                        scaleIn(Motion.enter(Motion.QUICK_MILLIS), initialScale = 0.8f),
+                    exit = fadeOut(Motion.exit()) + scaleOut(Motion.exit(), targetScale = 0.8f),
+                ) {
+                    OverlayIconButton(
+                        icon = Icons.Filled.Close,
+                        contentDescription = stringResource(Res.string.action_close),
+                        onClick = onBack,
+                    )
+                }
+            },
+            trailing = {
+                AnimatedVisibility(
+                    visible = pageControls && discovery != null,
+                    enter = fadeIn(Motion.enter(Motion.QUICK_MILLIS)) +
+                        scaleIn(Motion.enter(Motion.QUICK_MILLIS), initialScale = 0.8f),
+                    exit = fadeOut(Motion.exit()) + scaleOut(Motion.exit(), targetScale = 0.8f),
+                ) {
+                    OverlayIconButton(
+                        icon = Icons.Filled.Delete,
+                        contentDescription = stringResource(Res.string.discovery_delete),
+                        onClick = { onIntent(DiscoveryIntent.RequestDelete) },
+                    )
+                }
+            },
+        )
     }
 
     if (showPermissionSheet) {
@@ -606,14 +618,14 @@ private fun PhotoHeader(discovery: Discovery) {
         Row(
             modifier = Modifier
                 .align(Alignment.BottomStart)
-                .padding(start = ScreenGutter, bottom = SHEET_LIP + 18.dp)
-                .clip(RoundedCornerShape(50))
+                .padding(start = ScreenGutter, bottom = SHEET_LIP + Spacing.lg)
+                .clip(Pill)
                 .background(Vermilion)
-                .padding(horizontal = 14.dp, vertical = 8.dp),
+                .padding(horizontal = Spacing.md, vertical = Spacing.sm),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Box(modifier = Modifier.size(6.dp).clip(CircleShape).background(PaperCream))
-            Spacer(Modifier.width(8.dp))
+            Spacer(Modifier.width(Spacing.sm))
             Kicker(
                 text = "${discovery.category.label()} · " + stringResource(
                     Res.string.discovery_confidence,
@@ -628,7 +640,7 @@ private fun PhotoHeader(discovery: Discovery) {
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()
                 .height(SHEET_LIP)
-                .clip(RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp))
+                .clip(RoundedCornerShape(topStart = Corner.extraLarge, topEnd = Corner.extraLarge))
                 .background(MaterialTheme.colorScheme.background),
         )
     }
@@ -647,14 +659,14 @@ private fun TitleBlock(discovery: Discovery) {
                     tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(13.dp),
                 )
-                Spacer(Modifier.width(5.dp))
+                Spacer(Modifier.width(Spacing.xs))
                 Kicker(text = place, color = MaterialTheme.colorScheme.primary)
                 DashedRule(
                     color = MaterialTheme.colorScheme.outlineVariant,
-                    modifier = Modifier.padding(start = 12.dp).weight(1f),
+                    modifier = Modifier.padding(start = Spacing.md).weight(1f),
                 )
             }
-            Spacer(Modifier.height(10.dp))
+            Spacer(Modifier.height(Spacing.sm))
         }
 
         Text(
@@ -665,11 +677,10 @@ private fun TitleBlock(discovery: Discovery) {
         val localName = discovery.localName?.takeIf { it.isNotBlank() && it != discovery.title }
         val subtitle = listOfNotNull(localName, discovery.category.label()).joinToString(" · ")
         if (subtitle.isNotBlank()) {
-            Spacer(Modifier.height(6.dp))
+            Spacer(Modifier.height(Spacing.xs))
             Text(
                 text = subtitle,
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Normal,
+                style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
@@ -691,12 +702,12 @@ private fun ListenCard(
 ) {
     Surface(
         onClick = onToggle,
-        modifier = Modifier.fillMaxWidth().padding(horizontal = ScreenGutter, vertical = 20.dp),
-        shape = RoundedCornerShape(20.dp),
+        modifier = Modifier.fillMaxWidth().padding(horizontal = ScreenGutter, vertical = Spacing.xl),
+        shape = MaterialTheme.shapes.large,
         color = InkBrown,
     ) {
         Row(
-            modifier = Modifier.padding(14.dp),
+            modifier = Modifier.padding(Spacing.md),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Box(
@@ -712,14 +723,14 @@ private fun ListenCard(
                     modifier = Modifier.size(26.dp),
                 )
             }
-            Spacer(Modifier.width(14.dp))
+            Spacer(Modifier.width(Spacing.md))
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = stringResource(Res.string.discovery_listen_title),
                     style = MaterialTheme.typography.titleMedium,
                     color = PaperCream,
                 )
-                Spacer(Modifier.height(2.dp))
+                Spacer(Modifier.height(Spacing.xxs))
                 Text(
                     text = stringResource(
                         Res.string.discovery_listen_meta,
@@ -730,7 +741,7 @@ private fun ListenCard(
                     color = PaperCream.copy(alpha = 0.7f),
                 )
             }
-            Spacer(Modifier.width(10.dp))
+            Spacer(Modifier.width(Spacing.sm))
             Waveform(isPlaying = isSpeaking)
         }
     }
@@ -755,7 +766,7 @@ private fun Waveform(isPlaying: Boolean) {
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(3.dp),
+        horizontalArrangement = Arrangement.spacedBy(Spacing.xxs),
         modifier = Modifier.height(28.dp),
     ) {
         heights.forEachIndexed { index, fraction ->
@@ -763,7 +774,7 @@ private fun Waveform(isPlaying: Boolean) {
                 modifier = Modifier
                     .width(3.dp)
                     .height(28.dp * fraction)
-                    .clip(RoundedCornerShape(50))
+                    .clip(Pill)
                     .background(if (index % 2 == 0) Marigold else PaperCream.copy(alpha = 0.55f)),
             )
         }
@@ -774,14 +785,14 @@ private fun Waveform(isPlaying: Boolean) {
 private fun LowConfidenceNote() {
     Surface(
         color = MaterialTheme.colorScheme.secondaryContainer,
-        shape = RoundedCornerShape(16.dp),
-        modifier = Modifier.fillMaxWidth().padding(horizontal = ScreenGutter, vertical = 4.dp),
+        shape = MaterialTheme.shapes.medium,
+        modifier = Modifier.fillMaxWidth().padding(horizontal = ScreenGutter, vertical = Spacing.xs),
     ) {
         Text(
             text = stringResource(Res.string.discovery_low_confidence),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSecondaryContainer,
-            modifier = Modifier.padding(14.dp),
+            modifier = Modifier.padding(Spacing.md),
         )
     }
 }
@@ -794,15 +805,15 @@ private fun LowConfidenceNote() {
  */
 @Composable
 private fun StoryBlock(discovery: Discovery) {
-    Column(modifier = Modifier.fillMaxWidth().padding(horizontal = ScreenGutter, vertical = 4.dp)) {
+    Column(modifier = Modifier.fillMaxWidth().padding(horizontal = ScreenGutter, vertical = Spacing.xs)) {
         Text(
             text = discovery.summary,
             style = MaterialTheme.typography.bodyLarge,
         )
         discovery.sections.forEach { section ->
-            Spacer(Modifier.height(22.dp))
+            Spacer(Modifier.height(Spacing.xl))
             Kicker(text = section.title, color = MaterialTheme.colorScheme.onSurfaceVariant)
-            Spacer(Modifier.height(8.dp))
+            Spacer(Modifier.height(Spacing.sm))
             Text(
                 text = section.body,
                 style = MaterialTheme.typography.bodyLarge,
@@ -816,11 +827,11 @@ private fun StoryBlock(discovery: Discovery) {
 @Composable
 private fun NoticeCard(facts: List<String>) {
     Surface(
-        modifier = Modifier.fillMaxWidth().padding(horizontal = ScreenGutter, vertical = 20.dp),
-        shape = RoundedCornerShape(20.dp),
+        modifier = Modifier.fillMaxWidth().padding(horizontal = ScreenGutter, vertical = Spacing.xl),
+        shape = MaterialTheme.shapes.large,
         color = MaterialTheme.colorScheme.surfaceVariant,
     ) {
-        Column(modifier = Modifier.padding(20.dp)) {
+        Column(modifier = Modifier.padding(Spacing.xl)) {
             Kicker(
                 text = pluralStringResource(
                     Res.plurals.discovery_notice_count,
@@ -830,10 +841,10 @@ private fun NoticeCard(facts: List<String>) {
                 color = MaterialTheme.colorScheme.primary,
             )
             facts.forEachIndexed { index, fact ->
-                Spacer(Modifier.height(if (index == 0) 16.dp else 14.dp))
+                Spacer(Modifier.height(if (index == 0) Spacing.lg else Spacing.md))
                 Row {
                     Ordinal(index + 1)
-                    Spacer(Modifier.width(12.dp))
+                    Spacer(Modifier.width(Spacing.md))
                     Text(
                         text = fact,
                         style = MaterialTheme.typography.bodyMedium,
@@ -850,11 +861,9 @@ private fun NoticeCard(facts: List<String>) {
 private fun Ordinal(number: Int, color: Color = MaterialTheme.colorScheme.secondary) {
     Text(
         text = number.toString().padStart(2, '0'),
-        style = MaterialTheme.typography.labelMedium,
-        fontFamily = FontFamily.Monospace,
-        fontWeight = FontWeight.Bold,
+        style = StampType.ordinal,
         color = color,
-        modifier = Modifier.padding(top = 2.dp),
+        modifier = Modifier.padding(top = Spacing.xxs),
     )
 }
 
@@ -862,18 +871,17 @@ private fun Ordinal(number: Int, color: Color = MaterialTheme.colorScheme.second
 private fun TagFlow(tags: List<String>, accent: Color) {
     FlowRow(
         modifier = Modifier.fillMaxWidth().padding(horizontal = ScreenGutter),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(Spacing.sm),
+        verticalArrangement = Arrangement.spacedBy(Spacing.sm),
     ) {
         tags.forEachIndexed { index, tag ->
             val tinted = index == 0
             Text(
                 text = tag,
-                style = MaterialTheme.typography.labelLarge,
-                fontWeight = FontWeight.Normal,
+                style = MaterialTheme.typography.bodySmall,
                 color = if (tinted) accent else MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier
-                    .clip(RoundedCornerShape(50))
+                    .clip(Pill)
                     .background(
                         if (tinted) {
                             accent.copy(alpha = 0.13f)
@@ -881,7 +889,7 @@ private fun TagFlow(tags: List<String>, accent: Color) {
                             MaterialTheme.colorScheme.surfaceVariant
                         },
                     )
-                    .padding(horizontal = 14.dp, vertical = 9.dp),
+                    .padding(horizontal = Spacing.md, vertical = Spacing.sm),
             )
         }
     }
@@ -900,14 +908,14 @@ private fun ActionRow(
     onShare: () -> Unit,
 ) {
     Row(
-        modifier = Modifier.fillMaxWidth().padding(horizontal = ScreenGutter, vertical = 20.dp),
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
+        modifier = Modifier.fillMaxWidth().padding(horizontal = ScreenGutter, vertical = Spacing.xl),
+        horizontalArrangement = Arrangement.spacedBy(Spacing.md),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Surface(
             onClick = onToggleFavorite,
             modifier = Modifier.weight(1f).height(56.dp),
-            shape = RoundedCornerShape(16.dp),
+            shape = MaterialTheme.shapes.medium,
             color = if (isFavorite) MaterialTheme.colorScheme.surfaceVariant else Vermilion,
         ) {
             Row(
@@ -922,7 +930,7 @@ private fun ActionRow(
                     tint = content,
                     modifier = Modifier.size(20.dp),
                 )
-                Spacer(Modifier.width(10.dp))
+                Spacer(Modifier.width(Spacing.sm))
                 Text(
                     text = stringResource(
                         if (isFavorite) {
@@ -940,7 +948,7 @@ private fun ActionRow(
         Surface(
             onClick = onShare,
             modifier = Modifier.size(56.dp),
-            shape = RoundedCornerShape(16.dp),
+            shape = MaterialTheme.shapes.medium,
             color = Color.Transparent,
             border = BorderStroke(
                 width = 1.dp,
@@ -991,7 +999,7 @@ private fun NoteBlock(
     val leaving = rememberLastPresent(editor)
     val written = rememberLastPresent(note)
 
-    Column(modifier = Modifier.fillMaxWidth().padding(horizontal = ScreenGutter, vertical = 12.dp)) {
+    Column(modifier = Modifier.fillMaxWidth().padding(horizontal = ScreenGutter, vertical = Spacing.md)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Kicker(
                 text = stringResource(Res.string.discovery_note_kicker),
@@ -1016,7 +1024,7 @@ private fun NoteBlock(
                 }
             }
         }
-        Spacer(Modifier.height(10.dp))
+        Spacer(Modifier.height(Spacing.sm))
 
         // The three cards are the same object in three states, not three different things,
         // so the block grows and shrinks between them rather than cutting. It is the one
@@ -1102,22 +1110,22 @@ private fun EmptyNoteCard(onStart: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(20.dp))
-            .dashedBorder(MaterialTheme.colorScheme.outlineVariant, cornerRadius = 20.dp)
+            .clip(MaterialTheme.shapes.large)
+            .dashedBorder(MaterialTheme.colorScheme.outlineVariant, cornerRadius = Corner.large)
             .clickable(onClick = onStart)
-            .padding(20.dp),
+            .padding(Spacing.xl),
     ) {
         Text(
             text = stringResource(Res.string.discovery_note_empty_title),
             style = MaterialTheme.typography.titleMedium,
         )
-        Spacer(Modifier.height(6.dp))
+        Spacer(Modifier.height(Spacing.xs))
         Text(
             text = stringResource(Res.string.discovery_note_empty_body),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
-        Spacer(Modifier.height(16.dp))
+        Spacer(Modifier.height(Spacing.lg))
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
                 imageVector = Icons.Filled.AddAPhoto,
@@ -1125,7 +1133,7 @@ private fun EmptyNoteCard(onStart: () -> Unit) {
                 tint = Vermilion,
                 modifier = Modifier.size(18.dp),
             )
-            Spacer(Modifier.width(10.dp))
+            Spacer(Modifier.width(Spacing.sm))
             Text(
                 text = stringResource(Res.string.discovery_note_add),
                 style = MaterialTheme.typography.titleSmall,
@@ -1144,21 +1152,21 @@ private fun SavedNote(
 ) {
     Surface(
         modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(20.dp),
+        shape = MaterialTheme.shapes.large,
         color = MaterialTheme.colorScheme.surfaceVariant,
     ) {
-        Column(modifier = Modifier.padding(18.dp)) {
+        Column(modifier = Modifier.padding(Spacing.lg)) {
             if (note.photoPaths.isNotEmpty()) {
                 NotePhotoStrip(
                     paths = note.photoPaths,
                     onOpen = onOpenPhoto,
                     onRemove = null,
                 )
-                Spacer(Modifier.height(if (note.body.isNotBlank()) 16.dp else 4.dp))
+                Spacer(Modifier.height(if (note.body.isNotBlank()) Spacing.lg else Spacing.xs))
             }
             if (note.body.isNotBlank()) {
                 Text(text = note.body, style = MaterialTheme.typography.bodyLarge)
-                Spacer(Modifier.height(14.dp))
+                Spacer(Modifier.height(Spacing.md))
             }
             Kicker(
                 text = buildString {
@@ -1198,10 +1206,10 @@ private fun NoteComposer(
 
     Surface(
         modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(20.dp),
+        shape = MaterialTheme.shapes.large,
         color = MaterialTheme.colorScheme.surfaceVariant,
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
+        Column(modifier = Modifier.padding(Spacing.lg)) {
             NotePhotoStrip(
                 paths = editor.photoPaths,
                 onOpen = onOpenPhoto,
@@ -1210,7 +1218,7 @@ private fun NoteComposer(
                 onCapture = onCapture.takeIf { editor.canAddPhoto },
             )
 
-            Spacer(Modifier.height(6.dp))
+            Spacer(Modifier.height(Spacing.xs))
             Kicker(
                 text = stringResource(
                     Res.string.discovery_note_photo_count,
@@ -1220,7 +1228,7 @@ private fun NoteComposer(
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
 
-            Spacer(Modifier.height(14.dp))
+            Spacer(Modifier.height(Spacing.md))
             OutlinedTextField(
                 value = editor.body,
                 onValueChange = { onIntent(DiscoveryIntent.NoteBodyChanged(it)) },
@@ -1232,14 +1240,14 @@ private fun NoteComposer(
                     )
                 },
                 textStyle = MaterialTheme.typography.bodyLarge,
-                shape = RoundedCornerShape(16.dp),
+                shape = MaterialTheme.shapes.medium,
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = Vermilion,
                     unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
                 ),
             )
 
-            Spacer(Modifier.height(10.dp))
+            Spacer(Modifier.height(Spacing.sm))
             // Says out loud what the note is *for*: the diary the guide writes each evening
             // reads these, which is not something the traveller could guess from a text box.
             Text(
@@ -1248,10 +1256,10 @@ private fun NoteComposer(
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
 
-            Spacer(Modifier.height(16.dp))
+            Spacer(Modifier.height(Spacing.lg))
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalArrangement = Arrangement.spacedBy(Spacing.sm),
             ) {
                 // A write to the database is usually over in a frame or two, and a button
                 // that goes grey and back in that time reads as a flicker rather than as
@@ -1270,7 +1278,7 @@ private fun NoteComposer(
                     onClick = { onIntent(DiscoveryIntent.SaveNote) },
                     enabled = !isSaving,
                     modifier = Modifier.weight(1f).height(48.dp),
-                    shape = RoundedCornerShape(14.dp),
+                    shape = MaterialTheme.shapes.medium,
                     color = saveColor,
                 ) {
                     Box(contentAlignment = Alignment.Center) {
@@ -1340,7 +1348,7 @@ private fun NotePhotoStrip(
 
     val openLabel = stringResource(Res.string.discovery_note_open_photo)
 
-    LazyRow(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+    LazyRow(horizontalArrangement = Arrangement.spacedBy(Spacing.sm)) {
         itemsIndexed(items = paths, key = { _, path -> path }) { index, path ->
             // Keyed, so removing a photo from the middle slides the ones after it left into
             // the gap instead of teleporting them. Six tiles is few enough that the eye
@@ -1355,7 +1363,7 @@ private fun NotePhotoStrip(
                 AppAsyncImage(
                     model = path,
                     contentDescription = openLabel,
-                    shape = RoundedCornerShape(14.dp),
+                    shape = MaterialTheme.shapes.medium,
                     // Under the badge, not over it: the two targets overlap in the
                     // corner, and the badge is the smaller and more consequential of
                     // the two, so it has to be the one that wins there.
@@ -1366,7 +1374,7 @@ private fun NotePhotoStrip(
                     Box(
                         modifier = Modifier
                             .align(Alignment.TopEnd)
-                            .padding(6.dp)
+                            .padding(Spacing.xs)
                             .size(24.dp)
                             .clip(CircleShape)
                             .background(Color.Black.copy(alpha = 0.55f))
@@ -1431,8 +1439,8 @@ private fun PhotoActionTile(
     Column(
         modifier = modifier
             .size(NOTE_PHOTO_SIZE)
-            .clip(RoundedCornerShape(14.dp))
-            .dashedBorder(MaterialTheme.colorScheme.outline, cornerRadius = 14.dp)
+            .clip(MaterialTheme.shapes.medium)
+            .dashedBorder(MaterialTheme.colorScheme.outline, cornerRadius = Corner.medium)
             .clickable(onClick = onClick),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -1443,7 +1451,7 @@ private fun PhotoActionTile(
             tint = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.size(20.dp),
         )
-        Spacer(Modifier.height(6.dp))
+        Spacer(Modifier.height(Spacing.xs))
         Text(
             text = label,
             style = MaterialTheme.typography.labelSmall,
@@ -1475,7 +1483,7 @@ private fun NotePhotoViewer(
             modifier = Modifier.fillMaxSize(),
             // Room to breathe between photos, so a half-swipe shows black rather than two
             // images touching — nothing else on this screen tells the eye where one ends.
-            pageSpacing = 12.dp,
+            pageSpacing = Spacing.md,
         ) { page ->
             ZoomablePhoto(
                 path = paths[page],
@@ -1486,11 +1494,16 @@ private fun NotePhotoViewer(
             )
         }
 
-        OverlayIconButton(
-            icon = Icons.Filled.Close,
-            contentDescription = stringResource(Res.string.action_close),
-            onClick = onClose,
-            modifier = Modifier.align(Alignment.TopStart).statusBarsPadding().padding(ScreenGutter),
+        OverlayHeader(
+            style = OverlayHeaderStyle.Plain,
+            modifier = Modifier.align(Alignment.TopCenter),
+            leading = {
+                OverlayIconButton(
+                    icon = Icons.Filled.Close,
+                    contentDescription = stringResource(Res.string.action_close),
+                    onClick = onClose,
+                )
+            },
         )
 
         // Shown even for a note with a single photo, where it says nothing new. On a screen
@@ -1507,12 +1520,12 @@ private fun NotePhotoViewer(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .navigationBarsPadding()
-                .padding(bottom = 28.dp)
-                .clip(RoundedCornerShape(50))
+                .padding(bottom = Spacing.xxl)
+                .clip(Pill)
                 // Dark enough to hold white text over a white photo, which the strip is full
                 // of: half of what a traveller keeps is a screenshot or a menu.
                 .background(Color.Black.copy(alpha = 0.62f))
-                .padding(horizontal = 16.dp, vertical = 8.dp),
+                .padding(horizontal = Spacing.lg, vertical = Spacing.sm),
         )
     }
 }
@@ -1652,32 +1665,34 @@ private fun NoteCameraOverlay(
             modifier = Modifier.fillMaxSize(),
         )
 
-        OverlayIconButton(
-            icon = Icons.Filled.Close,
-            contentDescription = stringResource(Res.string.action_close),
-            onClick = onClose,
-            modifier = Modifier.align(Alignment.TopStart).statusBarsPadding().padding(ScreenGutter),
+        OverlayHeader(
+            style = OverlayHeaderStyle.Plain,
+            modifier = Modifier.align(Alignment.TopCenter),
+            leading = {
+                OverlayIconButton(
+                    icon = Icons.Filled.Close,
+                    contentDescription = stringResource(Res.string.action_close),
+                    onClick = onClose,
+                )
+            },
+            // Only where there is a second camera to turn to: a flip button on a phone
+            // with one lens is a control that answers a tap by doing nothing. Which of the
+            // two it is arrives a moment after the preview does, so it fades in rather
+            // than appearing fully formed over an image that is already live.
+            trailing = {
+                AnimatedVisibility(
+                    visible = capabilities.hasFrontCamera,
+                    enter = fadeIn(Motion.enter()) + scaleIn(Motion.enter(), initialScale = 0.8f),
+                    exit = fadeOut(Motion.exit()) + scaleOut(Motion.exit(), targetScale = 0.8f),
+                ) {
+                    OverlayIconButton(
+                        icon = Icons.Filled.Cameraswitch,
+                        contentDescription = stringResource(Res.string.discovery_note_camera_flip),
+                        onClick = { lensFacing = lensFacing.flipped() },
+                    )
+                }
+            },
         )
-
-        // Only where there is a second camera to turn to: a flip button on a phone with
-        // one lens is a control that answers a tap by doing nothing. Which of the two it
-        // is arrives a moment after the preview does, so it fades in rather than appearing
-        // fully formed over an image that is already live.
-        AnimatedVisibility(
-            visible = capabilities.hasFrontCamera,
-            enter = fadeIn(Motion.enter()) + scaleIn(Motion.enter(), initialScale = 0.8f),
-            exit = fadeOut(Motion.exit()) + scaleOut(Motion.exit(), targetScale = 0.8f),
-            modifier = Modifier
-                .align(Alignment.TopEnd)
-                .statusBarsPadding()
-                .padding(ScreenGutter),
-        ) {
-            OverlayIconButton(
-                icon = Icons.Filled.Cameraswitch,
-                contentDescription = stringResource(Res.string.discovery_note_camera_flip),
-                onClick = { lensFacing = lensFacing.flipped() },
-            )
-        }
 
         // The one control on this screen with no state to show except that it was pressed.
         // The white disc dips and the ring behind it brightens for as long as the capture
@@ -1698,7 +1713,7 @@ private fun NoteCameraOverlay(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .navigationBarsPadding()
-                .padding(bottom = 40.dp)
+                .padding(bottom = SHUTTER_INSET)
                 .size(76.dp)
                 .clip(CircleShape)
                 .background(Color.White.copy(alpha = shutterRing))
@@ -1749,26 +1764,26 @@ private fun Modifier.dashedBorder(
 
 @Composable
 private fun NearbyBlock(suggestions: List<NearbySuggestion>) {
-    Column(modifier = Modifier.fillMaxWidth().padding(horizontal = ScreenGutter, vertical = 8.dp)) {
+    Column(modifier = Modifier.fillMaxWidth().padding(horizontal = ScreenGutter, vertical = Spacing.sm)) {
         Kicker(
             text = stringResource(Res.string.discovery_nearby),
             color = MaterialTheme.colorScheme.primary,
         )
         suggestions.forEachIndexed { index, suggestion ->
-            Spacer(Modifier.height(if (index == 0) 16.dp else 18.dp))
+            Spacer(Modifier.height(Spacing.lg))
             Row(verticalAlignment = Alignment.Top) {
                 Ordinal(index + 1, color = suggestion.category.accentColor)
-                Spacer(Modifier.width(12.dp))
+                Spacer(Modifier.width(Spacing.md))
                 Column(modifier = Modifier.weight(1f)) {
                     Text(text = suggestion.name, style = MaterialTheme.typography.titleMedium)
-                    Spacer(Modifier.height(3.dp))
+                    Spacer(Modifier.height(Spacing.xxs))
                     Text(
                         text = suggestion.reason,
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                     suggestion.walkingMinutes?.let { minutes ->
-                        Spacer(Modifier.height(6.dp))
+                        Spacer(Modifier.height(Spacing.xs))
                         Kicker(
                             text = stringResource(Res.string.discovery_walk_minutes, minutes),
                             color = MaterialTheme.colorScheme.secondary,
@@ -1782,25 +1797,25 @@ private fun NearbyBlock(suggestions: List<NearbySuggestion>) {
 
 @Composable
 private fun SuggestedQuestions(questions: List<String>, onAsk: (String) -> Unit) {
-    Column(modifier = Modifier.fillMaxWidth().padding(horizontal = ScreenGutter, vertical = 20.dp)) {
+    Column(modifier = Modifier.fillMaxWidth().padding(horizontal = ScreenGutter, vertical = Spacing.xl)) {
         Kicker(
             text = stringResource(Res.string.discovery_ask_subtitle),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
-        Spacer(Modifier.height(12.dp))
+        Spacer(Modifier.height(Spacing.md))
         questions.forEach { question ->
             Surface(
                 onClick = { onAsk(question) },
-                shape = RoundedCornerShape(16.dp),
+                shape = MaterialTheme.shapes.medium,
                 color = Color.Transparent,
                 border = BorderStroke(
                     width = 1.dp,
                     color = MaterialTheme.colorScheme.outlineVariant,
                 ),
-                modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                modifier = Modifier.fillMaxWidth().padding(vertical = Spacing.xs),
             ) {
                 Row(
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp),
+                    modifier = Modifier.padding(horizontal = Spacing.lg, vertical = Spacing.md),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
@@ -1808,7 +1823,7 @@ private fun SuggestedQuestions(questions: List<String>, onAsk: (String) -> Unit)
                         style = MaterialTheme.typography.bodyMedium,
                         modifier = Modifier.weight(1f),
                     )
-                    Spacer(Modifier.width(12.dp))
+                    Spacer(Modifier.width(Spacing.md))
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                         contentDescription = null,
@@ -1832,13 +1847,18 @@ private fun AskPill(onClick: () -> Unit, modifier: Modifier = Modifier) {
     Surface(
         onClick = onClick,
         modifier = modifier,
-        shape = RoundedCornerShape(50),
+        shape = Pill,
         color = MaterialTheme.colorScheme.surface,
         shadowElevation = 8.dp,
         tonalElevation = 3.dp,
     ) {
         Row(
-            modifier = Modifier.padding(start = 8.dp, end = 20.dp, top = 8.dp, bottom = 8.dp),
+            modifier = Modifier.padding(
+                start = Spacing.sm,
+                end = Spacing.xl,
+                top = Spacing.sm,
+                bottom = Spacing.sm,
+            ),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Box(
@@ -1852,7 +1872,7 @@ private fun AskPill(onClick: () -> Unit, modifier: Modifier = Modifier) {
                     modifier = Modifier.size(18.dp),
                 )
             }
-            Spacer(Modifier.width(12.dp))
+            Spacer(Modifier.width(Spacing.md))
             Text(
                 text = stringResource(Res.string.discovery_ask),
                 style = MaterialTheme.typography.titleMedium,
@@ -1864,15 +1884,15 @@ private fun AskPill(onClick: () -> Unit, modifier: Modifier = Modifier) {
 
 @Composable
 private fun Footer(discovery: Discovery, state: DiscoveryState) {
-    Column(modifier = Modifier.fillMaxWidth().padding(horizontal = ScreenGutter, vertical = 8.dp)) {
+    Column(modifier = Modifier.fillMaxWidth().padding(horizontal = ScreenGutter, vertical = Spacing.sm)) {
         DashedRule(color = MaterialTheme.colorScheme.outlineVariant, modifier = Modifier.fillMaxWidth())
-        Spacer(Modifier.height(14.dp))
+        Spacer(Modifier.height(Spacing.md))
         Kicker(
             text = discovery.createdAt.asRelativeTime(state.language),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
         discovery.modelUsed?.let { model ->
-            Spacer(Modifier.height(4.dp))
+            Spacer(Modifier.height(Spacing.xs))
             Text(
                 text = stringResource(Res.string.discovery_model, model),
                 style = MaterialTheme.typography.labelSmall,
@@ -1897,31 +1917,6 @@ private fun DashedRule(color: Color, modifier: Modifier = Modifier) {
     }
 }
 
-@Composable
-private fun OverlayIconButton(
-    icon: ImageVector,
-    contentDescription: String,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Box(
-        modifier = modifier
-            .size(40.dp)
-            .clip(CircleShape)
-            .background(Color.Black.copy(alpha = 0.45f))
-            .border(1.dp, Color.White.copy(alpha = 0.15f), CircleShape)
-            .clickable(onClick = onClick),
-        contentAlignment = Alignment.Center,
-    ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = contentDescription,
-            tint = Color.White,
-            modifier = Modifier.size(20.dp),
-        )
-    }
-}
-
 /**
  * How long the voice guide will talk, rounded to whole minutes.
  *
@@ -1936,6 +1931,18 @@ private fun Discovery.narrationMinutes(): Int {
 }
 
 private val HEADER_HEIGHT = 320.dp
+
+/**
+ * How far the story list stops short of the bottom edge.
+ *
+ * The room the floating note composer occupies, measured against it rather than
+ * chosen from the spacing scale — it is a position, not a gap, and snapping it onto a
+ * 4 dp step would put the last note under the field used to write it.
+ */
+private val COMPOSER_CLEARANCE = 132.dp
+
+/** Where the shutter sits above the navigation bar. A hit target, so it is not snapped. */
+private val SHUTTER_INSET = 40.dp
 
 /** How far the paper sheet laps over the foot of the photo. */
 private val SHEET_LIP = 26.dp

@@ -1,6 +1,6 @@
 package com.duylt.trave.vietlensai.core.designsystem.component
 
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarData
 import androidx.compose.material3.SnackbarDefaults
@@ -12,7 +12,6 @@ import androidx.compose.material3.SnackbarVisuals
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
 import com.duylt.trave.vietlensai.core.designsystem.theme.LacquerRed
 
 /**
@@ -45,7 +44,7 @@ fun AppSnackbarHost(
         val isError = data.visuals is ErrorSnackbarVisuals
         Snackbar(
             snackbarData = data,
-            shape = RoundedCornerShape(14.dp),
+            shape = MaterialTheme.shapes.medium,
             containerColor = if (isError) LacquerRed else SnackbarDefaults.color,
             contentColor = if (isError) Color.Black else SnackbarDefaults.contentColor,
             actionColor = if (isError) Color.Black else SnackbarDefaults.actionColor,

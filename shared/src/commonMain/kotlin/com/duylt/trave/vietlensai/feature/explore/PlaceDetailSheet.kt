@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.DirectionsWalk
@@ -37,14 +36,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.duylt.trave.vietlensai.core.designsystem.component.AccentChip
 import com.duylt.trave.vietlensai.core.designsystem.component.AppAsyncImage
 import com.duylt.trave.vietlensai.core.designsystem.component.Kicker
 import com.duylt.trave.vietlensai.core.designsystem.theme.Jade
 import com.duylt.trave.vietlensai.core.designsystem.theme.PaperCream
+import com.duylt.trave.vietlensai.core.designsystem.theme.PageSpacing
 import com.duylt.trave.vietlensai.core.designsystem.theme.ScreenGutter
+import com.duylt.trave.vietlensai.core.designsystem.theme.Spacing
 import com.duylt.trave.vietlensai.core.designsystem.theme.TempleGold
 import com.duylt.trave.vietlensai.core.designsystem.theme.Vermilion
 import com.duylt.trave.vietlensai.domain.model.NearbyPlace
@@ -93,14 +93,14 @@ fun PlaceDetailSheetContent(
             .fillMaxWidth()
             .verticalScroll(rememberScrollState())
             .padding(horizontal = ScreenGutter)
-            .padding(bottom = 28.dp),
+            .padding(bottom = PageSpacing.listBottom),
     ) {
         if (place.photoUrl != null) {
             AppAsyncImage(
                 model = place.photoUrl,
                 contentDescription = place.name,
                 modifier = Modifier.fillMaxWidth().height(180.dp),
-                shape = RoundedCornerShape(18.dp),
+                shape = MaterialTheme.shapes.medium,
                 contentScale = ContentScale.Crop,
             )
         } else {
@@ -110,7 +110,7 @@ fun PlaceDetailSheetContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(110.dp)
-                    .clip(RoundedCornerShape(18.dp))
+                    .clip(MaterialTheme.shapes.medium)
                     .background(accent.copy(alpha = CATEGORY_BANNER_ALPHA)),
                 contentAlignment = Alignment.Center,
             ) {
@@ -122,26 +122,25 @@ fun PlaceDetailSheetContent(
                 )
             }
         }
-        Spacer(Modifier.height(16.dp))
+        Spacer(Modifier.height(Spacing.lg))
 
         place.typeLabel?.let { label ->
             Kicker(text = label, color = accent)
-            Spacer(Modifier.height(6.dp))
+            Spacer(Modifier.height(Spacing.xs))
         }
 
         Text(
             text = place.name,
             style = MaterialTheme.typography.headlineSmall,
-            fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.onSurface,
         )
 
-        Spacer(Modifier.height(10.dp))
+        Spacer(Modifier.height(Spacing.sm))
         PlaceFacts(place = place, accent = accent)
 
         val summary = details?.fullSummary ?: place.summary
         if (summary != null) {
-            Spacer(Modifier.height(14.dp))
+            Spacer(Modifier.height(Spacing.md))
             Text(
                 text = summary,
                 style = MaterialTheme.typography.bodyMedium,
@@ -149,7 +148,7 @@ fun PlaceDetailSheetContent(
             )
         }
 
-        Spacer(Modifier.height(20.dp))
+        Spacer(Modifier.height(Spacing.xl))
         Button(
             onClick = onStartNavigation,
             modifier = Modifier.fillMaxWidth(),
@@ -158,18 +157,17 @@ fun PlaceDetailSheetContent(
                 containerColor = Vermilion,
                 contentColor = PaperCream,
             ),
-            contentPadding = PaddingValues(vertical = 14.dp),
+            contentPadding = PaddingValues(vertical = Spacing.md),
         ) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.DirectionsWalk,
                 contentDescription = null,
                 modifier = Modifier.size(20.dp),
             )
-            Spacer(Modifier.width(8.dp))
+            Spacer(Modifier.width(Spacing.sm))
             Text(
                 text = stringResource(Res.string.explore_start_navigation),
                 style = MaterialTheme.typography.titleSmall,
-                fontWeight = FontWeight.Bold,
             )
         }
 
@@ -178,7 +176,7 @@ fun PlaceDetailSheetContent(
         // A spinner for the part that is still coming rather than for the whole sheet,
         // so what is already answerable stays readable while the rest arrives.
         if (isLoadingDetails) {
-            Spacer(Modifier.height(24.dp))
+            Spacer(Modifier.height(Spacing.xl))
             Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
                 CircularProgressIndicator(modifier = Modifier.size(24.dp), strokeWidth = 2.dp)
             }
@@ -187,14 +185,14 @@ fun PlaceDetailSheetContent(
         details?.let { loaded ->
             PhotoStrip(photoUrls = loaded.photoUrls, placeName = place.name)
             loaded.articleUrl?.let { url ->
-                Spacer(Modifier.height(12.dp))
+                Spacer(Modifier.height(Spacing.md))
                 TextButton(onClick = { onOpenArticle(url) }) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Outlined.MenuBook,
                         contentDescription = null,
                         modifier = Modifier.size(16.dp),
                     )
-                    Spacer(Modifier.width(6.dp))
+                    Spacer(Modifier.width(Spacing.xs))
                     Text(stringResource(Res.string.explore_read_more))
                 }
             }
@@ -202,7 +200,7 @@ fun PlaceDetailSheetContent(
 
         // Attribution, not decoration. OpenStreetMap's licence requires the source to be
         // credited wherever its data is shown, and Wikipedia's asks the same.
-        Spacer(Modifier.height(20.dp))
+        Spacer(Modifier.height(Spacing.xl))
         Text(
             text = stringResource(Res.string.explore_source_note),
             style = MaterialTheme.typography.labelSmall,
@@ -223,7 +221,7 @@ private fun PlaceFacts(place: NearbyPlace, accent: Color) {
     Row(
         modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(Spacing.sm),
     ) {
         AccentChip(text = place.distanceMeters.asDistanceLabel(), accent = accent)
 
@@ -256,12 +254,12 @@ private fun ContactLines(place: NearbyPlace, accent: Color) {
     val phone = place.phone
     if (hours == null && website == null && phone == null) return
 
-    Spacer(Modifier.height(20.dp))
+    Spacer(Modifier.height(Spacing.xl))
     Kicker(
         text = stringResource(Res.string.explore_hours_title),
         color = MaterialTheme.colorScheme.onSurfaceVariant,
     )
-    Spacer(Modifier.height(8.dp))
+    Spacer(Modifier.height(Spacing.sm))
 
     hours?.let { IconLine(Icons.Outlined.Schedule, it, accent) }
     website?.let { IconLine(Icons.Outlined.Language, it, accent) }
@@ -275,16 +273,16 @@ private fun IconLine(
     accent: Color,
 ) {
     Row(
-        modifier = Modifier.fillMaxWidth().padding(bottom = 6.dp),
+        modifier = Modifier.fillMaxWidth().padding(bottom = Spacing.xs),
         verticalAlignment = Alignment.Top,
     ) {
         Icon(
             imageVector = icon,
             contentDescription = null,
-            modifier = Modifier.padding(top = 2.dp).size(14.dp),
+            modifier = Modifier.padding(top = Spacing.xxs).size(14.dp),
             tint = accent,
         )
-        Spacer(Modifier.width(6.dp))
+        Spacer(Modifier.width(Spacing.xs))
         Text(
             text = text,
             style = MaterialTheme.typography.bodySmall,
@@ -297,17 +295,17 @@ private fun IconLine(
 private fun PhotoStrip(photoUrls: List<String>, placeName: String) {
     if (photoUrls.isEmpty()) return
 
-    Spacer(Modifier.height(20.dp))
+    Spacer(Modifier.height(Spacing.xl))
     Row(
         modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(Spacing.sm),
     ) {
         photoUrls.forEach { url ->
             AppAsyncImage(
                 model = url,
                 contentDescription = placeName,
                 modifier = Modifier.size(width = 140.dp, height = 100.dp),
-                shape = RoundedCornerShape(12.dp),
+                shape = MaterialTheme.shapes.small,
                 contentScale = ContentScale.Crop,
             )
         }

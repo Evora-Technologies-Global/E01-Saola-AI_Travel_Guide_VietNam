@@ -23,10 +23,9 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import com.duylt.trave.vietlensai.core.designsystem.theme.PaperCream
 import com.duylt.trave.vietlensai.core.designsystem.theme.ScreenGutter
+import com.duylt.trave.vietlensai.core.designsystem.theme.Spacing
 import com.duylt.trave.vietlensai.core.designsystem.theme.Vermilion
 
 /**
@@ -74,21 +73,20 @@ fun PermissionSheet(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = ScreenGutter)
-                .padding(top = 24.dp, bottom = 24.dp),
+                .padding(vertical = Spacing.xl),
         ) {
             Text(
                 text = title,
                 style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface,
             )
-            Spacer(Modifier.height(8.dp))
+            Spacer(Modifier.height(Spacing.sm))
             Text(
                 text = body,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
-            Spacer(Modifier.height(20.dp))
+            Spacer(Modifier.height(Spacing.xl))
             // Both answers sit at the trailing end, the way a dialog's do: the way
             // out first, the one being asked for last and under the thumb.
             Row(
@@ -98,11 +96,11 @@ fun PermissionSheet(
             ) {
                 TextButton(
                     onClick = onDismiss,
-                    contentPadding = PaddingValues(horizontal = 14.dp, vertical = 10.dp),
+                    contentPadding = PaddingValues(horizontal = Spacing.md, vertical = Spacing.sm),
                 ) {
                     Text(text = dismissLabel, style = MaterialTheme.typography.labelLarge)
                 }
-                Spacer(Modifier.width(8.dp))
+                Spacer(Modifier.width(Spacing.sm))
                 Button(
                     onClick = onConfirm,
                     shape = CircleShape,
@@ -110,7 +108,7 @@ fun PermissionSheet(
                         containerColor = Vermilion,
                         contentColor = PaperCream,
                     ),
-                    contentPadding = PaddingValues(horizontal = 20.dp, vertical = 10.dp),
+                    contentPadding = PaddingValues(horizontal = Spacing.xl, vertical = Spacing.sm),
                 ) {
                     Text(text = confirmLabel, style = MaterialTheme.typography.labelLarge)
                 }

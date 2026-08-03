@@ -8,7 +8,6 @@ import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTransformGestures
@@ -29,7 +28,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.text.TextAutoSize
 import androidx.compose.material.icons.Icons
@@ -96,9 +94,13 @@ import com.duylt.trave.vietlensai.resources.translate_leave_title
 import com.duylt.trave.vietlensai.resources.translate_show_original
 import com.duylt.trave.vietlensai.resources.translate_speak
 import com.duylt.trave.vietlensai.core.designsystem.component.AppSnackbarHost
+import com.duylt.trave.vietlensai.core.designsystem.component.OverlayHeader
+import com.duylt.trave.vietlensai.core.designsystem.component.OverlayIconButton
 import com.duylt.trave.vietlensai.core.designsystem.component.showMessage
+import com.duylt.trave.vietlensai.core.designsystem.theme.PageSpacing
+import com.duylt.trave.vietlensai.core.designsystem.theme.Pill
 import com.duylt.trave.vietlensai.core.designsystem.theme.ScreenGutter
-import com.duylt.trave.vietlensai.core.designsystem.theme.screenInsetsPadding
+import com.duylt.trave.vietlensai.core.designsystem.theme.Spacing
 import com.duylt.trave.vietlensai.core.mvi.CollectEffects
 import com.duylt.trave.vietlensai.core.util.toUserMessage
 import com.duylt.trave.vietlensai.domain.model.TranslationBlock
@@ -306,7 +308,7 @@ private fun TranslationCanvas(
                     translationX = offset.x
                     translationY = offset.y
                 }
-                .clip(RoundedCornerShape(PHOTO_CORNER)),
+                .clip(MaterialTheme.shapes.large),
         ) {
             AppAsyncImage(
                 model = state.imagePath,
@@ -315,7 +317,7 @@ private fun TranslationCanvas(
                 // Repeated from the frame above rather than relied on: the parent clips
                 // because the translation boxes have to be clipped too, but the shimmer
                 // owning its own corners is what makes it survive being moved.
-                shape = RoundedCornerShape(PHOTO_CORNER),
+                shape = MaterialTheme.shapes.large,
                 onSuccess = { success ->
                     val size = success.painter.intrinsicSize
                     if (size.isSpecified && size.height > 0f) ratio = size.width / size.height
@@ -390,13 +392,20 @@ private fun TranslatedBlock(
             // greens" in the space "Cơm rang dưa bò" took, and it would lose.
             .height(height)
             .widthIn(min = width, max = maxWidth)
-            .clip(RoundedCornerShape(4.dp))
+            .clip(MaterialTheme.shapes.extraSmall)
             .background(Color.Black.copy(alpha = 0.82f))
             .clickable(role = Role.Button, onClick = onClick),
         contentAlignment = Alignment.Center,
     ) {
         BasicText(
             text = block.translated,
+            // Built from nothing rather than from a theme scale, and that is deliberate:
+            // `autoSize` steps `fontSize` down to fit, but it cannot touch an absolute
+            // `lineHeight`. Inheriting `labelLarge` would bake in a 20 sp line box that
+            // stays 20 sp after the type has been shrunk to 8 sp to fit a menu line — two
+            // such lines are 40 sp of text inside a box measured to the Vietnamese it
+            // covers, so the translation would overflow exactly where it has least room.
+            // Leaving `lineHeight` unspecified lets it follow the size that was measured.
             style = TextStyle(
                 color = Color.White,
                 fontWeight = FontWeight.Medium,
@@ -412,7 +421,7 @@ private fun TranslatedBlock(
             ),
             maxLines = 2,
             overflow = TextOverflow.Ellipsis,
-            modifier = Modifier.padding(horizontal = 2.dp),
+            modifier = Modifier.padding(horizontal = Spacing.xxs),
         )
     }
 }
@@ -469,65 +478,50 @@ private fun TranslationTopBar(
     onShowOriginal: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(
-                Brush.verticalGradient(listOf(Color.Black.copy(alpha = 0.6f), Color.Transparent)),
-            )
-            .screenInsetsPadding()
-            .padding(horizontal = 8.dp, vertical = 8.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        GlassButton(onClick = onBack) {
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+    // Press and hold rather than a toggle: peeking at the original is a glance, and a
+    // toggle leaves the traveller in a state they have to remember to get out of. Driven
+    // by the button's own press state rather than by a second gesture detector, which
+    // would be competing with its click for the same finger — which is why
+    // `OverlayIconButton` takes an interaction source at all.
+    val peekInteraction = remember { MutableInteractionSource() }
+    val peeking by peekInteraction.collectIsPressedAsState()
+    LaunchedEffect(peeking) { onShowOriginal(peeking) }
+
+    OverlayHeader(
+        modifier = modifier,
+        leading = {
+            OverlayIconButton(
+                icon = Icons.AutoMirrored.Filled.ArrowBack,
                 contentDescription = stringResource(Res.string.action_back),
-                tint = Color.White,
+                onClick = onBack,
             )
-        }
-
-        Spacer(Modifier.weight(1f))
-
-        if (state.translation == null) return@Row
-
-        // Press and hold rather than a toggle: peeking at the original is a glance,
-        // and a toggle leaves the traveller in a state they have to remember to get
-        // out of. Driven by the button's own press state rather than by a second
-        // gesture detector, which would be competing with its click for the same
-        // finger.
-        val peekInteraction = remember { MutableInteractionSource() }
-        val peeking by peekInteraction.collectIsPressedAsState()
-        LaunchedEffect(peeking) { onShowOriginal(peeking) }
-
-        GlassButton(onClick = {}, interactionSource = peekInteraction) {
-            Icon(
-                imageVector = Icons.Filled.Visibility,
+        },
+        trailing = {
+            if (state.translation == null) return@OverlayHeader
+            OverlayIconButton(
+                icon = Icons.Filled.Visibility,
                 contentDescription = stringResource(Res.string.translate_show_original),
-                tint = Color.White,
+                onClick = {},
+                interactionSource = peekInteraction,
             )
-        }
-        Spacer(Modifier.width(8.dp))
-        GlassButton(onClick = onCopy) {
-            Icon(
-                imageVector = Icons.Filled.ContentCopy,
+            Spacer(Modifier.width(Spacing.sm))
+            OverlayIconButton(
+                icon = Icons.Filled.ContentCopy,
                 contentDescription = stringResource(Res.string.translate_copy),
-                tint = Color.White,
+                onClick = onCopy,
             )
-        }
-        Spacer(Modifier.width(8.dp))
-        GlassButton(onClick = onSpeak) {
-            Icon(
-                imageVector = if (state.isSpeaking) {
+            Spacer(Modifier.width(Spacing.sm))
+            OverlayIconButton(
+                icon = if (state.isSpeaking) {
                     Icons.Filled.Stop
                 } else {
                     Icons.AutoMirrored.Filled.VolumeUp
                 },
                 contentDescription = stringResource(Res.string.translate_speak),
-                tint = Color.White,
+                onClick = onSpeak,
             )
-        }
-    }
+        },
+    )
 }
 
 /**
@@ -562,7 +556,7 @@ private fun TranslationFooter(state: TranslationState, modifier: Modifier = Modi
                     ),
                 )
                 .navigationBarsPadding()
-                .padding(horizontal = ScreenGutter, vertical = 16.dp),
+                .padding(horizontal = ScreenGutter, vertical = Spacing.lg),
             contentAlignment = Alignment.Center,
         ) {
             Text(
@@ -588,9 +582,9 @@ private fun TranslationError(
     Column(
         modifier = modifier
             .padding(ScreenGutter)
-            .clip(RoundedCornerShape(20.dp))
+            .clip(MaterialTheme.shapes.large)
             .background(Color.Black.copy(alpha = 0.82f))
-            .padding(24.dp),
+            .padding(Spacing.xl),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
@@ -599,13 +593,13 @@ private fun TranslationError(
             color = Color.White,
             textAlign = TextAlign.Center,
         )
-        Spacer(Modifier.height(16.dp))
+        Spacer(Modifier.height(Spacing.lg))
         Row(
             modifier = Modifier
-                .clip(RoundedCornerShape(percent = 50))
+                .clip(Pill)
                 .background(MaterialTheme.colorScheme.primary)
                 .clickable(role = Role.Button, onClick = onRetry)
-                .padding(horizontal = 20.dp, vertical = 10.dp),
+                .padding(horizontal = Spacing.xl, vertical = Spacing.sm),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
@@ -614,7 +608,7 @@ private fun TranslationError(
                 tint = MaterialTheme.colorScheme.onPrimary,
                 modifier = Modifier.size(18.dp),
             )
-            Spacer(Modifier.width(8.dp))
+            Spacer(Modifier.width(Spacing.sm))
             Text(
                 text = stringResource(Res.string.action_retry),
                 style = MaterialTheme.typography.labelLarge,
@@ -636,13 +630,12 @@ private fun BlockDetailSheet(block: TranslationBlock, onDismiss: () -> Unit) {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = ScreenGutter)
-                .padding(bottom = 32.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
+                .padding(bottom = PageSpacing.listBottom),
+            verticalArrangement = Arrangement.spacedBy(Spacing.sm),
         ) {
             Text(
                 text = block.original,
                 style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold,
             )
             Text(
                 text = block.translated,
@@ -653,7 +646,6 @@ private fun BlockDetailSheet(block: TranslationBlock, onDismiss: () -> Unit) {
                 Text(
                     text = price,
                     style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
                 )
             }
             block.note?.let { note ->
@@ -664,31 +656,6 @@ private fun BlockDetailSheet(block: TranslationBlock, onDismiss: () -> Unit) {
                 )
             }
         }
-    }
-}
-
-/** A round control that stays legible over whatever part of the photo it lands on. */
-@Composable
-private fun GlassButton(
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    interactionSource: MutableInteractionSource? = null,
-    content: @Composable () -> Unit,
-) {
-    Box(
-        modifier = modifier
-            .size(40.dp)
-            .clip(RoundedCornerShape(percent = 50))
-            .background(Color.Black.copy(alpha = 0.45f))
-            .clickable(
-                interactionSource = interactionSource,
-                indication = LocalIndication.current,
-                role = Role.Button,
-                onClick = onClick,
-            ),
-        contentAlignment = Alignment.Center,
-    ) {
-        content()
     }
 }
 
@@ -710,5 +677,3 @@ private const val MAX_ZOOM = 4f
 /** Used until the photo reports its own shape — the sensor's 4:3, portrait. */
 private const val DEFAULT_RATIO = 3f / 4f
 
-/** Softened just enough to read as a photo on a screen rather than a raw frame. */
-private val PHOTO_CORNER = 20.dp
