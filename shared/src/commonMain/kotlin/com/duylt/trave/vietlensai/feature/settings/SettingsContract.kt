@@ -3,7 +3,6 @@ package com.duylt.trave.vietlensai.feature.settings
 import com.duylt.trave.vietlensai.core.mvi.UiEffect
 import com.duylt.trave.vietlensai.core.mvi.UiIntent
 import com.duylt.trave.vietlensai.core.mvi.UiState
-import com.duylt.trave.vietlensai.domain.model.AppLanguage
 import com.duylt.trave.vietlensai.domain.model.AppSettings
 import com.duylt.trave.vietlensai.domain.model.GeminiModel
 import com.duylt.trave.vietlensai.domain.model.ThemePreference
@@ -26,7 +25,6 @@ sealed interface SettingsIntent : UiIntent {
     data class ApiKeyDraftChanged(val value: String) : SettingsIntent
     data object SaveApiKey : SettingsIntent
     data object ClearApiKey : SettingsIntent
-    data class SelectLanguage(val language: AppLanguage) : SettingsIntent
     data class SelectModel(val model: GeminiModel) : SettingsIntent
     data class SelectTheme(val preference: ThemePreference) : SettingsIntent
     data class SetSpeakAnswers(val enabled: Boolean) : SettingsIntent

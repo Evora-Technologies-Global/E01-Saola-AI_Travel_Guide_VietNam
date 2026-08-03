@@ -1,6 +1,5 @@
 package com.duylt.trave.vietlensai.domain.usecase
 
-import com.duylt.trave.vietlensai.domain.model.AppLanguage
 import com.duylt.trave.vietlensai.domain.model.AppSettings
 import com.duylt.trave.vietlensai.domain.model.GeminiModel
 import com.duylt.trave.vietlensai.domain.model.ThemePreference
@@ -40,12 +39,6 @@ class SaveApiKeyUseCase(
 ) {
     suspend operator fun invoke(key: String) =
         repository.setApiKey(key.trim().takeIf { it.isNotEmpty() })
-}
-
-class UpdateLanguageUseCase(
-    private val repository: SettingsRepository,
-) {
-    suspend operator fun invoke(language: AppLanguage) = repository.setLanguage(language)
 }
 
 class UpdateModelUseCase(

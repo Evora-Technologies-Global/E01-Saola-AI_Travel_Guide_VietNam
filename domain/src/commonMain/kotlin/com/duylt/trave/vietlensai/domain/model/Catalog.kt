@@ -9,32 +9,29 @@ package com.duylt.trave.vietlensai.domain.model
  * invent things to look for will cheerfully suggest a Lý-dynasty stone dragon to
  * someone standing in Cà Mau.
  *
+ * @param name and [hint], already in the language the app is running in. The asset
+ *   carries all eight; `CatalogAssetSource` picks one while parsing, so nothing above
+ *   the data layer has to know a translation table exists. That was a deliberate choice
+ *   when the app went from two languages to eight: holding every translation on the
+ *   model would have put a `Map` inside `CollectionEntry`, and a Map is unstable to
+ *   Compose — the collection board would lose its skips over a field no screen reads.
+ *   The device language cannot change without the process restarting, so there is
+ *   nothing to re-pick.
  * @param hint how to recognise it, which is the part that makes this a guide rather
  *   than a checklist. "Sợi bánh dẹt, nước dùng trong" teaches the traveller to look;
  *   "phở" only tells them a word they already knew.
  * @param aliases what the model might call it. Matched as whole words against a
  *   discovery's title, local name and tags — see the matcher for why diacritics are
- *   kept rather than folded.
+ *   kept rather than folded. Always Vietnamese, whatever [name] was resolved to: they
+ *   are matched against what Gemini returns, not against what the screen shows.
  */
 data class CatalogItem(
     val id: String,
     val category: DiscoveryCategory,
     val name: String,
-    val nameEn: String,
     val hint: String,
-    val hintEn: String,
     val aliases: List<String>,
-) {
-    fun displayName(language: AppLanguage): String = when (language) {
-        AppLanguage.VIETNAMESE -> name
-        AppLanguage.ENGLISH -> nameEn.ifBlank { name }
-    }
-
-    fun displayHint(language: AppLanguage): String = when (language) {
-        AppLanguage.VIETNAMESE -> hint
-        AppLanguage.ENGLISH -> hintEn.ifBlank { hint }
-    }
-}
+)
 
 /**
  * A catalogue entry as the traveller sees it: the thing, and their own photograph of

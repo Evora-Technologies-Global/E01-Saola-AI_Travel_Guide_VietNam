@@ -2,7 +2,7 @@ package com.duylt.trave.vietlensai.data.repository
 
 import com.duylt.trave.vietlensai.data.DataBuildConfig
 import com.duylt.trave.vietlensai.data.local.datastore.SettingsDataStore
-import com.duylt.trave.vietlensai.domain.model.AppLanguage
+import com.duylt.trave.vietlensai.data.platform.deviceLanguage
 import com.duylt.trave.vietlensai.domain.model.AppSettings
 import com.duylt.trave.vietlensai.domain.model.GeminiModel
 import com.duylt.trave.vietlensai.domain.model.ThemePreference
@@ -19,8 +19,8 @@ import kotlinx.coroutines.flow.first
  * translation and the diary all read [current] to find the language and the model *before*
  * they reach their own guards, and [settings] and [current] have no `AppResult` to report a
  * failure in. Settings that cannot be read are settings the traveller never changed, which
- * is a working app in Vietnamese on the default model; an exception here is a camera that
- * will not take a photograph.
+ * is a working app in the phone's own language on the default model; an exception here is
+ * a camera that will not take a photograph.
  *
  * The writes are the other direction and do carry an `AppResult` — they delegate straight to
  * [SettingsDataStore], which folds a failed write into [AppError.Storage] rather than
@@ -30,8 +30,14 @@ internal class SettingsRepositoryImpl(
     private val dataStore: SettingsDataStore,
 ) : SettingsRepository {
 
+    // The floor keeps the device language even when everything else falls back. Language is
+    // not read from the preferences file at all, so a file this app cannot parse is no
+    // reason to start narrating in a language the phone is not set to.
     override val settings: Flow<AppSettings> = dataStore.settings
-        .fallbackOnFailure(AppSettings.DEFAULT, what = "read settings")
+        .fallbackOnFailure(
+            AppSettings.DEFAULT.copy(language = deviceLanguage()),
+            what = "read settings",
+        )
 
     override suspend fun current(): AppSettings = settings.first()
 
@@ -39,8 +45,6 @@ internal class SettingsRepositoryImpl(
         current().hasApiKey || DataBuildConfig.GEMINI_API_KEY.isNotBlank()
 
     override suspend fun setApiKey(key: String?) = dataStore.setApiKey(key)
-
-    override suspend fun setLanguage(language: AppLanguage) = dataStore.setLanguage(language)
 
     override suspend fun setModel(model: GeminiModel) = dataStore.setModel(model)
 

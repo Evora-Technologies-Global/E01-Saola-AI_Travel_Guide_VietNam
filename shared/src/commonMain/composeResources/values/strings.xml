@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  Default locale is English so the app stays readable on any device; values-vi/
-  carries the Vietnamese copy. The AI's *content* language is a separate in-app
-  setting: a traveller may well want an English interface with Vietnamese
-  narration, or the reverse.
+  Default locale is English so the app stays readable on any device; the seven
+  values-*/ files carry the rest. The AI's *content* language follows the same device
+  language these files are picked by, so the interface and the narration always
+  agree; there is no in-app language setting. See `deviceLanguage()` in :data.
 -->
 <resources>
     <!-- Brand name: identical in every locale. -->
     <string name="app_name">VietLens AI</string>
 
     <!--
-      Which of these two files the resource system picked.
+      Which of these eight files the resource system picked.
 
       Not shown to anyone. Text that ships outside the string table — the culture
       catalogue in assets/catalog.json — has to be written in the same language as the
       labels beside it, and this is the only way shared code can ask which locale was
-      actually resolved. Reading the in-app "story language" instead would put an
-      English dish name under a Vietnamese heading on a Vietnamese phone, because that
-      setting deliberately governs the AI's voice rather than the interface.
+      actually resolved. `deviceLanguage()` in :data answers the same question for code
+      below the UI, where composition is not available; the two agree by construction —
+      both resolve to a shipped language or else English — and this one stays the
+      authority for anything drawn beside a stringResource, because it reads the
+      resolution rather than recomputing it.
     -->
     <string name="resource_language">en</string>
 
@@ -256,7 +258,6 @@
     <string name="settings_model_scholar">Scholar</string>
     <string name="settings_model_scholar_summary">Deepest history and cultural detail. Slower.</string>
     <string name="settings_section_experience">Experience</string>
-    <string name="settings_language">Story language</string>
     <string name="settings_speak">Read answers aloud</string>
     <string name="settings_speak_summary">Speak descriptions and chat replies</string>
     <string name="settings_section_appearance">Appearance</string>

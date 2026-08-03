@@ -7,7 +7,7 @@ import com.duylt.trave.vietlensai.data.local.db.entity.DiscoveryNoteEntity
 import com.duylt.trave.vietlensai.data.mapper.toDomain
 import com.duylt.trave.vietlensai.data.mapper.toEntity
 import com.duylt.trave.vietlensai.data.remote.gemini.GeminiRemoteDataSource
-import com.duylt.trave.vietlensai.data.util.longLabel
+import com.duylt.trave.vietlensai.domain.model.longLabel
 import com.duylt.trave.vietlensai.domain.model.Discovery
 import com.duylt.trave.vietlensai.domain.model.JournalDay
 import com.duylt.trave.vietlensai.domain.model.JournalStats

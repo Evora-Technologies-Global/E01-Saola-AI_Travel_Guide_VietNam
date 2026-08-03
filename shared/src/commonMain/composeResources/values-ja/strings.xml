@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Japanese. Vietnamese proper nouns keep their diacritics — Việt Nam, Hoàng Sa — because
+  the traveller has to match what they read here against a sign, a ticket and a map that
+  are written only that way. See values/strings.xml for the rest of the conventions.
+-->
+<resources>
+    <string name="app_name">VietLens AI</string>
+
+    <string name="resource_language">ja</string>
+
+    <!-- Navigation -->
+    <string name="nav_lens">レンズ</string>
+    <string name="nav_journal">日誌</string>
+    <string name="nav_explore">周辺</string>
+    <string name="nav_settings">設定</string>
+
+    <!-- Camera -->
+    <string name="camera_permission_title">カメラへのアクセスが必要です</string>
+    <string name="camera_permission_body">VietLens は名所や料理、看板を認識するためにカメラを使います。写真は端末の中に留まります。</string>
+    <string name="camera_permission_grant">カメラを許可</string>
+    <string name="camera_permission_blocked_body">VietLens のカメラアクセスがオフになっており、Android は再度たずねません。続けるにはアプリ設定でオンにしてください。</string>
+    <string name="location_permission_title">パスポートに押印する</string>
+    <string name="location_permission_body">位置情報をオンにすると、撮った写真がどの省で撮られたかを覚え、その省がパスポートの地図に塗られます。</string>
+    <string name="location_permission_blocked_body">VietLens の位置情報がオフになっており、Android は再度たずねません。写真でパスポートの地図を埋めるにはアプリ設定でオンにしてください。</string>
+    <string name="location_permission_grant">許可する</string>
+    <string name="location_permission_later">今はしない</string>
+    <string name="permission_open_settings">設定を開く</string>
+    <string name="camera_capture">撮影</string>
+    <string name="camera_pick_gallery">写真を選ぶ</string>
+    <string name="camera_flash_on">フラッシュをオン</string>
+    <string name="camera_flash_off">フラッシュをオフ</string>
+    <string name="camera_mode_selector">撮影モード</string>
+    <string name="camera_grid_show">グリッドを表示</string>
+    <string name="camera_grid_hide">グリッドを隠す</string>
+    <string name="camera_switch_lens">カメラを切り替え</string>
+    <string name="camera_timer_off">セルフタイマーなし</string>
+    <string name="camera_timer_3">3秒タイマー</string>
+    <string name="camera_timer_10">10秒タイマー</string>
+    <string name="camera_cancel_timer">タイマーを中止</string>
+    <string name="camera_open_journal">日誌を開く</string>
+    <string name="camera_ae_af_locked">AE/AF ロック</string>
+    <string name="camera_hint_auto">名所・料理・展示品に向けてください</string>
+    <string name="camera_hint_landmark">建物や記念碑の全体を入れてください</string>
+    <string name="camera_hint_food">料理に近づいてください</string>
+    <string name="camera_hint_artifact">できれば解説プレートも入れてください</string>
+    <string name="camera_hint_translate">文字の上で静止させてください</string>
+
+    <!-- Lens modes -->
+    <string name="mode_auto">おまかせ</string>
+    <string name="mode_landmark">遺産</string>
+    <string name="mode_food">料理</string>
+    <string name="mode_artifact">博物館</string>
+    <string name="mode_translate">翻訳</string>
+
+    <!-- Photo translation language picker -->
+    <string name="camera_translate_auto">自動</string>
+    <string name="camera_translate_auto_detect">自動で判別する</string>
+    <string name="camera_translate_from">翻訳元</string>
+    <string name="camera_translate_to">翻訳先</string>
+    <string name="camera_translate_swap">言語を入れ替え</string>
+    <string name="camera_translate_pick_from">翻訳元の言語を選ぶ</string>
+    <string name="camera_translate_pick_to">翻訳先の言語を選ぶ</string>
+
+    <!-- Language names -->
+    <string name="language_vi">ベトナム語</string>
+    <string name="language_en">英語</string>
+    <string name="language_ja">日本語</string>
+    <string name="language_ko">韓国語</string>
+    <string name="language_zh">中国語</string>
+    <string name="language_fr">フランス語</string>
+    <string name="language_es">スペイン語</string>
+    <string name="language_th">タイ語</string>
+
+    <!-- Analysing -->
+    <string name="analysing_title">写真を見ています…</string>
+    <string name="analysing_recognising">写っているものを認識中</string>
+    <string name="analysing_history">背景にある歴史を集めています</string>
+    <string name="analysing_stories">語る価値のある話を探しています</string>
+
+    <!-- Discovery -->
+    <string name="discovery_confidence">一致度 %1$d%</string>
+    <string name="discovery_low_confidence">確信は持てません。別の角度から撮るともっと近づけます。</string>
+    <string name="discovery_nearby">せっかくなので</string>
+    <string name="discovery_ask">これについて聞く</string>
+    <string name="discovery_ask_subtitle">ガイドは上の内容をすべて覚えています</string>
+    <string name="discovery_listen">聞く</string>
+    <string name="discovery_stop">停止</string>
+    <string name="discovery_favorite_add">お気に入りに追加</string>
+    <string name="discovery_favorite_remove">お気に入りから削除</string>
+    <string name="discovery_delete">削除</string>
+    <string name="discovery_walk_minutes">徒歩 %1$d 分</string>
+    <string name="discovery_model">%1$s が回答</string>
+    <string name="discovery_not_found">この発見はもう見つかりません。</string>
+    <string name="discovery_delete_confirm_title">この発見を削除しますか？</string>
+    <string name="discovery_delete_confirm_body">写真と、それについての会話がこの端末から消えます。</string>
+    <string name="discovery_photo_label">写真 · %1$s</string>
+    <string name="discovery_listen_title">物語を聞く</string>
+    <string name="discovery_listen_meta">%1$d 分 · %2$s で朗読</string>
+    <string name="discovery_favorite_saved">保存しました</string>
+    <string name="discovery_share">共有</string>
+    <string name="discovery_share_body">%1$s\n\n%2$s\n\nVietLens AI より</string>
+    <plurals name="discovery_notice_count">
+        <item quantity="other">注目したいこと %1$d 点</item>
+    </plurals>
+
+    <!-- The traveller's own note -->
+    <string name="discovery_note_kicker">あなたのメモ</string>
+    <string name="discovery_note_empty_title">これは自分のために残しておく</string>
+    <string name="discovery_note_empty_body">どう感じたかの一行、自分で撮った写真 — ガイドブックには書けない部分です。</string>
+    <string name="discovery_note_add">メモを書く</string>
+    <string name="discovery_note_edit">編集</string>
+    <string name="discovery_note_placeholder">この場所について何を覚えておきたいですか？</string>
+    <string name="discovery_note_add_photo">写真を追加</string>
+    <string name="discovery_note_photo_count">写真 %1$d / %2$d 枚</string>
+    <string name="discovery_note_remove_photo">この写真を削除</string>
+    <string name="discovery_note_open_photo">この写真を開く</string>
+    <string name="discovery_note_photo_position">%1$d / %2$d</string>
+    <string name="discovery_note_save">メモを保存</string>
+    <string name="discovery_note_delete">メモを削除</string>
+    <string name="discovery_note_edited">編集済み</string>
+    <string name="discovery_note_take_photo">写真を撮る</string>
+    <string name="discovery_note_camera_flip">カメラを切り替え</string>
+    <string name="discovery_note_camera_permission_title">このメモ用に写真を撮りますか？</string>
+    <string name="discovery_note_camera_permission_body">メモと一緒に残す写真を撮るために、VietLens はカメラを使います。写真はこの端末にだけ保存され、送信されることはありません。</string>
+    <string name="discovery_note_camera_permission_blocked_body">VietLens のカメラがオフになっており、Android は再度たずねません。撮影するにはアプリ設定でオンに戻してください。それまではギャラリーから追加できます。</string>
+    <string name="discovery_note_camera_permission_allow">許可する</string>
+    <string name="discovery_note_camera_permission_deny">今はしない</string>
+    <string name="discovery_note_in_diary">ガイドはその日の日記を書くときにこれを使います。</string>
+
+    <!-- Chat -->
+    <string name="chat_title">ガイドに聞く</string>
+    <string name="chat_subtitle">地元のガイドに聞く</string>
+    <string name="chat_suggestions_kicker">こんな質問はどうですか</string>
+    <string name="chat_input_hint">この場所について何でも聞いてください…</string>
+    <string name="chat_send">送信</string>
+    <string name="chat_thinking">考えています…</string>
+    <string name="chat_empty_title">何でも聞いてください</string>
+    <string name="chat_empty_body">誰が建てたのか、なぜ大切なのか、次に何を見るか — 今見たものは覚えています。</string>
+    <string name="chat_clear">会話を消去</string>
+
+    <!-- Translation -->
+    <string name="translate_copy">翻訳をコピー</string>
+    <string name="translate_copied">翻訳をコピーしました</string>
+    <string name="translate_speak">読み上げる</string>
+    <string name="translate_show_original">長押しで原文を表示</string>
+    <string name="translate_direction">%1$s → %2$s</string>
+    <string name="translate_leave_title">翻訳の途中ですが、閉じますか？</string>
+    <string name="translate_leave_body">この写真はまだ翻訳中です。今閉じると中止され、何も保存されません。</string>
+    <string name="translate_leave_confirm">閉じる</string>
+    <string name="translate_leave_stay">続ける</string>
+
+    <!-- Journal -->
+    <string name="journal_kicker">あなたの旅</string>
+    <string name="journal_heading">旅の記録</string>
+    <plurals name="journal_discoveries_label">
+        <item quantity="other">件の発見</item>
+    </plurals>
+    <string name="journal_passport_progress">%1$d / %2$d</string>
+    <string name="journal_collection_progress">%1$d / %2$d</string>
+    <string name="journal_day_write_story">物語を書く</string>
+    <string name="journal_end_of_day_kicker">一日の終わりに</string>
+    <plurals name="journal_end_of_day_title">
+        <item quantity="other">今日の %1$d の発見を一つの物語に</item>
+    </plurals>
+    <string name="journal_end_of_day_body">手元に残しても家族に送ってもいい短い文章 — 実際に見たものだけから書かれます。</string>
+    <string name="journal_end_of_day_action">今日を書いてもらう</string>
+    <string name="journal_story_expand">全文を読む</string>
+    <string name="journal_story_collapse">折りたたむ</string>
+    <string name="journal_stats_open_passport">旅の地図を開く</string>
+    <string name="journal_stats_open_collection">文化コレクションを開く</string>
+    <string name="journal_summary_regenerate">書き直す</string>
+    <string name="journal_summary_generating">日記を書いています…</string>
+    <string name="journal_tomorrow">明日のためのヒント</string>
+    <string name="journal_highlights">ハイライト</string>
+    <string name="journal_empty_title">旅はここから始まります</string>
+    <string name="journal_empty_body">見つけたものはすべて日ごとにここへ保存され、一日の終わりに AI がまとめを書けます。</string>
+    <string name="journal_empty_action">レンズを開く</string>
+    <string name="journal_filter_all">すべて</string>
+    <string name="journal_filter_favorites">お気に入り</string>
+    <string name="journal_favorites_empty_title">お気に入りはまだありません</string>
+    <string name="journal_favorites_empty_body">発見のハートを押すと、ここに並びます。</string>
+
+    <!-- Explore -->
+    <string name="explore_title">あなたの周り</string>
+    <string name="explore_nearby_count">5 km 以内に %1$d か所</string>
+    <string name="explore_loading">歩く価値のある場所を探しています…</string>
+    <string name="explore_recenter">現在地に戻る</string>
+    <string name="explore_refresh">もう一度さがす</string>
+    <string name="explore_search_failed_title">周辺を検索できませんでした</string>
+    <string name="explore_empty_title">この辺りはまだ地図に載っていません</string>
+    <string name="explore_empty_body">この一帯は OpenStreetMap にほとんど登録がありません。移動してから試すか、地図をドラッグして周りを見てください。</string>
+    <string name="explore_permission_title">周辺の表示には位置情報が必要です</string>
+    <string name="explore_permission_body">地図は今いる場所を中心に置き、5 km 以内で歩く価値のある場所を探します。位置はその検索の中心としてのみ送られます。</string>
+    <string name="explore_permission_blocked_body">VietLens の位置情報がオフになっており、システムは再度たずねません。周りを見るにはアプリ設定でオンにしてください。</string>
+    <string name="explore_source_note">場所は OpenStreetMap · 説明と写真は Wikipedia と Wikimedia Commons より</string>
+    <string name="explore_read_more">記事全文を読む</string>
+    <string name="explore_readers">閲覧 %1$s 件</string>
+    <string name="explore_start_navigation">案内開始</string>
+    <string name="explore_hours_title">詳細</string>
+
+    <!-- Culture collection -->
+    <string name="collection_title">文化コレクション</string>
+    <string name="collection_subtitle">ベトナムを一枚ずつ</string>
+    <string name="collection_progress_of">/ %1$d 点</string>
+    <string name="collection_collected_percent">%1$d% 収集</string>
+    <string name="collection_section_progress">%1$d/%2$d</string>
+    <string name="collection_open_discovery">自分の発見を開く</string>
+    <string name="collection_locked_hint">見分け方を見る</string>
+    <string name="collection_collected_badge">収集済み</string>
+    <string name="collection_go_capture">出かけて撮ってくる</string>
+    <string name="collection_view_capture">自分の写真を見る</string>
+    <string name="collection_sovereignty_subtitle">Hoàng Sa・Trường Sa 諸島 · ベトナムの主権</string>
+
+    <!-- Settings -->
+    <string name="settings_title">設定</string>
+    <string name="settings_kicker">環境設定</string>
+    <string name="settings_section_ai">知能</string>
+    <string name="settings_api_key">API キー</string>
+    <string name="settings_api_key_set">あなたのキーを使用中</string>
+    <string name="settings_api_key_default">アプリ内蔵のキーを使用中</string>
+    <string name="settings_api_key_none">キーが未設定です</string>
+    <string name="settings_api_key_active">有効</string>
+    <string name="settings_api_key_inactive">キーなし</string>
+    <string name="settings_api_key_hint">自分のキーを貼り付け…</string>
+    <string name="settings_api_key_save">キーを保存</string>
+    <string name="settings_api_key_clear">消去</string>
+    <string name="settings_api_key_saved">API キーを保存しました</string>
+    <string name="settings_model_balanced">バランス</string>
+    <string name="settings_model_balanced_summary">十分な深さと、メニューを読める速さ。</string>
+    <string name="settings_model_quick">高速</string>
+    <string name="settings_model_quick_summary">看板、ラベル、値段。いちばん安価。</string>
+    <string name="settings_model_scholar">研究者</string>
+    <string name="settings_model_scholar_summary">歴史と文化をもっとも深く。そのぶん遅い。</string>
+    <string name="settings_section_experience">体験</string>
+    <string name="settings_speak">回答を読み上げる</string>
+    <string name="settings_speak_summary">解説とチャットの返答を音声で</string>
+    <string name="settings_section_appearance">外観</string>
+    <string name="settings_theme">テーマ</string>
+    <string name="settings_theme_system">システムに合わせる</string>
+    <string name="settings_theme_light">ライト</string>
+    <string name="settings_theme_dark">ダーク</string>
+    <string name="settings_section_data">データ</string>
+    <string name="settings_clear_history">すべての発見を削除</string>
+    <string name="settings_clear_history_summary">写真・会話・日誌をすべて消します</string>
+    <string name="settings_clear_confirm_title">すべて削除しますか？</string>
+    <string name="settings_clear_confirm_body">この端末にあるすべての発見、写真、会話、日誌が完全に削除されます。</string>
+    <string name="settings_cleared">すべての発見を削除しました</string>
+    <string name="settings_footer">Made in Việt Nam · v%1$s</string>
+
+    <!-- Categories -->
+    <string name="category_landmark">名所</string>
+    <string name="category_food">料理</string>
+    <string name="category_artifact">展示品</string>
+    <string name="category_architecture">建築</string>
+    <string name="category_nature">自然</string>
+    <string name="category_culture">文化</string>
+    <string name="category_other">その他</string>
+
+    <!-- Time -->
+    <string name="time_just_now">たった今</string>
+    <string name="time_minutes_ago">%1$d 分前</string>
+    <string name="time_hours_ago">%1$d 時間前</string>
+    <string name="time_yesterday">昨日</string>
+    <string name="date_today">今日</string>
+    <string name="date_yesterday">昨日</string>
+
+    <!-- Generic actions -->
+    <string name="action_retry">もう一度</string>
+    <string name="action_cancel">キャンセル</string>
+    <string name="action_delete">削除</string>
+    <string name="action_back">戻る</string>
+    <string name="action_close">閉じる</string>
+
+    <!-- Errors -->
+    <string name="error_missing_api_key">Gemini の API キーがまだありません。設定で追加すると認識を始められます。</string>
+    <string name="error_invalid_api_key">その API キーは拒否されました。設定で確認してください。</string>
+    <string name="error_no_connection">インターネットに接続していません。認識には Gemini への接続が必要です。</string>
+    <string name="error_timeout">時間がかかりすぎました。もう一度お試しください。</string>
+    <string name="error_rate_limited">今のところ無料枠の上限に達しました。少し待ってからお試しください。</string>
+    <string name="error_models_busy">Gemini が混み合っています。数秒おいてからお試しください。</string>
+    <string name="error_api">Gemini がこの要求を処理できませんでした（エラー %1$d）。</string>
+    <string name="error_malformed">回答が壊れて返ってきました。もう一度お試しください。</string>
+    <string name="error_not_recognized">これは判別できませんでした。近づくか、別の角度から撮ってみてください。</string>
+    <string name="error_image_unavailable">その写真は読み取れませんでした。</string>
+    <string name="error_location_unavailable">現在、位置情報を取得できません。</string>
+    <string name="error_storage">この端末に保存できませんでした。</string>
+    <string name="error_unexpected">問題が発生しました。もう一度お試しください。</string>
+
+    <!-- Passport -->
+    <string name="passport_title">旅のパスポート</string>
+    <string name="passport_subtitle">歩くほどに Việt Nam が埋まっていきます</string>
+    <string name="passport_progress_of">/ %1$d 省</string>
+    <string name="passport_explored">%1$d% 踏破</string>
+    <string name="passport_empty_title">地図はまだ白いままです</string>
+    <string name="passport_empty_body">何かを認識すると、その場所の省があなたの写真で灯ります。</string>
+    <string name="passport_empty_action">レンズを開く</string>
+    <string name="passport_merged_from">%1$s から成立</string>
+    <string name="passport_province_locked">ここにはまだ来ていません。この省で何かにカメラを向ければ、あなたのものになります。</string>
+    <string name="passport_province_locked_action">レンズを開く</string>
+    <string name="passport_unavailable_title">地図を表示できません</string>
+    <string name="passport_unavailable_body">省の境界線を読み込めませんでした。アプリの他の機能はすべて使えます。</string>
+    <plurals name="passport_discovery_count">
+        <item quantity="other">%1$d 件の発見</item>
+    </plurals>
+    <string name="passport_sheet_first_visit">初訪問</string>
+    <string name="passport_sheet_last_visit">最新</string>
+    <string name="passport_sheet_unlock_order">%1$d 番目の省</string>
+    <string name="passport_sheet_no_stamp">ここにはまだ押印がありません</string>
+    <string name="passport_sheet_open_discovery">%1$s を開く</string>
+    <string name="passport_sheet_expand">省のパネルを広げる</string>
+    <string name="passport_no_location_title">位置情報がオフです</string>
+    <string name="passport_no_location_body">発見は保存されていますが、どこで撮ったかを持っていないため、どの省も塗れません。設定で位置情報をオンにすると、これからの撮影が地図に押印します。</string>
+    <string name="passport_administers">%1$s 諸島を管轄</string>
+    <string name="passport_status_unlocked">収集済み</string>
+    <string name="passport_status_locked">まだ</string>
+
+    <!-- Sovereignty -->
+    <string name="sovereignty_title">Hoàng Sa 諸島と Trường Sa 諸島は Việt Nam に属します</string>
+    <string name="sovereignty_seal">Chủ\nquyền\nVN</string>
+    <string name="sovereignty_read">読む</string>
+    <string name="sovereignty_open">主権に関する声明を読む</string>
+
+    <string name="sovereignty_page_title">Hoàng Sa と Trường Sa は Việt Nam の主権下にあります</string>
+    <string name="sovereignty_page_subtitle">Hoàng Sa 諸島・Trường Sa 諸島</string>
+    <string name="sovereignty_body">Việt Nam は Hoàng Sa 諸島と Trường Sa 諸島に対する主権を、何世紀にもわたって継続的かつ平和的に行使してきました。そのことは Đại Nam nhất thống toàn đồ（1838年）をはじめとする朝廷の文書や地図に記録されています。</string>
+    <string name="sovereignty_body_source">Đại Nam nhất thống toàn đồ</string>
+    <string name="sovereignty_body_secondary">このアプリの地図、地名、物語はすべてそれに従っています。ほかで見る地図がここでの表示と違うなら、理由はこれです。</string>
+    <string name="sovereignty_note">初回起動時と設定画面で、すべての旅行者に表示されます。</string>
+    <string name="sovereignty_understood">了解しました</string>
+    <string name="sovereignty_close">閉じる</string>
+    <string name="sovereignty_map_country">Việt Nam</string>
+    <string name="sovereignty_map_sea">Biển Đông</string>
+
+    <string name="settings_section_about">このアプリについて</string>
+    <string name="settings_sovereignty">Biển Đông についての私たちの立場</string>
+    <string name="settings_sovereignty_summary">Hoàng Sa &amp; Trường Sa · Việt Nam</string>
+</resources>

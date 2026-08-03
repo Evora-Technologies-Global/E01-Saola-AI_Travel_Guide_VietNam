@@ -20,6 +20,8 @@ import com.duylt.trave.vietlensai.resources.time_minutes_ago
 import com.duylt.trave.vietlensai.resources.time_yesterday
 import com.duylt.trave.vietlensai.core.designsystem.theme.CategoryColors
 import com.duylt.trave.vietlensai.domain.model.AppLanguage
+import com.duylt.trave.vietlensai.domain.model.mediumLabel
+import com.duylt.trave.vietlensai.domain.model.shortLabel
 import com.duylt.trave.vietlensai.domain.model.DiscoveryCategory
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDate
@@ -49,19 +51,22 @@ fun DiscoveryCategory.label(): String = stringResource(
  * Resolved by asking the string table itself which of its files was picked, because
  * Compose Resources follows the device locale and offers no way to read that back.
  *
- * Deliberately not [AppSettings.language]: that is the "story language", the voice the
- * guide narrates in, and a traveller is expected to pair an English interface with
- * Vietnamese narration or the reverse. Anything that has to sit *beside* a
- * `stringResource` — the culture catalogue's names and recognition hints, which ship in
- * an asset rather than in the string table — belongs to this one, or the screen ends up
- * captioning a Vietnamese heading with an English name.
+ * Now the same answer as `AppSettings.language`, which follows the device too, but still
+ * the one to reach for inside composition. This reads the resolution Compose actually
+ * made; the other recomputes it from the platform locale API for code that cannot call a
+ * composable. Anything that has to sit *beside* a `stringResource` — the culture
+ * catalogue's names and recognition hints, which ship in an asset rather than in the
+ * string table — belongs to this one, so it cannot disagree with the labels around it
+ * even if the two ever drift.
  */
 @Composable
-fun uiLanguage(): AppLanguage =
-    when (stringResource(Res.string.resource_language)) {
-        "vi" -> AppLanguage.VIETNAMESE
-        else -> AppLanguage.ENGLISH
-    }
+fun uiLanguage(): AppLanguage {
+    val marker = stringResource(Res.string.resource_language)
+    // `else` rather than an exhaustive map: the marker is whatever the resolved
+    // strings.xml happens to carry, and a file added with a typo in it should degrade
+    // to English rather than crash the screen drawing it.
+    return AppLanguage.entries.firstOrNull { it.code == marker } ?: AppLanguage.ENGLISH
+}
 
 val DiscoveryCategory.accentColor: Color
     get() = when (this) {

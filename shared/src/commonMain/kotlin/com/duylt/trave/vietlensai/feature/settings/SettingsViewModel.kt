@@ -7,7 +7,6 @@ import com.duylt.trave.vietlensai.domain.usecase.ClearHistoryUseCase
 import com.duylt.trave.vietlensai.domain.usecase.ObserveApiKeyAvailabilityUseCase
 import com.duylt.trave.vietlensai.domain.usecase.ObserveSettingsUseCase
 import com.duylt.trave.vietlensai.domain.usecase.SaveApiKeyUseCase
-import com.duylt.trave.vietlensai.domain.usecase.UpdateLanguageUseCase
 import com.duylt.trave.vietlensai.domain.usecase.UpdateModelUseCase
 import com.duylt.trave.vietlensai.domain.usecase.UpdateThemeUseCase
 import com.duylt.trave.vietlensai.domain.util.AppResult
@@ -19,7 +18,6 @@ class SettingsViewModel(
     observeApiKeyAvailability: ObserveApiKeyAvailabilityUseCase,
     private val settingsRepository: SettingsRepository,
     private val saveApiKey: SaveApiKeyUseCase,
-    private val updateLanguage: UpdateLanguageUseCase,
     private val updateModel: UpdateModelUseCase,
     private val updateTheme: UpdateThemeUseCase,
     private val clearHistory: ClearHistoryUseCase,
@@ -58,10 +56,6 @@ class SettingsViewModel(
             SettingsIntent.ClearApiKey -> launchSafely {
                 settingsRepository.setApiKey(null)
                 setState { copy(apiKeyDraft = "") }
-            }
-
-            is SettingsIntent.SelectLanguage -> launchSafely {
-                updateLanguage(intent.language)
             }
 
             is SettingsIntent.SelectModel -> launchSafely { updateModel(intent.model) }

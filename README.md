@@ -136,7 +136,7 @@ Supports international visitors.
 
 > **Half built.** The answers are spoken, the questions are typed.
 >
-> Narration reads guide replies aloud in the app's language, and translations in whichever
+> Narration reads guide replies aloud in the device language, and translations in whichever
 > of the eight target languages was picked. The Settings switch auto-speaks chat replies
 > only — the Listen buttons on a translation and on a discovery are manual taps it does not
 > reach.
@@ -482,13 +482,34 @@ The summary and section bodies are deliberately **not** searched. They are parag
 that mention neighbouring dishes and regional variants, and matching against them
 would collect half the board from one photograph.
 
-### Two languages, and which one
+### Eight languages, one source
 
-Catalogue names and hints follow the **interface** language, not the in-app "story
-language" that governs the AI's voice — a traveller is expected to pair an English
-interface with Vietnamese narration. Since Compose Resources offers no way to read
-back which locale it resolved, the string table answers for itself through a
-`resource_language` marker; see `uiLanguage()` in `Formatters.kt`.
+Interface and narration both follow the **device** language: a Japanese phone gets
+Japanese screens, Japanese answers and a Japanese voice. There is no in-app language
+setting — there used to be one, defaulting to Vietnamese, which is how an English phone
+ended up reading English labels while the guide talked to it in Vietnamese.
+
+The eight are Vietnamese, English, Japanese, Korean, Chinese, French, Spanish and Thai —
+the same eight `TranslateLanguage` offers, with the same codes and BCP-47 tags, asserted
+in `GeminiModelTest`. Anything else falls to English, because that is the string table
+Compose Resources resolves it to.
+
+Three places answer "which language", each for code that cannot reach the others:
+
+| Where | What it reads | Used by |
+|---|---|---|
+| `uiLanguage()` in `Formatters.kt` | the `resource_language` marker in the resolved `strings.xml` | anything drawn beside a `stringResource` |
+| `deviceLanguage()` in `:data/platform/` | the platform locale API | repositories, prompts, the TTS voice |
+| `CatalogAssetSource` | `deviceLanguage()`, once, while parsing | the culture collection's names and hints |
+
+The catalogue resolves at parse time rather than at draw time so `CatalogItem` holds one
+name and one hint instead of a `Map` of eight — a Map on that model would be unstable to
+Compose and cost the collection board its recomposition skips.
+
+Written dates are hand-assembled in `domain/model/DateNames.kt`: `DateTimeFormatter` is
+JVM-only and `NSDateFormatter` Apple-only, and the journal heading has to name the same
+month as the prompt that writes the day's story. Thai years are Common Era there, not
+Buddhist Era, so they do not disagree with every other date the app shows.
 
 ### Known gaps
 
@@ -929,8 +950,8 @@ The application makes cultural exploration more engaging, interactive, and acces
 | Culture collection: 61 things to find, unlocked by your own photographs | ✅ |
 | Explore: live map of what is worth walking to within 5 km | ✅ |
 | Recommendations from location and trip history | Replaced by the collection — see below |
-| Settings: API key, model, language, theme, TTS, location | ✅ |
-| Vietnamese + English UI and AI narration | ✅ |
+| Settings: API key, model, theme, TTS, location (language follows the device) | ✅ |
+| Eight-language UI and AI narration, both following the device | ✅ |
 | Offline-first reads (Room single source of truth) | ✅ |
 | Gemini Live API (real-time voice) | Roadmap |
 | Google Maps SDK embed (Android) + MapKit (iOS) on the Explore map | ✅ |

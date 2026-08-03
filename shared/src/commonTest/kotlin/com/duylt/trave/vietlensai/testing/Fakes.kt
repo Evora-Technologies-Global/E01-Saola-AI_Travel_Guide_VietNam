@@ -1,6 +1,5 @@
 package com.duylt.trave.vietlensai.testing
 
-import com.duylt.trave.vietlensai.domain.model.AppLanguage
 import com.duylt.trave.vietlensai.domain.model.AppSettings
 import com.duylt.trave.vietlensai.domain.model.CaptureImage
 import com.duylt.trave.vietlensai.domain.model.Discovery
@@ -183,10 +182,6 @@ class FakeSettingsRepository : SettingsRepository {
 
     override suspend fun setApiKey(key: String?) = write {
         state.value = state.value.copy(apiKey = key)
-    }
-
-    override suspend fun setLanguage(language: AppLanguage) = write {
-        state.value = state.value.copy(language = language)
     }
 
     override suspend fun setModel(model: GeminiModel) = write {

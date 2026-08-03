@@ -32,7 +32,6 @@ import com.duylt.trave.vietlensai.domain.usecase.SaveNoteUseCase
 import com.duylt.trave.vietlensai.domain.usecase.SweepOrphanCapturesUseCase
 import com.duylt.trave.vietlensai.domain.usecase.ToggleFavoriteUseCase
 import com.duylt.trave.vietlensai.domain.usecase.TranslateImageUseCase
-import com.duylt.trave.vietlensai.domain.usecase.UpdateLanguageUseCase
 import com.duylt.trave.vietlensai.domain.usecase.UpdateModelUseCase
 import com.duylt.trave.vietlensai.domain.usecase.UpdateThemeUseCase
 import com.duylt.trave.vietlensai.feature.camera.LensViewModel
@@ -92,7 +91,6 @@ val useCaseModule: Module = module {
     factory { ObserveSettingsUseCase(get()) }
     factory { ObserveApiKeyAvailabilityUseCase(get()) }
     factory { SaveApiKeyUseCase(get()) }
-    factory { UpdateLanguageUseCase(get()) }
     factory { UpdateModelUseCase(get()) }
     factory { UpdateThemeUseCase(get()) }
     factory { MarkLocationAskedUseCase(get()) }
@@ -211,7 +209,6 @@ val presentationModule: Module = module {
             observeApiKeyAvailability = get(),
             settingsRepository = get(),
             saveApiKey = get(),
-            updateLanguage = get(),
             updateModel = get(),
             updateTheme = get(),
             clearHistory = get(),

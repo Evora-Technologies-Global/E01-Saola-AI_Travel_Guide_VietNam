@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.emptyPreferences
 import com.duylt.trave.vietlensai.data.local.asset.BundledAssets
 import com.duylt.trave.vietlensai.data.local.asset.ProvinceAssetSource
 import com.duylt.trave.vietlensai.data.local.datastore.SettingsDataStore
+import com.duylt.trave.vietlensai.data.platform.deviceLanguage
 import com.duylt.trave.vietlensai.data.local.db.dao.ChatDao
 import com.duylt.trave.vietlensai.data.local.db.dao.DiscoveryDao
 import com.duylt.trave.vietlensai.data.local.db.dao.NoteDao
@@ -336,6 +337,16 @@ class RepositoryFailureTest {
     // ---------------------------------------------------------------------------------
 
     /**
+     * What "defaults" means now that the language is not one.
+     *
+     * `AppSettings.DEFAULT.language` is a placeholder the app never reads: the real value
+     * comes from the phone. Comparing against the constant passed or failed depending on
+     * what the machine running the suite happened to be set to — green on a Vietnamese
+     * host, red on an English simulator, from the same commit.
+     */
+    private val defaultsOnThisDevice = AppSettings.DEFAULT.copy(language = deviceLanguage())
+
+    /**
      * Three unrelated classes called `IOException` reach that `catch`, and only the JVM
      * collapses them into one. This test is written for the platform where it matters: on
      * Apple targets `androidx.datastore.core.IOException` and `okio.IOException` are
@@ -350,7 +361,7 @@ class RepositoryFailureTest {
 
         failures.forEach { failure ->
             val settings = SettingsDataStore(FakeDataStore(failure = failure)).settings.first()
-            assertEquals(AppSettings.DEFAULT, settings)
+            assertEquals(defaultsOnThisDevice, settings)
         }
     }
 
@@ -367,8 +378,8 @@ class RepositoryFailureTest {
             SettingsDataStore(FakeDataStore(failure = diskFailure)),
         )
 
-        assertEquals(AppSettings.DEFAULT, repository.settings.first())
-        assertEquals(AppSettings.DEFAULT, repository.current())
+        assertEquals(defaultsOnThisDevice, repository.settings.first())
+        assertEquals(defaultsOnThisDevice, repository.current())
         // Reads `current()` as well, and has to answer rather than throw. Either answer is
         // correct — a build with a key baked into `local.properties` says true, one without
         // says false — so only the returning is asserted.

@@ -230,7 +230,6 @@
     <string name="settings_model_scholar">Chuyên sâu</string>
     <string name="settings_model_scholar_summary">Lịch sử và văn hóa sâu nhất. Chậm hơn.</string>
     <string name="settings_section_experience">Trải nghiệm</string>
-    <string name="settings_language">Ngôn ngữ kể chuyện</string>
     <string name="settings_speak">Đọc to câu trả lời</string>
     <string name="settings_speak_summary">Đọc phần mô tả và câu trả lời trong khung chat</string>
     <string name="settings_section_appearance">Giao diện</string>

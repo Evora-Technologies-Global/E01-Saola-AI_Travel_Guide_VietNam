@@ -5,7 +5,6 @@ import com.duylt.trave.vietlensai.domain.usecase.ClearHistoryUseCase
 import com.duylt.trave.vietlensai.domain.usecase.ObserveApiKeyAvailabilityUseCase
 import com.duylt.trave.vietlensai.domain.usecase.ObserveSettingsUseCase
 import com.duylt.trave.vietlensai.domain.usecase.SaveApiKeyUseCase
-import com.duylt.trave.vietlensai.domain.usecase.UpdateLanguageUseCase
 import com.duylt.trave.vietlensai.domain.usecase.UpdateModelUseCase
 import com.duylt.trave.vietlensai.domain.usecase.UpdateThemeUseCase
 import com.duylt.trave.vietlensai.domain.util.AppError
@@ -62,7 +61,6 @@ class SettingsViewModelTest {
         observeApiKeyAvailability = ObserveApiKeyAvailabilityUseCase(settingsRepository),
         settingsRepository = settingsRepository,
         saveApiKey = SaveApiKeyUseCase(settingsRepository),
-        updateLanguage = UpdateLanguageUseCase(settingsRepository),
         updateModel = UpdateModelUseCase(settingsRepository),
         updateTheme = UpdateThemeUseCase(settingsRepository),
         clearHistory = ClearHistoryUseCase(discoveryRepository),

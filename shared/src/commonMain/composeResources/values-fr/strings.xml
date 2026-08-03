@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  French. Vietnamese proper nouns keep their diacritics — Việt Nam, Hoàng Sa — because the
+  traveller has to match what they read here against a sign, a ticket and a map that are
+  written only that way. See values/strings.xml for the rest of the conventions.
+-->
+<resources>
+    <string name="app_name">VietLens AI</string>
+
+    <string name="resource_language">fr</string>
+
+    <!-- Navigation -->
+    <string name="nav_lens">Objectif</string>
+    <string name="nav_journal">Journal</string>
+    <string name="nav_explore">Explorer</string>
+    <string name="nav_settings">Réglages</string>
+
+    <!-- Camera -->
+    <string name="camera_permission_title">Accès à l'appareil photo requis</string>
+    <string name="camera_permission_body">VietLens utilise l'appareil photo pour reconnaître les monuments, les plats et les panneaux autour de vous. Vos photos restent sur votre téléphone.</string>
+    <string name="camera_permission_grant">Autoriser l'appareil photo</string>
+    <string name="camera_permission_blocked_body">L'accès à l'appareil photo est désactivé pour VietLens et Android ne le redemandera pas. Activez-le dans les réglages de l'application pour continuer.</string>
+    <string name="location_permission_title">Tamponnez votre passeport</string>
+    <string name="location_permission_body">Avec la localisation activée, chaque photo sait dans quelle province elle a été prise, et cette province se remplit sur la carte de votre passeport.</string>
+    <string name="location_permission_blocked_body">La localisation est désactivée pour VietLens et Android ne la redemandera pas. Activez-la dans les réglages pour que vos photos tamponnent la carte de votre passeport.</string>
+    <string name="location_permission_grant">Autoriser</string>
+    <string name="location_permission_later">Pas maintenant</string>
+    <string name="permission_open_settings">Ouvrir les réglages</string>
+    <string name="camera_capture">Photographier</string>
+    <string name="camera_pick_gallery">Choisir une photo</string>
+    <string name="camera_flash_on">Activer le flash</string>
+    <string name="camera_flash_off">Désactiver le flash</string>
+    <string name="camera_mode_selector">Mode de prise de vue</string>
+    <string name="camera_grid_show">Afficher la grille</string>
+    <string name="camera_grid_hide">Masquer la grille</string>
+    <string name="camera_switch_lens">Changer d'appareil photo</string>
+    <string name="camera_timer_off">Retardateur désactivé</string>
+    <string name="camera_timer_3">Retardateur 3 s</string>
+    <string name="camera_timer_10">Retardateur 10 s</string>
+    <string name="camera_cancel_timer">Annuler le retardateur</string>
+    <string name="camera_open_journal">Ouvrir le journal</string>
+    <string name="camera_ae_af_locked">AE/AF VERROUILLÉ</string>
+    <string name="camera_hint_auto">Visez un monument, un plat ou un objet</string>
+    <string name="camera_hint_landmark">Cadrez le bâtiment ou le monument en entier</string>
+    <string name="camera_hint_food">Approchez-vous du plat</string>
+    <string name="camera_hint_artifact">Incluez le cartel si possible</string>
+    <string name="camera_hint_translate">Restez immobile au-dessus du texte</string>
+
+    <!-- Lens modes -->
+    <string name="mode_auto">Auto</string>
+    <string name="mode_landmark">Patrimoine</string>
+    <string name="mode_food">Cuisine</string>
+    <string name="mode_artifact">Musée</string>
+    <string name="mode_translate">Traduire</string>
+
+    <!-- Photo translation language picker -->
+    <string name="camera_translate_auto">Auto</string>
+    <string name="camera_translate_auto_detect">Détecter automatiquement</string>
+    <string name="camera_translate_from">Traduire depuis</string>
+    <string name="camera_translate_to">Traduire vers</string>
+    <string name="camera_translate_swap">Inverser les langues</string>
+    <string name="camera_translate_pick_from">Choisir la langue source</string>
+    <string name="camera_translate_pick_to">Choisir la langue cible</string>
+
+    <!-- Language names -->
+    <string name="language_vi">Vietnamien</string>
+    <string name="language_en">Anglais</string>
+    <string name="language_ja">Japonais</string>
+    <string name="language_ko">Coréen</string>
+    <string name="language_zh">Chinois</string>
+    <string name="language_fr">Français</string>
+    <string name="language_es">Espagnol</string>
+    <string name="language_th">Thaï</string>
+
+    <!-- Analysing -->
+    <string name="analysing_title">Nous regardons votre photo…</string>
+    <string name="analysing_recognising">Reconnaissance de ce qui est dans le cadre</string>
+    <string name="analysing_history">Collecte de l'histoire qui va avec</string>
+    <string name="analysing_stories">Recherche des histoires qui valent la peine</string>
+
+    <!-- Discovery -->
+    <string name="discovery_confidence">%1$d% de correspondance</string>
+    <string name="discovery_low_confidence">Pas totalement sûr de celle-ci — essayez un autre angle pour affiner.</string>
+    <string name="discovery_nearby">Puisque vous êtes là</string>
+    <string name="discovery_ask">Poser une question</string>
+    <string name="discovery_ask_subtitle">Votre guide se souvient de tout ce qui précède</string>
+    <string name="discovery_listen">Écouter</string>
+    <string name="discovery_stop">Arrêter</string>
+    <string name="discovery_favorite_add">Ajouter aux favoris</string>
+    <string name="discovery_favorite_remove">Retirer des favoris</string>
+    <string name="discovery_delete">Supprimer</string>
+    <string name="discovery_walk_minutes">%1$d min à pied</string>
+    <string name="discovery_model">Réponse de %1$s</string>
+    <string name="discovery_not_found">Cette découverte n'existe plus.</string>
+    <string name="discovery_delete_confirm_title">Supprimer cette découverte ?</string>
+    <string name="discovery_delete_confirm_body">La photo et la conversation à son sujet seront retirées de cet appareil.</string>
+    <string name="discovery_photo_label">Photo · %1$s</string>
+    <string name="discovery_listen_title">Écouter l'histoire</string>
+    <string name="discovery_listen_meta">%1$d min · racontée en %2$s</string>
+    <string name="discovery_favorite_saved">Enregistré</string>
+    <string name="discovery_share">Partager</string>
+    <string name="discovery_share_body">%1$s\n\n%2$s\n\nPartagé depuis VietLens AI</string>
+    <plurals name="discovery_notice_count">
+        <item quantity="one">Un détail à remarquer</item>
+        <item quantity="other">%1$d détails à remarquer</item>
+    </plurals>
+
+    <!-- The traveller's own note -->
+    <string name="discovery_note_kicker">Votre note</string>
+    <string name="discovery_note_empty_title">Gardez celle-ci pour vous</string>
+    <string name="discovery_note_empty_body">Une ligne sur ce que vous avez ressenti, une photo bien à vous — la part qu'aucun guide ne peut écrire à votre place.</string>
+    <string name="discovery_note_add">Écrire une note</string>
+    <string name="discovery_note_edit">Modifier</string>
+    <string name="discovery_note_placeholder">Que voulez-vous retenir de ce lieu ?</string>
+    <string name="discovery_note_add_photo">Ajouter une photo</string>
+    <string name="discovery_note_photo_count">%1$d / %2$d photos</string>
+    <string name="discovery_note_remove_photo">Retirer cette photo</string>
+    <string name="discovery_note_open_photo">Ouvrir cette photo</string>
+    <string name="discovery_note_photo_position">%1$d / %2$d</string>
+    <string name="discovery_note_save">Enregistrer la note</string>
+    <string name="discovery_note_delete">Supprimer la note</string>
+    <string name="discovery_note_edited">modifiée</string>
+    <string name="discovery_note_take_photo">Prendre une photo</string>
+    <string name="discovery_note_camera_flip">Changer d'appareil photo</string>
+    <string name="discovery_note_camera_permission_title">Prendre une photo pour cette note ?</string>
+    <string name="discovery_note_camera_permission_body">VietLens a besoin de l'appareil photo pour la photo que vous gardez avec cette note. Elle est enregistrée uniquement sur cet appareil et n'est jamais envoyée.</string>
+    <string name="discovery_note_camera_permission_blocked_body">L'appareil photo est désactivé pour VietLens et Android ne le redemandera pas. Réactivez-le dans les réglages pour photographier — en attendant, vous pouvez toujours ajouter une image depuis votre galerie.</string>
+    <string name="discovery_note_camera_permission_allow">Autoriser</string>
+    <string name="discovery_note_camera_permission_deny">Pas maintenant</string>
+    <string name="discovery_note_in_diary">Votre guide s'en servira pour écrire votre journal de la journée.</string>
+
+    <!-- Chat -->
+    <string name="chat_title">Demandez à votre guide</string>
+    <string name="chat_subtitle">Demandez à un guide local</string>
+    <string name="chat_suggestions_kicker">Essayez de demander</string>
+    <string name="chat_input_hint">Posez n'importe quelle question sur ce lieu…</string>
+    <string name="chat_send">Envoyer</string>
+    <string name="chat_thinking">Réflexion…</string>
+    <string name="chat_empty_title">Demandez-moi ce que vous voulez</string>
+    <string name="chat_empty_body">Qui l'a construit, pourquoi cela compte, quoi voir ensuite — je me souviens de ce que nous venons de regarder.</string>
+    <string name="chat_clear">Effacer la conversation</string>
+
+    <!-- Translation -->
+    <string name="translate_copy">Copier la traduction</string>
+    <string name="translate_copied">Traduction copiée</string>
+    <string name="translate_speak">Lire à voix haute</string>
+    <string name="translate_show_original">Maintenez pour voir l'original</string>
+    <string name="translate_direction">%1$s → %2$s</string>
+    <string name="translate_leave_title">Partir avant la fin de la traduction ?</string>
+    <string name="translate_leave_body">Cette photo est encore en cours de traduction. Partir maintenant l'annule et rien ne sera enregistré.</string>
+    <string name="translate_leave_confirm">Partir</string>
+    <string name="translate_leave_stay">Rester</string>
+
+    <!-- Journal -->
+    <string name="journal_kicker">Votre voyage</string>
+    <string name="journal_heading">Carnet de route</string>
+    <plurals name="journal_discoveries_label">
+        <item quantity="one">découverte</item>
+        <item quantity="other">découvertes</item>
+    </plurals>
+    <string name="journal_passport_progress">%1$d / %2$d</string>
+    <string name="journal_collection_progress">%1$d / %2$d</string>
+    <string name="journal_day_write_story">Écrire le récit</string>
+    <string name="journal_end_of_day_kicker">Fin de journée</string>
+    <plurals name="journal_end_of_day_title">
+        <item quantity="one">Transformez la découverte du jour en récit</item>
+        <item quantity="other">Transformez vos %1$d découvertes du jour en un récit</item>
+    </plurals>
+    <string name="journal_end_of_day_body">Un texte court à garder ou à envoyer chez vous — écrit à partir de ce que vous avez vraiment vu.</string>
+    <string name="journal_end_of_day_action">Raconter ma journée</string>
+    <string name="journal_story_expand">Lire tout le récit</string>
+    <string name="journal_story_collapse">Réduire</string>
+    <string name="journal_stats_open_passport">Ouvrir la carte de votre voyage</string>
+    <string name="journal_stats_open_collection">Ouvrir votre collection culturelle</string>
+    <string name="journal_summary_regenerate">Réécrire</string>
+    <string name="journal_summary_generating">Rédaction de votre journal…</string>
+    <string name="journal_tomorrow">Idées pour demain</string>
+    <string name="journal_highlights">Moments forts</string>
+    <string name="journal_empty_title">Votre voyage commence ici</string>
+    <string name="journal_empty_body">Tout ce que vous découvrez est enregistré ici, groupé par jour, avec un récit rédigé par l'IA à la fin de chacun.</string>
+    <string name="journal_empty_action">Ouvrir l'objectif</string>
+    <string name="journal_filter_all">Tout</string>
+    <string name="journal_filter_favorites">Favoris</string>
+    <string name="journal_favorites_empty_title">Aucun favori pour l'instant</string>
+    <string name="journal_favorites_empty_body">Touchez le cœur sur une découverte et elle vous attendra ici.</string>
+
+    <!-- Explore -->
+    <string name="explore_title">Autour de vous</string>
+    <string name="explore_nearby_count">%1$d lieux dans un rayon de 5 km</string>
+    <string name="explore_loading">Recherche de lieux qui valent le détour…</string>
+    <string name="explore_recenter">Me recentrer</string>
+    <string name="explore_refresh">Chercher à nouveau</string>
+    <string name="explore_search_failed_title">Impossible de chercher autour de vous</string>
+    <string name="explore_empty_title">Rien de cartographié par ici</string>
+    <string name="explore_empty_body">Ce coin compte peu de lieux sur OpenStreetMap. Réessayez après avoir avancé, ou faites glisser la carte pour voir ce qu'il y a autour.</string>
+    <string name="explore_permission_title">Explorer a besoin de votre position</string>
+    <string name="explore_permission_body">La carte se centre là où vous êtes et cherche les lieux qui méritent une marche dans un rayon de 5 km. Votre position n'est envoyée que comme centre de cette recherche.</string>
+    <string name="explore_permission_blocked_body">La localisation est désactivée pour VietLens et le système ne la redemandera pas. Activez-la dans les réglages pour voir ce qui vous entoure.</string>
+    <string name="explore_source_note">Lieux issus d'OpenStreetMap · descriptions et photographies de Wikipédia et Wikimedia Commons</string>
+    <string name="explore_read_more">Lire l'article complet</string>
+    <string name="explore_readers">%1$s lecteurs</string>
+    <string name="explore_start_navigation">Y aller</string>
+    <string name="explore_hours_title">Détails</string>
+
+    <!-- Culture collection -->
+    <string name="collection_title">Collection culturelle</string>
+    <string name="collection_subtitle">Le Việt Nam, une photo à la fois</string>
+    <string name="collection_progress_of">sur %1$d choses</string>
+    <string name="collection_collected_percent">%1$d% collectés</string>
+    <string name="collection_section_progress">%1$d/%2$d</string>
+    <string name="collection_open_discovery">Ouvrir votre découverte</string>
+    <string name="collection_locked_hint">Voir comment la repérer</string>
+    <string name="collection_collected_badge">Collecté</string>
+    <string name="collection_go_capture">Allez la photographier</string>
+    <string name="collection_view_capture">Voir votre photo</string>
+    <string name="collection_sovereignty_subtitle">Archipels de Hoàng Sa &amp; Trường Sa · souveraineté vietnamienne</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Réglages</string>
+    <string name="settings_kicker">Préférences</string>
+    <string name="settings_section_ai">Intelligence</string>
+    <string name="settings_api_key">Clé API</string>
+    <string name="settings_api_key_set">Votre propre clé est utilisée</string>
+    <string name="settings_api_key_default">Utilisation de la clé intégrée à l'application</string>
+    <string name="settings_api_key_none">Aucune clé configurée</string>
+    <string name="settings_api_key_active">Active</string>
+    <string name="settings_api_key_inactive">Aucune clé</string>
+    <string name="settings_api_key_hint">collez votre propre clé…</string>
+    <string name="settings_api_key_save">Enregistrer la clé</string>
+    <string name="settings_api_key_clear">Effacer</string>
+    <string name="settings_api_key_saved">Clé API enregistrée</string>
+    <string name="settings_model_balanced">Équilibré</string>
+    <string name="settings_model_balanced_summary">Bonne profondeur, assez rapide pour lire un menu.</string>
+    <string name="settings_model_quick">Rapide</string>
+    <string name="settings_model_quick_summary">Panneaux, étiquettes, prix. Le plus économique.</string>
+    <string name="settings_model_scholar">Érudit</string>
+    <string name="settings_model_scholar_summary">Le plus de détails historiques et culturels. Plus lent.</string>
+    <string name="settings_section_experience">Expérience</string>
+    <string name="settings_speak">Lire les réponses à voix haute</string>
+    <string name="settings_speak_summary">Énoncer les descriptions et les réponses du guide</string>
+    <string name="settings_section_appearance">Apparence</string>
+    <string name="settings_theme">Thème</string>
+    <string name="settings_theme_system">Suivre le système</string>
+    <string name="settings_theme_light">Clair</string>
+    <string name="settings_theme_dark">Sombre</string>
+    <string name="settings_section_data">Données</string>
+    <string name="settings_clear_history">Effacer toutes les découvertes</string>
+    <string name="settings_clear_history_summary">Supprime toutes les photos, conversations et entrées du journal</string>
+    <string name="settings_clear_confirm_title">Tout effacer ?</string>
+    <string name="settings_clear_confirm_body">Cela supprime définitivement chaque découverte, photo, conversation et entrée de journal sur cet appareil.</string>
+    <string name="settings_cleared">Toutes les découvertes ont été effacées</string>
+    <string name="settings_footer">Made in Việt Nam · v%1$s</string>
+
+    <!-- Categories -->
+    <string name="category_landmark">Monument</string>
+    <string name="category_food">Cuisine</string>
+    <string name="category_artifact">Objet</string>
+    <string name="category_architecture">Architecture</string>
+    <string name="category_nature">Nature</string>
+    <string name="category_culture">Culture</string>
+    <string name="category_other">Autre</string>
+
+    <!-- Time -->
+    <string name="time_just_now">À l'instant</string>
+    <string name="time_minutes_ago">il y a %1$d min</string>
+    <string name="time_hours_ago">il y a %1$d h</string>
+    <string name="time_yesterday">Hier</string>
+    <string name="date_today">Aujourd'hui</string>
+    <string name="date_yesterday">Hier</string>
+
+    <!-- Generic actions -->
+    <string name="action_retry">Réessayer</string>
+    <string name="action_cancel">Annuler</string>
+    <string name="action_delete">Supprimer</string>
+    <string name="action_back">Retour</string>
+    <string name="action_close">Fermer</string>
+
+    <!-- Errors -->
+    <string name="error_missing_api_key">Pas encore de clé API Gemini. Ajoutez-en une dans les réglages pour commencer à reconnaître.</string>
+    <string name="error_invalid_api_key">Cette clé API a été refusée. Vérifiez-la dans les réglages.</string>
+    <string name="error_no_connection">Aucune connexion internet. La reconnaissance a besoin de joindre Gemini.</string>
+    <string name="error_timeout">Cela a pris trop de temps. Réessayez.</string>
+    <string name="error_rate_limited">Vous avez atteint le quota gratuit pour le moment. Patientez un instant et réessayez.</string>
+    <string name="error_models_busy">Gemini est occupé en ce moment. Laissez-lui quelques secondes et réessayez.</string>
+    <string name="error_api">Gemini n'a pas pu traiter cette requête (erreur %1$d).</string>
+    <string name="error_malformed">La réponse est revenue illisible. Réessayez.</string>
+    <string name="error_not_recognized">Je n'arrive pas à distinguer ce que c'est. Approchez-vous, ou essayez un autre angle.</string>
+    <string name="error_image_unavailable">Cette photo n'a pas pu être lue.</string>
+    <string name="error_location_unavailable">La position est indisponible pour le moment.</string>
+    <string name="error_storage">Impossible d'enregistrer sur cet appareil.</string>
+    <string name="error_unexpected">Quelque chose s'est mal passé. Réessayez.</string>
+
+    <!-- Passport -->
+    <string name="passport_title">Passeport de voyage</string>
+    <string name="passport_subtitle">Le Việt Nam se remplit à mesure que vous le parcourez</string>
+    <string name="passport_progress_of">sur %1$d provinces</string>
+    <string name="passport_explored">%1$d% exploré</string>
+    <string name="passport_empty_title">Votre carte est encore vierge</string>
+    <string name="passport_empty_body">Reconnaissez quelque chose et la province où il se trouve s'illumine avec votre photo.</string>
+    <string name="passport_empty_action">Ouvrir l'objectif</string>
+    <string name="passport_merged_from">Formée à partir de %1$s</string>
+    <string name="passport_province_locked">Vous n'êtes pas encore venu ici. Visez n'importe quoi dans cette province et elle devient vôtre.</string>
+    <string name="passport_province_locked_action">Ouvrir l'objectif</string>
+    <string name="passport_unavailable_title">Carte indisponible</string>
+    <string name="passport_unavailable_body">Les contours des provinces n'ont pas pu être chargés. Tout le reste de l'application fonctionne.</string>
+    <plurals name="passport_discovery_count">
+        <item quantity="one">%1$d découverte</item>
+        <item quantity="other">%1$d découvertes</item>
+    </plurals>
+    <string name="passport_sheet_first_visit">Première visite</string>
+    <string name="passport_sheet_last_visit">Dernière</string>
+    <string name="passport_sheet_unlock_order">province n° %1$d</string>
+    <string name="passport_sheet_no_stamp">Pas encore de tampon ici</string>
+    <string name="passport_sheet_open_discovery">Ouvrir %1$s</string>
+    <string name="passport_sheet_expand">Déplier le panneau de la province</string>
+    <string name="passport_no_location_title">La localisation est désactivée</string>
+    <string name="passport_no_location_body">Vos découvertes sont enregistrées, mais aucune ne sait où elle a été prise : aucune province ne peut donc être remplie. Activez la localisation dans les réglages et vos prochaines photos tamponneront la carte.</string>
+    <string name="passport_administers">Administre l'archipel de %1$s</string>
+    <string name="passport_status_unlocked">Collectée</string>
+    <string name="passport_status_locked">Pas encore</string>
+
+    <!-- Sovereignty -->
+    <string name="sovereignty_title">Les archipels de Hoàng Sa et Trường Sa appartiennent au Việt Nam</string>
+    <string name="sovereignty_seal">Chủ\nquyền\nVN</string>
+    <string name="sovereignty_read">Lire</string>
+    <string name="sovereignty_open">Lire la déclaration de souveraineté</string>
+
+    <string name="sovereignty_page_title">Hoàng Sa et Trường Sa relèvent de la souveraineté du Việt Nam</string>
+    <string name="sovereignty_page_subtitle">Archipels de Hoàng Sa et de Trường Sa</string>
+    <string name="sovereignty_body">Le Việt Nam exerce sa souveraineté sur les archipels de Hoàng Sa et de Trường Sa de manière continue et pacifique depuis des siècles — ce que consignent les documents et les cartes impériales, tels que le Đại Nam nhất thống toàn đồ (1838).</string>
+    <string name="sovereignty_body_source">Đại Nam nhất thống toàn đồ</string>
+    <string name="sovereignty_body_secondary">Chaque carte, chaque toponyme et chaque récit de cette application le reflètent. Si une carte vue ailleurs diffère de celle de votre téléphone, c'en est la raison.</string>
+    <string name="sovereignty_note">Montré à chaque voyageur, au premier lancement et dans les réglages.</string>
+    <string name="sovereignty_understood">Compris</string>
+    <string name="sovereignty_close">Fermer</string>
+    <string name="sovereignty_map_country">Việt Nam</string>
+    <string name="sovereignty_map_sea">Biển Đông</string>
+
+    <string name="settings_section_about">À propos</string>
+    <string name="settings_sovereignty">Notre position sur la Biển Đông</string>
+    <string name="settings_sovereignty_summary">Hoàng Sa &amp; Trường Sa · Việt Nam</string>
+</resources>

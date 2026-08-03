@@ -24,7 +24,6 @@ import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -76,7 +75,6 @@ import com.duylt.trave.vietlensai.resources.settings_clear_history_summary
 import com.duylt.trave.vietlensai.resources.settings_cleared
 import com.duylt.trave.vietlensai.resources.settings_footer
 import com.duylt.trave.vietlensai.resources.settings_kicker
-import com.duylt.trave.vietlensai.resources.settings_language
 import com.duylt.trave.vietlensai.resources.settings_model_balanced
 import com.duylt.trave.vietlensai.resources.settings_model_balanced_summary
 import com.duylt.trave.vietlensai.resources.settings_model_quick
@@ -112,7 +110,6 @@ import com.duylt.trave.vietlensai.core.designsystem.theme.Vermilion
 import com.duylt.trave.vietlensai.core.designsystem.theme.screenInsetsPadding
 import com.duylt.trave.vietlensai.core.mvi.CollectEffects
 import com.duylt.trave.vietlensai.core.util.userMessage
-import com.duylt.trave.vietlensai.domain.model.AppLanguage
 import com.duylt.trave.vietlensai.domain.model.GeminiModel
 import com.duylt.trave.vietlensai.domain.model.ThemePreference
 import kotlinx.coroutines.launch
@@ -126,9 +123,10 @@ import org.jetbrains.compose.resources.StringResource
  * between the four tabs constantly, and a bar appearing on exactly one of them reads
  * as a different app.
  *
- * The three things that change what the guide *says* — key, model, language — are
- * given the most room, in that order. Everything below them is furniture: how the app
- * looks, what it may use, and what it will forget on request.
+ * The two things that change what the guide *says* — key and model — are given the most
+ * room, in that order. Everything below them is furniture: how the app looks, what it may
+ * use, and what it will forget on request. Language is not among them any more: it
+ * follows the phone.
  */
 @Composable
 fun SettingsRoute(
@@ -145,7 +143,6 @@ fun SettingsRoute(
     // Which picker is open is the screen's own business, not the ViewModel's: it
     // survives nothing but a rotation, and a dialog reopening after process death
     // would be a surprise rather than a restoration.
-    var pickingLanguage by rememberSaveable { mutableStateOf(false) }
     var pickingTheme by rememberSaveable { mutableStateOf(false) }
 
     // Shown from `scope` rather than from the collector itself, the same way the explore
@@ -206,12 +203,11 @@ fun SettingsRoute(
             }
             item(key = "experience") {
                 SettingsCard {
-                    ValueRow(
-                        title = stringResource(Res.string.settings_language),
-                        value = state.settings.language.displayName,
-                        onClick = { pickingLanguage = true },
-                    )
-                    RowDivider()
+                    // No language row here either, for the same reason as location below:
+                    // the phone already has that switch. Narration now follows the device
+                    // language, so an in-app picker could only ever disagree with the
+                    // interface around it — an English screen reading itself out in
+                    // Vietnamese. Changed in the phone's settings, it changes here.
                     SwitchRow(
                         title = stringResource(Res.string.settings_speak),
                         summary = stringResource(Res.string.settings_speak_summary),
@@ -278,20 +274,6 @@ fun SettingsRoute(
                 )
             }
         }
-    }
-
-    if (pickingLanguage) {
-        ChoiceDialog(
-            title = stringResource(Res.string.settings_language),
-            options = AppLanguage.entries,
-            selected = state.settings.language,
-            label = { it.displayName },
-            onSelect = {
-                viewModel.onIntent(SettingsIntent.SelectLanguage(it))
-                pickingLanguage = false
-            },
-            onDismiss = { pickingLanguage = false },
-        )
     }
 
     if (pickingTheme) {
@@ -707,14 +689,6 @@ private fun DestructiveRow(title: String, summary: String, onClick: () -> Unit) 
     }
 }
 
-@Composable
-private fun RowDivider() {
-    HorizontalDivider(
-        modifier = Modifier.padding(horizontal = Spacing.lg),
-        color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = DIVIDER_ALPHA),
-    )
-}
-
 /** One list of mutually exclusive options, for the rows that open a picker. */
 @Composable
 private fun <T> ChoiceDialog(
@@ -775,4 +749,3 @@ private val ThemePreference.labelRes: StringResource
 private const val PILL_BACKGROUND_ALPHA = 0.14f
 private const val SELECTED_CONTAINER_ALPHA = 0.55f
 private const val SOVEREIGNTY_BORDER_ALPHA = 0.45f
-private const val DIVIDER_ALPHA = 0.6f

@@ -81,8 +81,8 @@ src/
 │   └── voice/                        expect: SpeechRecognizer, TextToSpeech
 │
 ├── commonMain/composeResources/
-│   ├── values/strings.xml            Default (en)
-│   ├── values-vi/strings.xml         Vietnamese
+│   ├── values/strings.xml            Default (en) — the fallback for every unshipped locale
+│   ├── values-vi|ja|ko|zh|fr|es|th/  The other seven, same keys, same placeholders
 │   └── files/                        Raw assets read via Res.readBytes
 │
 ├── androidMain/kotlin/…              actual: CameraX, Android permissions, TTS/STT,
@@ -284,7 +284,7 @@ test can find the sources.
 | A page header | Nothing — call `PageHeader` or `OverlayHeader` | §13. A screen never writes its own; `DesignTokenTest` fails the build |
 | A colour / dimension / duration | `core/designsystem/theme/` | Never a magic number in a screen. §13 |
 | A text style | `theme/Type.kt` — a scale, or `StampType` | Never a `.copy()` or a `fontWeight` at a call site |
-| A string | `composeResources/values/strings.xml` **and** `values-vi/` | Both, always |
+| A string | `composeResources/values/strings.xml` **and** all seven other `values-*/` | All eight, always. `resource_language` in each file names its own locale, and `uiLanguage()` reads it back |
 | A platform capability | `expect` in `commonMain`, `actual` in both platform source sets | + a Koin binding in `platformUiModule` if it needs `Context` |
 | A pure helper | `core/util/` | Must be testable without Compose |
 | A screen-local helper composable | Bottom of the same `XScreen.kt`, `private` | Split to `XComponents.kt` past ~150 lines |
@@ -314,6 +314,7 @@ the file.
 | 17 | `TranslationScreen` is allowlisted in `DesignTokenTest` for `.sp` alongside the two map canvases. Its use is legitimate — `autoSize` steps a translated block's type down to fit the Vietnamese line it covers — but the allowlist is per *file*, so a genuine hardcoded size added anywhere else in those 700 lines would pass. Narrow it to the composable if the file is ever split. | `feature/translate/TranslationScreen.kt:405-415` |
 | 18 | **`androidDeviceTest` cannot run on Android 15 or newer.** All nine instrumented tests fail in `Espresso.onIdle` with `NoSuchMethodException: android.hardware.input.InputManager.getInstance` — a reflection call Espresso makes that the platform removed. It is not a project defect and not a regression: `RecompositionTest.theChatStateIsComparedByValue` only compares two `ChatState` instances and fails identically. The only emulator on this machine is API 37, so the device leg of any verification is currently unrunnable. Fix by upgrading `androidx.compose.ui:ui-test-junit4` and its transitive `androidx.test:runner`/`espresso-core`, or by keeping an API 34 AVD for this suite. | `androidDeviceTest/` |
 | 19 | **`DesignTokenTest` scans `feature/` for four of its six rules** — gap, corner, weight and type size — while only the inset rule walks all of `commonMain`. A literal radius or a call-site `fontWeight` added under `core/designsystem/component/` is therefore invisible to the gate, which is the one place a bad value would spread furthest. The narrow scope was deliberate (a design-system component owns its own internal geometry, per `Dimens.kt`), but *internal padding* and *a sixth corner radius* are not the same exemption. Verified clean by hand on 03.08.2026 — zero corner literals, zero call-site weights, zero `.sp` outside `Type.kt` — so this is a latent hole, not a live one. Fix by scanning `designsystem/` for corner and weight while leaving the gap rule at `feature/`. | `androidHostTest/…/DesignTokenTest.kt:290` |
+| 22 | **Seven placeholder languages still say Vietnamese.** `AppSettings.DEFAULT.language` and the `language` default on the Journal, Chat, Translation, Discovery, Passport and Explore contracts are all `AppLanguage.VIETNAMESE` — the value a screen holds for the few milliseconds before the settings flow delivers the device's answer. That was coherent while Vietnamese was the app-wide default; since narration follows the phone, English is the fallback everywhere else (`languageForTag`, `uiLanguage()`, the `values/` string table), so a Japanese phone can draw one frame of `12 thg 3, 2026` before flipping. Not new in kind — anyone who had picked English in the old picker saw the same flicker — only the affected population changed. No clean fix available where it sits: `deviceLanguage()` is `internal` to `:data` and a contract has no composition to call `uiLanguage()` from, so this needs either a `:domain`-level device-language port or an initial value threaded from DI. | `domain/…/AppSettings.kt:33`, `feature/*/XContract.kt` |
 | 21 | `docs/bug-report-effect-collection.md` does not exist, but `plans/260802-2103-mvi-refactor/plan.md` refers to it four times as the home for the deferred UI work. Either write it or drop the references. **Renumbered from 15 on 03.08.2026:** a *different* deviation in the Fixed table below already held that number, and seven places cite `§11 row #15` meaning that one — including live comments in `JournalContract.kt`, `JournalViewModelTest.kt` and `SettingsViewModelTest.kt`. A number cited from source code is not free to reuse. | `plans/260802-2103-mvi-refactor/plan.md` |
 
 ### Fixed

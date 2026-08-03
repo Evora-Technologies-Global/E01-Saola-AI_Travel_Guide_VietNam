@@ -59,8 +59,6 @@ import com.duylt.trave.vietlensai.core.designsystem.theme.Vermilion
 import com.duylt.trave.vietlensai.core.designsystem.theme.screenInsetsPadding
 import com.duylt.trave.vietlensai.core.util.accentColor
 import com.duylt.trave.vietlensai.core.util.label
-import com.duylt.trave.vietlensai.core.util.uiLanguage
-import com.duylt.trave.vietlensai.domain.model.AppLanguage
 import com.duylt.trave.vietlensai.domain.model.CollectionEntry
 import com.duylt.trave.vietlensai.domain.model.CollectionSection
 import com.duylt.trave.vietlensai.resources.Res
@@ -101,11 +99,10 @@ fun CollectionRoute(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
-    // The catalogue's own language, which is the interface's rather than the guide's:
-    // these names are captions under headings that came from the string table, and a
-    // traveller narrating in English on a Vietnamese phone must not get one tile in
-    // each language.
-    val language = uiLanguage()
+    // No language threaded through this screen any more. `CatalogAssetSource` resolves
+    // each entry's name and hint while parsing the asset, so a tile arrives already in
+    // the right language — and it uses the same device language the string table above
+    // it was resolved by, which is what stops a heading and its caption disagreeing.
 
     Column(
         modifier = modifier
@@ -155,7 +152,6 @@ fun CollectionRoute(
                 ) { row ->
                     CollectionRow(
                         row = row,
-                        language = language,
                         onOpenDiscovery = onOpenDiscovery,
                         onShowHint = { id -> viewModel.onIntent(CollectionIntent.Select(id)) },
                     )
@@ -167,7 +163,6 @@ fun CollectionRoute(
     state.selected?.let { entry ->
         EntrySheet(
             entry = entry,
-            language = language,
             onDismiss = { viewModel.onIntent(CollectionIntent.DismissSelection) },
             onOpenLens = onOpenLens,
             onOpenDiscovery = onOpenDiscovery,
@@ -240,7 +235,6 @@ private fun SectionHeading(section: CollectionSection) {
 @Composable
 private fun CollectionRow(
     row: List<CollectionEntry>,
-    language: AppLanguage,
     onOpenDiscovery: (String) -> Unit,
     onShowHint: (String) -> Unit,
 ) {
@@ -254,7 +248,6 @@ private fun CollectionRow(
         row.forEach { entry ->
             CollectionTile(
                 entry = entry,
-                language = language,
                 onOpenDiscovery = onOpenDiscovery,
                 onShowHint = onShowHint,
                 modifier = Modifier.weight(1f),
@@ -282,12 +275,11 @@ private fun CollectionRow(
 @Composable
 private fun CollectionTile(
     entry: CollectionEntry,
-    language: AppLanguage,
     onOpenDiscovery: (String) -> Unit,
     onShowHint: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val name = entry.item.displayName(language)
+    val name = entry.item.name
     val openLabel = stringResource(Res.string.collection_open_discovery)
     val hintLabel = stringResource(Res.string.collection_locked_hint)
 
@@ -426,7 +418,6 @@ private fun CollectedBadge(accent: Color, modifier: Modifier = Modifier) {
 @Composable
 private fun EntrySheet(
     entry: CollectionEntry,
-    language: AppLanguage,
     onDismiss: () -> Unit,
     onOpenLens: () -> Unit,
     onOpenDiscovery: (String) -> Unit,
@@ -447,12 +438,12 @@ private fun EntrySheet(
             )
             Spacer(Modifier.height(Spacing.sm))
             Text(
-                text = entry.item.displayName(language),
+                text = entry.item.name,
                 style = MaterialTheme.typography.headlineSmall,
             )
             Spacer(Modifier.height(Spacing.sm))
             Text(
-                text = entry.item.displayHint(language),
+                text = entry.item.hint,
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )

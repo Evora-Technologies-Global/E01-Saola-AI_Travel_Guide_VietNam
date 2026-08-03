@@ -41,24 +41,61 @@ data class AppSettings(
 
 /**
  * The narration language. Also drives the TTS voice and the "translate into"
- * target, so a single switch changes the whole experience.
+ * target, so one value decides the whole experience.
+ *
+ * Not chosen in the app: it is read from the phone, so the answers are in the language
+ * the interface is already drawn in. `deviceLanguage()` in :data is where that happens,
+ * and it is why [AppSettings.language] has no setter on `SettingsRepository`.
  */
 enum class AppLanguage(
     val code: String,
     val displayName: String,
     val bcp47: String,
+    /** How this language orders a written date; see `DateNames.kt`. */
+    val dateStyle: DateStyle,
+    /** English is the only one of the eight that reads a clock in halves. */
+    val uses12HourClock: Boolean = false,
 ) {
-    VIETNAMESE(code = "vi", displayName = "Tiếng Việt", bcp47 = "vi-VN"),
-    ENGLISH(code = "en", displayName = "English", bcp47 = "en-US"),
+    VIETNAMESE("vi", "Tiếng Việt", "vi-VN", DateStyle.DAY_FIRST_COMMA),
+    ENGLISH("en", "English", "en-US", DateStyle.DAY_FIRST, uses12HourClock = true),
+    JAPANESE("ja", "日本語", "ja-JP", DateStyle.YEAR_FIRST_CJK),
+    KOREAN("ko", "한국어", "ko-KR", DateStyle.YEAR_FIRST_CJK),
+    CHINESE("zh", "中文", "zh-CN", DateStyle.YEAR_FIRST_CJK),
+    FRENCH("fr", "Français", "fr-FR", DateStyle.DAY_FIRST),
+    SPANISH("es", "Español", "es-ES", DateStyle.DAY_DE_MONTH),
+    THAI("th", "ไทย", "th-TH", DateStyle.DAY_FIRST),
     ;
 
-    /** What a menu should be translated *into* is the other language, not this one. */
-    val opposite: AppLanguage get() = if (this == VIETNAMESE) ENGLISH else VIETNAMESE
+    // Deliberately the same eight, in the same order, with the same codes and BCP-47 tags
+    // as `TranslateLanguage`. They stay two enums because they answer different questions
+    // — one is the language the app speaks, the other a target the traveller picks per
+    // photo — but a tag that disagreed between them would give the same sentence two
+    // different voices depending on which screen read it aloud.
 
-    companion object {
-        fun fromCode(code: String?): AppLanguage =
-            entries.firstOrNull { it.code.equals(code, ignoreCase = true) } ?: VIETNAMESE
-    }
+    // No `fromCode`. It existed to read the stored preference, and it defaulted to
+    // Vietnamese for anything it did not recognise — which is the wrong answer for a
+    // phone in a language the app does not ship, whose interface falls back to the
+    // English string table. `languageForTag` in :data replaces it and defaults that way.
+}
+
+/**
+ * The three date orders the app's eight languages need.
+ *
+ * Not a format string: `DateTimeFormatter` is JVM-only and `NSDateFormatter` Apple-only,
+ * so the ordering is applied by hand in `DateNames.kt`.
+ */
+enum class DateStyle {
+    /** 12 March 2026 · 12 mars 2026 · 12 มีนาคม 2026 */
+    DAY_FIRST,
+
+    /** 12 tháng 3, 2026 — Vietnamese puts a comma before the year. */
+    DAY_FIRST_COMMA,
+
+    /** 2026年3月12日 · 2026년 3월 12일 — year, month, day, each with its own marker. */
+    YEAR_FIRST_CJK,
+
+    /** 12 de marzo de 2026 — Spanish joins the parts with a preposition. */
+    DAY_DE_MONTH,
 }
 
 enum class ThemePreference {

@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Thai. Vietnamese proper nouns keep their diacritics — Việt Nam, Hoàng Sa — because the
+  traveller has to match what they read here against a sign, a ticket and a map that are
+  written only that way. Years are Common Era throughout, not Buddhist Era: every other
+  date the app shows is CE, and mixing the two would read as a bug. See DateNames.kt.
+-->
+<resources>
+    <string name="app_name">VietLens AI</string>
+
+    <string name="resource_language">th</string>
+
+    <!-- Navigation -->
+    <string name="nav_lens">เลนส์</string>
+    <string name="nav_journal">บันทึก</string>
+    <string name="nav_explore">รอบตัว</string>
+    <string name="nav_settings">ตั้งค่า</string>
+
+    <!-- Camera -->
+    <string name="camera_permission_title">ต้องขอใช้กล้อง</string>
+    <string name="camera_permission_body">VietLens ใช้กล้องเพื่อรู้จักสถานที่สำคัญ อาหาร และป้ายต่าง ๆ รอบตัวคุณ รูปภาพจะอยู่ในเครื่องของคุณเท่านั้น</string>
+    <string name="camera_permission_grant">อนุญาตให้ใช้กล้อง</string>
+    <string name="camera_permission_blocked_body">สิทธิ์กล้องของ VietLens ถูกปิดไว้ และ Android จะไม่ถามอีก เปิดในการตั้งค่าแอปเพื่อใช้งานต่อ</string>
+    <string name="location_permission_title">ประทับตราหนังสือเดินทางของคุณ</string>
+    <string name="location_permission_body">เมื่อเปิดตำแหน่ง ทุกรูปจะรู้ว่าถ่ายในจังหวัดใด และจังหวัดนั้นจะถูกเติมสีบนแผนที่หนังสือเดินทางของคุณ</string>
+    <string name="location_permission_blocked_body">สิทธิ์ตำแหน่งของ VietLens ถูกปิดไว้ และ Android จะไม่ถามอีก เปิดในการตั้งค่าแอปเพื่อให้รูปของคุณประทับตราลงแผนที่</string>
+    <string name="location_permission_grant">อนุญาต</string>
+    <string name="location_permission_later">ไว้ก่อน</string>
+    <string name="permission_open_settings">เปิดการตั้งค่า</string>
+    <string name="camera_capture">ถ่าย</string>
+    <string name="camera_pick_gallery">เลือกรูป</string>
+    <string name="camera_flash_on">เปิดแฟลช</string>
+    <string name="camera_flash_off">ปิดแฟลช</string>
+    <string name="camera_mode_selector">โหมดถ่ายภาพ</string>
+    <string name="camera_grid_show">แสดงเส้นตาราง</string>
+    <string name="camera_grid_hide">ซ่อนเส้นตาราง</string>
+    <string name="camera_switch_lens">สลับกล้อง</string>
+    <string name="camera_timer_off">ปิดตั้งเวลา</string>
+    <string name="camera_timer_3">ตั้งเวลา 3 วินาที</string>
+    <string name="camera_timer_10">ตั้งเวลา 10 วินาที</string>
+    <string name="camera_cancel_timer">ยกเลิกการตั้งเวลา</string>
+    <string name="camera_open_journal">เปิดบันทึก</string>
+    <string name="camera_ae_af_locked">ล็อก AE/AF</string>
+    <string name="camera_hint_auto">เล็งไปที่สถานที่ อาหาร หรือวัตถุจัดแสดง</string>
+    <string name="camera_hint_landmark">จัดให้เห็นอาคารหรืออนุสรณ์ทั้งหลัง</string>
+    <string name="camera_hint_food">เข้าใกล้จานอาหารอีกนิด</string>
+    <string name="camera_hint_artifact">ถ้าทำได้ ให้ติดป้ายคำอธิบายมาด้วย</string>
+    <string name="camera_hint_translate">ถือนิ่ง ๆ เหนือข้อความ</string>
+
+    <!-- Lens modes -->
+    <string name="mode_auto">อัตโนมัติ</string>
+    <string name="mode_landmark">มรดก</string>
+    <string name="mode_food">อาหาร</string>
+    <string name="mode_artifact">พิพิธภัณฑ์</string>
+    <string name="mode_translate">แปล</string>
+
+    <!-- Photo translation language picker -->
+    <string name="camera_translate_auto">อัตโนมัติ</string>
+    <string name="camera_translate_auto_detect">ตรวจหาให้อัตโนมัติ</string>
+    <string name="camera_translate_from">แปลจาก</string>
+    <string name="camera_translate_to">แปลเป็น</string>
+    <string name="camera_translate_swap">สลับภาษา</string>
+    <string name="camera_translate_pick_from">เลือกภาษาต้นทาง</string>
+    <string name="camera_translate_pick_to">เลือกภาษาปลายทาง</string>
+
+    <!-- Language names -->
+    <string name="language_vi">เวียดนาม</string>
+    <string name="language_en">อังกฤษ</string>
+    <string name="language_ja">ญี่ปุ่น</string>
+    <string name="language_ko">เกาหลี</string>
+    <string name="language_zh">จีน</string>
+    <string name="language_fr">ฝรั่งเศส</string>
+    <string name="language_es">สเปน</string>
+    <string name="language_th">ไทย</string>
+
+    <!-- Analysing -->
+    <string name="analysing_title">กำลังดูรูปของคุณ…</string>
+    <string name="analysing_recognising">กำลังดูว่าในภาพคืออะไร</string>
+    <string name="analysing_history">กำลังรวบรวมประวัติเบื้องหลัง</string>
+    <string name="analysing_stories">กำลังหาเรื่องราวที่ควรเล่า</string>
+
+    <!-- Discovery -->
+    <string name="discovery_confidence">ตรงกัน %1$d%</string>
+    <string name="discovery_low_confidence">ยังไม่แน่ใจนัก — ลองเปลี่ยนมุมถ่ายอีกครั้งจะตรงกว่านี้</string>
+    <string name="discovery_nearby">มาถึงแล้วก็แวะ</string>
+    <string name="discovery_ask">ถามเกี่ยวกับสิ่งนี้</string>
+    <string name="discovery_ask_subtitle">ไกด์จำทุกอย่างข้างบนนี้ได้</string>
+    <string name="discovery_listen">ฟัง</string>
+    <string name="discovery_stop">หยุด</string>
+    <string name="discovery_favorite_add">เพิ่มในรายการโปรด</string>
+    <string name="discovery_favorite_remove">เอาออกจากรายการโปรด</string>
+    <string name="discovery_delete">ลบ</string>
+    <string name="discovery_walk_minutes">เดิน %1$d นาที</string>
+    <string name="discovery_model">ตอบโดย %1$s</string>
+    <string name="discovery_not_found">ไม่พบสิ่งที่ค้นพบนี้แล้ว</string>
+    <string name="discovery_delete_confirm_title">ลบสิ่งที่ค้นพบนี้ไหม</string>
+    <string name="discovery_delete_confirm_body">รูปภาพและบทสนทนาเกี่ยวกับมันจะถูกลบออกจากเครื่องนี้</string>
+    <string name="discovery_photo_label">รูป · %1$s</string>
+    <string name="discovery_listen_title">ฟังเรื่องราว</string>
+    <string name="discovery_listen_meta">%1$d นาที · เล่าเป็นภาษา%2$s</string>
+    <string name="discovery_favorite_saved">บันทึกแล้ว</string>
+    <string name="discovery_share">แชร์</string>
+    <string name="discovery_share_body">%1$s\n\n%2$s\n\nแชร์จาก VietLens AI</string>
+    <plurals name="discovery_notice_count">
+        <item quantity="other">%1$d จุดที่น่าสังเกต</item>
+    </plurals>
+
+    <!-- The traveller's own note -->
+    <string name="discovery_note_kicker">บันทึกของคุณ</string>
+    <string name="discovery_note_empty_title">เก็บอันนี้ไว้ให้ตัวเอง</string>
+    <string name="discovery_note_empty_body">สักบรรทัดว่ารู้สึกอย่างไร รูปที่คุณถ่ายเอง — ส่วนที่ไม่มีหนังสือนำเที่ยวเล่มไหนเขียนแทนคุณได้</string>
+    <string name="discovery_note_add">เขียนบันทึก</string>
+    <string name="discovery_note_edit">แก้ไข</string>
+    <string name="discovery_note_placeholder">คุณอยากจำอะไรเกี่ยวกับที่นี่</string>
+    <string name="discovery_note_add_photo">เพิ่มรูป</string>
+    <string name="discovery_note_photo_count">%1$d / %2$d รูป</string>
+    <string name="discovery_note_remove_photo">ลบรูปนี้</string>
+    <string name="discovery_note_open_photo">เปิดรูปนี้</string>
+    <string name="discovery_note_photo_position">%1$d / %2$d</string>
+    <string name="discovery_note_save">บันทึกโน้ต</string>
+    <string name="discovery_note_delete">ลบโน้ต</string>
+    <string name="discovery_note_edited">แก้ไขแล้ว</string>
+    <string name="discovery_note_take_photo">ถ่ายรูป</string>
+    <string name="discovery_note_camera_flip">สลับกล้อง</string>
+    <string name="discovery_note_camera_permission_title">ถ่ายรูปสำหรับโน้ตนี้ไหม</string>
+    <string name="discovery_note_camera_permission_body">VietLens ต้องใช้กล้องเพื่อถ่ายรูปที่คุณจะเก็บไว้กับโน้ตนี้ รูปจะถูกบันทึกไว้ในเครื่องนี้เท่านั้น และไม่ถูกอัปโหลด</string>
+    <string name="discovery_note_camera_permission_blocked_body">กล้องของ VietLens ถูกปิดไว้ และ Android จะไม่ถามอีก เปิดใหม่ในการตั้งค่าแอปเพื่อถ่ายรูป — ระหว่างนี้ยังเพิ่มรูปจากคลังภาพได้</string>
+    <string name="discovery_note_camera_permission_allow">อนุญาต</string>
+    <string name="discovery_note_camera_permission_deny">ไว้ก่อน</string>
+    <string name="discovery_note_in_diary">ไกด์จะใช้โน้ตนี้ตอนเขียนบันทึกประจำวันให้คุณ</string>
+
+    <!-- Chat -->
+    <string name="chat_title">ถามไกด์ของคุณ</string>
+    <string name="chat_subtitle">ถามไกด์ท้องถิ่น</string>
+    <string name="chat_suggestions_kicker">ลองถามดู</string>
+    <string name="chat_input_hint">ถามอะไรก็ได้เกี่ยวกับที่นี่…</string>
+    <string name="chat_send">ส่ง</string>
+    <string name="chat_thinking">กำลังคิด…</string>
+    <string name="chat_empty_title">ถามอะไรก็ได้</string>
+    <string name="chat_empty_body">ใครสร้าง ทำไมถึงสำคัญ ต่อไปควรดูอะไร — ผมจำสิ่งที่เราเพิ่งดูกันได้</string>
+    <string name="chat_clear">ล้างบทสนทนา</string>
+
+    <!-- Translation -->
+    <string name="translate_copy">คัดลอกคำแปล</string>
+    <string name="translate_copied">คัดลอกคำแปลแล้ว</string>
+    <string name="translate_speak">อ่านออกเสียง</string>
+    <string name="translate_show_original">กดค้างเพื่อดูต้นฉบับ</string>
+    <string name="translate_direction">%1$s → %2$s</string>
+    <string name="translate_leave_title">ออกก่อนแปลเสร็จไหม</string>
+    <string name="translate_leave_body">รูปนี้ยังแปลไม่เสร็จ ออกตอนนี้จะเป็นการยกเลิก และจะไม่มีอะไรถูกบันทึก</string>
+    <string name="translate_leave_confirm">ออก</string>
+    <string name="translate_leave_stay">อยู่ต่อ</string>
+
+    <!-- Journal -->
+    <string name="journal_kicker">การเดินทางของคุณ</string>
+    <string name="journal_heading">สมุดบันทึกการเดินทาง</string>
+    <plurals name="journal_discoveries_label">
+        <item quantity="other">สิ่งที่ค้นพบ</item>
+    </plurals>
+    <string name="journal_passport_progress">%1$d / %2$d</string>
+    <string name="journal_collection_progress">%1$d / %2$d</string>
+    <string name="journal_day_write_story">เขียนเรื่องราว</string>
+    <string name="journal_end_of_day_kicker">ปิดท้ายวัน</string>
+    <plurals name="journal_end_of_day_title">
+        <item quantity="other">เปลี่ยนสิ่งที่ค้นพบ %1$d อย่างของวันนี้ให้เป็นเรื่องเล่าเดียว</item>
+    </plurals>
+    <string name="journal_end_of_day_body">ข้อความสั้น ๆ ที่จะเก็บไว้เองหรือส่งกลับบ้านก็ได้ — เขียนจากสิ่งที่คุณเห็นมาจริง ๆ</string>
+    <string name="journal_end_of_day_action">เขียนวันนี้ให้ฉัน</string>
+    <string name="journal_story_expand">อ่านเรื่องราวทั้งหมด</string>
+    <string name="journal_story_collapse">ย่อ</string>
+    <string name="journal_stats_open_passport">เปิดแผนที่การเดินทาง</string>
+    <string name="journal_stats_open_collection">เปิดคอลเลกชันวัฒนธรรม</string>
+    <string name="journal_summary_regenerate">เขียนใหม่</string>
+    <string name="journal_summary_generating">กำลังเขียนบันทึกให้คุณ…</string>
+    <string name="journal_tomorrow">ไอเดียสำหรับพรุ่งนี้</string>
+    <string name="journal_highlights">ไฮไลต์</string>
+    <string name="journal_empty_title">การเดินทางของคุณเริ่มที่นี่</string>
+    <string name="journal_empty_body">ทุกสิ่งที่คุณค้นพบจะถูกเก็บไว้ที่นี่ แยกตามวัน พร้อมบทสรุปที่ AI เขียนให้เมื่อจบแต่ละวัน</string>
+    <string name="journal_empty_action">เปิดเลนส์</string>
+    <string name="journal_filter_all">ทั้งหมด</string>
+    <string name="journal_filter_favorites">รายการโปรด</string>
+    <string name="journal_favorites_empty_title">ยังไม่มีรายการโปรด</string>
+    <string name="journal_favorites_empty_body">แตะรูปหัวใจบนสิ่งที่ค้นพบ แล้วมันจะมารออยู่ตรงนี้</string>
+
+    <!-- Explore -->
+    <string name="explore_title">รอบตัวคุณ</string>
+    <string name="explore_nearby_count">%1$d แห่งในรัศมี 5 กม.</string>
+    <string name="explore_loading">กำลังหาที่ที่คุ้มค่าจะเดินไป…</string>
+    <string name="explore_recenter">กลับมาที่ตำแหน่งฉัน</string>
+    <string name="explore_refresh">ค้นหาอีกครั้ง</string>
+    <string name="explore_search_failed_title">ค้นหารอบตัวคุณไม่สำเร็จ</string>
+    <string name="explore_empty_title">แถวนี้ยังไม่มีข้อมูลบนแผนที่</string>
+    <string name="explore_empty_body">มุมนี้มีสถานที่บน OpenStreetMap น้อยมาก ลองอีกครั้งเมื่อย้ายที่แล้ว หรือลากแผนที่เพื่อดูรอบ ๆ</string>
+    <string name="explore_permission_title">การดูรอบตัวต้องใช้ตำแหน่งของคุณ</string>
+    <string name="explore_permission_body">แผนที่จะยึดตำแหน่งที่คุณยืนอยู่เป็นจุดกลาง แล้วหาที่ที่ควรเดินไปในรัศมี 5 กม. ตำแหน่งของคุณถูกส่งไปในฐานะจุดกลางของการค้นหานั้นเท่านั้น</string>
+    <string name="explore_permission_blocked_body">ตำแหน่งของ VietLens ถูกปิดไว้ และระบบจะไม่ถามอีก เปิดในการตั้งค่าแอปเพื่อดูว่ามีอะไรอยู่รอบตัวคุณ</string>
+    <string name="explore_source_note">สถานที่จาก OpenStreetMap · คำอธิบายและภาพจาก Wikipedia และ Wikimedia Commons</string>
+    <string name="explore_read_more">อ่านบทความเต็ม</string>
+    <string name="explore_readers">ผู้อ่าน %1$s คน</string>
+    <string name="explore_start_navigation">เริ่มนำทาง</string>
+    <string name="explore_hours_title">รายละเอียด</string>
+
+    <!-- Culture collection -->
+    <string name="collection_title">คอลเลกชันวัฒนธรรม</string>
+    <string name="collection_subtitle">รู้จักเวียดนามทีละภาพ</string>
+    <string name="collection_progress_of">จาก %1$d อย่าง</string>
+    <string name="collection_collected_percent">สะสมแล้ว %1$d%</string>
+    <string name="collection_section_progress">%1$d/%2$d</string>
+    <string name="collection_open_discovery">เปิดสิ่งที่คุณค้นพบ</string>
+    <string name="collection_locked_hint">ดูวิธีสังเกต</string>
+    <string name="collection_collected_badge">สะสมแล้ว</string>
+    <string name="collection_go_capture">ออกไปถ่ายมาสิ</string>
+    <string name="collection_view_capture">ดูรูปที่คุณถ่าย</string>
+    <string name="collection_sovereignty_subtitle">หมู่เกาะ Hoàng Sa และ Trường Sa · อธิปไตยของเวียดนาม</string>
+
+    <!-- Settings -->
+    <string name="settings_title">ตั้งค่า</string>
+    <string name="settings_kicker">การตั้งค่า</string>
+    <string name="settings_section_ai">ปัญญาประดิษฐ์</string>
+    <string name="settings_api_key">คีย์ API</string>
+    <string name="settings_api_key_set">กำลังใช้คีย์ของคุณเอง</string>
+    <string name="settings_api_key_default">กำลังใช้คีย์ที่ติดมากับแอป</string>
+    <string name="settings_api_key_none">ยังไม่ได้ตั้งคีย์</string>
+    <string name="settings_api_key_active">ใช้งานอยู่</string>
+    <string name="settings_api_key_inactive">ไม่มีคีย์</string>
+    <string name="settings_api_key_hint">วางคีย์ของคุณ…</string>
+    <string name="settings_api_key_save">บันทึกคีย์</string>
+    <string name="settings_api_key_clear">ล้าง</string>
+    <string name="settings_api_key_saved">บันทึกคีย์ API แล้ว</string>
+    <string name="settings_model_balanced">สมดุล</string>
+    <string name="settings_model_balanced_summary">ลึกพอ และเร็วพอจะอ่านเมนู</string>
+    <string name="settings_model_quick">เร็ว</string>
+    <string name="settings_model_quick_summary">ป้าย ฉลาก ราคา ประหยัดที่สุด</string>
+    <string name="settings_model_scholar">นักวิชาการ</string>
+    <string name="settings_model_scholar_summary">ลงลึกด้านประวัติศาสตร์และวัฒนธรรมที่สุด แต่ช้ากว่า</string>
+    <string name="settings_section_experience">ประสบการณ์</string>
+    <string name="settings_speak">อ่านคำตอบออกเสียง</string>
+    <string name="settings_speak_summary">อ่านคำอธิบายและคำตอบในแชท</string>
+    <string name="settings_section_appearance">รูปลักษณ์</string>
+    <string name="settings_theme">ธีม</string>
+    <string name="settings_theme_system">ตามระบบ</string>
+    <string name="settings_theme_light">สว่าง</string>
+    <string name="settings_theme_dark">มืด</string>
+    <string name="settings_section_data">ข้อมูล</string>
+    <string name="settings_clear_history">ล้างสิ่งที่ค้นพบทั้งหมด</string>
+    <string name="settings_clear_history_summary">ลบรูปภาพ บทสนทนา และบันทึกทั้งหมด</string>
+    <string name="settings_clear_confirm_title">ล้างทั้งหมดไหม</string>
+    <string name="settings_clear_confirm_body">การกระทำนี้จะลบทุกสิ่งที่ค้นพบ รูปภาพ บทสนทนา และบันทึกในเครื่องนี้อย่างถาวร</string>
+    <string name="settings_cleared">ล้างสิ่งที่ค้นพบทั้งหมดแล้ว</string>
+    <string name="settings_footer">Made in Việt Nam · v%1$s</string>
+
+    <!-- Categories -->
+    <string name="category_landmark">สถานที่สำคัญ</string>
+    <string name="category_food">อาหาร</string>
+    <string name="category_artifact">วัตถุโบราณ</string>
+    <string name="category_architecture">สถาปัตยกรรม</string>
+    <string name="category_nature">ธรรมชาติ</string>
+    <string name="category_culture">วัฒนธรรม</string>
+    <string name="category_other">อื่น ๆ</string>
+
+    <!-- Time -->
+    <string name="time_just_now">เมื่อสักครู่</string>
+    <string name="time_minutes_ago">%1$d นาทีที่แล้ว</string>
+    <string name="time_hours_ago">%1$d ชม. ที่แล้ว</string>
+    <string name="time_yesterday">เมื่อวาน</string>
+    <string name="date_today">วันนี้</string>
+    <string name="date_yesterday">เมื่อวาน</string>
+
+    <!-- Generic actions -->
+    <string name="action_retry">ลองอีกครั้ง</string>
+    <string name="action_cancel">ยกเลิก</string>
+    <string name="action_delete">ลบ</string>
+    <string name="action_back">ย้อนกลับ</string>
+    <string name="action_close">ปิด</string>
+
+    <!-- Errors -->
+    <string name="error_missing_api_key">ยังไม่มีคีย์ API ของ Gemini เพิ่มในการตั้งค่าเพื่อเริ่มการรู้จำ</string>
+    <string name="error_invalid_api_key">คีย์ API นั้นถูกปฏิเสธ ตรวจสอบอีกครั้งในการตั้งค่า</string>
+    <string name="error_no_connection">ไม่มีการเชื่อมต่ออินเทอร์เน็ต การรู้จำต้องติดต่อกับ Gemini</string>
+    <string name="error_timeout">ใช้เวลานานเกินไป ลองอีกครั้ง</string>
+    <string name="error_rate_limited">คุณใช้โควตาฟรีหมดแล้วในตอนนี้ รอสักครู่แล้วลองใหม่</string>
+    <string name="error_models_busy">ตอนนี้ Gemini ไม่ว่าง รอสักครู่แล้วลองใหม่</string>
+    <string name="error_api">Gemini จัดการคำขอนี้ไม่ได้ (ข้อผิดพลาด %1$d)</string>
+    <string name="error_malformed">คำตอบที่ได้กลับมาเสียหาย ลองอีกครั้ง</string>
+    <string name="error_not_recognized">ผมดูไม่ออกว่านี่คืออะไร ลองเข้าไปใกล้ขึ้น หรือเปลี่ยนมุมดู</string>
+    <string name="error_image_unavailable">อ่านรูปนั้นไม่ได้</string>
+    <string name="error_location_unavailable">ตอนนี้ยังไม่ได้ตำแหน่ง</string>
+    <string name="error_storage">บันทึกลงเครื่องนี้ไม่สำเร็จ</string>
+    <string name="error_unexpected">มีบางอย่างผิดพลาด ลองอีกครั้ง</string>
+
+    <!-- Passport -->
+    <string name="passport_title">หนังสือเดินทางนักเดินทาง</string>
+    <string name="passport_subtitle">Việt Nam จะค่อย ๆ เต็มขึ้นตามที่คุณเดิน</string>
+    <string name="passport_progress_of">จาก %1$d จังหวัด</string>
+    <string name="passport_explored">สำรวจแล้ว %1$d%</string>
+    <string name="passport_empty_title">แผนที่ของคุณยังว่างอยู่</string>
+    <string name="passport_empty_body">รู้จำอะไรสักอย่าง แล้วจังหวัดที่มันตั้งอยู่จะสว่างขึ้นด้วยรูปของคุณ</string>
+    <string name="passport_empty_action">เปิดเลนส์</string>
+    <string name="passport_merged_from">รวมมาจาก %1$s</string>
+    <string name="passport_province_locked">คุณยังไม่เคยมาที่นี่ เล็งกล้องไปที่อะไรก็ได้ในจังหวัดนี้ แล้วมันจะเป็นของคุณ</string>
+    <string name="passport_province_locked_action">เปิดเลนส์</string>
+    <string name="passport_unavailable_title">แผนที่ใช้งานไม่ได้</string>
+    <string name="passport_unavailable_body">โหลดเส้นขอบจังหวัดไม่สำเร็จ ส่วนอื่นของแอปยังใช้งานได้ตามปกติ</string>
+    <plurals name="passport_discovery_count">
+        <item quantity="other">%1$d สิ่งที่ค้นพบ</item>
+    </plurals>
+    <string name="passport_sheet_first_visit">มาครั้งแรก</string>
+    <string name="passport_sheet_last_visit">ล่าสุด</string>
+    <string name="passport_sheet_unlock_order">จังหวัดที่ %1$d</string>
+    <string name="passport_sheet_no_stamp">ที่นี่ยังไม่มีตราประทับ</string>
+    <string name="passport_sheet_open_discovery">เปิด %1$s</string>
+    <string name="passport_sheet_expand">ขยายแผงจังหวัด</string>
+    <string name="passport_no_location_title">ตำแหน่งถูกปิดอยู่</string>
+    <string name="passport_no_location_body">สิ่งที่คุณค้นพบถูกบันทึกไว้ แต่ไม่มีอันไหนรู้ว่าถ่ายที่ไหน จึงยังเติมจังหวัดไม่ได้ เปิดตำแหน่งในการตั้งค่า แล้วภาพที่ถ่ายต่อจากนี้จะประทับตราลงแผนที่</string>
+    <string name="passport_administers">ดูแลหมู่เกาะ %1$s</string>
+    <string name="passport_status_unlocked">สะสมแล้ว</string>
+    <string name="passport_status_locked">ยังไม่ได้</string>
+
+    <!-- Sovereignty -->
+    <string name="sovereignty_title">หมู่เกาะ Hoàng Sa และ Trường Sa เป็นของ Việt Nam</string>
+    <string name="sovereignty_seal">Chủ\nquyền\nVN</string>
+    <string name="sovereignty_read">อ่าน</string>
+    <string name="sovereignty_open">อ่านคำแถลงเรื่องอธิปไตย</string>
+
+    <string name="sovereignty_page_title">Hoàng Sa และ Trường Sa อยู่ภายใต้อธิปไตยของ Việt Nam</string>
+    <string name="sovereignty_page_subtitle">หมู่เกาะ Hoàng Sa และหมู่เกาะ Trường Sa</string>
+    <string name="sovereignty_body">Việt Nam ได้ใช้อธิปไตยเหนือหมู่เกาะ Hoàng Sa และ Trường Sa อย่างต่อเนื่องและโดยสันติมานานหลายศตวรรษ ดังที่ปรากฏในเอกสารและแผนที่ของราชสำนัก เช่น Đại Nam nhất thống toàn đồ (ค.ศ. 1838)</string>
+    <string name="sovereignty_body_source">Đại Nam nhất thống toàn đồ</string>
+    <string name="sovereignty_body_secondary">ทุกแผนที่ ทุกชื่อสถานที่ และทุกเรื่องเล่าในแอปนี้เป็นไปตามนั้น หากแผนที่ที่คุณเห็นจากที่อื่นต่างจากบนเครื่องของคุณ นี่คือเหตุผล</string>
+    <string name="sovereignty_note">แสดงต่อนักเดินทางทุกคน ทั้งตอนเปิดแอปครั้งแรกและในการตั้งค่า</string>
+    <string name="sovereignty_understood">เข้าใจแล้ว</string>
+    <string name="sovereignty_close">ปิด</string>
+    <string name="sovereignty_map_country">Việt Nam</string>
+    <string name="sovereignty_map_sea">Biển Đông</string>
+
+    <string name="settings_section_about">เกี่ยวกับ</string>
+    <string name="settings_sovereignty">จุดยืนของเราเรื่อง Biển Đông</string>
+    <string name="settings_sovereignty_summary">Hoàng Sa &amp; Trường Sa · Việt Nam</string>
+</resources>

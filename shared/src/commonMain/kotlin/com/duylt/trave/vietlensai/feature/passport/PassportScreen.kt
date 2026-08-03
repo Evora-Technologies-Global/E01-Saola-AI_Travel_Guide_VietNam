@@ -92,7 +92,7 @@ import com.duylt.trave.vietlensai.core.designsystem.theme.Vermilion
 import com.duylt.trave.vietlensai.core.designsystem.theme.screenInsetsPadding
 import com.duylt.trave.vietlensai.core.util.asJournalHeading
 import com.duylt.trave.vietlensai.core.util.formatDate
-import com.duylt.trave.vietlensai.core.util.stampLabel
+import com.duylt.trave.vietlensai.domain.model.stampLabel
 import com.duylt.trave.vietlensai.domain.model.AppLanguage
 import com.duylt.trave.vietlensai.domain.model.Discovery
 import com.duylt.trave.vietlensai.domain.model.PassportStamp
