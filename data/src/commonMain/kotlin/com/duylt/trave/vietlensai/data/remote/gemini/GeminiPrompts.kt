@@ -14,6 +14,12 @@ import com.duylt.trave.vietlensai.domain.model.TranslateLanguage
  * what travellers already have and do not want. Second, the model is told to admit
  * uncertainty; a confidently wrong temple name is worse than "I'm not sure, try
  * the entrance gate".
+ *
+ * What may never come out — scope, tone, historical accuracy and sovereignty — is
+ * [GeminiGuardrails], appended to the three instructions that generate prose about
+ * Vietnam. Line translation is the deliberate exception: it renders text the traveller
+ * has physically pointed a camera at, and a guardrail there would refuse to translate a
+ * war-museum caption or a headstone, which is precisely when they most need it.
  */
 internal object GeminiPrompts {
 
@@ -43,6 +49,8 @@ internal object GeminiPrompts {
             "Return only data that fits the provided schema. Do not use markdown, " +
                 "bullet characters or emoji inside any field.",
         )
+        append("\n\n")
+        append(GeminiGuardrails.forGuide)
     }
 
     fun recognitionPrompt(
@@ -86,6 +94,8 @@ internal object GeminiPrompts {
             )
         }
         append("\n\n")
+        append(GeminiGuardrails.RECOGNITION_REFUSAL)
+        append("\n\n")
         append(languageDirective(language))
     }
 
@@ -93,6 +103,13 @@ internal object GeminiPrompts {
         append(GUIDE_PERSONA)
         append(' ')
         append(languageDirective(language))
+        append("\n\n")
+        // Ahead of the discovery context rather than after it. The chat is the one place a
+        // traveller types whatever they like, so the rules are read before the model has a
+        // subject to be enthusiastic about.
+        append(GeminiGuardrails.forGuide)
+        append("\n\n")
+        append(GeminiGuardrails.CHAT_REDIRECT)
         append("\n\n")
         append("The traveller is standing in front of: ")
         append(discovery.title)
@@ -179,6 +196,11 @@ internal object GeminiPrompts {
         )
         append(' ')
         append(languageDirective(language))
+        append("\n\n")
+        // A traveller's own note is free text that goes straight into a prompt, and the
+        // instruction above tells the model to build the paragraph around it. That is the
+        // whole reason the summary carries the guardrails too.
+        append(GeminiGuardrails.forGuide)
     }
 
     fun summaryPrompt(
