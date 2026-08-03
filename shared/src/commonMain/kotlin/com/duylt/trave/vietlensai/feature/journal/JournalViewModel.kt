@@ -2,12 +2,6 @@ package com.duylt.trave.vietlensai.feature.journal
 
 import androidx.lifecycle.viewModelScope
 import com.duylt.trave.vietlensai.core.mvi.MviViewModel
-import com.duylt.trave.vietlensai.core.mvi.UiEffect
-import com.duylt.trave.vietlensai.core.mvi.UiIntent
-import com.duylt.trave.vietlensai.core.mvi.UiState
-import com.duylt.trave.vietlensai.domain.model.AppLanguage
-import com.duylt.trave.vietlensai.domain.model.JournalDay
-import com.duylt.trave.vietlensai.domain.model.JournalStats
 import com.duylt.trave.vietlensai.domain.usecase.GenerateDaySummaryUseCase
 import com.duylt.trave.vietlensai.domain.usecase.ObserveCollectionUseCase
 import com.duylt.trave.vietlensai.domain.usecase.ObserveJournalStatsUseCase
@@ -15,59 +9,10 @@ import com.duylt.trave.vietlensai.domain.usecase.ObserveJournalUseCase
 import com.duylt.trave.vietlensai.domain.usecase.ObserveSettingsUseCase
 import com.duylt.trave.vietlensai.domain.usecase.ObserveTravelPassportUseCase
 import com.duylt.trave.vietlensai.domain.usecase.ToggleFavoriteUseCase
-import com.duylt.trave.vietlensai.domain.util.AppError
 import com.duylt.trave.vietlensai.domain.util.AppResult
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDate
-
-data class JournalState(
-    val isLoading: Boolean = true,
-    val days: List<JournalDay> = emptyList(),
-    val stats: JournalStats = JournalStats(0, 0, 0, emptyMap()),
-    val favoritesOnly: Boolean = false,
-    val language: AppLanguage = AppLanguage.VIETNAMESE,
-    /** Provinces stamped so far, and how many there are in total, for the passport row. */
-    val provincesUnlocked: Int = 0,
-    val provincesTotal: Int = 0,
-    /** The same two numbers for the culture collection's row beneath it. */
-    val itemsCollected: Int = 0,
-    val itemsTotal: Int = 0,
-    /** Which day is currently having its narrative written. */
-    val generatingDate: LocalDate? = null,
-    val error: AppError? = null,
-) : UiState {
-    /** 0f..1f for the passport progress bar; 0 while the province list is still loading. */
-    val passportProgress: Float
-        get() = if (provincesTotal == 0) 0f else provincesUnlocked.toFloat() / provincesTotal
-
-    /** The same, for the collection; 0 while the catalogue asset is still being read. */
-    val collectionProgress: Float
-        get() = if (itemsTotal == 0) 0f else itemsCollected.toFloat() / itemsTotal
-
-    val visibleDays: List<JournalDay>
-        get() = if (!favoritesOnly) {
-            days
-        } else {
-            days.mapNotNull { day ->
-                day.discoveries.filter { it.isFavorite }
-                    .takeIf { it.isNotEmpty() }
-                    ?.let { day.copy(discoveries = it) }
-            }
-        }
-}
-
-sealed interface JournalIntent : UiIntent {
-    data class GenerateSummary(val date: LocalDate) : JournalIntent
-    data class SetFavoritesOnly(val enabled: Boolean) : JournalIntent
-    data class ToggleFavorite(val discoveryId: String) : JournalIntent
-    data object DismissError : JournalIntent
-}
-
-sealed interface JournalEffect : UiEffect {
-    data class ShowMessage(val error: AppError) : JournalEffect
-}
 
 class JournalViewModel(
     observeJournal: ObserveJournalUseCase,
@@ -124,12 +69,12 @@ class JournalViewModel(
     override fun onIntent(intent: JournalIntent) {
         when (intent) {
             is JournalIntent.SetFavoritesOnly -> setState { copy(favoritesOnly = intent.enabled) }
-            JournalIntent.DismissError -> setState { copy(error = null) }
             is JournalIntent.GenerateSummary -> generate(intent.date)
             // The new state arrives through observeJournal(), so nothing is set here.
-            is JournalIntent.ToggleFavorite -> launchSafely(onError = { setState { copy(error = it) } }) {
-                toggleFavorite(intent.discoveryId)
-            }
+            is JournalIntent.ToggleFavorite ->
+                launchSafely(onError = { sendEffect(JournalEffect.ShowMessage(it)) }) {
+                    toggleFavorite(intent.discoveryId)
+                }
         }
     }
 
@@ -138,11 +83,19 @@ class JournalViewModel(
         // would let a slow one overwrite a fresh one when it lands.
         if (currentState.generatingDate != null) return
 
-        launchSafely(onError = { setState { copy(error = it) } }) {
-            setState { copy(generatingDate = date, error = null) }
+        // The crash floor reports too, rather than only lowering the spinner. An unwrapped
+        // throw on this path used to leave the header stopping exactly as it does on success,
+        // which is the same silence the screen had for an ordinary failure.
+        launchSafely(
+            onError = {
+                setState { copy(generatingDate = null) }
+                sendEffect(JournalEffect.ShowMessage(it))
+            },
+        ) {
+            setState { copy(generatingDate = date) }
             when (val result = generateDaySummary(date)) {
                 is AppResult.Failure -> {
-                    setState { copy(generatingDate = null, error = result.error) }
+                    setState { copy(generatingDate = null) }
                     sendEffect(JournalEffect.ShowMessage(result.error))
                 }
                 // The written summary arrives through observeJournal(), so there is

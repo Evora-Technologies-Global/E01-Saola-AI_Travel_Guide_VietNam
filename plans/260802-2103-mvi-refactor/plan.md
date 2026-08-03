@@ -480,12 +480,92 @@ contains only row #11.
 
 | Phase | Rows | Est. | Depends on | Status |
 |---|---|---|---|---|
-| 1 — One effect collector | #8 #9 #10 | 1 d | — | ☐ Not started |
-| 2 — Contract extraction | #7 #12 | 0.5 d | — | ☐ Not started |
-| 3 — Declarations match collectors | #1 #2 | 0.5 d | Phase 1 | ☐ Not started |
-| 4 — Close escape hatches | #3 #4 #5 #6 | 2–3 d | Phase 2 | ☐ Not started |
+| 1 — One effect collector | #8 #9 #10 | 1 d | — | ☑ Done, 3 Aug 2026 |
+| 2 — Contract extraction | #7 #12 | 0.5 d | — | ☑ Done, 3 Aug 2026 |
+| 3 — Declarations match collectors | #1 #2 | 0.5 d | Phase 1 | ☑ Done — see below |
+| 4 — Close escape hatches | #3 #4 #5 #6 | 2–3 d | Phase 2 | ☑ Done, 3 Aug 2026 |
 
 Phases 1 and 2 are independent and can run in either order or in parallel.
+
+### Where this plan was out of date when it ran
+
+The codebase had already moved past three of the steps, and one of them would have been a
+regression. Recorded here rather than edited away, because the plan is the reason the work
+was done and the gap is the useful part.
+
+| Plan step | What was found | What was done |
+|---|---|---|
+| 3.1, 3.2 — Chat effects | Already fixed. `ChatEffect` was an empty sealed interface; `ScrollToBottom`, `ShowMessage` and `RequestMicPermission` were gone, along with the voice branch. | Nothing. `ChatRoute` correctly has no collector — the plan's step 3.2 would have *added* one for an effect that no longer exists. |
+| 3.3 — delete `JournalEffect.ShowMessage` | Wrong. `JournalRoute` collects it and shows an error snackbar; the plan assumed it was uncollected. Deleting it would have removed visible feedback for a failed day summary, which ground rule 2 forbids. | Kept the effect, converted the wrapper to `CollectEffects`, and documented in `JournalContract.kt` why it is raised as well as written to state. Confirmed with the user before proceeding. |
+| 4.1 — `onMicPermissionGranted()` → intent | Already fixed; the method is gone. | Nothing. |
+| 4.2 — Discovery via `TakeNotePhoto` effect | Does not fit. Discovery's shutter is inside `NoteCameraOverlay` with its own `isCapturing` latch; the ViewModel never learns of the press, so there is no effect for a path to ride on, and `NotePhotoRequested` does not exist. Building it would have moved a working camera's latch into state. | Took the other option `LLM.md` §11 row #6 already offered: `NoteCameraOverlay` gets `CaptureStore` from Koin. Removes the public method *and* the five-level lambda thread, with no behaviour change. Confirmed with the user. |
+| Risk table — "`TakePhoto` signature change breaks three assertions, **Certain**" | Stale. No test names `TakePhoto`; the assertions at `:317`, `:341`, `:380` assert that *no* effect fires. | Nothing to update. All 16 `LensViewModelCrashTest` cases passed unchanged. |
+
+### What the plan did not anticipate
+
+| Found | Why it mattered | Resolution |
+|---|---|---|
+| Journal was a **sixth** hand-rolled collector | The plan's table listed five, because it assumed Journal had none. | Converted along with the other five. |
+| `collectLatest` → `collect` changes Settings' snackbars | `showSnackbar` suspends until the notice is dismissed. Under `collect` the second of two effects would have waited ~4s instead of replacing the first — a rendered change, forbidden by ground rule 2. | Snackbar calls moved into `scope.launch`, the shape Explore and Journal already used. `showLatest` then gives replace semantics with the collector left free. |
+| `SovereigntyState` is unstable | It holds `RegionMap`, whose outlines are `List<DoubleArray>`. `ComposeStabilityReportTest` failed on `UNSTABLE_CLASS_CEILING = 19`. | Ceiling raised to 20 with the reason written into the test, plus a note on why this one state class is exempt. It is never passed to a composable and changes once. |
+| `CollectEffects` itself takes two unstable params | `Flow` is an interface and a suspend lambda is never stable, so the stability gate rejected it. | Added to `allowedUnstableParams` with the argument: its whole body is one `LaunchedEffect` keyed on values that do not change, so re-execution restarts nothing. |
+| `commonTest` does not compile for Kotlin/Native | `LensViewModelCrashTest.kt:187` uses `SecurityException`, a JVM class, so `:shared:allTests` fails before running. Pre-dates this work — the file is unchanged since `09401ed`. | Not fixed; out of this plan's mandate. Filed as `LLM.md` §11 row #14. |
+| `SovereigntyRoute` has no stateless `SovereigntyScreen` | The only feature without the Route/Screen split; `LLM.md` §12 claimed all ten had it. | §12 corrected. Not fixed here: extracting the composable changes its recomposition scope, which the appendix rules out as mechanical work. Filed as §11 row #13. |
+| Journal's failure snackbar never reaches the traveller | Found by running the app offline on a device, not by reading the diff. The effect is emitted and collected, then dropped on `errorMessage ?: return@launch`, because the effect is handled a main-queue turn before the recomposition that resolves the message. | Confirmed pre-existing by building `dcdb958` in a worktree and reproducing it exactly. Filed as §11 row #15, then **fixed in a follow-up change** at the user's request — see below. |
+
+---
+
+## Follow-up — fixing §11 row #15
+
+Asked for after the refactor landed, and deliberately kept separate from it: this one *does*
+change rendered output, which the refactor's own ground rule 2 forbids.
+
+**Root cause.** `AppError.toUserMessage()` is `@Composable`, so a route could only resolve it
+during composition — and then the effect collector, which runs one main-queue turn after
+`sendEffect`, read a value produced a frame too late. Every first failure was dropped.
+
+**Fix.** `core/util/ErrorMessages.kt` now separates *which words answer this error* from *how
+they are read*: one private `when` returns an `ErrorText`, and two thin wrappers resolve it —
+the existing `@Composable toUserMessage()` for anything drawn, and a new
+`suspend userMessage()` built on `getString` for collectors. The three routes that collect a
+message effect — Journal, Settings, Explore — now resolve from the effect's own payload.
+
+**Consequences taken, not deferred:**
+
+| | |
+|---|---|
+| `JournalState.error`, `SettingsState.error` | Deleted. Neither screen draws a failure inline, so per MVI doc §2 the failure belongs entirely to the effect. Both were written on every failure and read by nobody — which is what made the wrong collector look correct. `ExploreState.error` stays: it *is* drawn, as a card whenever the map is empty. |
+| `JournalIntent.DismissError` | Deleted with the field. Nothing dispatched it. |
+| Journal's `launchSafely(onError = …)` | Now raises `ShowMessage` as well as lowering the spinner. An unwrapped throw used to end identically to success. |
+| `SettingsViewModelTest` | One assertion asserted `vm.state.value.error` "because the screen resolves its message from state" — the exact wrong belief. Rewritten to assert the error on the effect. |
+| `JournalViewModelTest` | New, 5 cases: ordinary failure carries the error, a throw is reported not swallowed, a failed favourite is reported, a second request while one is in flight is ignored, a success raises nothing. Needed three new fakes — `FakeJournalRepository`, `FakeProvinceRepository`, `FakeCatalogRepository`. |
+| `ErrorText.FromResources` | Holds `arg: Int?`, not `List<Any>`. The list form is unstable to Compose and pushed `UNSTABLE_CLASS_CEILING` to 21 for a private implementation detail; exactly one error interpolates anything, and it is an HTTP code. |
+
+**Verified on device.** Offline, "Write my day" now shows the lacquer-red snackbar *"No
+internet connection. Recognition needs to reach Gemini."* where it previously showed nothing.
+29/29 unit tests green; Android and iOS both compile.
+
+### Verified on a device
+
+Run on a Pixel 7 Pro emulator (Android 16, API 36) on 3 Aug 2026, driving the real UI. The
+two manual checks the plan asks for in step 1.6 are the first two rows.
+
+| What | Result |
+|---|---|
+| Self-timer 10s, background mid-countdown, return | No photo written, no error banner, shutter ready. Countdown cancelled by `ScreenStopped` as intended. |
+| Background *during* a capture, return | JPEG still written and `PhotoCaptured` still raised — the capture reached its `finally` from `rememberCoroutineScope()` even though `CollectEffects` was cancelled at `ON_STOP`. `isCapturing` false on return. |
+| **Effect raised while backgrounded** | The decisive test for `repeatOnLifecycle`. In Translate mode the shutter raises `OpenTranslation` with no network call: shutter → HOME → 8s → resume, and the app navigated to the translation screen exactly once. `Channel(BUFFERED)` buffered it and the restarted collector delivered it. |
+| Capture → recognition → `OpenDiscovery` | Picked the `temple_of_literature.jpg` fixture; recognised as Khuê Văn Các and navigated. |
+| `LensEffect.TakePhoto(outputPath)` | File lands in `files/captures` exactly as before. `newCapturePath()` only builds a timestamped path string, so moving the call site reserves nothing and cannot orphan a file. |
+| Discovery note camera via `koinInject<CaptureStore>()` | Overlay opened, photo captured into the same directory, strip showed `1 / 6 PHOTOS`. No Koin resolution error — the binding is `single<CaptureStore>`, so the composable gets the ViewModel's instance. |
+| Settings `HistoryCleared` / `ApiKeySaved` | Both snackbars shown. |
+| Settings replace-not-queue | Fired `ApiKeySaved` then `HistoryCleared` ~3s apart, inside the first notice's 4s duration: the second replaced the first. The `scope.launch` change preserves what `collectLatest` used to give. |
+| `apiKeyDraft` cleared after save | Field empty, status flips to "Your own key is in use". The security property the plan flags is intact. |
+| `TranslationEffect.Close` | Back from the translation screen returns to the lens. |
+| Sovereignty on `MviViewModel` | Page renders with the map drawn from `state.map`; no asset error in logcat. |
+
+Not reproducible on the iOS simulator: it has no camera, so every capture path is unreachable
+there. The iOS build was verified to compile, link and launch, and the framework loads.
 
 ---
 

@@ -40,10 +40,10 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -107,11 +107,12 @@ import com.duylt.trave.vietlensai.core.designsystem.component.showMessage
 import com.duylt.trave.vietlensai.core.designsystem.theme.ScreenGutter
 import com.duylt.trave.vietlensai.core.designsystem.theme.Vermilion
 import com.duylt.trave.vietlensai.core.designsystem.theme.screenInsetsPadding
-import com.duylt.trave.vietlensai.core.util.toUserMessage
+import com.duylt.trave.vietlensai.core.mvi.CollectEffects
+import com.duylt.trave.vietlensai.core.util.userMessage
 import com.duylt.trave.vietlensai.domain.model.AppLanguage
 import com.duylt.trave.vietlensai.domain.model.GeminiModel
 import com.duylt.trave.vietlensai.domain.model.ThemePreference
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
 
 /**
@@ -134,12 +135,9 @@ fun SettingsRoute(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
     val savedMessage = stringResource(Res.string.settings_api_key_saved)
     val clearedMessage = stringResource(Res.string.settings_cleared)
-
-    // Resolved here rather than inside the collector: `toUserMessage` is a composable,
-    // and a non-composable collector cannot call one. Same shape as JournalRoute.
-    val errorMessage = state.error?.toUserMessage()
 
     // Which picker is open is the screen's own business, not the ViewModel's: it
     // survives nothing but a rotation, and a dialog reopening after process death
@@ -147,17 +145,26 @@ fun SettingsRoute(
     var pickingLanguage by rememberSaveable { mutableStateOf(false) }
     var pickingTheme by rememberSaveable { mutableStateOf(false) }
 
-    LaunchedEffect(viewModel) {
-        viewModel.effects.collectLatest { effect ->
-            // `showMessage` dismisses whatever is on screen first. Saving a key and
-            // clearing history can land seconds apart, and a queued snackbar would
-            // tell the traveller about the first act while they are looking at the
-            // result of the second.
-            when (effect) {
-                SettingsEffect.ApiKeySaved -> snackbarHostState.showMessage(savedMessage)
-                SettingsEffect.HistoryCleared -> snackbarHostState.showMessage(clearedMessage)
-                is SettingsEffect.ShowMessage ->
-                    snackbarHostState.showError(errorMessage ?: return@collectLatest)
+    // Shown from `scope` rather than from the collector itself, the same way the explore
+    // and journal routes do it. `showSnackbar` suspends for the length of the snackbar, so
+    // a collector that awaited it would hold the next effect behind the current notice —
+    // and saving a key and clearing history can land seconds apart, which would tell the
+    // traveller about the first act while they are looking at the result of the second.
+    // Launched separately, each message reaches `showLatest`, which dismisses what is on
+    // screen before showing, so the newer notice replaces the older one.
+    CollectEffects(viewModel.effects) { effect ->
+        when (effect) {
+            SettingsEffect.ApiKeySaved -> scope.launch {
+                snackbarHostState.showMessage(savedMessage)
+            }
+            SettingsEffect.HistoryCleared -> scope.launch {
+                snackbarHostState.showMessage(clearedMessage)
+            }
+            // From the effect's own payload, not from `state.error`: the state value has not
+            // been through a recomposition yet when this runs, so a key that failed to save
+            // used to say nothing at all the first time. See `AppError.userMessage`.
+            is SettingsEffect.ShowMessage -> scope.launch {
+                snackbarHostState.showError(effect.error.userMessage())
             }
         }
     }

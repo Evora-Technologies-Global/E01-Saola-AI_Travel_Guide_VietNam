@@ -297,17 +297,47 @@ class LensViewModel(
 }
 ```
 
+### Where the rule stops: screens, not every ViewModel
+
+**`MviViewModel` is for screens** — anything with a route and a back-stack entry, a user who
+acts on it, and a state to render. A **window host** is the stated exception: in this codebase
+`MainViewModel` owns the theme and the splash gate for the whole window and is read by the
+Android Activity and by `MainViewController` on iOS, before any screen exists. It has no
+route, nothing sends it an intent, and nothing would collect an effect, so it stays a plain
+`ViewModel` with two StateFlows.
+
+That is the whole exemption. It is written down here, in `LLM.md` §3, and in the class's own
+KDoc so that nobody files it as an oversight — and so nobody cites it for a screen. If it is
+reached by navigation, it extends `MviViewModel`.
+
 ### Hard rules
 
 1. **`onIntent` is the only public method.** No other public function, no public property
-   besides `state` and `effects`.
+   besides `state` and `effects`. `onCleared()` is a framework override, not a public method
+   in this sense.
 
    ```kotlin
    fun newCapturePath(): String = captureStore.newCapturePath()   // ❌ escape hatch
    fun onMicPermissionGranted() { … }                             // ❌ should be an Intent
    ```
    If the composable needs a value the VM has, either raise it in an Effect or let the
-   Route get the collaborator from DI directly.
+   composable get the collaborator from DI directly. Both shapes are in this codebase, and
+   which one is right depends on **who knows when the value is needed**:
+
+   ```kotlin
+   // The lens: the ViewModel already decides WHEN the shutter fires (self-timer), so it
+   // decides WHERE the file goes at the same moment and sends both together.
+   data class TakePhoto(val outputPath: String) : LensEffect
+   ```
+   ```kotlin
+   // Discovery's note camera: the shutter is pressed inside the overlay and the ViewModel
+   // never learns of the press, so there is no effect for a path to ride on. The composable
+   // takes the store from Koin — it is the store, not the ViewModel, and nothing below the
+   // Route sees a ViewModel.
+   val captureStore: CaptureStore = koinInject()
+   ```
+   What is *not* acceptable is the third option both replaced: a public method on the
+   ViewModel, threaded down as a lambda through five composables.
 
 2. **The `when` must be exhaustive with no `else`.** That is the entire reason Intent is a
    sealed interface: adding a case becomes a compile error at every reducer.
@@ -455,9 +485,10 @@ private fun LensScreen(
 ) { … }
 ```
 
-### The effect collector — write it once, in `core/mvi/`
+### The effect collector — written once, in `core/mvi/CollectEffects.kt`
 
-Five screens hand-rolling this block is how two of them ended up forgetting it entirely.
+Six screens hand-rolling this block is how two of them ended up forgetting it entirely.
+There is now exactly one copy, and `effects.collect` appears nowhere else in the codebase.
 
 ```kotlin
 // core/mvi/CollectEffects.kt
@@ -477,12 +508,65 @@ fun <E : UiEffect> CollectEffects(effects: Flow<E>, onEffect: suspend (E) -> Uni
   previous effect the moment the next arrives — a navigation half-performed.
 - **`repeatOnLifecycle(STARTED)`,** so nothing is handled while the screen is not visible.
   The channel buffers meanwhile; nothing is lost.
+- **The handler is not a `LaunchedEffect` key.** It is a fresh lambda on every recomposition,
+  so keying on it would tear the collector down and rebuild it each frame.
+  `rememberUpdatedState` is what lets the collector stay up while still calling the newest
+  navigation lambdas.
 - **If a ViewModel declares an Effect, some screen must collect it.** An uncollected
   `Channel(BUFFERED)` fills at 64 and every subsequent `send` suspends forever inside
-  `viewModelScope` — one leaked coroutine per emission, and the feature silently dead.
-  This is currently true of `ChatScreen` and `JournalScreen`.
-- Work that must outlive the collector (a capture in flight) is `scope.launch { … }` from a
-  `rememberCoroutineScope()` **outside** the collector.
+  `viewModelScope` — one leaked coroutine per emission, and the feature silently dead. The
+  matching rule is that an effect nobody collects should not be declared: `ChatEffect`,
+  `CollectionEffect`, `PassportEffect` and `SovereigntyEffect` are empty sealed interfaces,
+  and those four routes correctly have no collector.
+- **An effect must carry everything its handler needs.** The collector runs one main-queue
+  turn after `sendEffect`; the recomposition that reacts to the `setState` beside it runs on
+  the next *frame*, which is later. So a handler that reads anything the same emission just
+  wrote to state reads the value from *before* the failure. This shipped, and it was silent:
+
+  ```kotlin
+  // ❌ resolved during composition, still null when the effect lands
+  val errorMessage = state.error?.toUserMessage()
+  CollectEffects(viewModel.effects) { effect ->
+      when (effect) {
+          is JournalEffect.ShowMessage -> scope.launch {
+              snackbarHostState.showError(errorMessage ?: return@launch)   // drops it, every time
+          }
+      }
+  }
+
+  // ✅ from the effect's own payload — no recomposition involved
+  is JournalEffect.ShowMessage -> scope.launch {
+      snackbarHostState.showError(effect.error.userMessage())
+  }
+  ```
+
+  `toUserMessage()` is `@Composable`, which is *why* the wrong version looked necessary.
+  `core/util/ErrorMessages.kt` therefore has a `suspend` twin, `AppError.userMessage()`,
+  built on `getString` rather than `stringResource` and sharing one `when` with the composable
+  form. Reach for it in any collector.
+
+  The cost of getting this wrong was a failed day summary reaching the traveller as a spinner
+  that simply stopped — see `LLM.md` §11 row #15.
+
+- **If a screen draws no inline error, the failure does not belong in state at all.** Holding
+  it in both places is what invited the bug above: `JournalState.error` and
+  `SettingsState.error` were written on every failure and read by nobody. Keep a failure in
+  state only where a composable renders it — `ExploreState.error` is the good case, drawn as
+  a card whenever the map is empty, with the effect reserved for the case where the map
+  already has markers and there is nowhere left to draw it.
+
+- **Anything that suspends for a visible duration goes in a `scope.launch { … }` inside the
+  branch, not awaited by the collector.** `SnackbarHostState.showSnackbar` suspends until the
+  notice is dismissed, so a collector that awaited it would hold the next effect behind the
+  current snackbar — which turns "replace" into "queue four seconds later". Same for work
+  that must outlive the collector: the collector now dies at `ON_STOP`, and a capture in
+  flight has to reach its `finally`.
+
+  ```kotlin
+  is SettingsEffect.ShowMessage -> scope.launch {          // ✅ collector stays free
+      snackbarHostState.showError(errorMessage ?: return@launch)
+  }
+  ```
 
 ### Rules for `XScreen` and below
 
@@ -738,10 +822,13 @@ Other performance rules that follow from MVI:
 
 | Anti-pattern | What it actually costs |
 |---|---|
-| Effect declared but never collected | `Channel(BUFFERED)` fills at 64, `send` suspends forever, one leaked coroutine per emission, feature silently dead. **Live in `ChatScreen` and `JournalScreen`.** |
-| Public method on a VM besides `onIntent` | The screen can drive the VM out of band; the reducer stops being the whole story. **Live: `newCapturePath()`, `onMicPermissionGranted()`.** |
-| `effects.collectLatest { }` | The next effect cancels the handling of the previous one. **Live in three screens.** |
-| Contract inline in the ViewModel file | The state class is buried; nobody reads it; fields get duplicated. **Live in four features.** |
+| Effect declared but never collected | `Channel(BUFFERED)` fills at 64, `send` suspends forever, one leaked coroutine per emission, feature silently dead. *Was* live in `ChatScreen` and `JournalScreen`. |
+| Public method on a VM besides `onIntent` | The screen can drive the VM out of band; the reducer stops being the whole story. *Was* live: `newCapturePath()`, `onMicPermissionGranted()`. |
+| `effects.collectLatest { }` | The next effect cancels the handling of the previous one. *Was* live in three screens. |
+| Awaiting `showSnackbar` in the collector | It suspends for the length of the notice, so the next effect waits behind it and a replacement becomes a queue. Launch it from a `rememberCoroutineScope()`. |
+| Effect handler reading state the same emission just wrote | The handler runs a main-queue turn before the next frame, so it reads the pre-failure value. **Cost a real bug**: a failed day summary was reported to nobody for as long as the feature existed. Put it on the effect. |
+| A failure in state that no composable draws | Two records of one fact, one of which is never read — and the unread one is the one the collector trusted. |
+| Contract inline in the ViewModel file | The state class is buried; nobody reads it; fields get duplicated. *Was* live in four features. |
 | `viewModelScope.launch` without a handler | No `CoroutineExceptionHandler` on `viewModelScope` → process death on Android. |
 | Swallowing `CancellationException` | Every ordinary cancellation becomes an error banner; structured concurrency breaks. |
 | `SharedFlow` for effects | Drops the event (replay 0) or re-fires it (replay 1). |
@@ -751,4 +838,4 @@ Other performance rules that follow from MVI:
 | `advanceUntilIdle` with a ticker | The suite hangs instead of failing. |
 | Domain types not in `compose-stability.conf` | Every composable taking one becomes non-skippable; whole screens repaint per tick. |
 | `single { }` for a ViewModel | It outlives its screen with all its state and jobs. |
-| Plain `ViewModel` instead of `MviViewModel` | No effect channel, no crash floor, untestable in the same way as everything else. **Live: `SovereigntyViewModel`.** |
+| Plain `ViewModel` instead of `MviViewModel` for a **screen** | No effect channel, no crash floor, untestable in the same way as everything else. *Was* live: `SovereigntyViewModel`. The window host is the one stated exception — see §3. |

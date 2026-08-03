@@ -59,9 +59,11 @@ Root package: `com.duylt.trave.vietlensai`
 ```
 src/
 ├── commonMain/kotlin/com/duylt/trave/vietlensai/
-│   ├── MainViewModel.kt              App-level state: theme, splash gate, startup sweep
+│   ├── MainViewModel.kt              App-level state: theme, splash gate, startup sweep.
+│   │                                 The ONE plain ViewModel — see the exemption below
 │   ├── core/
 │   │   ├── mvi/MviViewModel.kt       THE MVI CONTRACT — read this first
+│   │   ├── mvi/CollectEffects.kt     The one effect collector every XRoute uses
 │   │   ├── designsystem/
 │   │   │   ├── theme/                Color, Type, Dimens, Motion, Insets, Theme
 │   │   │   └── component/            Reusable composables (AppSnackbar, PermissionSheet…)
@@ -91,6 +93,14 @@ src/
 
 **Rule:** anything platform-specific is an `expect` in `commonMain` with an `actual` in
 both `androidMain` and `iosMain`. Never `if (Platform.isAndroid)` in shared code.
+
+**The `MainViewModel` exemption, stated so it is not filed as an oversight.** `MviViewModel`
+is for **screens** — anything with a route and a back-stack entry. `MainViewModel` is the
+**window host**: no route, owns theme and the splash gate for the whole window, read by both
+the Android Activity and `MainViewController` on iOS before any screen exists. An intent
+channel with no sender and an effect channel with no collector would be ceremony. It is the
+only plain `ViewModel` in the project and the only one allowed to be; every one of the ten
+feature ViewModels extends `MviViewModel`.
 
 ---
 
@@ -140,9 +150,9 @@ Optional, only when it earns its own file:
 └── CameraOptions.kt    Feature-local enums/value types that are NOT domain concepts
 ```
 
-**`XContract.kt` is mandatory, even when the effect set is empty.** Contract files are the
-first thing anyone reads to understand a screen; burying `LensState` at line 200 of a
-ViewModel hides it. An empty effect set is still declared:
+**`XContract.kt` is mandatory, even when the effect set is empty** — all ten features have
+one. Contract files are the first thing anyone reads to understand a screen; burying
+`LensState` at line 200 of a ViewModel hides it. An empty effect set is still declared:
 
 ```kotlin
 /** Nothing to emit — every action on this screen is navigation the route already owns. */
@@ -279,35 +289,31 @@ currently break this badly and are the standing refactor backlog.
 These exist in the reference codebase today. **Do not copy them.** Fix them when you touch
 the file.
 
-### Open — correctness
-
-| # | Deviation | Location | Effect |
-|---|---|---|---|
-| 1 | `ChatScreen` never collects `viewModel.effects` | `feature/chat/ChatScreen.kt` | `ScrollToBottom` ×2, `RequestMicPermission`, `ShowMessage` all dropped. The mic button cannot work. `Channel(BUFFERED)` fills at 64 and `send` then suspends forever inside `viewModelScope` — a coroutine leak per emission. |
-| 2 | `JournalScreen` never collects `viewModel.effects` | `feature/journal/JournalScreen.kt` | `JournalEffect.ShowMessage` dropped; same channel-fill leak. |
-| 3 | `ChatViewModel.onMicPermissionGranted()` is public and unreferenced | `feature/chat/ChatViewModel.kt:99` | Dead escape hatch. Should be `ChatIntent.MicPermissionGranted`. |
-
-### Open — MVI discipline
-
-| # | Deviation | Location | Should be |
-|---|---|---|---|
-| 4 | `SovereigntyViewModel` is a plain `ViewModel` exposing `StateFlow<RegionMap?>` | `feature/sovereignty/` | `MviViewModel` + `SovereigntyContract.kt` |
-| 5 | `MainViewModel` is a plain `ViewModel` exposing two StateFlows | `MainViewModel.kt` | Acceptable *only* as the app-level host VM; document the exemption or convert |
-| 6 | `newCapturePath()` public on two VMs, called from the composable | `LensViewModel:74`, `DiscoveryViewModel:153` | The Route should get `CaptureStore` from Koin, or the VM should raise the path in an Effect |
-| 7 | Contract types declared inline in the ViewModel file | `collection`, `journal`, `settings`, `translate` | Extract to `XContract.kt` (5 features already do this) |
-| 8 | `effects.collectLatest { }` — cancels handling of the previous effect | `LensScreen:248`, `SettingsScreen:145`, `DiscoveryScreen:204` | `collect` |
-| 9 | Effect collection is `LaunchedEffect(viewModel) { … }`, not lifecycle-aware | all 5 screens that collect | A shared `CollectEffects` helper using `repeatOnLifecycle(STARTED)` |
-| 10 | No shared effect-collection helper — the same block is hand-rolled 5× and forgotten 2× | `core/mvi/` | Add `CollectEffects.kt`; this is the direct cause of #1 and #2 |
-
 ### Open — hygiene
 
 | # | Deviation | Location |
 |---|---|---|
-| 11 | Screen files far over the 200-line rule: `LensScreen` 2170, `DiscoveryScreen` 1970, `PassportScreen` 1061, `JournalScreen` 806, `SettingsScreen` 788, `TranslationScreen` 715 | `feature/*/` |
-| 12 | Unused `import kotlinx.coroutines.launch` | `Journal`, `Settings`, `Chat`, `Explore`, `Translation` ViewModels |
+| 11 | Screen files far over the 200-line rule: `LensScreen` 2173, `DiscoveryScreen` 1974, `PassportScreen` 1061, `JournalScreen` 838, `SettingsScreen` 804, `TranslationScreen` 714 | `feature/*/` |
+| 13 | `SovereigntyRoute` renders the page itself — there is no private stateless `SovereigntyScreen`. The only feature without the Route/Screen split, so the page cannot be previewed. Not fixed with the MVI conversion because extracting a composable changes its recomposition scope, which is feature work rather than a structural rename. | `feature/sovereignty/SovereigntyScreen.kt:79` |
+| 14 | `commonTest` does not compile for Kotlin/Native: `LensViewModelCrashTest.kt:187` uses `SecurityException`, which is a JVM class. `:shared:allTests` therefore fails at `compileTestKotlinIosSimulatorArm64`; only the Android host run is green. Pre-dates this refactor — the file is unchanged since `09401ed`. | `commonTest/…/LensViewModelCrashTest.kt:187` |
+| 15 | `docs/bug-report-effect-collection.md` does not exist, but `plans/260802-2103-mvi-refactor/plan.md` refers to it four times as the home for the deferred UI work. Either write it or drop the references. | `plans/260802-2103-mvi-refactor/plan.md` |
 
 ### Fixed
-_(move rows here with the commit that fixed them)_
+
+| # | Deviation | Fixed by |
+|---|---|---|
+| 1 | `ChatScreen` never collects `viewModel.effects` | Already fixed before the refactor: `ChatEffect` is now an empty sealed interface, `ScrollToBottom` / `ShowMessage` / `RequestMicPermission` were removed, and scrolling and the error banner are both driven from state. `ChatRoute` correctly has no collector. |
+| 2 | `JournalScreen` never collects `viewModel.effects` | Already fixed before the refactor: `JournalRoute` collects `ShowMessage` and shows the error snackbar. The refactor converted the wrapper to `CollectEffects` and kept the effect — deleting it, as the refactor plan's step 3.3 assumed, would have removed a visible snackbar. |
+| 3 | `ChatViewModel.onMicPermissionGranted()` public and unreferenced | Already fixed before the refactor: the method and the voice-input branch behind it are gone. |
+| 4 | `SovereigntyViewModel` a plain `ViewModel` | MVI refactor — now `MviViewModel<SovereigntyState, SovereigntyIntent, SovereigntyEffect>` with `SovereigntyContract.kt`. Cost one slot in `UNSTABLE_CLASS_CEILING`; see the note in `ComposeStabilityReportTest`. |
+| 5 | `MainViewModel` a plain `ViewModel` | MVI refactor — kept, and the exemption is now written down in §3 above, in `docs/android-mvi-best-practices.md` §3, and in the class's own KDoc. |
+| 6 | `newCapturePath()` public on two VMs | MVI refactor — `LensEffect.TakePhoto` now carries `outputPath`, and `NoteCameraOverlay` takes `CaptureStore` from Koin. Both public methods deleted; Discovery also loses the five-level `newCapturePath` lambda thread. |
+| 7 | Contract types inline in the ViewModel file | MVI refactor — `CollectionContract.kt`, `JournalContract.kt`, `SettingsContract.kt`, `TranslationContract.kt` added. All ten features now have one. |
+| 8 | `effects.collectLatest { }` | MVI refactor — zero remaining. Settings needed its snackbar calls moved into `scope.launch` to keep replace-not-queue behaviour, because `showSnackbar` suspends for the length of the notice. |
+| 9 | Effect collection not lifecycle-aware | MVI refactor — all six collectors go through `CollectEffects`, which uses `repeatOnLifecycle(STARTED)`. |
+| 10 | No shared effect-collection helper | MVI refactor — `core/mvi/CollectEffects.kt`. It is the only place `effects.collect` appears. |
+| 12 | Unused `import kotlinx.coroutines.launch` | MVI refactor — removed from the Journal, Settings, Explore and Translation ViewModels. Chat's had already gone with the voice branch. |
+| 15 | **A failed day summary told the traveller nothing.** `JournalEffect.ShowMessage` was emitted and collected, then dropped: the route resolved the text as `state.error?.toUserMessage()` during composition and the handler did `errorMessage ?: return@launch`, but the effect is handled one main-queue turn after `sendEffect` — before the frame that would have produced the string. Found by running the app offline on a device; reproduced identically on a build of `dcdb958`, so it pre-dated the MVI refactor. **Fixed 03.08.2026:** `AppError.userMessage()` is a `suspend` twin of `toUserMessage()` that resolves outside composition, so the three routes that collect a message effect — Journal, Settings, Explore — now read it off the effect's own payload. `JournalState.error` and `SettingsState.error` are gone with it: neither screen draws a failure inline, so a failure belongs entirely to the effect. Journal's `launchSafely(onError = …)` now raises the effect too, so an unwrapped throw reports rather than just lowering the spinner. Covered by `JournalViewModelTest`. |
 
 ---
 
@@ -317,7 +323,10 @@ Do not "improve" these; they are deliberate and documented in the code:
 
 - `Channel`-based effects with the exactly-once guarantee (`LensViewModelCrashTest` asserts it).
 - `launchSafely` on every screen action, with `CancellationException` rethrown.
-- Route/Screen split — done consistently across all 10 features.
+- One effect collector, `core/mvi/CollectEffects.kt`: `collect`, `repeatOnLifecycle(STARTED)`,
+  handler held through `rememberUpdatedState`. Never hand-roll the block again — doing so is
+  how two screens ended up with no collector at all.
+- Route/Screen split — done in 9 of 10 features (sovereignty is §11 row #13).
 - Derived state as computed `val`s on the state class (`isBusy`, `visibleDays`, `hasMap`),
   never duplicated fields.
 - Ids in state, not objects (`selectedItemId`, `selectedPlaceId`) — so a background refresh

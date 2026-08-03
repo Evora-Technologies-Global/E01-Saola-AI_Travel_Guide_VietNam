@@ -28,7 +28,6 @@ import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -61,7 +60,7 @@ import androidx.compose.ui.graphics.PathEffect
 import com.duylt.trave.vietlensai.core.designsystem.component.AppAsyncImage
 import com.duylt.trave.vietlensai.core.designsystem.component.AppSnackbarHost
 import com.duylt.trave.vietlensai.core.designsystem.component.showError
-import com.duylt.trave.vietlensai.core.util.toUserMessage
+import com.duylt.trave.vietlensai.core.util.userMessage
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
@@ -112,6 +111,7 @@ import com.duylt.trave.vietlensai.core.designsystem.theme.Marigold
 import com.duylt.trave.vietlensai.core.designsystem.theme.PaperCream
 import com.duylt.trave.vietlensai.core.designsystem.theme.ScreenGutter
 import com.duylt.trave.vietlensai.core.designsystem.theme.Vermilion
+import com.duylt.trave.vietlensai.core.mvi.CollectEffects
 import com.duylt.trave.vietlensai.core.designsystem.theme.screenInsetsPadding
 import com.duylt.trave.vietlensai.core.util.LocationPermissionState
 import com.duylt.trave.vietlensai.core.util.accentColor
@@ -155,21 +155,22 @@ fun JournalRoute(
     val locationPermission = rememberLocationPermissionState()
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
-    // Resolved here rather than inside the collector: `toUserMessage` is a composable,
-    // and a non-composable collector cannot call one. Same shape as ExploreRoute.
-    val errorMessage = state.error?.toUserMessage()
 
     // "Write story" is a model call that can fail for the same reasons the lens can — no
     // key, no network, a throttled model — and every one of them arrives as an AppError
-    // rather than a throw. Without this collector the spinner on the day header simply
-    // stopped and nothing else changed, so the traveller was told nothing at all on the
-    // screen that hosts one of the app's headline features.
-    LaunchedEffect(viewModel) {
-        viewModel.effects.collect { effect ->
-            when (effect) {
-                is JournalEffect.ShowMessage -> scope.launch {
-                    snackbarHostState.showError(errorMessage ?: return@launch)
-                }
+    // rather than a throw. Without this the spinner on the day header simply stopped and
+    // nothing else changed, so the traveller was told nothing at all on the screen that
+    // hosts one of the app's headline features.
+    //
+    // The message is resolved from the effect through `userMessage()`, not read out of
+    // state. Reading it from state is what silently lost it: the route resolved
+    // `state.error?.toUserMessage()` during composition, and by the time the effect was
+    // handled — one main-queue turn after `sendEffect`, before the next frame — that value
+    // was still the null from before the failure.
+    CollectEffects(viewModel.effects) { effect ->
+        when (effect) {
+            is JournalEffect.ShowMessage -> scope.launch {
+                snackbarHostState.showError(effect.error.userMessage())
             }
         }
     }

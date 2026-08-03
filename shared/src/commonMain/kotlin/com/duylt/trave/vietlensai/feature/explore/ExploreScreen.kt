@@ -56,8 +56,10 @@ import com.duylt.trave.vietlensai.core.designsystem.component.Kicker
 import com.duylt.trave.vietlensai.core.designsystem.component.showError
 import com.duylt.trave.vietlensai.core.designsystem.theme.ScreenGutter
 import com.duylt.trave.vietlensai.core.designsystem.theme.screenInsetsPadding
+import com.duylt.trave.vietlensai.core.mvi.CollectEffects
 import com.duylt.trave.vietlensai.core.util.rememberLocationPermissionState
 import com.duylt.trave.vietlensai.core.util.toUserMessage
+import com.duylt.trave.vietlensai.core.util.userMessage
 import com.duylt.trave.vietlensai.domain.model.NearbyPlace
 import com.duylt.trave.vietlensai.platform.rememberUrlOpener
 import com.duylt.trave.vietlensai.resources.Res
@@ -104,9 +106,6 @@ fun ExploreRoute(
     val openUrl = rememberUrlOpener()
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
-    // Resolved here rather than inside the effect collector: `toUserMessage` is a
-    // composable, and a non-composable collector cannot call one.
-    val errorMessage = state.error?.toUserMessage()
 
     // The permission state re-reads itself on resume, so this also covers the traveller
     // granting it out in system settings and coming back — the search starts by itself
@@ -115,15 +114,15 @@ fun ExploreRoute(
         viewModel.onIntent(ExploreIntent.PermissionResolved(permission.isGranted))
     }
 
-    LaunchedEffect(viewModel) {
-        viewModel.effects.collect { effect ->
-            when (effect) {
-                is ExploreEffect.OpenUrl -> openUrl(effect.url)
-                // Read from state rather than from the effect, so the message is the one
-                // this composition already resolved in the traveller's language.
-                is ExploreEffect.ShowError -> scope.launch {
-                    snackbarHostState.showError(errorMessage ?: return@launch)
-                }
+    CollectEffects(viewModel.effects) { effect ->
+        when (effect) {
+            is ExploreEffect.OpenUrl -> openUrl(effect.url)
+            // From the effect's own payload. This effect is only raised when the map already
+            // has markers, so there is no card on screen to read the failure off — which
+            // makes it the one path where losing the message loses it entirely, and reading
+            // `state.error` here lost it on every first failure. See `AppError.userMessage`.
+            is ExploreEffect.ShowError -> scope.launch {
+                snackbarHostState.showError(effect.error.userMessage())
             }
         }
     }

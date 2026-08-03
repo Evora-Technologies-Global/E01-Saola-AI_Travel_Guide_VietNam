@@ -9,6 +9,15 @@ import com.duylt.trave.vietlensai.domain.model.GeminiModel
 import com.duylt.trave.vietlensai.domain.model.GeoPoint
 import com.duylt.trave.vietlensai.domain.model.LensMode
 import com.duylt.trave.vietlensai.domain.model.ThemePreference
+import com.duylt.trave.vietlensai.domain.model.CultureCollection
+import com.duylt.trave.vietlensai.domain.model.JournalDay
+import com.duylt.trave.vietlensai.domain.model.JournalStats
+import com.duylt.trave.vietlensai.domain.model.Province
+import com.duylt.trave.vietlensai.domain.model.TravelPassport
+import com.duylt.trave.vietlensai.domain.model.TripSummary
+import com.duylt.trave.vietlensai.domain.repository.CatalogRepository
+import com.duylt.trave.vietlensai.domain.repository.JournalRepository
+import com.duylt.trave.vietlensai.domain.repository.ProvinceRepository
 import com.duylt.trave.vietlensai.domain.repository.CaptureStore
 import com.duylt.trave.vietlensai.domain.repository.DiscoveryRepository
 import com.duylt.trave.vietlensai.domain.repository.LocationRepository
@@ -21,6 +30,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.datetime.LocalDate
 import kotlin.time.Instant
 
 /**
@@ -124,7 +134,12 @@ class FakeDiscoveryRepository : DiscoveryRepository {
     override suspend fun getDiscovery(id: String): Discovery? =
         discoveries.value.firstOrNull { it.id == id }
 
-    override suspend fun toggleFavorite(id: String): AppResult<Unit> = AppResult.Success(Unit)
+    var throwOnToggleFavorite: Throwable? = null
+
+    override suspend fun toggleFavorite(id: String): AppResult<Unit> {
+        throwOnToggleFavorite?.let { throw it }
+        return AppResult.Success(Unit)
+    }
     override suspend fun delete(id: String): AppResult<Unit> = AppResult.Success(Unit)
     override suspend fun deleteAll(): AppResult<Unit> = AppResult.Success(Unit)
 }
@@ -236,4 +251,57 @@ class FakeCaptureStore : CaptureStore {
     override suspend fun flattenOrientation(path: String): AppResult<Unit> = AppResult.Success(Unit)
 
     override suspend fun listCaptures(): List<String> = emptyList()
+}
+
+
+/**
+ * The journal, with both ways a day summary can fail.
+ *
+ * [failOnGenerate] is the ordinary path — the repository folds the failure into an
+ * [AppResult] the way the real one does. [throwOnGenerate] is the crash floor: an
+ * unwrapped throw, which is the gap `launchSafely` exists to catch and which used to lower
+ * the day's spinner while telling the traveller nothing at all.
+ */
+class FakeJournalRepository : JournalRepository {
+    val days = MutableStateFlow<List<JournalDay>>(emptyList())
+    val stats = MutableStateFlow(JournalStats(0, 0, 0, emptyMap()))
+    var failOnGenerate: AppError? = null
+    var throwOnGenerate: Throwable? = null
+    var generateDelayMillis: Long = 0
+    var generateCalls = 0
+
+    override fun observeJournal(): Flow<List<JournalDay>> = days
+    override fun observeStats(): Flow<JournalStats> = stats
+
+    override suspend fun generateSummary(date: LocalDate): AppResult<TripSummary> {
+        generateCalls += 1
+        if (generateDelayMillis > 0) delay(generateDelayMillis)
+        throwOnGenerate?.let { throw it }
+        failOnGenerate?.let { return AppResult.Failure(it) }
+        return AppResult.Success(
+            TripSummary(
+                date = date,
+                headline = "A day",
+                narrative = "It happened.",
+                highlights = emptyList(),
+                tomorrowIdeas = emptyList(),
+                generatedAt = Instant.fromEpochMilliseconds(0),
+            ),
+        )
+    }
+}
+
+class FakeProvinceRepository : ProvinceRepository {
+    val passport = MutableStateFlow(TravelPassport(stamps = emptyList()))
+
+    override suspend fun provinces(): List<Province> = emptyList()
+    override suspend fun provinceAt(location: GeoPoint): Province? = null
+    override fun observePassport(): Flow<TravelPassport> = passport
+    override suspend fun backfillProvinces(): Int = 0
+}
+
+class FakeCatalogRepository : CatalogRepository {
+    val collection = MutableStateFlow(CultureCollection(sections = emptyList()))
+
+    override fun observeCollection(): Flow<CultureCollection> = collection
 }

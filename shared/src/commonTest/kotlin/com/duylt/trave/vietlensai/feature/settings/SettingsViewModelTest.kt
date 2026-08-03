@@ -107,6 +107,17 @@ class SettingsViewModelTest {
                     effect is SettingsEffect.ShowMessage,
                     "a failed write must report the failure, not confirm a save — got $effect",
                 )
+                // The error rides on the effect rather than being read back out of state.
+                // This assertion used to be `vm.state.value.error`, on the reasoning that
+                // "the screen resolves its message from state" — which was the bug: the
+                // route resolves during composition, and the effect is handled a
+                // main-queue turn before the next frame, so the message was always the
+                // stale null. See `AppError.userMessage` and `LLM.md` §11 row #15.
+                assertEquals(
+                    AppError.Storage("disk full"),
+                    (effect as SettingsEffect.ShowMessage).error,
+                    "the message the screen shows comes from the effect, so the error has to be on it",
+                )
                 cancelAndIgnoreRemainingEvents()
             }
 
@@ -114,11 +125,6 @@ class SettingsViewModelTest {
                 "AIza-unlucky",
                 vm.state.value.apiKeyDraft,
                 "the key must survive in the field so the traveller can retry without retyping",
-            )
-            assertEquals(
-                AppError.Storage("disk full"),
-                vm.state.value.error,
-                "the screen resolves its message from state, so the error has to land there",
             )
         }
 
