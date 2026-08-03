@@ -5,5 +5,6 @@
 -->
 <resources>
     <color name="window_background">#FFFFFBF8</color>
-    <color name="ic_launcher_background">#FFB3261E</color>
+    <!-- The cream ground the logo disc sits on, so the adaptive layers meet seamlessly. -->
+    <color name="ic_launcher_background">#FFFBF6ED</color>
 </resources>
