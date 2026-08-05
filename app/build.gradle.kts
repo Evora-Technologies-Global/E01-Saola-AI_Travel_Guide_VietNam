@@ -254,9 +254,20 @@ dependencies {
     // plugin pins in `:shared`; only the Android-only tooling is named here.
     debugImplementation(libs.androidx.compose.ui.tooling)
 
+    // `:app` is the module that assembles and starts the Koin graph, so it is the module
+    // whose crash-on-launch a graph check prevents. `koin-test` is JVM reflection, which is
+    // why this lives here rather than in `:shared`'s multiplatform `commonTest`.
+    testImplementation(libs.junit)
+    testImplementation(platform(libs.koin.bom))
+    testImplementation(libs.koin.test)
+
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.kotlinx.coroutines.test)
+    // Same forced upgrade as `:shared`'s device suite, and it has to be repeated because
+    // dependency resolution is per configuration. See `libs.versions.toml`.
+    androidTestImplementation(libs.androidx.test.espresso.core)
+    androidTestImplementation(libs.androidx.test.runner)
     // The end-to-end suite resolves repositories from the running app's Koin graph.
     androidTestImplementation(platform(libs.koin.bom))
     androidTestImplementation(libs.koin.core)

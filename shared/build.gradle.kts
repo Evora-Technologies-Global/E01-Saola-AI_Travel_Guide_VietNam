@@ -183,6 +183,12 @@ kotlin {
             implementation(libs.androidx.compose.ui.test.junit4)
             implementation(libs.androidx.compose.ui.test.manifest)
             implementation(libs.kotlinx.coroutines.test)
+
+            // Named explicitly only to raise them above what `ui-test-junit4` drags in —
+            // espresso-core 3.5.0 and runner 1.5.0, which is what made every instrumented
+            // test fail on API 37 before its body ran. See the note in `libs.versions.toml`.
+            implementation(libs.androidx.test.espresso.core)
+            implementation(libs.androidx.test.runner)
         }
 
         androidMain.dependencies {
