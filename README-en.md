@@ -79,64 +79,52 @@ app are real photographs from Wikimedia Commons.
 
 ### Android — phone
 
-| Lens | Journal | Travel passport |
-|---|---|---|
-| ![Lens](screenshots/android-phone/01-lens.png) | ![Journal](screenshots/android-phone/02-journal.png) | ![Passport](screenshots/android-phone/03-passport.png) |
+| Lens | Journal | Travel passport | Culture collection |
+|---|---|---|---|
+| <img src="screenshots/android-phone/01-lens.png" width="180" alt="Lens"> | <img src="screenshots/android-phone/02-journal.png" width="180" alt="Journal"> | <img src="screenshots/android-phone/03-passport.png" width="180" alt="Passport"> | <img src="screenshots/android-phone/04-collection.png" width="180" alt="Collection"> |
 
-| Culture collection | Discovery detail | Chat |
+| Discovery detail | Chat | Explore nearby |
 |---|---|---|
-| ![Collection](screenshots/android-phone/04-collection.png) | ![Discovery](screenshots/android-phone/05-discovery.png) | ![Chat](screenshots/android-phone/06-chat.png) |
+| <img src="screenshots/android-phone/05-discovery.png" width="180" alt="Discovery"> | <img src="screenshots/android-phone/06-chat.png" width="180" alt="Chat"> | <img src="screenshots/android-phone/07-explore.png" width="180" alt="Explore"> |
 
-| Explore nearby | Place detail | Menu translation |
+| Place detail | Menu translation | Settings |
 |---|---|---|
-| ![Explore](screenshots/android-phone/07-explore.png) | ![Place](screenshots/android-phone/08-explore-detail.png) | ![Translate](screenshots/android-phone/09-translate.png) |
-
-| Settings |
-|---|
-| ![Settings](screenshots/android-phone/10-settings.png) |
+| <img src="screenshots/android-phone/08-explore-detail.png" width="180" alt="Place"> | <img src="screenshots/android-phone/09-translate.png" width="180" alt="Translate"> | <img src="screenshots/android-phone/10-settings.png" width="180" alt="Settings"> |
 
 ### Android — tablet
 
 The wide layout: a vertical navigation rail on the left and two content panes side by side.
 
-| Lens | Journal + passport |
-|---|---|
-| ![Lens](screenshots/android-tablet/01-lens.png) | ![Journal](screenshots/android-tablet/02-journal.png) |
+| Lens | Journal + passport | Collection |
+|---|---|---|
+| <img src="screenshots/android-tablet/01-lens.png" width="250" alt="Lens"> | <img src="screenshots/android-tablet/02-journal.png" width="250" alt="Journal"> | <img src="screenshots/android-tablet/03-collection.png" width="250" alt="Collection"> |
 
-| Collection | Article + ask the guide |
-|---|---|
-| ![Collection](screenshots/android-tablet/03-collection.png) | ![Discovery](screenshots/android-tablet/04-discovery.png) |
-
-| Explore | Settings |
-|---|---|
-| ![Explore](screenshots/android-tablet/05-explore.png) | ![Settings](screenshots/android-tablet/06-settings.png) |
+| Article + ask the guide | Explore | Settings |
+|---|---|---|
+| <img src="screenshots/android-tablet/04-discovery.png" width="250" alt="Discovery"> | <img src="screenshots/android-tablet/05-explore.png" width="250" alt="Explore"> | <img src="screenshots/android-tablet/06-settings.png" width="250" alt="Settings"> |
 
 ### iOS — iPhone
 
-| Journal | Passport | Collection |
-|---|---|---|
-| ![Journal](screenshots/ios-phone/01-journal.png) | ![Passport](screenshots/ios-phone/02-passport.png) | ![Collection](screenshots/ios-phone/03-collection.png) |
+| Journal | Passport | Collection | Discovery detail |
+|---|---|---|---|
+| <img src="screenshots/ios-phone/01-journal.png" width="180" alt="Journal"> | <img src="screenshots/ios-phone/02-passport.png" width="180" alt="Passport"> | <img src="screenshots/ios-phone/03-collection.png" width="180" alt="Collection"> | <img src="screenshots/ios-phone/04-discovery.png" width="180" alt="Discovery"> |
 
-| Discovery detail | Chat | Explore (MapKit) |
+| Chat | Explore (MapKit) | Settings |
 |---|---|---|
-| ![Discovery](screenshots/ios-phone/04-discovery.png) | ![Chat](screenshots/ios-phone/05-chat.png) | ![Explore](screenshots/ios-phone/06-explore.png) |
-
-| Settings |
-|---|
-| ![Settings](screenshots/ios-phone/07-settings.png) |
+| <img src="screenshots/ios-phone/05-chat.png" width="180" alt="Chat"> | <img src="screenshots/ios-phone/06-explore.png" width="180" alt="Explore"> | <img src="screenshots/ios-phone/07-settings.png" width="180" alt="Settings"> |
 
 > The Lens screen is absent from the iOS set because the iOS Simulator has no camera — the
 > viewfinder would be blank.
 
 ### iOS — iPad
 
-| Journal + passport | Collection |
-|---|---|
-| ![Journal](screenshots/ios-ipad/01-journal.png) | ![Collection](screenshots/ios-ipad/02-collection.png) |
-
-| Article + ask the guide | Explore | Settings |
+| Journal + passport | Collection | Article + ask the guide |
 |---|---|---|
-| ![Discovery](screenshots/ios-ipad/03-discovery.png) | ![Explore](screenshots/ios-ipad/04-explore.png) | ![Settings](screenshots/ios-ipad/05-settings.png) |
+| <img src="screenshots/ios-ipad/01-journal.png" width="250" alt="Journal"> | <img src="screenshots/ios-ipad/02-collection.png" width="250" alt="Collection"> | <img src="screenshots/ios-ipad/03-discovery.png" width="250" alt="Discovery"> |
+
+| Explore | Settings |
+|---|---|
+| <img src="screenshots/ios-ipad/04-explore.png" width="250" alt="Explore"> | <img src="screenshots/ios-ipad/05-settings.png" width="250" alt="Settings"> |
 
 > The iPad Explore shot shows twelve restaurants and no landmarks: Overpass (the OpenStreetMap
 > query server) rate-limits per IP, and after a day of repeated searches the sights half of the

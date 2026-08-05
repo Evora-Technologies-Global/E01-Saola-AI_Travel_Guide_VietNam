@@ -75,63 +75,51 @@ Chụp trên máy ảo Pixel 7 Pro, Pixel Tablet, iPhone 17 và iPad Pro 11". D�
 
 ### Android — điện thoại
 
-| Ống kính | Nhật ký | Hộ chiếu du lịch |
-|---|---|---|
-| ![Ống kính](screenshots/android-phone/01-lens.png) | ![Nhật ký](screenshots/android-phone/02-journal.png) | ![Hộ chiếu](screenshots/android-phone/03-passport.png) |
+| Ống kính | Nhật ký | Hộ chiếu du lịch | Bộ sưu tập văn hoá |
+|---|---|---|---|
+| <img src="screenshots/android-phone/01-lens.png" width="180" alt="Ống kính"> | <img src="screenshots/android-phone/02-journal.png" width="180" alt="Nhật ký"> | <img src="screenshots/android-phone/03-passport.png" width="180" alt="Hộ chiếu"> | <img src="screenshots/android-phone/04-collection.png" width="180" alt="Bộ sưu tập"> |
 
-| Bộ sưu tập văn hoá | Chi tiết khám phá | Trò chuyện |
+| Chi tiết khám phá | Trò chuyện | Khám phá quanh đây |
 |---|---|---|
-| ![Bộ sưu tập](screenshots/android-phone/04-collection.png) | ![Chi tiết](screenshots/android-phone/05-discovery.png) | ![Trò chuyện](screenshots/android-phone/06-chat.png) |
+| <img src="screenshots/android-phone/05-discovery.png" width="180" alt="Chi tiết"> | <img src="screenshots/android-phone/06-chat.png" width="180" alt="Trò chuyện"> | <img src="screenshots/android-phone/07-explore.png" width="180" alt="Khám phá"> |
 
-| Khám phá quanh đây | Chi tiết địa điểm | Dịch thực đơn |
+| Chi tiết địa điểm | Dịch thực đơn | Cài đặt |
 |---|---|---|
-| ![Khám phá](screenshots/android-phone/07-explore.png) | ![Địa điểm](screenshots/android-phone/08-explore-detail.png) | ![Dịch](screenshots/android-phone/09-translate.png) |
-
-| Cài đặt |
-|---|
-| ![Cài đặt](screenshots/android-phone/10-settings.png) |
+| <img src="screenshots/android-phone/08-explore-detail.png" width="180" alt="Địa điểm"> | <img src="screenshots/android-phone/09-translate.png" width="180" alt="Dịch"> | <img src="screenshots/android-phone/10-settings.png" width="180" alt="Cài đặt"> |
 
 ### Android — máy tính bảng
 
 Bố cục rộng: thanh điều hướng dọc bên trái, hai khung nội dung song song.
 
-| Ống kính | Nhật ký + Hộ chiếu |
-|---|---|
-| ![Ống kính](screenshots/android-tablet/01-lens.png) | ![Nhật ký](screenshots/android-tablet/02-journal.png) |
+| Ống kính | Nhật ký + Hộ chiếu | Bộ sưu tập |
+|---|---|---|
+| <img src="screenshots/android-tablet/01-lens.png" width="250" alt="Ống kính"> | <img src="screenshots/android-tablet/02-journal.png" width="250" alt="Nhật ký"> | <img src="screenshots/android-tablet/03-collection.png" width="250" alt="Bộ sưu tập"> |
 
-| Bộ sưu tập | Bài viết + Hỏi hướng dẫn viên |
-|---|---|
-| ![Bộ sưu tập](screenshots/android-tablet/03-collection.png) | ![Chi tiết](screenshots/android-tablet/04-discovery.png) |
-
-| Khám phá | Cài đặt |
-|---|---|
-| ![Khám phá](screenshots/android-tablet/05-explore.png) | ![Cài đặt](screenshots/android-tablet/06-settings.png) |
+| Bài viết + Hỏi hướng dẫn viên | Khám phá | Cài đặt |
+|---|---|---|
+| <img src="screenshots/android-tablet/04-discovery.png" width="250" alt="Chi tiết"> | <img src="screenshots/android-tablet/05-explore.png" width="250" alt="Khám phá"> | <img src="screenshots/android-tablet/06-settings.png" width="250" alt="Cài đặt"> |
 
 ### iOS — iPhone
 
-| Nhật ký | Hộ chiếu | Bộ sưu tập |
-|---|---|---|
-| ![Nhật ký](screenshots/ios-phone/01-journal.png) | ![Hộ chiếu](screenshots/ios-phone/02-passport.png) | ![Bộ sưu tập](screenshots/ios-phone/03-collection.png) |
+| Nhật ký | Hộ chiếu | Bộ sưu tập | Chi tiết khám phá |
+|---|---|---|---|
+| <img src="screenshots/ios-phone/01-journal.png" width="180" alt="Nhật ký"> | <img src="screenshots/ios-phone/02-passport.png" width="180" alt="Hộ chiếu"> | <img src="screenshots/ios-phone/03-collection.png" width="180" alt="Bộ sưu tập"> | <img src="screenshots/ios-phone/04-discovery.png" width="180" alt="Chi tiết"> |
 
-| Chi tiết khám phá | Trò chuyện | Khám phá (MapKit) |
+| Trò chuyện | Khám phá (MapKit) | Cài đặt |
 |---|---|---|
-| ![Chi tiết](screenshots/ios-phone/04-discovery.png) | ![Trò chuyện](screenshots/ios-phone/05-chat.png) | ![Khám phá](screenshots/ios-phone/06-explore.png) |
-
-| Cài đặt |
-|---|
-| ![Cài đặt](screenshots/ios-phone/07-settings.png) |
+| <img src="screenshots/ios-phone/05-chat.png" width="180" alt="Trò chuyện"> | <img src="screenshots/ios-phone/06-explore.png" width="180" alt="Khám phá"> | <img src="screenshots/ios-phone/07-settings.png" width="180" alt="Cài đặt"> |
 
 > Màn Ống kính không có trong bộ iOS vì máy ảo iOS không có camera — khung ngắm sẽ trắng.
 
 ### iOS — iPad
 
-| Nhật ký + Hộ chiếu | Bộ sưu tập |
-|---|---|
-| ![Nhật ký](screenshots/ios-ipad/01-journal.png) | ![Bộ sưu tập](screenshots/ios-ipad/02-collection.png) |
-
-| Bài viết + Hỏi hướng dẫn viên | Khám phá | Cài đặt |
+| Nhật ký + Hộ chiếu | Bộ sưu tập | Bài viết + Hỏi hướng dẫn viên |
 |---|---|---|
-| ![Chi tiết](screenshots/ios-ipad/03-discovery.png) | ![Khám phá](screenshots/ios-ipad/04-explore.png) | ![Cài đặt](screenshots/ios-ipad/05-settings.png) |
+| <img src="screenshots/ios-ipad/01-journal.png" width="250" alt="Nhật ký"> | <img src="screenshots/ios-ipad/02-collection.png" width="250" alt="Bộ sưu tập"> | <img src="screenshots/ios-ipad/03-discovery.png" width="250" alt="Chi tiết"> |
+
+| Khám phá | Cài đặt |
+|---|---|
+| <img src="screenshots/ios-ipad/04-explore.png" width="250" alt="Khám phá"> | <img src="screenshots/ios-ipad/05-settings.png" width="250" alt="Cài đặt"> |
 
 > Ảnh Khám phá trên iPad chỉ có 12 quán ăn và không có di tích: Overpass (máy chủ OpenStreetMap)
 > giới hạn số truy vấn theo IP, và sau một ngày chụp ảnh liên tục thì nhánh truy vấn di tích bị
