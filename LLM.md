@@ -90,6 +90,7 @@ src/
 │   │   │                             AccentChip, ShimmerBox, Kicker, BackChip, FillGauge,
 │   │   │                             SectionHeader, SurfaceLuminance
 │   │   ├── window/WindowClass.kt     COMPACT / EXPANDED — measures the window, picks a branch
+│   │   │                             plus rememberCanStackVertically: column or row inside mobile/
 │   │   └── util/                     Log, Formatters, Permissions, DateTimeFormat,
 │   │                                 ErrorMessages, VolumeShutterBus, DetectTimeout
 │   ├── feature/<name>/               ONE PACKAGE PER SCREEN, shared half — see §5
@@ -451,6 +452,16 @@ Split across the branch line, and the split is the point:
   too short for a 392dp master column beside a detail pane. There is no
   `material3-window-size-class` here: that library is Android-only, and measuring is also
   the only answer that stays true in split-screen.
+- **A second question lives in the same file and does not choose a branch.**
+  `rememberCanStackVertically(maxHeight)` is `≥ 500dp` and answers *"can a page stack its
+  parts down the screen"* — both of its answers are `mobile/`. It exists because a phone
+  turned sideways stays COMPACT and the lens cannot draw a column in 384dp: 214dp of chrome
+  leaves the viewfinder a 55dp slot. Only `mobile/feature/camera/LensScreen.kt` reads it;
+  the other nine phone screens either scroll or fit, checked one by one on a Galaxy A16 at
+  832 × 384dp on 05.08.2026. **The two thresholds are deliberately not wired together** —
+  600 is what two panes need and 500 is what one column needs, and coupling them would let
+  a change to the tablet's gate silently re-lay-out the phone. `WindowClassTest` walks both
+  boundaries, including the six points by which an iPad in portrait misses the width gate.
 
 ---
 

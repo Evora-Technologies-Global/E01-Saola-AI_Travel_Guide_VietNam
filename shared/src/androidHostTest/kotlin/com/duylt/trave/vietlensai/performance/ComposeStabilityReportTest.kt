@@ -105,6 +105,14 @@ class ComposeStabilityReportTest {
         "LensHost" to setOf("viewModel"),
         "ViewfinderPane" to setOf("controller"),
         "CameraFrame" to setOf("controller"),
+        // The phone's two arrangements, added 05.08.2026 with the landscape lens. Same
+        // argument as `ViewfinderPane` one line up and no new kind of exception: the
+        // controller is created once per screen and handed down, so the reference
+        // comparison compares the one instance against itself. The zoom driver is *not*
+        // here, and that is the point — it is passed as three lambdas rather than as the
+        // object, which is what the tablet already did and what keeps the frame skippable.
+        "StackedLens" to setOf("controller"),
+        "SideBySideLens" to setOf("controller"),
         "Viewfinder" to setOf("controller"),
         "rememberZoomDriver" to setOf("controller"),
         "ChatRoute" to setOf("viewModel"),

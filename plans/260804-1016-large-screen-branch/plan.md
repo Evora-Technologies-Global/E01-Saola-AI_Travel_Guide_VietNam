@@ -34,6 +34,11 @@ bản.** Thứ được nhân đôi chỉ là tầng sắp đặt — `XScreen.k
 | QĐ-3 | Phạm vi nền tảng | **Mở hết cho cả iPhone lẫn iPad** — iPad ở phase 02, iPhone ở **phase 10, ưu tiên cuối** |
 | QĐ-4 | Ngưỡng và hành vi khi đổi kích thước | Rộng **≥ 840dp** và cao **≥ 600dp**, dùng chung `NavHostController` |
 
+> **Ngưỡng thứ hai, thêm ở phase 10 (05.08.2026).** `rememberCanStackVertically` — cao
+> **≥ 500dp** — không chọn nhánh: cả hai đáp án đều là `mobile/`. Nó chọn *cách sắp đặt bên
+> trong* nhánh điện thoại, và chỉ Lens đọc nó. Cố tình không dùng lại 600 của QĐ-4: 600 là
+> chiều cao hai pane cần, 500 là chiều cao một cột cần.
+
 ---
 
 ## Giai đoạn
@@ -49,7 +54,7 @@ bản.** Thứ được nhân đôi chỉ là tầng sắp đặt — `XScreen.k
 | 07 | Explore — bản đồ full-bleed + hai cụm nổi | ☑ Xong 04.08.2026 · đã thử ở 1664×768dp | [phase-07](phase-07-explore-tablet.md) |
 | 08 | Settings + Chủ quyền + sheet 440 | ☑ Xong 04.08.2026 · đã thử ở 1280×800dp, ja/th, và một lần resize | [phase-08](phase-08-settings-and-sovereignty-tablet.md) |
 | 09 | Kiểm thử và tài liệu | ☑ Xong 04.08.2026 · [verification.md](verification.md) | [phase-09](phase-09-tests-and-docs.md) |
-| 10 | iPhone landscape — mười màn mobile | ☐ Chưa bắt đầu · **ưu tiên cuối** | [phase-10](phase-10-iphone-landscape.md) |
+| 10 | iPhone landscape — mười màn mobile | ☑ Xong 05.08.2026 · **chín trên mười màn không phải sửa** | [phase-10](phase-10-iphone-landscape.md) |
 
 Phase 04–08 độc lập với nhau, có thể chạy song song sau khi 03 xong. 01 → 02 → 03 là chuỗi.
 Phase 10 rời hẳn phần còn lại — nó không đụng nhánh tablet, và hoãn được sang đợt sau.

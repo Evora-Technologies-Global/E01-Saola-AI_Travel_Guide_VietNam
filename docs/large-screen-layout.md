@@ -61,6 +61,48 @@ An iPad in portrait therefore draws the phone's bottom bar. That is the threshol
 specified, not a bug — but it is the single most surprising consequence of it, so anyone
 changing 840 should know they are changing that.
 
+### 2.1 The second question — `rememberCanStackVertically`
+
+```kotlin
+canStack  ⟺  maxHeight ≥ 500.dp
+```
+
+**This does not choose a branch.** Both of its answers are `mobile/`; it chooses an
+arrangement *inside* the phone branch, and it is the answer to a question the table above
+raises and does not settle: a phone held sideways is COMPACT, so what does `mobile/` draw in
+832 × 384 dp?
+
+Nine of the ten phone screens draw exactly what they always did. They were checked one at a
+time on a Galaxy A16 at that size on 05.08.2026, and each survives for a reason worth writing
+down rather than re-deriving:
+
+| Screen | Why it survives sideways |
+|---|---|
+| Journal, Collection, Settings, Sovereignty, Discovery | scroll — a `LazyColumn` or `verticalScroll` does not care how tall the window is |
+| Explore | full-bleed map with floating chrome; the map fills whatever it is given |
+| Passport | `VietnamMapCanvas` fits to `min(width/worldWidth, height/worldHeight)`, so a short window draws Vietnam smaller and complete |
+| Translation | the photograph scales; the overlay is positioned on the image, not on the window |
+| Chat | composer takes `imePadding()` under `adjustResize`, which is what the keyboard needs and landscape needs more |
+
+The lens is the tenth and it fails, badly enough that it is the whole reason this threshold
+exists. Its column needs **214 dp of chrome** before the picture gets a pixel — a 44 dp tool
+row inside `Spacing.sm` (60), a chip row inside `Spacing.md` (68), a 78 dp shutter with
+`Spacing.sm` under it (86) — which in 384 dp leaves the viewfinder a **55 dp letterbox strip
+with the zoom dial floating in it**. 500 is 214 plus 280 for a frame that still reads as a
+viewfinder rather than a slot, rounded.
+
+`mobile/feature/camera/LensScreen.kt` therefore holds two arrangements, `StackedLens` and
+`SideBySideLens`, sharing every component including the frame. The sideways one reaches the
+same conclusion the tablet did — picture takes the width, shutter takes the trailing edge —
+from a different premise: the tablet moves the shutter there because a tablet is held at both
+side edges, the phone because there is no height left. **The phone's control column claims no
+width of its own**; it measures to the 78 dp shutter plus a gutter either side, so there is no
+landscape twin of `PaneWidth.lensPanel` to keep in step with anything.
+
+**500 and 600 are deliberately not the same number and not wired together.** 600 is what two
+panes need; 500 is what one column needs. Coupling them would mean a change to the tablet's
+gate silently re-laying-out a phone. `WindowClassTest` walks both boundaries.
+
 ---
 
 ## 3. One controller, two shells

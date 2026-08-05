@@ -52,19 +52,23 @@
 		<string>arm64</string>
 	</array>
 	<!--
-	  iPhone: portrait only, and only for now.
+	  iPhone: portrait and both landscapes. Unlocked 05.08.2026 by phase 10.
 
-	  The comment that used to sit here said "portrait only, like the Android build", which
-	  was never true — the Android manifest declares no `screenOrientation` and MainActivity
-	  sets no `requestedOrientation`, so Android has always turned. The real reason is that
-	  the ten phone screens are framed for portrait: the viewfinder, the shutter's measured
-	  inset, and every `screenInsetsPadding()` assume the tall edge. Unlocking this is phase
-	  10 of `plans/260804-1016-large-screen-branch/`, and it is the *whole* of that phase —
-	  unlocking it early only buys a long stretch of time in which a sideways iPhone is broken.
+	  It was portrait-only because the ten phone screens were framed for the tall edge, and
+	  the survey that phase opened with found that claim was true of exactly one of them.
+	  Nine either scroll or fit at 832 × 384dp — measured on a Galaxy A16, which is the same
+	  window an iPhone gives sideways — and the lens, which does neither, now arranges as a
+	  row below `StackableMinHeight`. See `mobile/feature/camera/LensScreen.kt`.
+
+	  Upside down is left out, and that is not an oversight carried over: a phone has a right
+	  way up and the earpiece is at the top of it. An iPad below does include it, for the
+	  opposite reason.
 	-->
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<!--
 	  iPad: all four, which is what makes the large-window branch reachable at all.
