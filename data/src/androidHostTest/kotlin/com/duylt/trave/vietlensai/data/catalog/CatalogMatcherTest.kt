@@ -1,6 +1,7 @@
 package com.duylt.trave.vietlensai.data.catalog
 
 import com.duylt.trave.vietlensai.data.local.asset.parseCatalog
+import com.duylt.trave.vietlensai.domain.model.AppLanguage
 import com.duylt.trave.vietlensai.domain.model.CatalogItem
 import com.duylt.trave.vietlensai.domain.model.Discovery
 import com.duylt.trave.vietlensai.domain.model.DiscoveryCategory
@@ -38,7 +39,12 @@ private fun readShippedCatalog(): String {
  */
 class CatalogMatcherTest {
 
-    private val items: List<CatalogItem> = parseCatalog(readShippedCatalog())
+    private val catalogText: String = readShippedCatalog()
+
+    // Vietnamese explicitly, not the host machine's language: these assertions name
+    // Vietnamese aliases and hints, and a CI box in another locale would parse the
+    // board into a different language and fail on text it was never testing.
+    private val items: List<CatalogItem> = parseCatalog(catalogText, AppLanguage.VIETNAMESE)
 
     private fun discovery(
         title: String,
@@ -80,9 +86,39 @@ class CatalogMatcherTest {
     fun `catalogue parses and every entry is complete`() {
         assertTrue("catalogue is empty", items.isNotEmpty())
         assertEquals("duplicate ids", items.size, items.map { it.id }.distinct().size)
-        assertTrue(items.all { it.name.isNotBlank() && it.nameEn.isNotBlank() })
-        assertTrue(items.all { it.hint.isNotBlank() && it.hintEn.isNotBlank() })
+        assertTrue(items.all { it.name.isNotBlank() })
+        assertTrue(items.all { it.hint.isNotBlank() })
         assertTrue(items.all { it.aliases.isNotEmpty() })
+    }
+
+    /**
+     * Every entry is translated into all eight languages, checked by parsing the asset
+     * once per language and requiring the hints to come out different every time.
+     *
+     * Comparing hints rather than names is the point: a proper noun legitimately stays
+     * put — "Phở" is "Phở" in Japanese — but a *description* that repeats across two
+     * languages means one of them fell through `pick()` to English, which is exactly
+     * the silent hole a missing translation would leave. It cannot be caught by reading
+     * the JSON, because a missing key and a key holding the English text look the same
+     * on screen.
+     */
+    @Test
+    fun `every entry is translated into all eight languages`() {
+        val byLanguage = AppLanguage.entries.associateWith { parseCatalog(catalogText, it) }
+
+        byLanguage.values.forEach { parsed ->
+            assertEquals(items.size, parsed.size)
+            assertTrue(parsed.all { it.name.isNotBlank() && it.hint.isNotBlank() })
+        }
+
+        items.indices.forEach { index ->
+            val hints = byLanguage.values.map { it[index].hint }
+            assertEquals(
+                "entry '${items[index].id}' is missing a translation: $hints",
+                AppLanguage.entries.size,
+                hints.distinct().size,
+            )
+        }
     }
 
     /**

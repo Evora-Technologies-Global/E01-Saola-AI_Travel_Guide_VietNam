@@ -73,6 +73,50 @@ object PageSpacing {
 }
 
 /**
+ * How wide each pane is in the large-window arrangement.
+ *
+ * These are **measured positions, not gaps**, so they are deliberately not on the [Spacing]
+ * scale — the same argument `SHUTTER_INSET` and `SheetPeekHeight` are held to. Each one was
+ * read off the tablet wireframe (`Việt Travel Lens - Tablet.dc.html`, 1194 × 834 with a
+ * 1218 px inner frame) rather than chosen, and the frame is what they are measured against:
+ * take [rail] off 1218 and 1114 is left for content, which is the number every other value
+ * here is a fraction of.
+ *
+ * They live in one object rather than beside the five screens that draw them because the
+ * proportions only make sense read together. The guide column is 352 of 1114 — 31.6% — and
+ * that split is a judgement about *both* sides: enough for a question and its answer to be
+ * readable, and not so much that the story beside it drops under a comfortable measure. Move
+ * one of these and the one it sits next to has to be looked at in the same minute.
+ *
+ * `tablet/navigation/TwoPaneScaffold.kt` is the only file that reads [lensPanel], [guide] and
+ * [journalList]; a screen names the width it wants and hands it over.
+ */
+object PaneWidth {
+    /** The navigation rail down the left edge, and the only one of these on every screen. */
+    val rail = 104.dp
+
+    /** The controls beside the viewfinder — modes, recent captures, what the lens found. */
+    val lensPanel = 310.dp
+
+    /** The AI guide, alongside a discovery rather than pushed on top of it. */
+    val guide = 352.dp
+
+    /** The day column of the journal — the master half, which sits at the **start**. */
+    val journalList = 392.dp
+
+    /**
+     * A modal that floats over the arrangement instead of covering it.
+     *
+     * The only one of these five that is not a pane, and so the only one `TwoPaneScaffold`
+     * never sees. Three things read it, and all three are the same decision: the theme picker
+     * and the clear-history confirmation cap themselves here rather than taking Material's
+     * 560 dp, and the sovereignty statement sets its document column to it. `widthIn` in every
+     * case, so a phone — narrower than this to begin with — is left exactly as it was.
+     */
+    val sheet = 440.dp
+}
+
+/**
  * The gutter every screen keeps between the display edge and anything drawn on it.
  *
  * One value for the whole app rather than a per-screen choice: the traveller moves

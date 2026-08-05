@@ -129,12 +129,14 @@ class DesignTokenTest {
             pattern = RAW_INSET,
             rule = "`statusBarsPadding()` is used instead of `screenInsetsPadding()`.",
             cost = """
-                This app hides the system bars, so the status-bar inset is **zero** — and
-                the notch is a hole in the glass that is still there. `statusBarsPadding()`
-                therefore compiles, runs, and pads by nothing, and the control sits under
-                the cutout on every phone that has one. That is not hypothetical: the
+                The notch is a hole in the glass and no bar owns it. Held sideways it is on
+                a side edge, where the status bar reports nothing at all — so
+                `statusBarsPadding()` compiles, runs, pads the wrong edge by the wrong
+                amount, and the control sits under the cutout. That is not hypothetical: the
                 discovery page did exactly this, in five places, until `OverlayHeader` took
-                the inset over.
+                the inset over. It was worse then — the app hid the status bar, so the inset
+                was zero on every rotation — and the bar coming back fixes only the upright
+                case, which is the half that would have hidden the rest.
 
                 `screenInsetsPadding()` unions the display cutout in and is the only correct
                 answer here. On an immersive screen you usually want neither — use
@@ -176,6 +178,48 @@ class DesignTokenTest {
             in about four seconds.
 
             Offenders: $offenders
+            """.trimIndent(),
+        )
+    }
+
+    /**
+     * Each presentation branch still reaches the rules above — and says how many files.
+     *
+     * The count is printed rather than merely asserted because the failure this guards
+     * against is a *silent* one: four of the six rules would report green on a branch that
+     * had quietly stopped being scanned, and a green tick is not evidence of anything.
+     * Read the number, and expect it to move only when files are genuinely added.
+     */
+    @Test
+    fun `every presentation branch is actually scanned`() {
+        val counts = BRANCH_ROOTS.associateWith { branch ->
+            val root = sourceRoot().resolve(branch)
+            if (root.isDirectory) {
+                root.walkTopDown().count { it.isFile && it.extension == "kt" }
+            } else {
+                0
+            }
+        }
+
+        println(
+            "DesignTokenTest scans ${featureFiles().size} feature file(s) — " +
+                counts.entries.joinToString { (branch, count) ->
+                    "${branch.removePrefix("com/duylt/trave/vietlensai/")}: $count"
+                },
+        )
+
+        val empty = POPULATED_BRANCHES.filter { counts[it] == 0 }
+        assertTrue(
+            empty.isEmpty(),
+            """
+            ${empty.size} presentation branch(es) contribute no sources: $empty
+
+            The rules in this class read files, not packages, so a branch that has moved
+            or been renamed does not fail them — it disappears from them. That is how the
+            corner, gap, weight and type-size rules can all pass while enforcing nothing.
+
+            Either fix BRANCH_ROOTS to match the tree, or — if the branch is genuinely
+            gone — remove it from POPULATED_BRANCHES and say why in LLM.md §3.
             """.trimIndent(),
         )
     }
@@ -291,12 +335,41 @@ class DesignTokenTest {
         return trimmed.startsWith("//") || trimmed.startsWith("*") || trimmed.startsWith("/*")
     }
 
-    private fun featureFiles(exceptNamed: List<String> = emptyList()): List<File> =
-        sourceRoot().resolve("com/duylt/trave/vietlensai/feature")
-            .walkTopDown()
-            .filter { it.isFile && it.extension == "kt" }
-            .filterNot { it.name.removeSuffix(".kt") in exceptNamed }
-            .toList()
+    /**
+     * Every Kotlin file in a feature package, across all three presentation branches.
+     *
+     * `:shared` splits its presentation layer in two: `mobile/feature/<name>/` holds what the
+     * phone draws, `tablet/feature/<name>/` what a large window draws, and `feature/<name>/`
+     * keeps what both call — the Contract, the ViewModel, and any composable lifted out so
+     * two branches share one copy. All three are scanned, because a literal radius is a
+     * literal radius wherever it is typed, and the tablet branch is where the temptation is
+     * strongest: it is laying things out afresh.
+     *
+     * **The empty check is the point, not defensive habit.** This used to resolve one
+     * directory. When the screens moved under `mobile/`, four of the six rules in this class
+     * — corner, gap, weight, type size — would have gone on reporting green while reading an
+     * empty list. A gate that passes because it looked at nothing is worse than one that
+     * fails, because a pass is never investigated. `every presentation branch is actually
+     * scanned` is the paired check: this one catches losing *all* the sources, that one
+     * catches losing *a branch*.
+     */
+    private fun featureFiles(exceptNamed: List<String> = emptyList()): List<File> {
+        val files = BRANCH_ROOTS
+            .map { sourceRoot().resolve(it) }
+            .filter { it.isDirectory }
+            .flatMap { root -> root.walkTopDown().filter { it.isFile && it.extension == "kt" } }
+
+        if (files.isEmpty()) {
+            fail(
+                "No feature sources found under any of ${BRANCH_ROOTS.joinToString()}.\n\n" +
+                    "Every rule in this class that scans a feature package just ran on an " +
+                    "empty list and passed. A package has been renamed or moved without " +
+                    "updating BRANCH_ROOTS.",
+            )
+        }
+
+        return files.filterNot { it.name.removeSuffix(".kt") in exceptNamed }
+    }
 
     private fun commonMainFiles(): List<File> =
         sourceRoot().walkTopDown().filter { it.isFile && it.extension == "kt" }.toList()
@@ -314,6 +387,34 @@ class DesignTokenTest {
     }
 
     private companion object {
+        /**
+         * The three feature roots, relative to `commonMain/kotlin`.
+         *
+         * `feature/` is the shared half — Contract, ViewModel, and the composables both
+         * branches call. `mobile/feature/` and `tablet/feature/` are the two arrangements
+         * of them. See `LLM.md` §3.
+         */
+        val BRANCH_ROOTS = listOf(
+            "com/duylt/trave/vietlensai/feature",
+            "com/duylt/trave/vietlensai/mobile/feature",
+            "com/duylt/trave/vietlensai/tablet/feature",
+        )
+
+        /**
+         * The roots that must not be empty today.
+         *
+         * All three, since `tablet/feature/camera/` landed with the tablet lens in phase 04.
+         * Before that the tablet branch was a package with no screens in it, and listing it
+         * here would have failed the build for a directory that was correctly empty. Now it
+         * holds screens, and the entry is what stops those screens from dropping out of the
+         * corner, gap, weight and type-size rules the day someone moves the package.
+         */
+        val POPULATED_BRANCHES = listOf(
+            "com/duylt/trave/vietlensai/feature",
+            "com/duylt/trave/vietlensai/mobile/feature",
+            "com/duylt/trave/vietlensai/tablet/feature",
+        )
+
         /**
          * Files that compute a type size instead of choosing one.
          *
@@ -370,17 +471,41 @@ class DesignTokenTest {
          * title would put a caption on a viewfinder. `SovereigntyScreen` is out because it
          * is a scrolling document whose outermost column already takes the inset; it uses
          * the shared `OverlayIconButton` for its close affordance and needs nothing else.
-         * Both exclusions are decisions, not omissions.
+         * Both exclusions are decisions, not omissions, and both carry to the large window:
+         * `LensTabletScreen.kt` and `SovereigntyTabletScreen.kt` are absent for exactly the
+         * reasons their phone halves are.
+         *
+         * Matched by file *name*, not by path, so the mobile/tablet split costs this list
+         * nothing: `mobile/feature/journal/JournalScreen.kt` matches the same entry the
+         * unsplit file did. A tablet screen carrying a different name is a new entry, added
+         * when that screen is written — `DiscoveryTabletScreen.kt` is the first, and it draws
+         * two headers: an `OverlayHeader` over the story pane and a `PageHeader` at the top of
+         * the guide column. `LensTabletScreen.kt` is absent for the same reason `LensScreen.kt`
+         * is.
+         *
+         * **A pane is a screen for this rule.** `PassportPane.kt` and `CollectionPane.kt` are
+         * not destinations — on a large window they fill the flexible half of the journal —
+         * but each opens with a title band over a page of content, which is precisely what
+         * `PageHeader` exists to standardise. Leaving them out would let the one arrangement
+         * where two titled pages sit side by side be the one arrangement nothing checks, and
+         * a hand-rolled header there is *more* visible than on a phone, not less: the
+         * traveller sees it next to a compliant one rather than four seconds after it.
          */
         val HEADER_OWNERS = listOf(
             "JournalScreen.kt",
+            "JournalTabletScreen.kt",
             "SettingsScreen.kt",
+            "SettingsTabletScreen.kt",
             "CollectionScreen.kt",
+            "CollectionPane.kt",
             "PassportScreen.kt",
+            "PassportPane.kt",
             "ChatScreen.kt",
             "DiscoveryScreen.kt",
+            "DiscoveryTabletScreen.kt",
             "TranslationScreen.kt",
             "ExploreScreen.kt",
+            "ExploreTabletScreen.kt",
         )
     }
 }

@@ -41,12 +41,12 @@ internal fun ChatMessage.toEntity(): ChatMessageEntity = ChatMessageEntity(
 
 // --- Notes ---
 
-internal fun DiscoveryNoteEntity.toDomain(): DiscoveryNote = DiscoveryNote(
+internal fun DiscoveryNoteEntity.toDomain(resolveCapture: (String) -> String): DiscoveryNote = DiscoveryNote(
     discoveryId = discoveryId,
     body = body,
     // A note whose photo files were lost still reads back as a note: decoding is lenient,
     // and the traveller's words are the part that cannot be replaced.
-    photoPaths = Converters.decodeStrings(photoPathsJson),
+    photoPaths = Converters.decodeStrings(photoNamesJson).map(resolveCapture),
     createdAt = Instant.fromEpochMilliseconds(createdAt),
     updatedAt = Instant.fromEpochMilliseconds(updatedAt),
 )
@@ -64,7 +64,8 @@ internal fun DiscoveryNoteEntity.toDomain(): DiscoveryNote = DiscoveryNote(
  */
 internal fun LineTranslationPayload.toEntity(
     id: String,
-    imagePath: String?,
+    /** A capture **name**, never a path — see `CaptureStore.nameOf`. */
+    imageName: String?,
     recognized: List<RecognizedLine>,
     target: TranslateLanguage,
     createdAt: Instant,
@@ -72,7 +73,7 @@ internal fun LineTranslationPayload.toEntity(
     val byIndex = lines.associateBy { it.index }
     return TranslationEntity(
         id = id,
-        imagePath = imagePath,
+        imageName = imageName,
         detectedLanguage = detectedLanguage.trim(),
         targetLanguage = target.code,
         blocksJson = Converters.encodeBlocks(
@@ -97,9 +98,9 @@ internal fun LineTranslationPayload.toEntity(
     )
 }
 
-internal fun TranslationEntity.toDomain(): TranslationResult = TranslationResult(
+internal fun TranslationEntity.toDomain(resolveCapture: (String) -> String): TranslationResult = TranslationResult(
     id = id,
-    imagePath = imagePath,
+    imagePath = imageName?.let(resolveCapture),
     detectedLanguage = detectedLanguage,
     targetLanguage = targetLanguage,
     blocks = Converters.decodeBlocks(blocksJson).map {

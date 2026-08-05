@@ -36,7 +36,11 @@ internal object GeminiSchemas {
         putJsonObject("properties") {
             putJsonObject("recognized") {
                 put(TYPE, BOOLEAN)
-                put("description", "False only when the photo is too unclear to identify anything.")
+                put(
+                    "description",
+                    "False when the photo is too unclear to identify anything, or when its " +
+                        "subject falls outside travel, culture, history and everyday life.",
+                )
             }
             putJsonObject("title") {
                 put(TYPE, STRING)
@@ -99,7 +103,11 @@ internal object GeminiSchemas {
             }
             putJsonObject("notRecognizedHint") {
                 put(TYPE, STRING)
-                put("description", "Only when recognized is false: what to photograph instead.")
+                put(
+                    "description",
+                    "Only when recognized is false: what to photograph instead. Say it as a " +
+                        "helpful suggestion, never as a refusal or a reprimand.",
+                )
             }
         }
         putJsonArray("required") {

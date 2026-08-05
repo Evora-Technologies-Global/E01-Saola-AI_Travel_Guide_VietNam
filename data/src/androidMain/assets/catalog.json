@@ -1,560 +1,1768 @@
 {
-  "version": 1,
-  "note": "The collection catalogue. Aliases are matched case-insensitively against a discovery's title, local name and tags, as whole words, with Vietnamese diacritics kept — see CatalogMatcher.kt for why folding them would be wrong.",
+  "version": 2,
+  "note": "The collection catalogue. `name`/`hint` are the Vietnamese originals; `names`/`hints` carry the other seven languages, keyed by language code, and CatalogAssetSource picks one while parsing. Aliases are matched case-insensitively against a discovery's title, local name and tags, as whole words, with Vietnamese diacritics kept — see CatalogMatcher.kt for why folding them would be wrong. Aliases stay Vietnamese in every language: they are matched against what Gemini returns, not against what the screen shows.",
   "items": [
     {
       "id": "pho",
       "category": "FOOD",
       "name": "Phở",
-      "nameEn": "Phở",
       "hint": "Sợi bánh dẹt màu trắng ngà trong nước dùng trong ninh từ xương, ăn kèm hành lá và rau thơm.",
-      "hintEn": "Flat ivory rice noodles in a clear bone broth, served with spring onion and herbs.",
-      "aliases": ["phở", "phở bò", "phở gà", "bánh phở"]
+      "aliases": [
+        "phở",
+        "phở bò",
+        "phở gà",
+        "bánh phở"
+      ],
+      "names": {
+        "en": "Phở",
+        "ja": "フォー",
+        "ko": "퍼",
+        "zh": "越南河粉",
+        "fr": "Phở",
+        "es": "Phở",
+        "th": "เฝอ"
+      },
+      "hints": {
+        "en": "Flat ivory rice noodles in a clear bone broth, served with spring onion and herbs.",
+        "ja": "骨から取った澄んだスープに、乳白色の平たい米麺。青ねぎと香草を添えて。",
+        "ko": "뼈를 고아 낸 맑은 국물에 담긴 아이보리빛 납작 쌀국수. 파와 향채를 곁들인다.",
+        "zh": "象牙色的扁米粉浸在骨头熬出的清汤里，配上葱花和香草。",
+        "fr": "Nouilles de riz plates, ivoire, dans un bouillon d'os clair, servies avec cébette et herbes fraîches.",
+        "es": "Fideos planos de arroz, color marfil, en un caldo claro de huesos, servidos con cebolleta y hierbas frescas.",
+        "th": "เส้นก๋วยเตี๋ยวแบนสีงาช้างในน้ำซุปกระดูกใส เสิร์ฟพร้อมต้นหอมและผักสมุนไพร"
+      }
     },
     {
       "id": "bun-bo-hue",
       "category": "FOOD",
       "name": "Bún bò Huế",
-      "nameEn": "Bún bò Huế",
       "hint": "Sợi bún tròn to trong nước dùng đỏ cay có sả và mắm ruốc, thường kèm một khoanh giò heo.",
-      "hintEn": "Thick round noodles in a spicy red broth of lemongrass and shrimp paste, usually with a slice of pork knuckle.",
-      "aliases": ["bún bò huế", "bún bò"]
+      "aliases": [
+        "bún bò huế",
+        "bún bò"
+      ],
+      "names": {
+        "en": "Bún bò Huế",
+        "ja": "ブンボーフエ",
+        "ko": "분보후에",
+        "zh": "顺化牛肉粉",
+        "fr": "Bún bò Huế",
+        "es": "Bún bò Huế",
+        "th": "บุ๋นบ่อเว้"
+      },
+      "hints": {
+        "en": "Thick round noodles in a spicy red broth of lemongrass and shrimp paste, usually with a slice of pork knuckle.",
+        "ja": "レモングラスとエビの発酵調味料が効いた赤く辛いスープに、太い丸麺。豚足の輪切りが一枚入ることが多い。",
+        "ko": "레몬그라스와 새우젓으로 낸 맵고 붉은 국물에 굵은 원형 국수. 보통 돼지 족 한 토막이 올라간다.",
+        "zh": "粗圆米粉泡在香茅与虾酱调出的红辣汤中，通常还有一块猪脚。",
+        "fr": "Grosses nouilles rondes dans un bouillon rouge et piquant à la citronnelle et à la pâte de crevette, souvent avec une rondelle de jarret de porc.",
+        "es": "Fideos redondos y gruesos en un caldo rojo y picante de citronela y pasta de gamba, casi siempre con una rodaja de codillo de cerdo.",
+        "th": "เส้นกลมหนาในน้ำซุปแดงเผ็ดกลิ่นตะไคร้และกะปิ มักมีขาหมูหั่นชิ้นหนึ่ง"
+      }
     },
     {
       "id": "banh-mi",
       "category": "FOOD",
       "name": "Bánh mì",
-      "nameEn": "Bánh mì",
       "hint": "Ổ bánh vỏ giòn ruột rỗng, rạch dọc và nhồi pate, thịt, đồ chua và rau mùi.",
-      "hintEn": "A crisp hollow baguette split lengthways and filled with pâté, meat, pickles and coriander.",
-      "aliases": ["bánh mì", "banh mi"]
+      "aliases": [
+        "bánh mì",
+        "banh mi"
+      ],
+      "names": {
+        "en": "Bánh mì",
+        "ja": "バインミー",
+        "ko": "반미",
+        "zh": "越式法包",
+        "fr": "Bánh mì",
+        "es": "Bánh mì",
+        "th": "บั๋นหมี่"
+      },
+      "hints": {
+        "en": "A crisp hollow baguette split lengthways and filled with pâté, meat, pickles and coriander.",
+        "ja": "皮が薄く中が空洞のバゲットを横に割り、パテ・肉・なます・パクチーを詰めたもの。",
+        "ko": "겉이 바삭하고 속이 빈 바게트를 길게 갈라 파테, 고기, 절임채소, 고수를 채운 것.",
+        "zh": "外脆内空的小法棍纵向剖开，夹入肝酱、肉、腌菜和香菜。",
+        "fr": "Une baguette croustillante et creuse, fendue dans la longueur et garnie de pâté, de viande, de légumes au vinaigre et de coriandre.",
+        "es": "Una baguette crujiente y hueca, abierta a lo largo y rellena de paté, carne, encurtidos y cilantro.",
+        "th": "ขนมปังบาแก็ตเปลือกกรอบไส้กลวง ผ่าตามยาวแล้วยัดตับบด เนื้อ ผักดอง และผักชี"
+      }
     },
     {
       "id": "banh-xeo",
       "category": "FOOD",
       "name": "Bánh xèo",
-      "nameEn": "Bánh xèo",
       "hint": "Bánh tráng mỏng vàng nghệ gập đôi hình bán nguyệt, nhân tôm thịt giá, cuốn với rau sống.",
-      "hintEn": "A thin turmeric-yellow crêpe folded in half over prawn, pork and beansprouts, eaten wrapped in leaves.",
-      "aliases": ["bánh xèo", "bánh khoái"]
+      "aliases": [
+        "bánh xèo",
+        "bánh khoái"
+      ],
+      "names": {
+        "en": "Bánh xèo",
+        "ja": "バインセオ",
+        "ko": "반쎄오",
+        "zh": "越式煎饼",
+        "fr": "Bánh xèo",
+        "es": "Bánh xèo",
+        "th": "บั๋นแส่ว"
+      },
+      "hints": {
+        "en": "A thin turmeric-yellow crêpe folded in half over prawn, pork and beansprouts, eaten wrapped in leaves.",
+        "ja": "ターメリックで黄色く色づいた薄い生地を二つ折りにし、エビ・豚肉・もやしを包む。葉野菜で巻いて食べる。",
+        "ko": "강황으로 노랗게 물든 얇은 부침을 반으로 접어 새우, 돼지고기, 숙주를 감싼다. 잎채소에 싸서 먹는다.",
+        "zh": "姜黄染成金黄的薄煎饼对折，包住虾仁、猪肉和豆芽，用叶菜卷着吃。",
+        "fr": "Une crêpe fine, jaune de curcuma, repliée sur des crevettes, du porc et des germes de soja ; on la mange roulée dans des feuilles.",
+        "es": "Una crepe fina y amarilla de cúrcuma, doblada sobre gambas, cerdo y brotes de soja; se come envuelta en hojas.",
+        "th": "แป้งทอดแผ่นบางสีเหลืองขมิ้น พับครึ่งทับกุ้ง หมู และถั่วงอก กินโดยห่อใบไม้"
+      }
     },
     {
       "id": "goi-cuon",
       "category": "FOOD",
       "name": "Gỏi cuốn",
-      "nameEn": "Fresh spring rolls",
       "hint": "Cuốn bánh tráng trong suốt nhìn rõ tôm hồng và rau bên trong, ăn nguội chấm tương.",
-      "hintEn": "Translucent rice-paper rolls showing the pink prawn inside, served cold with a dipping sauce.",
-      "aliases": ["gỏi cuốn", "nem cuốn", "summer roll", "fresh spring roll"]
+      "aliases": [
+        "gỏi cuốn",
+        "nem cuốn",
+        "summer roll",
+        "fresh spring roll"
+      ],
+      "names": {
+        "en": "Fresh spring rolls",
+        "ja": "生春巻き",
+        "ko": "월남쌈",
+        "zh": "越南春卷（生）",
+        "fr": "Rouleaux de printemps frais",
+        "es": "Rollitos frescos",
+        "th": "ปอเปี๊ยะสด"
+      },
+      "hints": {
+        "en": "Translucent rice-paper rolls showing the pink prawn inside, served cold with a dipping sauce.",
+        "ja": "半透明のライスペーパー越しにエビのピンクが透ける、冷たいまま食べる巻きもの。つけだれを添えて。",
+        "ko": "반투명한 라이스페이퍼 너머로 분홍빛 새우가 비치는 롤. 차갑게, 찍어 먹는 소스와 함께.",
+        "zh": "半透明的米纸里透出粉色虾仁，凉着吃，配一碟蘸酱。",
+        "fr": "Rouleaux de galette de riz translucide laissant voir la crevette rose ; servis froids avec une sauce.",
+        "es": "Rollos de papel de arroz translúcido que dejan ver la gamba rosada; se toman fríos con una salsa para mojar.",
+        "th": "แผ่นแป้งข้าวใสจนเห็นกุ้งสีชมพูข้างใน กินเย็น ๆ คู่กับน้ำจิ้ม"
+      }
     },
     {
       "id": "cao-lau",
       "category": "FOOD",
       "name": "Cao lầu",
-      "nameEn": "Cao lầu",
       "hint": "Sợi mì dày màu nâu ngà, rất ít nước dùng, rắc tóp mỡ giòn — chỉ Hội An mới có.",
-      "hintEn": "Thick brownish noodles with barely any broth and crisp pork crackling — found only in Hội An.",
-      "aliases": ["cao lầu"]
+      "aliases": [
+        "cao lầu"
+      ],
+      "names": {
+        "en": "Cao lầu",
+        "ja": "カオラウ",
+        "ko": "까오러우",
+        "zh": "高楼面",
+        "fr": "Cao lầu",
+        "es": "Cao lầu",
+        "th": "เกาเหลิ่ว"
+      },
+      "hints": {
+        "en": "Thick brownish noodles with barely any broth and crisp pork crackling — found only in Hội An.",
+        "ja": "スープをほとんど張らない茶色い太麺に、カリカリの豚皮。Hội An でしか出会えない。",
+        "ko": "국물이 거의 없는 굵고 갈색빛 도는 면에 바삭한 돼지껍질. Hội An에서만 만날 수 있다.",
+        "zh": "几乎不带汤的褐色粗面，配酥脆猪皮 — 只在 Hội An 才吃得到。",
+        "fr": "Nouilles épaisses et brunes, presque sans bouillon, avec des couennes de porc croustillantes — introuvables ailleurs qu'à Hội An.",
+        "es": "Fideos gruesos y parduzcos con apenas caldo y cortezas de cerdo crujientes: solo se encuentran en Hội An.",
+        "th": "เส้นหนาสีน้ำตาลแทบไม่มีน้ำซุป โรยแคบหมูกรอบ — หากินได้เฉพาะที่ Hội An"
+      }
     },
     {
       "id": "mi-quang",
       "category": "FOOD",
       "name": "Mì Quảng",
-      "nameEn": "Mì Quảng",
       "hint": "Sợi mì bản to màu vàng nghệ chan xăm xắp nước, phủ đậu phộng rang và bánh tráng mè bẻ vụn.",
-      "hintEn": "Wide turmeric noodles in just a splash of broth, topped with roasted peanuts and shards of sesame rice cracker.",
-      "aliases": ["mì quảng"]
+      "aliases": [
+        "mì quảng"
+      ],
+      "names": {
+        "en": "Mì Quảng",
+        "ja": "ミークアン",
+        "ko": "미꽝",
+        "zh": "广南面",
+        "fr": "Mì Quảng",
+        "es": "Mì Quảng",
+        "th": "หมี่กว๋าง"
+      },
+      "hints": {
+        "en": "Wide turmeric noodles in just a splash of broth, topped with roasted peanuts and shards of sesame rice cracker.",
+        "ja": "ターメリック色の幅広麺をスープに少しだけ浸し、炒った落花生と割った胡麻煎餅をのせる。",
+        "ko": "강황빛 넓적면을 국물에 살짝만 적시고, 볶은 땅콩과 깨 라이스크래커 조각을 올린다.",
+        "zh": "姜黄色的宽面只浇一点点汤，撒上烤花生和掰碎的芝麻米饼。",
+        "fr": "Larges nouilles au curcuma dans un fond de bouillon, garnies de cacahuètes grillées et d'éclats de galette de riz au sésame.",
+        "es": "Fideos anchos de cúrcuma con un chorro de caldo, coronados con cacahuetes tostados y trozos de galleta de arroz con sésamo.",
+        "th": "เส้นแบนสีขมิ้นราดน้ำซุปเพียงเล็กน้อย โรยถั่วลิสงคั่วและข้าวเกรียบงาหักเป็นชิ้น"
+      }
     },
     {
       "id": "bun-cha",
       "category": "FOOD",
       "name": "Bún chả",
-      "nameEn": "Bún chả",
       "hint": "Chả viên và thịt nướng thả trong bát nước mắm chua ngọt, bún trắng để riêng.",
-      "hintEn": "Grilled pork patties floating in a bowl of sweet-sour fish sauce, with the white noodles served separately.",
-      "aliases": ["bún chả"]
+      "aliases": [
+        "bún chả"
+      ],
+      "names": {
+        "en": "Bún chả",
+        "ja": "ブンチャー",
+        "ko": "분짜",
+        "zh": "烤肉米线",
+        "fr": "Bún chả",
+        "es": "Bún chả",
+        "th": "บุ๋นจ๋า"
+      },
+      "hints": {
+        "en": "Grilled pork patties floating in a bowl of sweet-sour fish sauce, with the white noodles served separately.",
+        "ja": "甘酸っぱいヌクマムの椀に浮かぶ炭火焼きの豚肉団子。白い麺は別皿で。",
+        "ko": "새콤달콤한 느억맘 국물에 뜬 숯불 돼지고기 완자. 흰 국수는 따로 나온다.",
+        "zh": "炭烤猪肉饼浮在酸甜鱼露汤里，白米线另装一盘。",
+        "fr": "Boulettes de porc grillées au charbon flottant dans un bol de nuoc-mâm aigre-doux, les nouilles blanches servies à part.",
+        "es": "Hamburguesitas de cerdo a la brasa flotando en un cuenco de salsa de pescado agridulce, con los fideos blancos aparte.",
+        "th": "หมูปิ้งเตาถ่านลอยอยู่ในชามน้ำปลาหวานอมเปรี้ยว ส่วนเส้นขาวเสิร์ฟแยกจาน"
+      }
     },
     {
       "id": "com-tam",
       "category": "FOOD",
       "name": "Cơm tấm",
-      "nameEn": "Cơm tấm",
       "hint": "Cơm nấu từ hạt gạo gãy, ăn với sườn nướng, bì và chả trứng, chan mỡ hành.",
-      "hintEn": "Rice cooked from broken grains, served with grilled pork chop, shredded skin and an egg meatloaf.",
-      "aliases": ["cơm tấm"]
+      "aliases": [
+        "cơm tấm"
+      ],
+      "names": {
+        "en": "Cơm tấm",
+        "ja": "コムタム",
+        "ko": "껌떰",
+        "zh": "碎米饭",
+        "fr": "Cơm tấm",
+        "es": "Cơm tấm",
+        "th": "ข้าวหัก"
+      },
+      "hints": {
+        "en": "Rice cooked from broken grains, served with grilled pork chop, shredded skin and an egg meatloaf.",
+        "ja": "砕き米で炊いたご飯に、焼き豚のロース肉、細切りの豚皮、卵入りの蒸し肉を添えて。",
+        "ko": "싸라기로 지은 밥에 구운 돼지갈비, 채 썬 돼지껍질, 달걀을 넣은 고기찜을 곁들인다.",
+        "zh": "用碎米煮的饭，配烤猪排、猪皮丝和一块蒸蛋肉饼。",
+        "fr": "Riz de brisures, servi avec une côtelette de porc grillée, de la couenne en filaments et un pain de viande à l'œuf.",
+        "es": "Arroz de grano partido, servido con chuleta de cerdo a la brasa, corteza en tiras y un pastel de carne con huevo.",
+        "th": "ข้าวหุงจากปลายข้าว เสิร์ฟกับสันคอหมูย่าง หนังหมูฝอย และหมูสับอบไข่"
+      }
     },
     {
       "id": "banh-chung",
       "category": "FOOD",
       "name": "Bánh chưng",
-      "nameEn": "Bánh chưng",
       "hint": "Khối vuông gói lá dong buộc lạt; cắt ra thấy nếp xanh, nhân đậu xanh và thịt mỡ ở giữa.",
-      "hintEn": "A square parcel bound in dong leaves; cut open it shows green sticky rice around mung bean and pork.",
-      "aliases": ["bánh chưng", "bánh tét"]
+      "aliases": [
+        "bánh chưng",
+        "bánh tét"
+      ],
+      "names": {
+        "en": "Bánh chưng",
+        "ja": "バインチュン",
+        "ko": "반쯩",
+        "zh": "方形粽",
+        "fr": "Bánh chưng",
+        "es": "Bánh chưng",
+        "th": "บั๋นจึง"
+      },
+      "hints": {
+        "en": "A square parcel bound in dong leaves; cut open it shows green sticky rice around mung bean and pork.",
+        "ja": "ドンの葉で包んだ四角い包み。切ると、緑のもち米が緑豆と豚肉を囲んでいる。",
+        "ko": "동잎으로 싼 네모난 꾸러미. 잘라 보면 초록빛 찹쌀이 녹두와 돼지고기를 감싸고 있다.",
+        "zh": "用冬叶包成的方形粽子；切开可见绿色糯米裹着绿豆和猪肉。",
+        "fr": "Un paquet carré lié dans des feuilles de dong ; ouvert, il montre du riz gluant vert autour de haricot mungo et de porc.",
+        "es": "Un paquete cuadrado atado en hojas de dong; al abrirlo muestra arroz glutinoso verde alrededor de judía mungo y cerdo.",
+        "th": "ห่อสี่เหลี่ยมมัดด้วยใบดง ผ่าออกจะเห็นข้าวเหนียวสีเขียวห่อถั่วเขียวและหมู"
+      }
     },
     {
       "id": "che",
       "category": "FOOD",
       "name": "Chè",
-      "nameEn": "Chè",
       "hint": "Cốc nhiều lớp màu gồm đậu, thạch và nước cốt dừa, ăn lạnh bằng thìa dài.",
-      "hintEn": "A layered glass of beans, jelly and coconut cream, eaten cold with a long spoon.",
-      "aliases": ["chè", "chè ba màu", "chè đậu"]
+      "aliases": [
+        "chè",
+        "chè ba màu",
+        "chè đậu"
+      ],
+      "names": {
+        "en": "Chè",
+        "ja": "チェー",
+        "ko": "쩨",
+        "zh": "越式甜汤",
+        "fr": "Chè",
+        "es": "Chè",
+        "th": "เจ"
+      },
+      "hints": {
+        "en": "A layered glass of beans, jelly and coconut cream, eaten cold with a long spoon.",
+        "ja": "豆やゼリー、ココナッツクリームを層にしたグラス。長いスプーンで冷たいまま。",
+        "ko": "콩과 젤리, 코코넛 크림을 층층이 담은 잔. 긴 숟가락으로 차갑게 떠먹는다.",
+        "zh": "豆子、凉粉和椰浆分层装在玻璃杯里，用长勺凉着吃。",
+        "fr": "Un verre en couches de haricots, de gelées et de crème de coco, mangé froid à la longue cuillère.",
+        "es": "Un vaso por capas de legumbres, gelatinas y crema de coco, que se come frío con cuchara larga.",
+        "th": "แก้วขนมหวานเรียงเป็นชั้นของถั่ว วุ้น และกะทิ กินเย็นด้วยช้อนด้ามยาว"
+      }
     },
     {
       "id": "ca-phe-sua-da",
       "category": "FOOD",
       "name": "Cà phê sữa đá",
-      "nameEn": "Vietnamese iced coffee",
       "hint": "Phin nhôm đặt trên miệng ly, cà phê nhỏ từng giọt xuống lớp sữa đặc trắng ngà.",
-      "hintEn": "An aluminium filter perched on the glass, dripping coffee onto a layer of condensed milk.",
-      "aliases": ["cà phê sữa đá", "cà phê phin", "cà phê đá", "cà phê trứng"]
+      "aliases": [
+        "cà phê sữa đá",
+        "cà phê phin",
+        "cà phê đá",
+        "cà phê trứng"
+      ],
+      "names": {
+        "en": "Vietnamese iced coffee",
+        "ja": "ベトナム式アイスコーヒー",
+        "ko": "베트남식 아이스커피",
+        "zh": "越式冰咖啡",
+        "fr": "Café glacé vietnamien",
+        "es": "Café vietnamita con hielo",
+        "th": "กาแฟเย็นเวียดนาม"
+      },
+      "hints": {
+        "en": "An aluminium filter perched on the glass, dripping coffee onto a layer of condensed milk.",
+        "ja": "グラスに載せたアルミのフィルターから、コンデンスミルクの層へコーヒーが滴り落ちる。",
+        "ko": "잔 위에 얹은 알루미늄 필터에서 연유 층 위로 커피가 한 방울씩 떨어진다.",
+        "zh": "铝制滴滤壶架在杯口，咖啡一滴滴落到底下的炼乳上。",
+        "fr": "Un filtre en aluminium posé sur le verre, laissant tomber le café goutte à goutte sur une couche de lait concentré.",
+        "es": "Un filtro de aluminio apoyado en el vaso que gotea café sobre una capa de leche condensada.",
+        "th": "หม้อกรองอะลูมิเนียมวางบนปากแก้ว หยดกาแฟลงบนชั้นนมข้นหวาน"
+      }
     },
     {
       "id": "hu-tieu",
       "category": "FOOD",
       "name": "Hủ tiếu",
-      "nameEn": "Hủ tiếu",
       "hint": "Sợi nhỏ dai, nước dùng trong ngọt vị xương heo; ăn khô thì nước lèo để chén riêng.",
-      "hintEn": "Thin chewy noodles in a clear pork broth; the dry version keeps the broth in a separate bowl.",
-      "aliases": ["hủ tiếu", "hủ tíu"]
+      "aliases": [
+        "hủ tiếu",
+        "hủ tíu"
+      ],
+      "names": {
+        "en": "Hủ tiếu",
+        "ja": "フーティウ",
+        "ko": "후띠에우",
+        "zh": "粿条",
+        "fr": "Hủ tiếu",
+        "es": "Hủ tiếu",
+        "th": "ฮูเตียว"
+      },
+      "hints": {
+        "en": "Thin chewy noodles in a clear pork broth; the dry version keeps the broth in a separate bowl.",
+        "ja": "澄んだ豚のスープに、細くこしのある麺。汁なし版はスープを別椀で出す。",
+        "ko": "맑은 돼지 국물에 가늘고 쫄깃한 면. 비빔으로 먹을 땐 국물을 따로 낸다.",
+        "zh": "清甜的猪骨汤配细而弹牙的粉条；干拌版把汤另盛一碗。",
+        "fr": "Nouilles fines et élastiques dans un bouillon de porc clair ; la version sèche garde le bouillon dans un bol à part.",
+        "es": "Fideos finos y elásticos en un caldo claro de cerdo; la versión seca sirve el caldo en un cuenco aparte.",
+        "th": "เส้นเล็กเหนียวนุ่มในน้ำซุปหมูใส ส่วนแบบแห้งจะแยกน้ำซุปไว้อีกถ้วย"
+      }
     },
     {
       "id": "banh-cuon",
       "category": "FOOD",
       "name": "Bánh cuốn",
-      "nameEn": "Bánh cuốn",
       "hint": "Lá bột gạo tráng mỏng như tờ giấy, cuốn nhân mộc nhĩ thịt băm, rắc hành phi.",
-      "hintEn": "Paper-thin steamed rice sheets rolled around minced pork and wood-ear mushroom, scattered with fried shallot.",
-      "aliases": ["bánh cuốn"]
+      "aliases": [
+        "bánh cuốn"
+      ],
+      "names": {
+        "en": "Bánh cuốn",
+        "ja": "バインクオン",
+        "ko": "반꾸온",
+        "zh": "越式肠粉",
+        "fr": "Bánh cuốn",
+        "es": "Bánh cuốn",
+        "th": "บั๋นก๋วน"
+      },
+      "hints": {
+        "en": "Paper-thin steamed rice sheets rolled around minced pork and wood-ear mushroom, scattered with fried shallot.",
+        "ja": "紙のように薄く蒸した米の皮で豚ひき肉ときくらげを巻き、揚げエシャロットを散らす。",
+        "ko": "종이처럼 얇게 쪄낸 쌀피에 다진 돼지고기와 목이버섯을 말고, 튀긴 샬롯을 뿌린다.",
+        "zh": "薄如纸的蒸米皮卷着猪肉末和木耳，撒上炸干葱。",
+        "fr": "Feuilles de riz vapeur, fines comme du papier, roulées sur du porc haché et du champignon noir, parsemées d'échalote frite.",
+        "es": "Láminas de arroz al vapor, finas como el papel, enrolladas sobre carne picada de cerdo y oreja de Judas, con chalota frita por encima.",
+        "th": "แผ่นแป้งข้าวนึ่งบางเฉียบม้วนหมูสับกับเห็ดหูหนู โรยหอมเจียว"
+      }
     },
     {
       "id": "nem-ran",
       "category": "FOOD",
       "name": "Nem rán",
-      "nameEn": "Fried spring rolls",
       "hint": "Cuốn chiên vàng giòn vỏ bánh đa nem, cắt khúc, chấm nước mắm chua ngọt.",
-      "hintEn": "Golden deep-fried rolls in rice-paper wrappers, cut into lengths and dipped in sweet-sour fish sauce.",
-      "aliases": ["nem rán", "chả giò", "nem cua bể"]
+      "aliases": [
+        "nem rán",
+        "chả giò",
+        "nem cua bể"
+      ],
+      "names": {
+        "en": "Fried spring rolls",
+        "ja": "揚げ春巻き",
+        "ko": "짜조",
+        "zh": "炸春卷",
+        "fr": "Nems frits",
+        "es": "Rollitos fritos",
+        "th": "ปอเปี๊ยะทอด"
+      },
+      "hints": {
+        "en": "Golden deep-fried rolls in rice-paper wrappers, cut into lengths and dipped in sweet-sour fish sauce.",
+        "ja": "ライスペーパーで巻いて揚げた黄金色の巻きもの。食べやすく切り、甘酸っぱいヌクマムにつける。",
+        "ko": "라이스페이퍼로 말아 튀긴 황금빛 롤. 먹기 좋게 썰어 새콤달콤한 느억맘에 찍는다.",
+        "zh": "米纸包好炸至金黄的卷，切段后蘸酸甜鱼露。",
+        "fr": "Rouleaux dorés en galette de riz, frits, coupés en tronçons et trempés dans du nuoc-mâm aigre-doux.",
+        "es": "Rollos dorados de papel de arroz, fritos, cortados en trozos y mojados en salsa de pescado agridulce.",
+        "th": "ม้วนแป้งข้าวทอดจนเหลืองกรอบ หั่นเป็นท่อนแล้วจิ้มน้ำปลาหวานอมเปรี้ยว"
+      }
     },
     {
       "id": "banh-beo",
       "category": "FOOD",
       "name": "Bánh bèo",
-      "nameEn": "Bánh bèo",
       "hint": "Từng chén nhỏ bột gạo trắng lõm giữa, rắc tôm chấy màu cam và tóp mỡ.",
-      "hintEn": "Small saucers of white rice batter dimpled in the middle, topped with orange dried shrimp and crackling.",
-      "aliases": ["bánh bèo"]
+      "aliases": [
+        "bánh bèo"
+      ],
+      "names": {
+        "en": "Bánh bèo",
+        "ja": "バインベオ",
+        "ko": "반베오",
+        "zh": "水浮饼",
+        "fr": "Bánh bèo",
+        "es": "Bánh bèo",
+        "th": "บั๋นแบ่ว"
+      },
+      "hints": {
+        "en": "Small saucers of white rice batter dimpled in the middle, topped with orange dried shrimp and crackling.",
+        "ja": "中央がくぼんだ白い米生地の小皿。橙色の干しエビと揚げた豚皮をのせる。",
+        "ko": "가운데가 옴폭 들어간 흰 쌀 반죽의 작은 접시들. 주황빛 마른 새우와 바삭한 돼지껍질을 올린다.",
+        "zh": "一小碟一小碟中央凹陷的白米浆，上面放橙色虾松和炸猪皮。",
+        "fr": "De petites soucoupes de pâte de riz blanche creusées au centre, garnies de crevette séchée orange et de couenne croustillante.",
+        "es": "Platitos de masa de arroz blanca hundidos en el centro, con gamba seca anaranjada y corteza crujiente encima.",
+        "th": "ถ้วยเล็ก ๆ ของแป้งข้าวสีขาวที่ยุบตรงกลาง หน้าโรยกุ้งแห้งสีส้มและแคบหมู"
+      }
     },
-
     {
       "id": "dinh-lang",
       "category": "ARCHITECTURE",
       "name": "Đình làng",
-      "nameEn": "Village communal house",
       "hint": "Nhà chung của làng: mái ngói lớn xoè rộng gần chạm đất, sân gạch phía trước, cột gỗ để mộc.",
-      "hintEn": "The village's shared hall: a broad tiled roof sweeping almost to the ground, a brick forecourt, bare timber columns.",
-      "aliases": ["đình làng", "ngôi đình", "communal house"]
+      "aliases": [
+        "đình làng",
+        "ngôi đình",
+        "communal house"
+      ],
+      "names": {
+        "en": "Village communal house",
+        "ja": "村の共同集会所（đình）",
+        "ko": "마을 공동가옥(đình)",
+        "zh": "村社communal house（đình）",
+        "fr": "Maison communale du village",
+        "es": "Casa comunal del pueblo",
+        "th": "ศาลาประชาคมหมู่บ้าน"
+      },
+      "hints": {
+        "en": "The village's shared hall: a broad tiled roof sweeping almost to the ground, a brick forecourt, bare timber columns.",
+        "ja": "村みんなの広間。瓦屋根が地面近くまで大きく張り出し、煉瓦敷きの前庭と、塗らないままの木の柱が並ぶ。",
+        "ko": "마을 사람 모두의 큰 마루. 기와지붕이 땅 가까이까지 넓게 내려오고, 벽돌 앞마당과 칠하지 않은 나무 기둥이 있다.",
+        "zh": "全村共用的大厅：宽阔的瓦顶几乎垂到地面，青砖前庭，不上漆的木柱。",
+        "fr": "La grande salle commune du village : une large toiture de tuiles descendant presque au sol, un parvis de brique, des colonnes de bois nu.",
+        "es": "La sala compartida del pueblo: un ancho tejado de tejas que baja casi hasta el suelo, un patio de ladrillo y columnas de madera sin tratar.",
+        "th": "หอรวมของทั้งหมู่บ้าน หลังคากระเบื้องกว้างลาดลงมาเกือบถึงพื้น ลานอิฐด้านหน้า และเสาไม้เปลือย"
+      }
     },
     {
       "id": "cong-tam-quan",
       "category": "ARCHITECTURE",
       "name": "Cổng tam quan",
-      "nameEn": "Three-entrance gate",
       "hint": "Cổng chùa ba lối: một lối lớn ở giữa, hai lối nhỏ hai bên, nhiều nơi có gác chuông bên trên.",
-      "hintEn": "A pagoda gate with three openings — one large in the middle, two small at the sides — often with a bell tower above.",
-      "aliases": ["tam quan", "cổng tam quan"]
+      "aliases": [
+        "tam quan",
+        "cổng tam quan"
+      ],
+      "names": {
+        "en": "Three-entrance gate",
+        "ja": "三門",
+        "ko": "삼문",
+        "zh": "三关门",
+        "fr": "Porte à trois passages",
+        "es": "Puerta de tres vanos",
+        "th": "ประตูสามช่อง"
+      },
+      "hints": {
+        "en": "A pagoda gate with three openings — one large in the middle, two small at the sides — often with a bell tower above.",
+        "ja": "中央が大きく両脇が小さい三つの入り口を持つ寺の門。上に鐘楼を載せることが多い。",
+        "ko": "가운데가 크고 양옆이 작은 세 개의 문으로 이루어진 절 입구. 위에 종루를 얹는 경우가 많다.",
+        "zh": "中间大、两侧小的三个门洞组成的寺门，上方常设钟楼。",
+        "fr": "Une porte de pagode à trois ouvertures — une grande au centre, deux petites sur les côtés — souvent surmontée d'un beffroi.",
+        "es": "Una puerta de pagoda con tres aberturas —una grande en el centro y dos pequeñas a los lados—, a menudo con campanario encima.",
+        "th": "ประตูวัดที่มีช่องทางเข้าสามช่อง — ตรงกลางใหญ่ สองข้างเล็ก — มักมีหอระฆังอยู่ด้านบน"
+      }
     },
     {
       "id": "dau-dao",
       "category": "ARCHITECTURE",
       "name": "Đầu đao",
-      "nameEn": "Upswept roof corner",
       "hint": "Bốn góc mái cong vút lên như mũi thuyền, đầu đao thường chạm hình rồng hoặc phượng.",
-      "hintEn": "Roof corners curving up like the prow of a boat, usually carved into a dragon or phoenix.",
-      "aliases": ["đầu đao", "mái đao", "mái cong"]
+      "aliases": [
+        "đầu đao",
+        "mái đao",
+        "mái cong"
+      ],
+      "names": {
+        "en": "Upswept roof corner",
+        "ja": "反り上がった隅棟",
+        "ko": "치켜 올라간 지붕 모서리",
+        "zh": "翘起的屋角",
+        "fr": "Angle de toit relevé",
+        "es": "Alero curvado hacia arriba",
+        "th": "ปลายจั่วเชิดขึ้น"
+      },
+      "hints": {
+        "en": "Roof corners curving up like the prow of a boat, usually carved into a dragon or phoenix.",
+        "ja": "舟の舳先のように反り上がった屋根の隅。多くは龍や鳳凰の彫りになっている。",
+        "ko": "뱃머리처럼 위로 휜 지붕 모서리. 대개 용이나 봉황으로 조각된다.",
+        "zh": "像船头一样向上翘起的屋角，多雕成龙或凤。",
+        "fr": "Des angles de toit qui se relèvent comme une proue de barque, généralement sculptés en dragon ou en phénix.",
+        "es": "Esquinas del tejado que se curvan hacia arriba como la proa de una barca, normalmente talladas como dragón o fénix.",
+        "th": "มุมหลังคาโค้งเชิดขึ้นเหมือนหัวเรือ ส่วนใหญ่แกะสลักเป็นมังกรหรือหงส์"
+      }
     },
     {
       "id": "ngoi-am-duong",
       "category": "ARCHITECTURE",
       "name": "Ngói âm dương",
-      "nameEn": "Yin-yang roof tiles",
       "hint": "Hàng ngói úp ngửa xen kẽ nhau thành sóng — thường gặp ở Hội An và vùng núi phía Bắc.",
-      "hintEn": "Tiles laid alternately face-up and face-down into waves — common in Hội An and the northern uplands.",
-      "aliases": ["ngói âm dương", "ngói ống", "ngói vảy cá"]
+      "aliases": [
+        "ngói âm dương",
+        "ngói ống",
+        "ngói vảy cá"
+      ],
+      "names": {
+        "en": "Yin-yang roof tiles",
+        "ja": "陰陽瓦",
+        "ko": "음양 기와",
+        "zh": "阴阳瓦",
+        "fr": "Tuiles yin-yang",
+        "es": "Tejas yin-yang",
+        "th": "กระเบื้องหยินหยาง"
+      },
+      "hints": {
+        "en": "Tiles laid alternately face-up and face-down into waves — common in Hội An and the northern uplands.",
+        "ja": "表向きと裏向きを交互に葺いて波をつくる瓦。Hội An や北部の山地でよく見かける。",
+        "ko": "앞뒤를 번갈아 얹어 물결을 이루는 기와. Hội An과 북부 산간에서 흔히 보인다.",
+        "zh": "一正一反交替铺成波浪的屋瓦 — 在 Hội An 和北部山区常见。",
+        "fr": "Des tuiles posées alternativement à l'endroit et à l'envers, formant des vagues — courantes à Hội An et dans les hautes terres du Nord.",
+        "es": "Tejas colocadas alternando boca arriba y boca abajo formando olas: habituales en Hội An y en las tierras altas del norte.",
+        "th": "กระเบื้องวางสลับหงายคว่ำจนเป็นลอนคลื่น — พบมากที่ Hội An และที่ราบสูงทางเหนือ"
+      }
     },
     {
       "id": "nha-ruong",
       "category": "ARCHITECTURE",
       "name": "Nhà rường",
-      "nameEn": "Nhà rường timber house",
       "hint": "Nhà gỗ xứ Huế: hệ cột kèo lộ hẳn ra trong lòng nhà, chạm khắc tinh xảo, ghép mộng không dùng đinh.",
-      "hintEn": "The timber house of Huế: its post-and-beam frame left fully exposed inside, finely carved, jointed without nails.",
-      "aliases": ["nhà rường"]
+      "aliases": [
+        "nhà rường"
+      ],
+      "names": {
+        "en": "Nhà rường timber house",
+        "ja": "ニャールオン（フエの木造家屋）",
+        "ko": "냐르엉(후에식 목조 가옥)",
+        "zh": "顺化木构宅（nhà rường）",
+        "fr": "Maison en bois nhà rường",
+        "es": "Casa de madera nhà rường",
+        "th": "เรือนไม้เมืองเว้"
+      },
+      "hints": {
+        "en": "The timber house of Huế: its post-and-beam frame left fully exposed inside, finely carved, jointed without nails.",
+        "ja": "Huế の木造家屋。内部に柱と梁の骨組みをそのまま見せ、細かな彫りを施し、釘を使わず組む。",
+        "ko": "Huế의 목조 가옥. 기둥과 들보 구조를 실내에 그대로 드러내고, 정교하게 새기며, 못 없이 짜맞춘다.",
+        "zh": "Huế 的木造住宅：梁柱骨架在室内完全外露，雕工细腻，不用一根钉子。",
+        "fr": "La maison de bois de Huế : sa charpente à poteaux et poutres laissée entièrement visible à l'intérieur, finement sculptée, assemblée sans clou.",
+        "es": "La casa de madera de Huế: su armazón de postes y vigas queda a la vista por dentro, finamente tallado y ensamblado sin un solo clavo.",
+        "th": "เรือนไม้ของ Huế โครงเสาและคานเปิดให้เห็นทั้งหมดจากด้านใน แกะสลักละเอียด เข้าไม้โดยไม่ใช้ตะปู"
+      }
     },
     {
       "id": "nha-san",
       "category": "ARCHITECTURE",
       "name": "Nhà sàn",
-      "nameEn": "Stilt house",
       "hint": "Nhà dựng trên cột cao cách mặt đất, cầu thang gỗ dẫn lên sàn, gầm sàn để trống.",
-      "hintEn": "A house raised on tall posts, a wooden stair up to the floor, the space underneath left open.",
-      "aliases": ["nhà sàn", "stilt house"]
+      "aliases": [
+        "nhà sàn",
+        "stilt house"
+      ],
+      "names": {
+        "en": "Stilt house",
+        "ja": "高床式住居",
+        "ko": "고상 가옥",
+        "zh": "高脚屋",
+        "fr": "Maison sur pilotis",
+        "es": "Casa sobre pilotes",
+        "th": "เรือนใต้ถุนสูง"
+      },
+      "hints": {
+        "en": "A house raised on tall posts, a wooden stair up to the floor, the space underneath left open.",
+        "ja": "高い柱の上に建てた家。床まで木の階段が上がり、床下は開けたままにする。",
+        "ko": "높은 기둥 위에 올린 집. 나무 계단이 마루로 이어지고, 아래는 비워 둔다.",
+        "zh": "架在高柱上的房子，木梯通向楼板，下方空着不封。",
+        "fr": "Une maison portée par de hauts pieux, un escalier de bois jusqu'au plancher, l'espace du dessous laissé ouvert.",
+        "es": "Una casa alzada sobre postes altos, con una escalera de madera hasta el suelo de la vivienda y el espacio de abajo despejado.",
+        "th": "เรือนที่ยกขึ้นบนเสาสูง มีบันไดไม้ขึ้นสู่พื้นเรือน และเว้นใต้ถุนไว้โล่ง"
+      }
     },
     {
       "id": "nha-ong-pho-co",
       "category": "ARCHITECTURE",
       "name": "Nhà ống phố cổ",
-      "nameEn": "Old-quarter tube house",
       "hint": "Mặt tiền hẹp chỉ vài mét nhưng nhà sâu hun hút, có giếng trời ở giữa để lấy sáng và thoát nhiệt.",
-      "hintEn": "A frontage only metres wide but a plan running far back, with a light well in the middle.",
-      "aliases": ["nhà ống", "nhà phố cổ", "tube house"]
+      "aliases": [
+        "nhà ống",
+        "nhà phố cổ",
+        "tube house"
+      ],
+      "names": {
+        "en": "Old-quarter tube house",
+        "ja": "旧市街のうなぎの寝床",
+        "ko": "구시가의 관 모양 집",
+        "zh": "老街筒子屋",
+        "fr": "Maison-tube du vieux quartier",
+        "es": "Casa-tubo del casco antiguo",
+        "th": "เรือนแถวย่านเมืองเก่า"
+      },
+      "hints": {
+        "en": "A frontage only metres wide but a plan running far back, with a light well in the middle.",
+        "ja": "間口は数メートルしかないのに奥へ長く延びる間取り。中ほどに光を採る吹き抜けがある。",
+        "ko": "정면 폭은 몇 미터뿐이지만 안쪽으로 길게 이어지는 평면. 중간에 빛을 들이는 중정이 있다.",
+        "zh": "门面只有几米宽，平面却往里延伸很深，中间留一处天井采光。",
+        "fr": "Une façade de quelques mètres à peine, mais un plan qui file loin vers l'arrière, avec un puits de lumière au milieu.",
+        "es": "Una fachada de apenas unos metros pero una planta que se alarga hacia el fondo, con un patio de luces en medio.",
+        "th": "หน้ากว้างเพียงไม่กี่เมตรแต่ผังลึกเข้าไปด้านใน มีช่องแสงเปิดโล่งอยู่ตรงกลาง"
+      }
     },
     {
       "id": "kien-truc-phap",
       "category": "ARCHITECTURE",
       "name": "Kiến trúc Pháp thuộc",
-      "nameEn": "French colonial architecture",
       "hint": "Tường vàng, cửa chớp gỗ sơn xanh, ban công sắt uốn và mái ngói dốc kiểu Âu.",
-      "hintEn": "Ochre walls, green timber shutters, wrought-iron balconies and a steep European tiled roof.",
-      "aliases": ["kiến trúc pháp", "pháp thuộc", "kiểu pháp", "colonial", "french colonial"]
+      "aliases": [
+        "kiến trúc pháp",
+        "pháp thuộc",
+        "kiểu pháp",
+        "colonial",
+        "french colonial"
+      ],
+      "names": {
+        "en": "French colonial architecture",
+        "ja": "フランス植民地期の建築",
+        "ko": "프랑스 식민기 건축",
+        "zh": "法国殖民时期建筑",
+        "fr": "Architecture coloniale française",
+        "es": "Arquitectura colonial francesa",
+        "th": "สถาปัตยกรรมยุคอาณานิคมฝรั่งเศส"
+      },
+      "hints": {
+        "en": "Ochre walls, green timber shutters, wrought-iron balconies and a steep European tiled roof.",
+        "ja": "黄土色の壁、緑の木製よろい戸、鉄細工のバルコニー、そして急勾配のヨーロッパ式瓦屋根。",
+        "ko": "황토색 벽, 초록색 나무 덧문, 연철 발코니, 그리고 가파른 유럽식 기와지붕.",
+        "zh": "赭黄色墙面、绿色木百叶、铁艺阳台，以及陡峭的欧式瓦屋顶。",
+        "fr": "Murs ocre, volets de bois verts, balcons en fer forgé et toiture de tuiles européenne à forte pente.",
+        "es": "Muros ocres, contraventanas verdes de madera, balcones de hierro forjado y un tejado europeo de fuerte pendiente.",
+        "th": "ผนังสีดินเหลือง บานเกล็ดไม้สีเขียว ระเบียงเหล็กดัด และหลังคากระเบื้องยุโรปทรงชัน"
+      }
     },
     {
       "id": "nha-tho-cong-giao",
       "category": "ARCHITECTURE",
       "name": "Nhà thờ Công giáo",
-      "nameEn": "Catholic church",
       "hint": "Tháp chuông nhọn vươn cao, mặt tiền đối xứng, cửa sổ kính màu và mái vòm bên trong.",
-      "hintEn": "A tall pointed bell tower, a symmetrical front, stained glass and a vaulted interior.",
-      "aliases": ["nhà thờ", "thánh đường", "nhà thờ chính tòa", "cathedral"]
+      "aliases": [
+        "nhà thờ",
+        "thánh đường",
+        "nhà thờ chính tòa",
+        "cathedral"
+      ],
+      "names": {
+        "en": "Catholic church",
+        "ja": "カトリック教会",
+        "ko": "가톨릭 성당",
+        "zh": "天主教堂",
+        "fr": "Église catholique",
+        "es": "Iglesia católica",
+        "th": "โบสถ์คาทอลิก"
+      },
+      "hints": {
+        "en": "A tall pointed bell tower, a symmetrical front, stained glass and a vaulted interior.",
+        "ja": "高くとがった鐘楼、左右対称の正面、ステンドグラス、そしてヴォールト天井。",
+        "ko": "높고 뾰족한 종탑, 좌우대칭의 정면, 스테인드글라스, 그리고 궁륭 천장.",
+        "zh": "高耸的尖顶钟楼、对称的正立面、彩色玻璃窗和拱券顶的室内。",
+        "fr": "Un haut clocher pointu, une façade symétrique, des vitraux et un intérieur voûté.",
+        "es": "Un campanario alto y puntiagudo, una fachada simétrica, vidrieras y un interior abovedado.",
+        "th": "หอระฆังยอดแหลมสูง ด้านหน้าสมมาตร กระจกสี และเพดานโค้งภายใน"
+      }
     },
     {
       "id": "thap-cham",
       "category": "ARCHITECTURE",
       "name": "Tháp Chăm",
-      "nameEn": "Cham tower",
       "hint": "Tháp gạch đỏ nâu xây khít không thấy mạch vữa, thân thu nhỏ dần lên đỉnh, có phù điêu thần Hindu.",
-      "hintEn": "A red-brick tower laid so tightly no mortar line shows, tapering upward, carved with Hindu deities.",
-      "aliases": ["tháp chăm", "tháp chàm", "cham tower"]
+      "aliases": [
+        "tháp chăm",
+        "tháp chàm",
+        "cham tower"
+      ],
+      "names": {
+        "en": "Cham tower",
+        "ja": "チャム塔",
+        "ko": "참 탑",
+        "zh": "占婆塔",
+        "fr": "Tour cham",
+        "es": "Torre cham",
+        "th": "ปราสาทจาม"
+      },
+      "hints": {
+        "en": "A red-brick tower laid so tightly no mortar line shows, tapering upward, carved with Hindu deities.",
+        "ja": "目地が見えないほど緻密に積んだ赤煉瓦の塔。上に向かって細くなり、ヒンドゥーの神々が彫られる。",
+        "ko": "줄눈이 보이지 않을 만큼 촘촘히 쌓은 붉은 벽돌 탑. 위로 갈수록 좁아지고 힌두 신들이 새겨져 있다.",
+        "zh": "红砖砌得严丝合缝、看不出灰缝的塔，越往上越收，刻着印度教神祇。",
+        "fr": "Une tour de brique rouge appareillée si serré qu'aucun joint n'apparaît, s'affinant vers le haut, sculptée de divinités hindoues.",
+        "es": "Una torre de ladrillo rojo asentado tan justo que no se ve una junta, estrechándose hacia arriba y tallada con deidades hindúes.",
+        "th": "หอคอยอิฐแดงก่อชิดจนมองไม่เห็นรอยปูน สอบขึ้นไปด้านบน สลักรูปเทพเจ้าฮินดู"
+      }
     },
     {
       "id": "cau-ngoi",
       "category": "ARCHITECTURE",
       "name": "Cầu ngói",
-      "nameEn": "Roofed bridge",
       "hint": "Cầu có mái lợp ngói bắc qua kênh hoặc ao làng, người đi bộ trú được mưa nắng bên dưới.",
-      "hintEn": "A tile-roofed bridge over a canal or village pond, sheltering whoever crosses it.",
-      "aliases": ["cầu ngói", "cầu mái", "covered bridge"]
+      "aliases": [
+        "cầu ngói",
+        "cầu mái",
+        "covered bridge"
+      ],
+      "names": {
+        "en": "Roofed bridge",
+        "ja": "屋根付き橋",
+        "ko": "지붕 있는 다리",
+        "zh": "廊桥",
+        "fr": "Pont couvert",
+        "es": "Puente cubierto",
+        "th": "สะพานมีหลังคา"
+      },
+      "hints": {
+        "en": "A tile-roofed bridge over a canal or village pond, sheltering whoever crosses it.",
+        "ja": "水路や村の池に架かる瓦屋根の橋。渡る人を雨や日差しから守る。",
+        "ko": "수로나 마을 연못 위에 놓인 기와지붕 다리. 건너는 사람을 비와 볕에서 가려 준다.",
+        "zh": "架在水渠或村塘上的瓦顶桥，为过桥的人遮风挡雨。",
+        "fr": "Un pont à toiture de tuiles sur un canal ou une mare de village, abritant qui le traverse.",
+        "es": "Un puente con tejado de tejas sobre un canal o una charca del pueblo, que resguarda a quien lo cruza.",
+        "th": "สะพานหลังคากระเบื้องข้ามคลองหรือสระของหมู่บ้าน ให้ร่มเงาแก่ผู้ที่เดินข้าม"
+      }
     },
-
     {
       "id": "ao-dai",
       "category": "CULTURE",
       "name": "Áo dài",
-      "nameEn": "Áo dài",
       "hint": "Áo tay dài thân ôm, xẻ tà từ eo xuống thành hai vạt, mặc cùng quần lụa.",
-      "hintEn": "A long-sleeved fitted tunic split from the waist into two panels, worn over silk trousers.",
-      "aliases": ["áo dài"]
+      "aliases": [
+        "áo dài"
+      ],
+      "names": {
+        "en": "Áo dài",
+        "ja": "アオザイ",
+        "ko": "아오자이",
+        "zh": "奥黛",
+        "fr": "Áo dài",
+        "es": "Áo dài",
+        "th": "อ๋าวหญ่าย"
+      },
+      "hints": {
+        "en": "A long-sleeved fitted tunic split from the waist into two panels, worn over silk trousers.",
+        "ja": "腰から前後二枚に割れた、体に沿う長袖の上衣。絹のズボンの上に着る。",
+        "ko": "허리 아래로 앞뒤 두 자락이 갈라지는, 몸에 붙는 긴소매 상의. 실크 바지 위에 입는다.",
+        "zh": "合体的长袖上衣，自腰部分成前后两片，穿在丝质长裤外。",
+        "fr": "Une tunique ajustée à manches longues, fendue à la taille en deux pans, portée sur un pantalon de soie.",
+        "es": "Una túnica ajustada de manga larga, abierta desde la cintura en dos faldones, que se lleva sobre pantalón de seda.",
+        "th": "เสื้อคลุมแขนยาวเข้ารูป ผ่าจากเอวลงมาเป็นสองชาย สวมทับกางเกงแพรไหม"
+      }
     },
     {
       "id": "non-la",
       "category": "CULTURE",
       "name": "Nón lá",
-      "nameEn": "Conical leaf hat",
       "hint": "Nón hình chóp đan lá cọ trên vành tre, có quai vải buộc dưới cằm.",
-      "hintEn": "A cone of palm leaf stitched over bamboo rings, with a cloth strap under the chin.",
-      "aliases": ["nón lá", "nón bài thơ", "conical hat"]
+      "aliases": [
+        "nón lá",
+        "nón bài thơ",
+        "conical hat"
+      ],
+      "names": {
+        "en": "Conical leaf hat",
+        "ja": "ノンラー（葉の円錐笠）",
+        "ko": "논라(고깔 모양 삿갓)",
+        "zh": "越南斗笠",
+        "fr": "Chapeau conique en feuilles",
+        "es": "Sombrero cónico de hoja",
+        "th": "งอนลา (หมวกใบไม้ทรงกรวย)"
+      },
+      "hints": {
+        "en": "A cone of palm leaf stitched over bamboo rings, with a cloth strap under the chin.",
+        "ja": "竹の輪にヤシの葉を縫い付けた円錐形の笠。あご下に布のひもを通す。",
+        "ko": "대나무 테에 야자 잎을 기워 만든 고깔 모양 모자. 턱 아래로 천 끈을 맨다.",
+        "zh": "棕榈叶缝在竹圈上做成的圆锥形斗笠，颏下系一条布带。",
+        "fr": "Un cône de feuille de palmier cousu sur des cercles de bambou, avec une lanière de tissu sous le menton.",
+        "es": "Un cono de hoja de palma cosido sobre aros de bambú, con una cinta de tela bajo la barbilla.",
+        "th": "กรวยใบลานเย็บบนวงไม้ไผ่ มีสายผ้าคาดใต้คาง"
+      }
     },
     {
       "id": "mua-lan",
       "category": "CULTURE",
       "name": "Múa lân sư rồng",
-      "nameEn": "Lion and dragon dance",
       "hint": "Đầu lân to có mắt chớp được, người múa nâng lên hạ xuống theo nhịp trống.",
-      "hintEn": "A large lion head with blinking eyes, lifted and dropped by the dancer to the beat of a drum.",
-      "aliases": ["múa lân", "lân sư rồng", "múa rồng", "lion dance"]
+      "aliases": [
+        "múa lân",
+        "lân sư rồng",
+        "múa rồng",
+        "lion dance"
+      ],
+      "names": {
+        "en": "Lion and dragon dance",
+        "ja": "獅子舞・龍舞",
+        "ko": "사자춤과 용춤",
+        "zh": "舞狮舞龙",
+        "fr": "Danse du lion et du dragon",
+        "es": "Danza del león y del dragón",
+        "th": "เชิดสิงโตและมังกร"
+      },
+      "hints": {
+        "en": "A large lion head with blinking eyes, lifted and dropped by the dancer to the beat of a drum.",
+        "ja": "目を瞬かせる大きな獅子頭を、太鼓の拍子に合わせて舞い手が持ち上げ、落とす。",
+        "ko": "눈을 깜빡이는 커다란 사자 머리를 북장단에 맞춰 춤꾼이 들었다 내린다.",
+        "zh": "会眨眼的大狮头，舞者随鼓点将它高高举起又落下。",
+        "fr": "Une grande tête de lion aux yeux clignants, soulevée et rabattue par le danseur au rythme du tambour.",
+        "es": "Una gran cabeza de león de ojos parpadeantes que el bailarín levanta y deja caer al compás del tambor.",
+        "th": "หัวสิงโตขนาดใหญ่ที่กะพริบตาได้ ผู้เชิดยกขึ้นและทิ้งลงตามจังหวะกลอง"
+      }
     },
     {
       "id": "ban-tho-gia-tien",
       "category": "CULTURE",
       "name": "Bàn thờ gia tiên",
-      "nameEn": "Ancestral altar",
       "hint": "Bàn thờ đặt trên cao với bát hương, đôi chân nến, mâm ngũ quả và ảnh người đã khuất.",
-      "hintEn": "A raised altar with an incense bowl, a pair of candlesticks, a five-fruit tray and photographs of the dead.",
-      "aliases": ["bàn thờ", "bàn thờ gia tiên", "bát hương", "ancestral altar"]
+      "aliases": [
+        "bàn thờ",
+        "bàn thờ gia tiên",
+        "bát hương",
+        "ancestral altar"
+      ],
+      "names": {
+        "en": "Ancestral altar",
+        "ja": "祖先の祭壇",
+        "ko": "조상 제단",
+        "zh": "祖先神龛",
+        "fr": "Autel des ancêtres",
+        "es": "Altar de los antepasados",
+        "th": "หิ้งบูชาบรรพบุรุษ"
+      },
+      "hints": {
+        "en": "A raised altar with an incense bowl, a pair of candlesticks, a five-fruit tray and photographs of the dead.",
+        "ja": "香炉、一対の燭台、五種の果物の盆、そして故人の写真を置いた高い祭壇。",
+        "ko": "향로와 한 쌍의 촛대, 오과 쟁반, 그리고 고인의 사진을 올린 높은 제단.",
+        "zh": "抬高的供桌上有香炉、一对烛台、五果盘和先人的照片。",
+        "fr": "Un autel surélevé avec un brûle-encens, une paire de chandeliers, un plateau de cinq fruits et les portraits des défunts.",
+        "es": "Un altar elevado con un pebetero, un par de candelabros, una bandeja de cinco frutas y retratos de los difuntos.",
+        "th": "แท่นบูชายกสูง มีกระถางธูป เชิงเทียนคู่ พานผลไม้ห้าอย่าง และรูปผู้ล่วงลับ"
+      }
     },
     {
       "id": "cau-doi",
       "category": "CULTURE",
       "name": "Câu đối",
-      "nameEn": "Parallel verse couplet",
       "hint": "Hai vế chữ viết dọc treo đối xứng hai bên cột hoặc cửa, thường sơn son chữ vàng.",
-      "hintEn": "Two vertical lines of characters hung symmetrically on either side of a column or door, usually gold on red.",
-      "aliases": ["câu đối"]
+      "aliases": [
+        "câu đối"
+      ],
+      "names": {
+        "en": "Parallel verse couplet",
+        "ja": "対聯",
+        "ko": "주련",
+        "zh": "对联",
+        "fr": "Distiques parallèles",
+        "es": "Dísticos paralelos",
+        "th": "โคลงคู่แขวนเสา"
+      },
+      "hints": {
+        "en": "Two vertical lines of characters hung symmetrically on either side of a column or door, usually gold on red.",
+        "ja": "柱や戸の左右に対称に掛ける、縦書き二行の対句。多くは赤地に金文字。",
+        "ko": "기둥이나 문 양옆에 대칭으로 거는 세로 두 줄의 대구. 대개 붉은 바탕에 금빛 글씨.",
+        "zh": "对称挂在柱子或门两侧的两行竖写对句，多为红底金字。",
+        "fr": "Deux lignes verticales de caractères suspendues symétriquement de part et d'autre d'une colonne ou d'une porte, souvent dorées sur fond rouge.",
+        "es": "Dos líneas verticales de caracteres colgadas simétricamente a ambos lados de una columna o una puerta, casi siempre doradas sobre rojo.",
+        "th": "อักษรสองแถวแนวตั้งแขวนสมมาตรสองข้างเสาหรือประตู ส่วนใหญ่เป็นตัวทองบนพื้นแดง"
+      }
     },
     {
       "id": "hoanh-phi",
       "category": "CULTURE",
       "name": "Hoành phi",
-      "nameEn": "Horizontal lacquered board",
       "hint": "Tấm biển gỗ nằm ngang treo cao giữa gian thờ, khắc vài chữ Hán lớn thếp vàng.",
-      "hintEn": "A horizontal wooden board hung high in the shrine, carved with a few large gilded characters.",
-      "aliases": ["hoành phi", "biển hoành phi"]
+      "aliases": [
+        "hoành phi",
+        "biển hoành phi"
+      ],
+      "names": {
+        "en": "Horizontal lacquered board",
+        "ja": "横扁額",
+        "ko": "횡액자",
+        "zh": "横匾",
+        "fr": "Panneau laqué horizontal",
+        "es": "Tabla lacada horizontal",
+        "th": "ป้ายไม้แนวนอนลงรัก"
+      },
+      "hints": {
+        "en": "A horizontal wooden board hung high in the shrine, carved with a few large gilded characters.",
+        "ja": "祠堂の高い位置に掛ける横長の木の額。大きな金文字を数文字彫る。",
+        "ko": "사당 높은 곳에 거는 가로로 긴 나무 판. 큰 금빛 글자 몇 자를 새긴다.",
+        "zh": "高悬于祠堂之上的横向木匾，刻着几个描金大字。",
+        "fr": "Un panneau de bois horizontal accroché haut dans le sanctuaire, portant quelques grands caractères dorés.",
+        "es": "Una tabla de madera horizontal colgada en alto en el santuario, tallada con unos pocos caracteres dorados y grandes.",
+        "th": "แผ่นไม้แนวนอนแขวนไว้สูงในศาลเจ้า สลักอักษรปิดทองตัวใหญ่ไม่กี่ตัว"
+      }
     },
     {
       "id": "den-long",
       "category": "CULTURE",
       "name": "Đèn lồng",
-      "nameEn": "Silk lantern",
       "hint": "Đèn khung tre bọc lụa nhiều màu, treo thành dãy trước hiên nhà.",
-      "hintEn": "Bamboo frames covered in coloured silk, strung in rows along a shopfront.",
-      "aliases": ["đèn lồng", "lồng đèn", "lantern"]
+      "aliases": [
+        "đèn lồng",
+        "lồng đèn",
+        "lantern"
+      ],
+      "names": {
+        "en": "Silk lantern",
+        "ja": "絹の提灯",
+        "ko": "비단 등롱",
+        "zh": "丝绸灯笼",
+        "fr": "Lanternes de soie",
+        "es": "Farolillos de seda",
+        "th": "โคมไหม"
+      },
+      "hints": {
+        "en": "Bamboo frames covered in coloured silk, strung in rows along a shopfront.",
+        "ja": "竹の骨に色絹を張った提灯。店先に連ねて吊るす。",
+        "ko": "대나무 살에 색 비단을 씌운 등. 가게 앞에 줄줄이 매단다.",
+        "zh": "竹骨蒙上彩色丝绸的灯笼，成排挂在店铺门前。",
+        "fr": "Des armatures de bambou tendues de soie colorée, alignées le long d'une devanture.",
+        "es": "Armazones de bambú forrados de seda de colores, colgados en hilera ante los comercios.",
+        "th": "โครงไม้ไผ่หุ้มผ้าไหมสี ร้อยแขวนเป็นแถวหน้าร้าน"
+      }
     },
     {
       "id": "tranh-dan-gian",
       "category": "CULTURE",
       "name": "Tranh dân gian",
-      "nameEn": "Folk woodblock print",
       "hint": "Tranh in mộc bản trên giấy điệp óng ánh, màu lấy từ vỏ sò và lá cây; hình gà, lợn, đám cưới chuột.",
-      "hintEn": "Woodblock prints on iridescent điệp paper in colours ground from shell and leaf — cockerels, pigs, the rats' wedding.",
-      "aliases": ["tranh đông hồ", "tranh dân gian", "tranh hàng trống", "folk painting"]
+      "aliases": [
+        "tranh đông hồ",
+        "tranh dân gian",
+        "tranh hàng trống",
+        "folk painting"
+      ],
+      "names": {
+        "en": "Folk woodblock print",
+        "ja": "民間版画",
+        "ko": "민화 목판화",
+        "zh": "民间木版画",
+        "fr": "Estampe populaire sur bois",
+        "es": "Estampa popular xilográfica",
+        "th": "ภาพพิมพ์ไม้พื้นบ้าน"
+      },
+      "hints": {
+        "en": "Woodblock prints on iridescent điệp paper in colours ground from shell and leaf — cockerels, pigs, the rats' wedding.",
+        "ja": "貝と葉からすった顔料で、光沢のある điệp 紙に刷った木版画。雄鶏、豚、鼠の嫁入り。",
+        "ko": "조개와 잎에서 간 색으로, 은은히 반짝이는 điệp 종이에 찍은 목판화. 수탉, 돼지, 쥐의 혼례.",
+        "zh": "用贝壳和树叶研磨的颜色印在闪光 điệp 纸上的木版画 — 公鸡、肥猪、老鼠娶亲。",
+        "fr": "Des estampes imprimées sur papier điệp irisé, aux couleurs broyées à partir de coquillages et de feuilles — coqs, cochons, les noces des rats.",
+        "es": "Grabados sobre papel điệp irisado, con colores molidos de conchas y hojas: gallos, cerdos, la boda de los ratones.",
+        "th": "ภาพพิมพ์แม่พิมพ์ไม้บนกระดาษ điệp แวววาว สีบดจากเปลือกหอยและใบไม้ — ไก่ตัวผู้ หมู งานแต่งของหนู"
+      }
     },
     {
       "id": "mua-roi-nuoc",
       "category": "CULTURE",
       "name": "Múa rối nước",
-      "nameEn": "Water puppetry",
       "hint": "Con rối gỗ sơn diễn ngay trên mặt nước, người điều khiển đứng khuất sau tấm mành.",
-      "hintEn": "Lacquered wooden puppets performing on the water itself, the puppeteers hidden behind a screen.",
-      "aliases": ["múa rối nước", "rối nước", "water puppet"]
+      "aliases": [
+        "múa rối nước",
+        "rối nước",
+        "water puppet"
+      ],
+      "names": {
+        "en": "Water puppetry",
+        "ja": "水上人形劇",
+        "ko": "수상 인형극",
+        "zh": "水上木偶戏",
+        "fr": "Marionnettes sur l'eau",
+        "es": "Marionetas de agua",
+        "th": "หุ่นกระบอกน้ำ"
+      },
+      "hints": {
+        "en": "Lacquered wooden puppets performing on the water itself, the puppeteers hidden behind a screen.",
+        "ja": "漆塗りの木の人形が水面そのものの上で演じ、遣い手は簾の陰に隠れる。",
+        "ko": "옻칠한 나무 인형이 물 위에서 연기하고, 조종하는 사람은 발 뒤에 숨는다.",
+        "zh": "上漆的木偶直接在水面上表演，操纵者藏在竹帘后面。",
+        "fr": "Des marionnettes de bois laqué jouant sur l'eau même, les marionnettistes cachés derrière un rideau.",
+        "es": "Marionetas de madera lacada que actúan sobre el agua misma, con los titiriteros ocultos tras una cortina.",
+        "th": "หุ่นไม้ลงรักแสดงอยู่บนผิวน้ำจริง ๆ ส่วนผู้เชิดซ่อนอยู่หลังม่าน"
+      }
     },
     {
       "id": "tho-cam",
       "category": "CULTURE",
       "name": "Thổ cẩm",
-      "nameEn": "Highland brocade",
       "hint": "Vải dệt tay hoa văn hình học nhiều màu — khăn đội đầu, váy và địu của các dân tộc vùng cao.",
-      "hintEn": "Hand-woven cloth in dense geometric colour — the headscarves, skirts and baby carriers of the highland peoples.",
-      "aliases": ["thổ cẩm", "trang phục dân tộc", "dệt thổ cẩm", "brocade"]
+      "aliases": [
+        "thổ cẩm",
+        "trang phục dân tộc",
+        "dệt thổ cẩm",
+        "brocade"
+      ],
+      "names": {
+        "en": "Highland brocade",
+        "ja": "山地の織物",
+        "ko": "산간 지역의 직물",
+        "zh": "山地织锦",
+        "fr": "Brocart des hautes terres",
+        "es": "Brocado de las tierras altas",
+        "th": "ผ้าทอชาวเขา"
+      },
+      "hints": {
+        "en": "Hand-woven cloth in dense geometric colour — the headscarves, skirts and baby carriers of the highland peoples.",
+        "ja": "幾何学模様を色濃く織り込んだ手織りの布。山地の人々の頭巾、巻きスカート、負ぶい帯。",
+        "ko": "기하학 무늬를 촘촘한 색으로 짜 넣은 손베. 산간 사람들의 머릿수건, 치마, 아기 포대기.",
+        "zh": "手工织出的密实几何彩纹布 — 山地民族的头巾、筒裙和背婴带。",
+        "fr": "Une étoffe tissée à la main, aux motifs géométriques serrés et colorés — foulards, jupes et porte-bébés des peuples des hautes terres.",
+        "es": "Tela tejida a mano con densos motivos geométricos de color: los pañuelos, faldas y portabebés de los pueblos de montaña.",
+        "th": "ผ้าทอมือลวดลายเรขาคณิตแน่นและจัดจ้าน — ผ้าโพกหัว ผ้าถุง และผ้าอุ้มเด็กของชาวที่ราบสูง"
+      }
     },
     {
       "id": "cho-noi",
       "category": "CULTURE",
       "name": "Chợ nổi",
-      "nameEn": "Floating market",
       "hint": "Ghe thuyền chở đầy nông sản họp chợ trên sông; mỗi ghe treo một cây bẹo cắm thứ mình bán.",
-      "hintEn": "Boats laden with produce trading on the river, each flying a pole with a sample of what it sells.",
-      "aliases": ["chợ nổi", "floating market"]
+      "aliases": [
+        "chợ nổi",
+        "floating market"
+      ],
+      "names": {
+        "en": "Floating market",
+        "ja": "水上市場",
+        "ko": "수상 시장",
+        "zh": "水上集市",
+        "fr": "Marché flottant",
+        "es": "Mercado flotante",
+        "th": "ตลาดน้ำ"
+      },
+      "hints": {
+        "en": "Boats laden with produce trading on the river, each flying a pole with a sample of what it sells.",
+        "ja": "産物を積んだ舟が川の上で商う。舟ごとに、売り物の見本を掲げた竿を立てる。",
+        "ko": "농산물을 실은 배들이 강 위에서 거래한다. 배마다 파는 물건의 견본을 장대에 매달아 둔다.",
+        "zh": "满载农产的小船在河面上做买卖，每条船都竖一根竿，挂着所卖货物的样品。",
+        "fr": "Des barques chargées de produits qui commercent sur le fleuve, chacune arborant une perche où pend un échantillon de ce qu'elle vend.",
+        "es": "Barcas cargadas de productos comerciando en el río, cada una con una pértiga de la que cuelga una muestra de lo que vende.",
+        "th": "เรือบรรทุกผลผลิตค้าขายกันกลางแม่น้ำ แต่ละลำปักไม้แขวนตัวอย่างสินค้าที่ตนขาย"
+      }
     },
     {
       "id": "ganh-hang-rong",
       "category": "CULTURE",
       "name": "Gánh hàng rong",
-      "nameEn": "Shoulder-pole vendor",
       "hint": "Đôi quang gánh tre trĩu hai đầu, gánh trên vai người bán đi dọc phố.",
-      "hintEn": "A bamboo shoulder pole weighed down at both ends, carried through the street by the seller.",
-      "aliases": ["gánh hàng rong", "quang gánh", "hàng rong", "street vendor"]
+      "aliases": [
+        "gánh hàng rong",
+        "quang gánh",
+        "hàng rong",
+        "street vendor"
+      ],
+      "names": {
+        "en": "Shoulder-pole vendor",
+        "ja": "天秤棒の物売り",
+        "ko": "멜대 행상",
+        "zh": "挑担小贩",
+        "fr": "Marchande à la palanche",
+        "es": "Vendedora con pértiga",
+        "th": "หาบเร่"
+      },
+      "hints": {
+        "en": "A bamboo shoulder pole weighed down at both ends, carried through the street by the seller.",
+        "ja": "両端に荷を下げた竹の天秤棒を担ぎ、売り手が通りを歩く。",
+        "ko": "양끝에 짐을 매단 대나무 멜대를 지고 거리를 다니는 상인.",
+        "zh": "两头压着货担的竹扁担，由卖家挑着穿街走巷。",
+        "fr": "Une palanche de bambou lestée aux deux bouts, portée à travers la rue par celle qui vend.",
+        "es": "Una pértiga de bambú cargada en los dos extremos, que la vendedora lleva al hombro por la calle.",
+        "th": "ไม้คานไผ่ถ่วงหนักทั้งสองข้าง คนขายหาบเดินไปตามถนน"
+      }
     },
-
     {
       "id": "trong-dong",
       "category": "ARTIFACT",
       "name": "Trống đồng Đông Sơn",
-      "nameEn": "Đông Sơn bronze drum",
       "hint": "Mặt trống tròn có ngôi sao nhiều cánh ở chính giữa, quanh là vòng chim Lạc bay ngược chiều kim đồng hồ.",
-      "hintEn": "A round drum face with a many-rayed star at its centre, ringed by Lạc birds flying anticlockwise.",
-      "aliases": ["trống đồng", "đông sơn", "bronze drum"]
+      "aliases": [
+        "trống đồng",
+        "đông sơn",
+        "bronze drum"
+      ],
+      "names": {
+        "en": "Đông Sơn bronze drum",
+        "ja": "東山銅鼓",
+        "ko": "동선 청동북",
+        "zh": "东山铜鼓",
+        "fr": "Tambour de bronze de Đông Sơn",
+        "es": "Tambor de bronce de Đông Sơn",
+        "th": "กลองสำริดดงเซิน"
+      },
+      "hints": {
+        "en": "A round drum face with a many-rayed star at its centre, ringed by Lạc birds flying anticlockwise.",
+        "ja": "中心に多条の星を置いた円い鼓面。その周りを Lạc 鳥が反時計回りに飛ぶ。",
+        "ko": "가운데에 여러 갈래 별이 있는 둥근 북면. 그 둘레를 Lạc 새가 시계 반대 방향으로 난다.",
+        "zh": "圆形鼓面中心是一颗多芒星，四周环绕着逆时针飞行的 Lạc 鸟。",
+        "fr": "Un plateau de tambour rond, étoile à nombreux rayons en son centre, cerné d'oiseaux Lạc volant dans le sens antihoraire.",
+        "es": "Un disco de tambor con una estrella de muchos rayos en el centro, rodeada de aves Lạc que vuelan en sentido antihorario.",
+        "th": "หน้ากลองกลมมีดาวหลายแฉกอยู่ตรงกลาง ล้อมด้วยนก Lạc ที่บินทวนเข็มนาฬิกา"
+      }
     },
     {
       "id": "gom-bat-trang",
       "category": "ARTIFACT",
       "name": "Gốm Bát Tràng",
-      "nameEn": "Bát Tràng ceramics",
       "hint": "Gốm dày dặn men trắng ngà hoặc men rạn nứt như mạng nhện, hoa văn lam vẽ tay.",
-      "hintEn": "Sturdy ware in ivory or crackle glaze, its cobalt patterns painted by hand.",
-      "aliases": ["gốm bát tràng", "bát tràng"]
+      "aliases": [
+        "gốm bát tràng",
+        "bát tràng"
+      ],
+      "names": {
+        "en": "Bát Tràng ceramics",
+        "ja": "バッチャン焼",
+        "ko": "밧짱 도자기",
+        "zh": "钵场陶瓷",
+        "fr": "Céramique de Bát Tràng",
+        "es": "Cerámica de Bát Tràng",
+        "th": "เครื่องปั้นบั๊ตจ่าง"
+      },
+      "hints": {
+        "en": "Sturdy ware in ivory or crackle glaze, its cobalt patterns painted by hand.",
+        "ja": "象牙色または貫入釉の頑丈な器。コバルトの文様を手描きする。",
+        "ko": "상아색이나 빙렬 유약을 입힌 튼튼한 그릇. 코발트 문양을 손으로 그린다.",
+        "zh": "象牙色或开片釉的厚实器皿，钴蓝纹样手工绘制。",
+        "fr": "Une poterie robuste, ivoire ou à glaçure craquelée, aux motifs de cobalt peints à la main.",
+        "es": "Piezas robustas de esmalte marfil o craquelado, con motivos de cobalto pintados a mano.",
+        "th": "ภาชนะเนื้อหนาเคลือบสีงาช้างหรือเคลือบรานี ลายสีน้ำเงินโคบอลต์เขียนด้วยมือ"
+      }
     },
     {
       "id": "gom-hoa-lam",
       "category": "ARTIFACT",
       "name": "Gốm hoa lam",
-      "nameEn": "Blue-and-white ceramics",
       "hint": "Gốm trắng vẽ lam bằng cô ban dưới men, hoa dây, sen và cúc chạy quanh thân.",
-      "hintEn": "White ware painted in cobalt under the glaze — scrolling vines, lotus and chrysanthemum around the body.",
-      "aliases": ["gốm hoa lam", "chu đậu", "gốm chu đậu", "blue and white"]
+      "aliases": [
+        "gốm hoa lam",
+        "chu đậu",
+        "gốm chu đậu",
+        "blue and white"
+      ],
+      "names": {
+        "en": "Blue-and-white ceramics",
+        "ja": "染付",
+        "ko": "청화백자",
+        "zh": "青花瓷",
+        "fr": "Céramique bleu et blanc",
+        "es": "Cerámica azul y blanca",
+        "th": "เครื่องกระเบื้องน้ำเงินขาว"
+      },
+      "hints": {
+        "en": "White ware painted in cobalt under the glaze — scrolling vines, lotus and chrysanthemum around the body.",
+        "ja": "白磁に釉下のコバルトで描いた器。胴を巡る唐草、蓮、菊。",
+        "ko": "흰 바탕에 유약 아래로 코발트를 그린 그릇. 몸통을 감도는 덩굴, 연꽃, 국화.",
+        "zh": "白胎釉下钴蓝彩绘的器皿 — 器身绕着缠枝、莲花和菊花。",
+        "fr": "Une pâte blanche peinte au cobalt sous glaçure — rinceaux, lotus et chrysanthèmes courant sur la panse.",
+        "es": "Pasta blanca pintada en cobalto bajo cubierta: roleos, lotos y crisantemos rodeando el cuerpo.",
+        "th": "เนื้อขาวเขียนสีโคบอลต์ใต้เคลือบ — ลายก้านขด ดอกบัว และเบญจมาศพันรอบตัวภาชนะ"
+      }
     },
     {
       "id": "bia-tien-si",
       "category": "ARTIFACT",
       "name": "Bia đá đội rùa",
-      "nameEn": "Stele on a stone tortoise",
       "hint": "Tấm bia đá dựng trên lưng một con rùa đá, mặt bia khắc dày chữ Hán.",
-      "hintEn": "A stone stele standing on the back of a stone tortoise, its face densely carved with Chinese characters.",
-      "aliases": ["bia tiến sĩ", "bia đá", "rùa đội bia", "stele"]
+      "aliases": [
+        "bia tiến sĩ",
+        "bia đá",
+        "rùa đội bia",
+        "stele"
+      ],
+      "names": {
+        "en": "Stele on a stone tortoise",
+        "ja": "亀趺の石碑",
+        "ko": "돌거북 위의 비석",
+        "zh": "龟趺石碑",
+        "fr": "Stèle sur tortue de pierre",
+        "es": "Estela sobre tortuga de piedra",
+        "th": "ศิลาจารึกบนหลังเต่าหิน"
+      },
+      "hints": {
+        "en": "A stone stele standing on the back of a stone tortoise, its face densely carved with Chinese characters.",
+        "ja": "石の亀の背に立つ石碑。碑面いっぱいに漢字が刻まれている。",
+        "ko": "돌거북 등에 세운 비석. 비면 가득 한자가 빽빽이 새겨져 있다.",
+        "zh": "立在石龟背上的石碑，碑面密密刻满汉字。",
+        "fr": "Une stèle de pierre dressée sur le dos d'une tortue de pierre, la face densément gravée de caractères chinois.",
+        "es": "Una estela de piedra alzada sobre el lomo de una tortuga de piedra, con la cara cubierta de caracteres chinos.",
+        "th": "แผ่นศิลาจารึกตั้งอยู่บนหลังเต่าหิน หน้าจารึกแน่นด้วยอักษรจีน"
+      }
     },
     {
       "id": "tuong-phat",
       "category": "ARTIFACT",
       "name": "Tượng Phật",
-      "nameEn": "Buddha statue",
       "hint": "Tượng ngồi kiết già trên toà sen, tay kết ấn, sau đầu thường có vầng hào quang.",
-      "hintEn": "A figure seated cross-legged on a lotus throne, hands in a mudra, usually haloed.",
-      "aliases": ["tượng phật", "phật bà", "tượng quan âm", "tượng a di đà", "buddha statue"]
+      "aliases": [
+        "tượng phật",
+        "phật bà",
+        "tượng quan âm",
+        "tượng a di đà",
+        "buddha statue"
+      ],
+      "names": {
+        "en": "Buddha statue",
+        "ja": "仏像",
+        "ko": "불상",
+        "zh": "佛像",
+        "fr": "Statue de Bouddha",
+        "es": "Estatua de Buda",
+        "th": "พระพุทธรูป"
+      },
+      "hints": {
+        "en": "A figure seated cross-legged on a lotus throne, hands in a mudra, usually haloed.",
+        "ja": "蓮華座に結跏趺坐し、手は印を結ぶ。多くは光背をともなう。",
+        "ko": "연화좌에 결가부좌하고 손으로 수인을 맺은 상. 대개 광배를 두른다.",
+        "zh": "结跏趺坐于莲花座上，手结印契，多数带有背光。",
+        "fr": "Une figure assise en tailleur sur un trône de lotus, les mains en mudra, généralement nimbée.",
+        "es": "Una figura sentada con las piernas cruzadas sobre un trono de loto, las manos en mudra y casi siempre con halo.",
+        "th": "องค์พระประทับขัดสมาธิบนฐานบัว พระหัตถ์แสดงมุทรา ส่วนใหญ่มีประภามณฑล"
+      }
     },
     {
       "id": "cong-chieng",
       "category": "ARTIFACT",
       "name": "Cồng chiêng",
-      "nameEn": "Gong",
       "hint": "Bộ cồng chiêng đồng tròn treo thành dàn, loại có núm giữa và loại mặt phẳng, đánh bằng dùi bọc vải.",
-      "hintEn": "Bronze gongs hung in a set — some with a raised boss, some flat — struck with a cloth-wrapped mallet.",
-      "aliases": ["cồng chiêng", "chiêng", "gong"]
+      "aliases": [
+        "cồng chiêng",
+        "chiêng",
+        "gong"
+      ],
+      "names": {
+        "en": "Gong",
+        "ja": "ゴング（銅鑼）",
+        "ko": "징",
+        "zh": "铜锣",
+        "fr": "Gongs",
+        "es": "Gongs",
+        "th": "ฆ้อง"
+      },
+      "hints": {
+        "en": "Bronze gongs hung in a set — some with a raised boss, some flat — struck with a cloth-wrapped mallet.",
+        "ja": "組にして吊るす青銅の銅鑼。中央にこぶのあるものと平たいものがあり、布を巻いた撞木で打つ。",
+        "ko": "한 벌로 매단 청동 징. 가운데가 볼록한 것과 평평한 것이 있고, 천을 감은 채로 친다.",
+        "zh": "成套悬挂的青铜锣 — 有的中央带乳突，有的平面 — 用裹布的槌敲击。",
+        "fr": "Des gongs de bronze suspendus en jeu — certains à bossette, d'autres plats — frappés d'un maillet entouré de tissu.",
+        "es": "Gongs de bronce colgados en juego —unos con protuberancia central, otros planos—, golpeados con un mazo forrado de tela.",
+        "th": "ฆ้องสำริดแขวนเป็นชุด บ้างมีปุ่มตรงกลาง บ้างหน้าเรียบ ตีด้วยไม้ตีหุ้มผ้า"
+      }
     },
     {
       "id": "cua-vong",
       "category": "ARTIFACT",
       "name": "Cửa võng chạm khắc",
-      "nameEn": "Carved gilded screen",
       "hint": "Mảng gỗ chạm thủng sơn son thếp vàng treo trước ban thờ, kín đặc hoa lá rồng phượng.",
-      "hintEn": "A pierced timber panel in red lacquer and gold hung before an altar, packed with foliage, dragons and phoenixes.",
-      "aliases": ["cửa võng", "chạm khắc gỗ", "sơn son thếp vàng"]
+      "aliases": [
+        "cửa võng",
+        "chạm khắc gỗ",
+        "sơn son thếp vàng"
+      ],
+      "names": {
+        "en": "Carved gilded screen",
+        "ja": "透かし彫りの金漆衝立",
+        "ko": "투각 금칠 가리개",
+        "zh": "镂雕描金隔扇",
+        "fr": "Paravent ajouré et doré",
+        "es": "Celosía dorada tallada",
+        "th": "ฉากไม้ฉลุปิดทอง"
+      },
+      "hints": {
+        "en": "A pierced timber panel in red lacquer and gold hung before an altar, packed with foliage, dragons and phoenixes.",
+        "ja": "祭壇の前に吊るす、朱漆と金の透かし彫りの木板。草木・龍・鳳凰で埋め尽くされる。",
+        "ko": "제단 앞에 거는 붉은 옻칠과 금빛의 투각 목판. 넝쿨과 용, 봉황으로 가득 차 있다.",
+        "zh": "挂在神龛前的朱漆描金镂雕木板，满是枝叶、龙与凤。",
+        "fr": "Un panneau de bois ajouré, laque rouge et or, suspendu devant un autel, saturé de feuillages, de dragons et de phénix.",
+        "es": "Un panel de madera calado en laca roja y oro, colgado ante un altar y repleto de follaje, dragones y fénix.",
+        "th": "แผงไม้ฉลุลงรักแดงปิดทอง แขวนไว้หน้าแท่นบูชา เต็มไปด้วยลายใบไม้ มังกร และหงส์"
+      }
     },
     {
       "id": "thuyen-thung",
       "category": "ARTIFACT",
       "name": "Thuyền thúng",
-      "nameEn": "Basket boat",
       "hint": "Thuyền tròn đan nan tre trát dầu rái, không mũi không lái, chèo bằng một mái chèo duy nhất.",
-      "hintEn": "A round boat woven from bamboo and sealed with resin — no bow, no stern, worked with a single oar.",
-      "aliases": ["thuyền thúng", "thúng chai", "basket boat"]
+      "aliases": [
+        "thuyền thúng",
+        "thúng chai",
+        "basket boat"
+      ],
+      "names": {
+        "en": "Basket boat",
+        "ja": "竹編みの丸舟",
+        "ko": "대바구니 배",
+        "zh": "簸箕船",
+        "fr": "Barque-panier",
+        "es": "Barca cesta",
+        "th": "เรือกระด้ง"
+      },
+      "hints": {
+        "en": "A round boat woven from bamboo and sealed with resin — no bow, no stern, worked with a single oar.",
+        "ja": "竹を編んで樹脂で目止めした丸い舟。舳先も艫もなく、櫂一本で操る。",
+        "ko": "대나무를 엮어 수지로 메운 둥근 배. 뱃머리도 고물도 없이 노 하나로 젓는다.",
+        "zh": "竹篾编成、以树脂封缝的圆形小船 — 无首无尾，一支桨划动。",
+        "fr": "Une barque ronde tressée en bambou et étanchée à la résine — ni proue ni poupe, menée à la rame unique.",
+        "es": "Una barca redonda tejida en bambú y sellada con resina: sin proa ni popa, se maneja con un solo remo.",
+        "th": "เรือทรงกลมสานจากไม้ไผ่และยาด้วยชัน — ไม่มีหัวไม่มีท้าย พายด้วยไม้พายอันเดียว"
+      }
     },
-
     {
       "id": "ruong-bac-thang",
       "category": "NATURE",
       "name": "Ruộng bậc thang",
-      "nameEn": "Terraced rice fields",
       "hint": "Sườn núi xếp thành từng bậc uốn theo đường đồng mức, đổi màu theo mùa nước đổ và mùa lúa chín.",
-      "hintEn": "Hillsides stepped along the contour lines, changing colour between the flooding season and the harvest.",
-      "aliases": ["ruộng bậc thang", "terraced field", "rice terrace"]
+      "aliases": [
+        "ruộng bậc thang",
+        "terraced field",
+        "rice terrace"
+      ],
+      "names": {
+        "en": "Terraced rice fields",
+        "ja": "棚田",
+        "ko": "계단식 논",
+        "zh": "梯田",
+        "fr": "Rizières en terrasses",
+        "es": "Arrozales en terrazas",
+        "th": "นาขั้นบันได"
+      },
+      "hints": {
+        "en": "Hillsides stepped along the contour lines, changing colour between the flooding season and the harvest.",
+        "ja": "等高線に沿って段になった山腹。水を張る季節と収穫期とで色が変わる。",
+        "ko": "등고선을 따라 층을 이룬 산비탈. 물을 대는 철과 수확기에 색이 달라진다.",
+        "zh": "沿等高线层层叠起的山坡，灌水期与收割期颜色截然不同。",
+        "fr": "Des flancs de colline étagés le long des courbes de niveau, changeant de couleur entre la mise en eau et la moisson.",
+        "es": "Laderas escalonadas siguiendo las curvas de nivel, que cambian de color entre la inundación y la siega.",
+        "th": "ไหล่เขาที่ทำเป็นขั้นตามแนวระดับ เปลี่ยนสีไปตามฤดูขังน้ำและฤดูเก็บเกี่ยว"
+      }
     },
     {
       "id": "dong-lua",
       "category": "NATURE",
       "name": "Cánh đồng lúa",
-      "nameEn": "Rice paddy",
       "hint": "Mặt bằng xanh hoặc vàng trải rộng, chia thành ô bởi những bờ ruộng nhỏ.",
-      "hintEn": "A wide plane of green or gold, divided into plots by low earth bunds.",
-      "aliases": ["cánh đồng lúa", "đồng lúa", "ruộng lúa", "rice paddy"]
+      "aliases": [
+        "cánh đồng lúa",
+        "đồng lúa",
+        "ruộng lúa",
+        "rice paddy"
+      ],
+      "names": {
+        "en": "Rice paddy",
+        "ja": "水田",
+        "ko": "논",
+        "zh": "稻田",
+        "fr": "Rizière",
+        "es": "Arrozal",
+        "th": "ทุ่งนา"
+      },
+      "hints": {
+        "en": "A wide plane of green or gold, divided into plots by low earth bunds.",
+        "ja": "緑または黄金色に広がる平面。低い畦で区画に分けられている。",
+        "ko": "초록이나 황금빛으로 펼쳐진 평면. 낮은 흙두렁으로 구획이 나뉜다.",
+        "zh": "一大片绿色或金色的平面，被低矮的田埂分成一块块。",
+        "fr": "Une large étendue verte ou dorée, découpée en parcelles par de petites diguettes de terre.",
+        "es": "Una extensión llana, verde o dorada, dividida en parcelas por caballones bajos de tierra.",
+        "th": "ผืนราบกว้างสีเขียวหรือสีทอง แบ่งเป็นแปลง ๆ ด้วยคันดินเตี้ย"
+      }
     },
     {
       "id": "hang-dong",
       "category": "NATURE",
       "name": "Hang động đá vôi",
-      "nameEn": "Limestone cave",
       "hint": "Vòm đá vôi có thạch nhũ rủ từ trần xuống và măng đá mọc lên từ nền.",
-      "hintEn": "A limestone chamber with stalactites hanging from the roof and stalagmites rising from the floor.",
-      "aliases": ["hang động", "thạch nhũ", "limestone cave"]
+      "aliases": [
+        "hang động",
+        "thạch nhũ",
+        "limestone cave"
+      ],
+      "names": {
+        "en": "Limestone cave",
+        "ja": "石灰岩の洞窟",
+        "ko": "석회암 동굴",
+        "zh": "石灰岩溶洞",
+        "fr": "Grotte calcaire",
+        "es": "Cueva de caliza",
+        "th": "ถ้ำหินปูน"
+      },
+      "hints": {
+        "en": "A limestone chamber with stalactites hanging from the roof and stalagmites rising from the floor.",
+        "ja": "天井から鍾乳石が垂れ、床から石筍が伸びる石灰岩の空洞。",
+        "ko": "천장에서 종유석이 드리우고 바닥에서 석순이 솟는 석회암 공간.",
+        "zh": "洞顶垂下钟乳石、地面长出石笋的石灰岩洞厅。",
+        "fr": "Une salle calcaire aux stalactites pendant de la voûte et aux stalagmites montant du sol.",
+        "es": "Una sala de caliza con estalactitas colgando del techo y estalagmitas creciendo desde el suelo.",
+        "th": "โถงหินปูนที่มีหินย้อยห้อยจากเพดานและหินงอกผุดขึ้นจากพื้น"
+      }
     },
     {
       "id": "nui-da-voi",
       "category": "NATURE",
       "name": "Núi đá vôi trên nước",
-      "nameEn": "Karst pinnacles",
       "hint": "Những khối đá vôi dựng đứng nhô lên khỏi mặt nước, chân bị sóng ăn lõm vào thành ngấn.",
-      "hintEn": "Sheer limestone towers rising straight out of the water, undercut at the waterline by the waves.",
-      "aliases": ["núi đá vôi", "karst", "vịnh đá vôi"]
+      "aliases": [
+        "núi đá vôi",
+        "karst",
+        "vịnh đá vôi"
+      ],
+      "names": {
+        "en": "Karst pinnacles",
+        "ja": "水面に立つカルスト",
+        "ko": "물 위의 카르스트 봉우리",
+        "zh": "水上喀斯特石峰",
+        "fr": "Pitons karstiques",
+        "es": "Pitones kársticos",
+        "th": "เขาหินปูนกลางน้ำ"
+      },
+      "hints": {
+        "en": "Sheer limestone towers rising straight out of the water, undercut at the waterline by the waves.",
+        "ja": "水から直に切り立つ石灰岩の岩峰。波打ち際で根元がえぐられている。",
+        "ko": "물에서 곧장 솟은 석회암 절벽 봉우리. 물가에서 파도에 밑동이 파여 있다.",
+        "zh": "从水中笔直拔起的石灰岩峰，水线处被波浪掏出凹口。",
+        "fr": "Des tours calcaires jaillissant à pic de l'eau, creusées à leur base par les vagues.",
+        "es": "Torres de caliza que se alzan a plomo desde el agua, socavadas por las olas en la línea de flotación.",
+        "th": "ยอดเขาหินปูนตั้งชันขึ้นจากผิวน้ำ ฐานถูกคลื่นกัดเซาะเว้าเข้าไปตรงแนวน้ำ"
+      }
     },
     {
       "id": "thac-nuoc",
       "category": "NATURE",
       "name": "Thác nước",
-      "nameEn": "Waterfall",
       "hint": "Dòng nước đổ từ vách đá xuống thành nhiều tầng, chân thác có hồ nước và màn hơi nước mù.",
-      "hintEn": "Water falling from a rock face in tiers, with a pool and a haze of spray at the bottom.",
-      "aliases": ["thác nước", "thác", "waterfall"]
+      "aliases": [
+        "thác nước",
+        "thác",
+        "waterfall"
+      ],
+      "names": {
+        "en": "Waterfall",
+        "ja": "滝",
+        "ko": "폭포",
+        "zh": "瀑布",
+        "fr": "Cascade",
+        "es": "Cascada",
+        "th": "น้ำตก"
+      },
+      "hints": {
+        "en": "Water falling from a rock face in tiers, with a pool and a haze of spray at the bottom.",
+        "ja": "岩壁を段になって落ちる水。下には滝壺と水煙が広がる。",
+        "ko": "바위벽을 여러 단으로 떨어지는 물. 아래에는 웅덩이와 물안개가 있다.",
+        "zh": "水流沿岩壁层层跌落，底下有水潭和一片水雾。",
+        "fr": "De l'eau tombant d'une paroi rocheuse en gradins, avec une vasque et un voile d'embruns au pied.",
+        "es": "Agua que cae por una pared de roca en escalones, con una poza y una neblina de gotas al pie.",
+        "th": "สายน้ำไหลลงจากหน้าผาเป็นชั้น ๆ เบื้องล่างมีแอ่งน้ำและละอองฟุ้ง"
+      }
     },
     {
       "id": "rung-ngap-man",
       "category": "NATURE",
       "name": "Rừng ngập mặn",
-      "nameEn": "Mangrove forest",
       "hint": "Rừng mọc trong nước lợ, rễ chống chằng chịt nhô lên khỏi bùn khi triều xuống.",
-      "hintEn": "Forest standing in brackish water, its tangle of prop roots exposed above the mud at low tide.",
-      "aliases": ["rừng ngập mặn", "rừng đước", "rừng tràm", "mangrove"]
+      "aliases": [
+        "rừng ngập mặn",
+        "rừng đước",
+        "rừng tràm",
+        "mangrove"
+      ],
+      "names": {
+        "en": "Mangrove forest",
+        "ja": "マングローブ林",
+        "ko": "맹그로브 숲",
+        "zh": "红树林",
+        "fr": "Mangrove",
+        "es": "Manglar",
+        "th": "ป่าชายเลน"
+      },
+      "hints": {
+        "en": "Forest standing in brackish water, its tangle of prop roots exposed above the mud at low tide.",
+        "ja": "汽水に立つ林。干潮時には泥の上に支柱根の絡まりが現れる。",
+        "ko": "기수에 잠겨 선 숲. 썰물이면 뻘 위로 얽힌 지지근이 드러난다.",
+        "zh": "长在半咸水中的树林，退潮时露出泥面上盘错的支柱根。",
+        "fr": "Une forêt les pieds dans l'eau saumâtre, son enchevêtrement de racines-échasses découvert sur la vase à marée basse.",
+        "es": "Bosque que crece en agua salobre, con su maraña de raíces zancudas al descubierto sobre el fango en bajamar.",
+        "th": "ป่าที่ยืนอยู่ในน้ำกร่อย ยามน้ำลงจะเห็นรากค้ำยันพันกันอยู่เหนือเลน"
+      }
     },
     {
       "id": "doi-cat",
       "category": "NATURE",
       "name": "Đồi cát",
-      "nameEn": "Sand dunes",
       "hint": "Đồi cát trải sóng do gió thổi, màu vàng hoặc đỏ, gần như không có cây cối.",
-      "hintEn": "Dunes rippled by the wind, yellow or red, almost bare of vegetation.",
-      "aliases": ["đồi cát", "cồn cát", "sand dune"]
+      "aliases": [
+        "đồi cát",
+        "cồn cát",
+        "sand dune"
+      ],
+      "names": {
+        "en": "Sand dunes",
+        "ja": "砂丘",
+        "ko": "모래언덕",
+        "zh": "沙丘",
+        "fr": "Dunes de sable",
+        "es": "Dunas de arena",
+        "th": "เนินทราย"
+      },
+      "hints": {
+        "en": "Dunes rippled by the wind, yellow or red, almost bare of vegetation.",
+        "ja": "風が波模様を刻んだ砂の丘。黄や赤で、草木はほとんどない。",
+        "ko": "바람이 물결무늬를 남긴 노랗거나 붉은 모래언덕. 초목이 거의 없다.",
+        "zh": "被风吹出波纹的沙丘，黄色或红色，几乎不长草木。",
+        "fr": "Des dunes ridées par le vent, jaunes ou rouges, presque nues de végétation.",
+        "es": "Dunas rizadas por el viento, amarillas o rojas, casi desnudas de vegetación.",
+        "th": "เนินทรายที่ลมพัดจนเป็นริ้วคลื่น สีเหลืองหรือสีแดง แทบไม่มีพืชขึ้น"
+      }
     },
-
     {
       "id": "van-mieu",
       "category": "LANDMARK",
       "name": "Văn Miếu – Quốc Tử Giám",
-      "nameEn": "Temple of Literature",
       "hint": "Khuê Văn Các hai tầng tám mái nhìn xuống hồ vuông, phía trong là sân bia tiến sĩ trên lưng rùa.",
-      "hintEn": "The two-storey Khuê Văn pavilion over a square pond, and beyond it the courtyard of doctors' steles on tortoises.",
-      "aliases": ["văn miếu", "quốc tử giám", "khuê văn các", "temple of literature"]
+      "aliases": [
+        "văn miếu",
+        "quốc tử giám",
+        "khuê văn các",
+        "temple of literature"
+      ],
+      "names": {
+        "en": "Temple of Literature",
+        "ja": "文廟 – 国子監",
+        "ko": "문묘 – 국자감",
+        "zh": "文庙 – 国子监",
+        "fr": "Temple de la Littérature",
+        "es": "Templo de la Literatura",
+        "th": "วันเหมี่ยว – ก๊วกตื๋อยาม"
+      },
+      "hints": {
+        "en": "The two-storey Khuê Văn pavilion over a square pond, and beyond it the courtyard of doctors' steles on tortoises.",
+        "ja": "方形の池に映る二層の Khuê Văn 閣、その奥に亀の背に立つ進士題名碑の中庭。",
+        "ko": "네모난 연못 위의 이층 Khuê Văn 누각, 그 너머로 거북 위에 선 진사 비석의 뜰.",
+        "zh": "方池上的两层 Khuê Văn 阁，往里是立在石龟背上的进士题名碑庭院。",
+        "fr": "Le pavillon Khuê Văn à deux niveaux au-dessus d'un bassin carré, et au-delà la cour des stèles des docteurs portées par des tortues.",
+        "es": "El pabellón Khuê Văn de dos plantas sobre un estanque cuadrado y, más allá, el patio de las estelas de los doctores sobre tortugas.",
+        "th": "หอ Khuê Văn สองชั้นเหนือสระสี่เหลี่ยม ถัดเข้าไปเป็นลานศิลาจารึกบัณฑิตบนหลังเต่า"
+      }
     },
     {
       "id": "chua-mot-cot",
       "category": "LANDMARK",
       "name": "Chùa Một Cột",
-      "nameEn": "One Pillar Pagoda",
       "hint": "Ngôi chùa nhỏ hình vuông đặt trên một cột đá duy nhất giữa hồ, dựng như một bông sen đang nở.",
-      "hintEn": "A small square shrine on a single stone pillar in a pond, built to stand like an opening lotus.",
-      "aliases": ["chùa một cột", "diên hựu", "one pillar pagoda"]
+      "aliases": [
+        "chùa một cột",
+        "diên hựu",
+        "one pillar pagoda"
+      ],
+      "names": {
+        "en": "One Pillar Pagoda",
+        "ja": "一柱寺",
+        "ko": "일주사",
+        "zh": "一柱寺",
+        "fr": "Pagode au Pilier unique",
+        "es": "Pagoda del Pilar Único",
+        "th": "วัดเสาเดียว"
+      },
+      "hints": {
+        "en": "A small square shrine on a single stone pillar in a pond, built to stand like an opening lotus.",
+        "ja": "池の中の一本の石柱に載る小さな方形の堂。開きかけの蓮に見立てて建てられた。",
+        "ko": "연못 속 돌기둥 하나에 올린 작은 네모 사당. 피어나는 연꽃처럼 서도록 지었다.",
+        "zh": "池中单根石柱上的方形小殿，取一朵将开莲花的意象而建。",
+        "fr": "Un petit sanctuaire carré posé sur un unique pilier de pierre au milieu d'un bassin, bâti pour se dresser comme un lotus qui s'ouvre.",
+        "es": "Un pequeño santuario cuadrado sobre un único pilar de piedra en un estanque, construido para alzarse como un loto que se abre.",
+        "th": "ศาลาทรงสี่เหลี่ยมหลังเล็กตั้งบนเสาหินต้นเดียวกลางสระ สร้างให้ดูเหมือนดอกบัวกำลังแย้ม"
+      }
     },
     {
       "id": "kinh-thanh-hue",
       "category": "LANDMARK",
       "name": "Kinh thành Huế",
-      "nameEn": "Huế Citadel",
       "hint": "Tường thành gạch dày có hào nước bao quanh; Ngọ Môn năm lối với lầu Ngũ Phụng bên trên.",
-      "hintEn": "Thick brick ramparts inside a moat, entered through the five-passage Ngọ Môn beneath its Five Phoenix pavilion.",
-      "aliases": ["kinh thành huế", "đại nội", "ngọ môn", "hoàng thành huế", "imperial citadel"]
+      "aliases": [
+        "kinh thành huế",
+        "đại nội",
+        "ngọ môn",
+        "hoàng thành huế",
+        "imperial citadel"
+      ],
+      "names": {
+        "en": "Huế Citadel",
+        "ja": "フエの王城",
+        "ko": "후에 왕성",
+        "zh": "顺化皇城",
+        "fr": "Citadelle de Huế",
+        "es": "Ciudadela de Huế",
+        "th": "พระราชวังหลวงเมืองเว้"
+      },
+      "hints": {
+        "en": "Thick brick ramparts inside a moat, entered through the five-passage Ngọ Môn beneath its Five Phoenix pavilion.",
+        "ja": "堀に囲まれた厚い煉瓦の城壁。五鳳楼を戴く五つの通路の Ngọ Môn から入る。",
+        "ko": "해자 안쪽의 두꺼운 벽돌 성벽. 오봉루를 인 다섯 통로의 Ngọ Môn으로 들어간다.",
+        "zh": "护城河内的厚重砖砌城墙，由五凤楼下开五道门洞的 Ngọ Môn 进入。",
+        "fr": "D'épais remparts de brique derrière des douves, que l'on franchit par la Ngọ Môn à cinq passages, sous son pavillon des Cinq Phénix.",
+        "es": "Gruesas murallas de ladrillo tras un foso, a las que se entra por la Ngọ Môn de cinco pasos, bajo su pabellón de los Cinco Fénix.",
+        "th": "กำแพงอิฐหนาหลังคูน้ำ เข้าทางประตู Ngọ Môn ห้าช่องใต้หอห้าหงส์"
+      }
     },
     {
       "id": "chua-cau",
       "category": "LANDMARK",
       "name": "Chùa Cầu Hội An",
-      "nameEn": "Japanese Covered Bridge",
       "hint": "Cầu gỗ có mái che bắc qua lạch nước ở Hội An, hai đầu cầu đặt tượng khỉ và tượng chó đá.",
-      "hintEn": "A roofed timber bridge over a Hội An creek, guarded at one end by stone monkeys and at the other by stone dogs.",
-      "aliases": ["chùa cầu", "cầu nhật bản", "lai viễn kiều", "japanese bridge"]
+      "aliases": [
+        "chùa cầu",
+        "cầu nhật bản",
+        "lai viễn kiều",
+        "japanese bridge"
+      ],
+      "names": {
+        "en": "Japanese Covered Bridge",
+        "ja": "来遠橋（日本橋）",
+        "ko": "내원교(일본교)",
+        "zh": "会安来远桥（日本桥）",
+        "fr": "Pont couvert japonais",
+        "es": "Puente Cubierto Japonés",
+        "th": "สะพานญี่ปุ่น"
+      },
+      "hints": {
+        "en": "A roofed timber bridge over a Hội An creek, guarded at one end by stone monkeys and at the other by stone dogs.",
+        "ja": "Hội An の掘割に架かる屋根付きの木橋。一方の端を石の猿が、もう一方を石の犬が守る。",
+        "ko": "Hội An 수로에 놓인 지붕 있는 목조 다리. 한쪽 끝은 돌원숭이가, 반대쪽은 돌개가 지킨다.",
+        "zh": "跨过 Hội An 小溪的木构廊桥，一端由石猴守着，另一端是石犬。",
+        "fr": "Un pont de bois couvert enjambant un canal de Hội An, gardé à une extrémité par des singes de pierre et à l'autre par des chiens de pierre.",
+        "es": "Un puente de madera techado sobre un canal de Hội An, guardado en un extremo por monos de piedra y en el otro por perros de piedra.",
+        "th": "สะพานไม้มีหลังคาข้ามคลองใน Hội An ปลายด้านหนึ่งมีลิงหินเฝ้า อีกด้านเป็นสุนัขหิน"
+      }
     },
     {
       "id": "nha-tho-duc-ba",
       "category": "LANDMARK",
       "name": "Nhà thờ Đức Bà Sài Gòn",
-      "nameEn": "Saigon Notre-Dame Cathedral",
       "hint": "Nhà thờ xây gạch đỏ trần không tô, hai tháp chuông vuông cao bằng nhau đứng giữa quảng trường.",
-      "hintEn": "A cathedral of bare red brick with two matching square bell towers, standing in its own square.",
-      "aliases": ["nhà thờ đức bà", "vương cung thánh đường sài gòn", "notre dame"]
+      "aliases": [
+        "nhà thờ đức bà",
+        "vương cung thánh đường sài gòn",
+        "notre dame"
+      ],
+      "names": {
+        "en": "Saigon Notre-Dame Cathedral",
+        "ja": "サイゴン大聖堂",
+        "ko": "사이공 노트르담 대성당",
+        "zh": "西贡圣母大教堂",
+        "fr": "Cathédrale Notre-Dame de Saïgon",
+        "es": "Catedral de Notre-Dame de Saigón",
+        "th": "มหาวิหารนอเทรอดามไซ่ง่อน"
+      },
+      "hints": {
+        "en": "A cathedral of bare red brick with two matching square bell towers, standing in its own square.",
+        "ja": "素焼きの赤煉瓦をそのまま見せる大聖堂。同じ形の方形の鐘楼が二基、広場の中に立つ。",
+        "ko": "붉은 벽돌을 그대로 드러낸 대성당. 똑같은 모양의 네모난 종탑 두 개가 광장에 서 있다.",
+        "zh": "清水红砖砌成的大教堂，两座一模一样的方形钟楼立在自己的广场上。",
+        "fr": "Une cathédrale de brique rouge apparente, flanquée de deux clochers carrés identiques, dressée sur sa propre place.",
+        "es": "Una catedral de ladrillo rojo visto con dos campanarios cuadrados idénticos, en medio de su propia plaza.",
+        "th": "มหาวิหารอิฐแดงเปลือย มีหอระฆังทรงสี่เหลี่ยมสองหอเหมือนกัน ตั้งอยู่กลางจัตุรัสของตัวเอง"
+      }
     },
     {
       "id": "lang-bac",
       "category": "LANDMARK",
       "name": "Lăng Chủ tịch Hồ Chí Minh",
-      "nameEn": "Hồ Chí Minh Mausoleum",
       "hint": "Khối đá xám vuông vức giật cấp, hàng cột vuông chạy quanh mặt trước, có tiêu binh đứng gác.",
-      "hintEn": "A stepped block of grey stone fronted by square columns, with a sentry standing guard.",
-      "aliases": ["lăng chủ tịch hồ chí minh", "lăng bác", "mausoleum"]
+      "aliases": [
+        "lăng chủ tịch hồ chí minh",
+        "lăng bác",
+        "mausoleum"
+      ],
+      "names": {
+        "en": "Hồ Chí Minh Mausoleum",
+        "ja": "ホーチミン廟",
+        "ko": "호찌민 묘소",
+        "zh": "胡志明主席陵",
+        "fr": "Mausolée de Hồ Chí Minh",
+        "es": "Mausoleo de Hồ Chí Minh",
+        "th": "สุสานประธานาธิบดีโฮจิมินห์"
+      },
+      "hints": {
+        "en": "A stepped block of grey stone fronted by square columns, with a sentry standing guard.",
+        "ja": "角柱を正面に並べた、灰色の石の段状の建物。衛兵が立哨している。",
+        "ko": "각기둥을 앞세운 회색 돌의 계단식 건물. 위병이 보초를 선다.",
+        "zh": "灰石砌成的层叠方块，正面排列方柱，门前有卫兵站岗。",
+        "fr": "Un bloc de pierre grise à degrés, précédé de colonnes carrées, avec une sentinelle au garde-à-vous.",
+        "es": "Un bloque escalonado de piedra gris con columnas cuadradas al frente y un centinela montando guardia.",
+        "th": "อาคารหินสีเทาซ้อนเป็นชั้น ด้านหน้าเรียงเสาสี่เหลี่ยม มีทหารยืนยาม"
+      }
     },
     {
       "id": "my-son",
       "category": "LANDMARK",
       "name": "Thánh địa Mỹ Sơn",
-      "nameEn": "Mỹ Sơn Sanctuary",
       "hint": "Cụm tháp gạch Chăm trong thung lũng núi bao quanh; nhiều tháp chỉ còn phần chân sau chiến tranh.",
-      "hintEn": "A cluster of Cham brick towers in a valley ringed by hills, many reduced to their bases by the war.",
-      "aliases": ["mỹ sơn", "thánh địa mỹ sơn", "my son sanctuary"]
+      "aliases": [
+        "mỹ sơn",
+        "thánh địa mỹ sơn",
+        "my son sanctuary"
+      ],
+      "names": {
+        "en": "Mỹ Sơn Sanctuary",
+        "ja": "ミーソン聖域",
+        "ko": "미선 유적",
+        "zh": "美山圣地",
+        "fr": "Sanctuaire de Mỹ Sơn",
+        "es": "Santuario de Mỹ Sơn",
+        "th": "เทวสถานหมีเซิน"
+      },
+      "hints": {
+        "en": "A cluster of Cham brick towers in a valley ringed by hills, many reduced to their bases by the war.",
+        "ja": "丘に囲まれた谷間に建つチャムの煉瓦塔群。多くは戦争で基壇を残すのみとなった。",
+        "ko": "언덕에 둘러싸인 골짜기에 선 참족 벽돌 탑들. 상당수는 전쟁으로 기단만 남았다.",
+        "zh": "群山环抱的谷地中一组占婆砖塔，许多在战争中只剩基座。",
+        "fr": "Un ensemble de tours de brique cham dans une vallée cernée de collines, beaucoup réduites à leurs soubassements par la guerre.",
+        "es": "Un conjunto de torres cham de ladrillo en un valle rodeado de colinas, muchas reducidas a sus basamentos por la guerra.",
+        "th": "กลุ่มปราสาทอิฐของชาวจามในหุบเขาที่มีเนินล้อมรอบ หลายหลังเหลือเพียงฐานเพราะสงคราม"
+      }
     }
   ]
 }

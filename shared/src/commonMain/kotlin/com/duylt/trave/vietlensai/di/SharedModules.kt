@@ -32,7 +32,6 @@ import com.duylt.trave.vietlensai.domain.usecase.SaveNoteUseCase
 import com.duylt.trave.vietlensai.domain.usecase.SweepOrphanCapturesUseCase
 import com.duylt.trave.vietlensai.domain.usecase.ToggleFavoriteUseCase
 import com.duylt.trave.vietlensai.domain.usecase.TranslateImageUseCase
-import com.duylt.trave.vietlensai.domain.usecase.UpdateLanguageUseCase
 import com.duylt.trave.vietlensai.domain.usecase.UpdateModelUseCase
 import com.duylt.trave.vietlensai.domain.usecase.UpdateThemeUseCase
 import com.duylt.trave.vietlensai.feature.camera.LensViewModel
@@ -92,7 +91,6 @@ val useCaseModule: Module = module {
     factory { ObserveSettingsUseCase(get()) }
     factory { ObserveApiKeyAvailabilityUseCase(get()) }
     factory { SaveApiKeyUseCase(get()) }
-    factory { UpdateLanguageUseCase(get()) }
     factory { UpdateModelUseCase(get()) }
     factory { UpdateThemeUseCase(get()) }
     factory { MarkLocationAskedUseCase(get()) }
@@ -114,6 +112,7 @@ val presentationModule: Module = module {
         MainViewModel(
             observeSettings = get(),
             sweepOrphanCaptures = get(),
+            seedDemoData = get(),
         )
     }
 
@@ -132,9 +131,15 @@ val presentationModule: Module = module {
     // `SavedStateHandle` is resolved by Koin's ViewModel support from the navigation entry's
     // own saved state, which is how the chat, discovery and translation screens read the
     // route arguments they were opened with.
+    //
+    // Chat also accepts the id outright, because the tablet's guide column is not a
+    // destination and has no route of its own to read — `parametersOf(discoveryId)` at the
+    // call site lands in the same holder, looked up by type. `getOrNull` rather than `get`:
+    // the phone passes nothing and falls back to the handle. See `ChatViewModel`'s KDoc.
     viewModel { params ->
         ChatViewModel(
             savedStateHandle = params.get(),
+            explicitDiscoveryId = params.getOrNull<String>(),
             observeDiscovery = get(),
             observeChat = get(),
             observeSettings = get(),
@@ -211,7 +216,6 @@ val presentationModule: Module = module {
             observeApiKeyAvailability = get(),
             settingsRepository = get(),
             saveApiKey = get(),
-            updateLanguage = get(),
             updateModel = get(),
             updateTheme = get(),
             clearHistory = get(),

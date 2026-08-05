@@ -48,15 +48,28 @@ internal class IosCaptureStore(
         "${iosCapturesDirectory()}/" +
             ImagePolicy.captureFileName(Clock.System.now().toEpochMilliseconds())
 
+    override fun nameOf(nameOrPath: String): String = ImagePolicy.fileNameOf(nameOrPath)
+
+    /**
+     * Rebuilt from the container's location *now*, never from a path stored earlier.
+     *
+     * This is the whole fix: `iosCapturesDirectory()` asks the file manager where
+     * Application Support is on this launch, and that answer changes under the app when
+     * iOS re-homes the container after an install, an update or a restore.
+     */
+    override fun resolve(nameOrPath: String): String =
+        "${iosCapturesDirectory()}/${nameOf(nameOrPath)}"
+
     override suspend fun read(path: String): AppResult<CaptureImage> =
         withContext(ioDispatcher) {
-            if (!NSFileManager.defaultManager.fileExistsAtPath(path)) {
+            val resolved = resolve(path)
+            if (!NSFileManager.defaultManager.fileExistsAtPath(resolved)) {
                 return@withContext AppResult.Failure(
-                    AppError.ImageUnavailable("File not found: $path"),
+                    AppError.ImageUnavailable("File not found: $resolved"),
                 )
             }
             try {
-                val source = UIImage.imageWithContentsOfFile(path)
+                val source = UIImage.imageWithContentsOfFile(resolved)
                     ?: return@withContext AppResult.Failure(
                         AppError.ImageUnavailable("Could not decode image"),
                     )
@@ -83,7 +96,7 @@ internal class IosCaptureStore(
                     ),
                 )
             } catch (e: Exception) {
-                log.e(e) { "Could not read $path" }
+                log.e(e) { "Could not read $resolved" }
                 AppResult.Failure(AppError.ImageUnavailable(e.message))
             }
         }
@@ -118,7 +131,7 @@ internal class IosCaptureStore(
     override suspend fun delete(path: String?) {
         withContext(ioDispatcher) {
             path?.let {
-                runCatching { NSFileManager.defaultManager.removeItemAtPath(it, null) }
+                runCatching { NSFileManager.defaultManager.removeItemAtPath(resolve(it), null) }
             }
         }
     }
@@ -137,7 +150,7 @@ internal class IosCaptureStore(
                 is AppResult.Success -> read.data
             }
             try {
-                if (!upright.bytes.toNSData().writeToFile(path, atomically = true)) {
+                if (!upright.bytes.toNSData().writeToFile(resolve(path), atomically = true)) {
                     return@withContext AppResult.Failure(
                         AppError.ImageUnavailable("Could not rewrite $path upright"),
                     )
@@ -150,15 +163,13 @@ internal class IosCaptureStore(
         }
 
     override suspend fun listCaptures(): List<String> = withContext(ioDispatcher) {
-        val directory = iosCapturesDirectory()
         runCatching {
+            // `contentsOfDirectoryAtPath` already returns bare names, which is exactly
+            // what the sweep compares against the database.
             NSFileManager.defaultManager
-                .contentsOfDirectoryAtPath(directory, null)
+                .contentsOfDirectoryAtPath(iosCapturesDirectory(), null)
                 .orEmpty()
                 .filterIsInstance<String>()
-                // `contentsOfDirectoryAtPath` returns bare names, but everything that
-                // consumes a capture works in absolute paths.
-                .map { name -> "$directory/$name" }
         }
             .onFailure { log.w(it) { "Could not list the captures directory" } }
             .getOrDefault(emptyList())

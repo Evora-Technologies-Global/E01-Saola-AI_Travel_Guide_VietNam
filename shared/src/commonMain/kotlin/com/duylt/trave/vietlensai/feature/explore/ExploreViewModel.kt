@@ -104,7 +104,14 @@ class ExploreViewModel(
         val isFirstLoad = currentState.center == null
         setState { copy(isLoading = isFirstLoad, isRefreshing = !isFirstLoad, error = null) }
 
-        launchSafely(onError = { setState { copy(error = it) } }) {
+        // Both spinners come down as well as the error being written. An unwrapped throw
+        // skips every `AppResult` arm below, so this is the only thing that lowers them —
+        // and because the guard above refuses to start a search while either is up, leaving
+        // one raised does not merely spin, it retires refresh and retry for the life of the
+        // process. Same rule as `LensViewModel`'s analysis job and the chat's `isSending`.
+        launchSafely(
+            onError = { setState { copy(isLoading = false, isRefreshing = false, error = it) } },
+        ) {
             // The fix first, and published on its own. The map can be drawn from this
             // alone, so a search failure a moment later costs the traveller their
             // markers rather than the whole screen.
@@ -208,7 +215,17 @@ class ExploreViewModel(
             )
         }
 
-        detailsJob = launchSafely(onError = { setState { copy(error = it) } }) {
+        // Guarded on the id for the same reason the two arms below are: a throw belongs to
+        // the request that raised this flag, and by the time it lands the traveller may have
+        // opened another place whose own spinner must be left alone.
+        detailsJob = launchSafely(
+            onError = {
+                setState {
+                    if (selectedPlaceId == placeId) copy(isLoadingDetails = false, error = it)
+                    else copy(error = it)
+                }
+            },
+        ) {
             when (val result = loadPlaceDetails(place, currentState.language)) {
                 is AppResult.Success -> setState {
                     // Guarded: a slow response for a place the traveller has since

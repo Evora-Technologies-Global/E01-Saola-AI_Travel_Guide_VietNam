@@ -8,8 +8,8 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.MutablePreferences
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
+import com.duylt.trave.vietlensai.data.platform.deviceLanguage
 import com.duylt.trave.vietlensai.data.util.log
-import com.duylt.trave.vietlensai.domain.model.AppLanguage
 import com.duylt.trave.vietlensai.domain.model.AppSettings
 import com.duylt.trave.vietlensai.domain.model.GeminiModel
 import com.duylt.trave.vietlensai.domain.model.ThemePreference
@@ -43,7 +43,8 @@ internal class SettingsDataStore(
         .map { prefs ->
             AppSettings(
                 apiKey = prefs[Keys.API_KEY]?.takeIf { it.isNotBlank() },
-                language = AppLanguage.fromCode(prefs[Keys.LANGUAGE]),
+                // Read from the phone, not from storage. See [deviceLanguage].
+                language = deviceLanguage(),
                 preferredModel = GeminiModel.fromId(prefs[Keys.MODEL]),
                 speakAnswers = prefs[Keys.SPEAK_ANSWERS] ?: AppSettings.DEFAULT.speakAnswers,
                 hasAskedLocation = prefs[Keys.LOCATION_ASKED]
@@ -57,8 +58,6 @@ internal class SettingsDataStore(
     suspend fun setApiKey(key: String?) = edit { prefs ->
         if (key.isNullOrBlank()) prefs.remove(Keys.API_KEY) else prefs[Keys.API_KEY] = key
     }
-
-    suspend fun setLanguage(language: AppLanguage) = edit { it[Keys.LANGUAGE] = language.code }
 
     suspend fun setModel(model: GeminiModel) = edit { it[Keys.MODEL] = model.id }
 
@@ -100,7 +99,9 @@ internal class SettingsDataStore(
 
     private object Keys {
         val API_KEY = stringPreferencesKey("gemini_api_key")
-        val LANGUAGE = stringPreferencesKey("language")
+        // No LANGUAGE key. The old "language" preference is left unread rather than
+        // migrated: on an upgraded install it holds whatever the in-app picker was last
+        // set to, which is exactly the value this change exists to stop honouring.
         val MODEL = stringPreferencesKey("gemini_model")
         val SPEAK_ANSWERS = booleanPreferencesKey("speak_answers")
         // A new key rather than a reuse of the old `use_location`: that one was

@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Korean. Vietnamese proper nouns keep their diacritics — Việt Nam, Hoàng Sa — because
+  the traveller has to match what they read here against a sign, a ticket and a map that
+  are written only that way. See values/strings.xml for the rest of the conventions.
+-->
+<resources>
+    <string name="app_name">VietLens AI</string>
+
+    <string name="resource_language">ko</string>
+
+    <!-- Navigation -->
+    <string name="nav_lens">렌즈</string>
+    <string name="nav_journal">일지</string>
+    <string name="nav_explore">주변</string>
+    <string name="nav_settings">설정</string>
+
+    <!-- Camera -->
+    <string name="camera_permission_title">카메라 권한이 필요합니다</string>
+    <string name="camera_permission_body">VietLens는 주변의 명소와 음식, 표지판을 알아보기 위해 카메라를 사용합니다. 사진은 기기 안에만 남습니다.</string>
+    <string name="camera_permission_grant">카메라 허용</string>
+    <string name="camera_permission_blocked_body">VietLens의 카메라 권한이 꺼져 있고 Android는 다시 묻지 않습니다. 계속하려면 앱 설정에서 켜 주세요.</string>
+    <string name="location_permission_title">여권에 도장 찍기</string>
+    <string name="location_permission_body">위치를 켜면 사진마다 어느 성에서 찍혔는지 기억하고, 그 성이 여권 지도에 채워집니다.</string>
+    <string name="location_permission_blocked_body">VietLens의 위치 권한이 꺼져 있고 Android는 다시 묻지 않습니다. 사진으로 여권 지도를 채우려면 앱 설정에서 켜 주세요.</string>
+    <string name="location_permission_grant">허용</string>
+    <string name="location_permission_later">나중에</string>
+    <string name="permission_open_settings">설정 열기</string>
+    <string name="camera_capture">촬영</string>
+    <string name="camera_pick_gallery">사진 고르기</string>
+    <string name="camera_flash_on">플래시 켜기</string>
+    <string name="camera_flash_off">플래시 끄기</string>
+    <string name="camera_mode_selector">촬영 모드</string>
+    <string name="camera_grid_show">격자 표시</string>
+    <string name="camera_grid_hide">격자 숨기기</string>
+    <string name="camera_switch_lens">카메라 전환</string>
+    <string name="camera_timer_off">타이머 끔</string>
+    <string name="camera_timer_3">3초 타이머</string>
+    <string name="camera_timer_10">10초 타이머</string>
+    <string name="camera_cancel_timer">타이머 취소</string>
+    <string name="camera_open_journal">일지 열기</string>
+    <string name="camera_ready_to_scan">스캔 준비 완료</string>
+    <string name="camera_recent_scans">최근 스캔</string>
+    <string name="camera_ae_af_locked">AE/AF 잠금</string>
+    <string name="camera_hint_auto">명소나 음식, 전시품을 향해 주세요</string>
+    <string name="camera_hint_landmark">건물이나 기념물 전체를 담아 주세요</string>
+    <string name="camera_hint_food">음식에 가까이 가 주세요</string>
+    <string name="camera_hint_artifact">가능하면 설명판도 함께 담아 주세요</string>
+    <string name="camera_hint_translate">글자 위에서 움직이지 말고 들어 주세요</string>
+
+    <!-- Lens modes -->
+    <string name="mode_auto">자동</string>
+    <string name="mode_landmark">유산</string>
+    <string name="mode_food">음식</string>
+    <string name="mode_artifact">박물관</string>
+    <string name="mode_translate">번역</string>
+
+    <!-- Photo translation language picker -->
+    <string name="camera_translate_auto">자동</string>
+    <string name="camera_translate_auto_detect">자동으로 인식</string>
+    <string name="camera_translate_from">원본 언어</string>
+    <string name="camera_translate_to">번역할 언어</string>
+    <string name="camera_translate_swap">언어 바꾸기</string>
+    <string name="camera_translate_pick_from">원본 언어 선택</string>
+    <string name="camera_translate_pick_to">번역할 언어 선택</string>
+
+    <!-- Language names -->
+    <string name="language_vi">베트남어</string>
+    <string name="language_en">영어</string>
+    <string name="language_ja">일본어</string>
+    <string name="language_ko">한국어</string>
+    <string name="language_zh">중국어</string>
+    <string name="language_fr">프랑스어</string>
+    <string name="language_es">스페인어</string>
+    <string name="language_th">태국어</string>
+
+    <!-- Analysing -->
+    <string name="analysing_title">사진을 보는 중…</string>
+    <string name="analysing_recognising">화면에 무엇이 있는지 알아보는 중</string>
+    <string name="analysing_history">그 뒤의 역사를 모으는 중</string>
+    <string name="analysing_stories">들려줄 만한 이야기를 찾는 중</string>
+
+    <!-- Discovery -->
+    <string name="discovery_confidence">%1$d% 일치</string>
+    <string name="discovery_low_confidence">확신하기는 어렵습니다. 다른 각도로 찍으면 더 정확해집니다.</string>
+    <string name="discovery_nearby">온 김에</string>
+    <string name="discovery_ask">이것에 대해 묻기</string>
+    <string name="discovery_ask_subtitle">가이드는 위의 내용을 모두 기억합니다</string>
+    <string name="discovery_listen">듣기</string>
+    <string name="discovery_stop">정지</string>
+    <string name="discovery_favorite_add">즐겨찾기에 추가</string>
+    <string name="discovery_favorite_remove">즐겨찾기에서 제거</string>
+    <string name="discovery_delete">삭제</string>
+    <string name="discovery_walk_minutes">도보 %1$d분</string>
+    <string name="discovery_model">%1$s이(가) 답했습니다</string>
+    <string name="discovery_not_found">이 발견은 더 이상 없습니다.</string>
+    <string name="discovery_delete_confirm_title">이 발견을 삭제할까요?</string>
+    <string name="discovery_delete_confirm_body">사진과 그에 대한 대화가 이 기기에서 지워집니다.</string>
+    <string name="discovery_photo_label">사진 · %1$s</string>
+    <string name="discovery_listen_title">이야기 듣기</string>
+    <string name="discovery_listen_meta">%1$d분 · %2$s로 낭독</string>
+    <string name="discovery_favorite_saved">저장됨</string>
+    <string name="discovery_share">공유</string>
+    <string name="discovery_share_body">%1$s\n\n%2$s\n\nVietLens AI에서 공유</string>
+    <plurals name="discovery_notice_count">
+        <item quantity="other">눈여겨볼 것 %1$d가지</item>
+    </plurals>
+
+    <!-- The traveller's own note -->
+    <string name="discovery_note_kicker">내 메모</string>
+    <string name="discovery_note_empty_title">이건 나를 위해 남겨 두기</string>
+    <string name="discovery_note_empty_body">어떤 기분이었는지 한 줄, 직접 찍은 사진 한 장 — 어떤 안내서도 대신 써 줄 수 없는 부분입니다.</string>
+    <string name="discovery_note_add">메모 쓰기</string>
+    <string name="discovery_note_edit">편집</string>
+    <string name="discovery_note_placeholder">이곳에 대해 무엇을 기억하고 싶나요?</string>
+    <string name="discovery_note_add_photo">사진 추가</string>
+    <string name="discovery_note_photo_count">사진 %1$d / %2$d장</string>
+    <string name="discovery_note_remove_photo">이 사진 삭제</string>
+    <string name="discovery_note_open_photo">이 사진 열기</string>
+    <string name="discovery_note_photo_position">%1$d / %2$d</string>
+    <string name="discovery_note_save">메모 저장</string>
+    <string name="discovery_note_delete">메모 삭제</string>
+    <string name="discovery_note_edited">수정됨</string>
+    <string name="discovery_note_take_photo">사진 찍기</string>
+    <string name="discovery_note_camera_flip">카메라 전환</string>
+    <string name="discovery_note_camera_permission_title">이 메모에 넣을 사진을 찍을까요?</string>
+    <string name="discovery_note_camera_permission_body">메모와 함께 남길 사진을 찍기 위해 VietLens에 카메라가 필요합니다. 사진은 이 기기에만 저장되며 업로드되지 않습니다.</string>
+    <string name="discovery_note_camera_permission_blocked_body">VietLens의 카메라가 꺼져 있고 Android는 다시 묻지 않습니다. 촬영하려면 앱 설정에서 다시 켜 주세요. 그전까지는 갤러리에서 추가할 수 있습니다.</string>
+    <string name="discovery_note_camera_permission_allow">허용</string>
+    <string name="discovery_note_camera_permission_deny">나중에</string>
+    <string name="discovery_note_in_diary">가이드가 그날의 일기를 쓸 때 이 메모를 활용합니다.</string>
+
+    <!-- Chat -->
+    <string name="chat_title">가이드에게 묻기</string>
+    <string name="chat_subtitle">현지 가이드에게 묻기</string>
+    <string name="chat_about">%1$s 정보</string>
+    <string name="chat_suggestions_kicker">이렇게 물어보세요</string>
+    <string name="chat_input_hint">이곳에 대해 무엇이든 물어보세요…</string>
+    <string name="chat_send">보내기</string>
+    <string name="chat_thinking">생각하는 중…</string>
+    <string name="chat_empty_title">무엇이든 물어보세요</string>
+    <string name="chat_empty_body">누가 지었는지, 왜 중요한지, 다음에 무엇을 볼지 — 방금 본 것을 기억하고 있습니다.</string>
+    <string name="chat_clear">대화 지우기</string>
+
+    <!-- Translation -->
+    <string name="translate_copy">번역 복사</string>
+    <string name="translate_copied">번역을 복사했습니다</string>
+    <string name="translate_speak">소리내어 읽기</string>
+    <string name="translate_show_original">길게 눌러 원문 보기</string>
+    <string name="translate_direction">%1$s → %2$s</string>
+    <string name="translate_leave_title">번역이 끝나기 전에 나갈까요?</string>
+    <string name="translate_leave_body">이 사진은 아직 번역 중입니다. 지금 나가면 취소되고 아무것도 저장되지 않습니다.</string>
+    <string name="translate_leave_confirm">나가기</string>
+    <string name="translate_leave_stay">머물기</string>
+
+    <!-- Journal -->
+    <string name="journal_kicker">나의 여정</string>
+    <string name="journal_heading">여정 기록</string>
+    <plurals name="journal_discoveries_label">
+        <item quantity="other">건의 발견</item>
+    </plurals>
+    <string name="journal_passport_progress">%1$d / %2$d</string>
+    <string name="journal_collection_progress">%1$d / %2$d</string>
+    <string name="journal_day_write_story">이야기 쓰기</string>
+    <string name="journal_end_of_day_kicker">하루의 끝</string>
+    <plurals name="journal_end_of_day_title">
+        <item quantity="other">오늘의 발견 %1$d건을 하나의 이야기로</item>
+    </plurals>
+    <string name="journal_end_of_day_body">간직해도 좋고 집에 보내도 좋은 짧은 글 — 실제로 본 것에서만 씁니다.</string>
+    <string name="journal_end_of_day_action">오늘 이야기 쓰기</string>
+    <string name="journal_story_expand">전체 이야기 읽기</string>
+    <string name="journal_story_collapse">접기</string>
+    <string name="journal_stats_open_passport">여정 지도 열기</string>
+    <string name="journal_stats_open_collection">문화 컬렉션 열기</string>
+    <string name="journal_summary_regenerate">다시 쓰기</string>
+    <string name="journal_summary_generating">일기를 쓰는 중…</string>
+    <string name="journal_tomorrow">내일을 위한 아이디어</string>
+    <string name="journal_highlights">하이라이트</string>
+    <string name="journal_empty_title">여정은 여기서 시작됩니다</string>
+    <string name="journal_empty_body">발견한 모든 것이 날짜별로 여기에 저장되고, 하루가 끝나면 AI가 요약을 써 줍니다.</string>
+    <string name="journal_empty_action">렌즈 열기</string>
+    <string name="journal_filter_all">전체</string>
+    <string name="journal_filter_favorites">즐겨찾기</string>
+    <string name="journal_favorites_empty_title">아직 즐겨찾기가 없습니다</string>
+    <string name="journal_favorites_empty_body">발견에서 하트를 누르면 여기에 모입니다.</string>
+
+    <!-- Explore -->
+    <string name="explore_title">내 주변</string>
+    <string name="explore_nearby_count">5 km 안에 %1$d곳</string>
+    <string name="explore_loading">걸어갈 만한 곳을 찾는 중…</string>
+    <string name="explore_recenter">내 위치로</string>
+    <string name="explore_refresh">다시 찾기</string>
+    <string name="explore_search_failed_title">주변을 검색하지 못했습니다</string>
+    <string name="explore_empty_title">이 근처는 아직 지도에 없습니다</string>
+    <string name="explore_empty_body">이 일대는 OpenStreetMap에 등록된 곳이 적습니다. 자리를 옮긴 뒤 다시 시도하거나 지도를 끌어 주변을 살펴보세요.</string>
+    <string name="explore_permission_title">주변을 보려면 위치가 필요합니다</string>
+    <string name="explore_permission_body">지도는 지금 서 있는 곳을 가운데 두고 5 km 안에서 걸어갈 만한 곳을 찾습니다. 위치는 그 검색의 중심으로만 전송됩니다.</string>
+    <string name="explore_permission_blocked_body">VietLens의 위치가 꺼져 있고 시스템은 다시 묻지 않습니다. 주변을 보려면 앱 설정에서 켜 주세요.</string>
+    <string name="explore_source_note">장소는 OpenStreetMap · 설명과 사진은 Wikipedia와 Wikimedia Commons</string>
+    <string name="explore_read_more">전체 글 읽기</string>
+    <string name="explore_readers">조회 %1$s회</string>
+    <string name="explore_start_navigation">안내 시작</string>
+    <string name="explore_hours_title">상세</string>
+
+    <!-- Culture collection -->
+    <string name="collection_title">문화 컬렉션</string>
+    <string name="collection_subtitle">베트남을 한 장씩</string>
+    <string name="collection_progress_of">/ %1$d개</string>
+    <string name="collection_collected_percent">%1$d% 수집</string>
+    <string name="collection_section_progress">%1$d/%2$d</string>
+    <string name="collection_open_discovery">내 발견 열기</string>
+    <string name="collection_locked_hint">알아보는 법 보기</string>
+    <string name="collection_collected_badge">수집함</string>
+    <string name="collection_go_capture">가서 찍어 오기</string>
+    <string name="collection_view_capture">내 사진 보기</string>
+    <string name="collection_sovereignty_subtitle">Hoàng Sa · Trường Sa 군도 · 베트남의 주권</string>
+
+    <!-- Settings -->
+    <string name="settings_title">설정</string>
+    <string name="settings_kicker">환경설정</string>
+    <string name="settings_section_ai">지능</string>
+    <string name="settings_api_key">API 키</string>
+    <string name="settings_api_key_set">내 키를 사용 중</string>
+    <string name="settings_api_key_default">앱에 내장된 키를 사용 중</string>
+    <string name="settings_api_key_none">설정된 키가 없습니다</string>
+    <string name="settings_api_key_active">사용 중</string>
+    <string name="settings_api_key_inactive">키 없음</string>
+    <string name="settings_api_key_hint">내 키를 붙여넣기…</string>
+    <string name="settings_api_key_save">키 저장</string>
+    <string name="settings_api_key_clear">지우기</string>
+    <string name="settings_api_key_saved">API 키를 저장했습니다</string>
+    <string name="settings_model_balanced">균형</string>
+    <string name="settings_model_balanced_summary">충분한 깊이에, 메뉴를 읽을 만큼 빠릅니다.</string>
+    <string name="settings_model_quick">빠름</string>
+    <string name="settings_model_quick_summary">표지판, 라벨, 가격. 가장 저렴합니다.</string>
+    <string name="settings_model_scholar">학자</string>
+    <string name="settings_model_scholar_summary">역사와 문화를 가장 깊게. 대신 느립니다.</string>
+    <string name="settings_section_experience">경험</string>
+    <string name="settings_speak">답변 소리내어 읽기</string>
+    <string name="settings_speak_summary">설명과 채팅 답변을 음성으로</string>
+    <string name="settings_section_appearance">화면</string>
+    <string name="settings_theme">테마</string>
+    <string name="settings_theme_system">시스템 설정 따르기</string>
+    <string name="settings_theme_light">밝게</string>
+    <string name="settings_theme_dark">어둡게</string>
+    <string name="settings_section_data">데이터</string>
+    <string name="settings_clear_history">모든 발견 지우기</string>
+    <string name="settings_clear_history_summary">사진과 대화, 일지를 모두 삭제합니다</string>
+    <string name="settings_clear_confirm_title">전부 지울까요?</string>
+    <string name="settings_clear_confirm_body">이 기기의 모든 발견, 사진, 대화, 일지가 영구히 삭제됩니다.</string>
+    <string name="settings_cleared">모든 발견을 지웠습니다</string>
+    <string name="settings_footer">Made in Việt Nam · v%1$s</string>
+
+    <!-- Categories -->
+    <string name="category_landmark">명소</string>
+    <string name="category_food">음식</string>
+    <string name="category_artifact">유물</string>
+    <string name="category_architecture">건축</string>
+    <string name="category_nature">자연</string>
+    <string name="category_culture">문화</string>
+    <string name="category_other">기타</string>
+
+    <!-- Time -->
+    <string name="time_just_now">방금</string>
+    <string name="time_minutes_ago">%1$d분 전</string>
+    <string name="time_hours_ago">%1$d시간 전</string>
+    <string name="time_yesterday">어제</string>
+    <string name="date_today">오늘</string>
+    <string name="date_yesterday">어제</string>
+
+    <!-- Generic actions -->
+    <string name="action_retry">다시 시도</string>
+    <string name="action_cancel">취소</string>
+    <string name="action_delete">삭제</string>
+    <string name="action_back">뒤로</string>
+    <string name="action_close">닫기</string>
+
+    <!-- Errors -->
+    <string name="error_missing_api_key">아직 Gemini API 키가 없습니다. 설정에서 추가하면 인식을 시작할 수 있습니다.</string>
+    <string name="error_invalid_api_key">그 API 키는 거부되었습니다. 설정에서 확인해 주세요.</string>
+    <string name="error_no_connection">인터넷에 연결되어 있지 않습니다. 인식하려면 Gemini에 연결해야 합니다.</string>
+    <string name="error_timeout">시간이 너무 오래 걸렸습니다. 다시 시도해 주세요.</string>
+    <string name="error_rate_limited">지금은 무료 할당량을 다 썼습니다. 잠시 뒤에 다시 시도해 주세요.</string>
+    <string name="error_models_busy">Gemini가 지금 바쁩니다. 몇 초 뒤에 다시 시도해 주세요.</string>
+    <string name="error_api">Gemini가 이 요청을 처리하지 못했습니다(오류 %1$d).</string>
+    <string name="error_malformed">답변이 깨진 채로 돌아왔습니다. 다시 시도해 주세요.</string>
+    <string name="error_not_recognized">이것은 알아보지 못했습니다. 더 가까이 가거나 다른 각도로 찍어 보세요.</string>
+    <string name="error_image_unavailable">그 사진은 읽을 수 없었습니다.</string>
+    <string name="error_location_unavailable">지금은 위치를 가져올 수 없습니다.</string>
+    <string name="error_storage">이 기기에 저장하지 못했습니다.</string>
+    <string name="error_unexpected">문제가 생겼습니다. 다시 시도해 주세요.</string>
+
+    <!-- Passport -->
+    <string name="passport_title">여행 여권</string>
+    <string name="passport_subtitle">걸을수록 Việt Nam이 채워집니다</string>
+    <string name="passport_progress_of">/ %1$d개 성</string>
+    <string name="passport_explored">%1$d% 탐험</string>
+    <string name="passport_empty_title">지도가 아직 비어 있습니다</string>
+    <string name="passport_empty_body">무언가를 인식하면 그곳이 속한 성이 당신의 사진으로 밝아집니다.</string>
+    <string name="passport_empty_action">렌즈 열기</string>
+    <string name="passport_merged_from">%1$s에서 통합됨</string>
+    <string name="passport_province_locked">아직 여기에 오지 않았습니다. 이 성에서 무엇이든 카메라로 비추면 당신의 것이 됩니다.</string>
+    <string name="passport_province_locked_action">렌즈 열기</string>
+    <string name="passport_unavailable_title">지도를 표시할 수 없습니다</string>
+    <string name="passport_unavailable_body">성 경계선을 불러오지 못했습니다. 앱의 다른 기능은 모두 정상입니다.</string>
+    <plurals name="passport_discovery_count">
+        <item quantity="other">발견 %1$d건</item>
+    </plurals>
+    <string name="passport_sheet_first_visit">첫 방문</string>
+    <string name="passport_sheet_last_visit">최근</string>
+    <string name="passport_sheet_unlock_order">%1$d번째 성</string>
+    <string name="passport_sheet_no_stamp">아직 도장이 없습니다</string>
+    <string name="passport_sheet_open_discovery">%1$s 열기</string>
+    <string name="passport_sheet_expand">성 패널 펼치기</string>
+    <string name="passport_no_location_title">위치가 꺼져 있습니다</string>
+    <string name="passport_no_location_body">발견은 저장되지만 어디서 찍었는지 알지 못해 어떤 성도 채울 수 없습니다. 설정에서 위치를 켜면 앞으로 찍는 사진이 지도에 도장을 찍습니다.</string>
+    <string name="passport_administers">%1$s 군도를 관할</string>
+    <string name="passport_status_unlocked">수집함</string>
+    <string name="passport_status_locked">아직</string>
+
+    <!-- Sovereignty -->
+    <string name="sovereignty_title">Hoàng Sa 군도와 Trường Sa 군도는 Việt Nam의 것입니다</string>
+    <string name="sovereignty_seal">Chủ\nquyền\nVN</string>
+    <string name="sovereignty_read">읽기</string>
+    <string name="sovereignty_open">주권에 관한 성명 읽기</string>
+
+    <string name="sovereignty_page_title">Hoàng Sa와 Trường Sa는 Việt Nam의 주권 아래 있습니다</string>
+    <string name="sovereignty_page_subtitle">Hoàng Sa 군도 · Trường Sa 군도</string>
+    <string name="sovereignty_body">Việt Nam은 Hoàng Sa 군도와 Trường Sa 군도에 대한 주권을 여러 세기에 걸쳐 지속적이고 평화롭게 행사해 왔습니다. 이는 Đại Nam nhất thống toàn đồ(1838년)를 비롯한 조정의 문서와 지도에 기록되어 있습니다.</string>
+    <string name="sovereignty_body_source">Đại Nam nhất thống toàn đồ</string>
+    <string name="sovereignty_body_secondary">이 앱의 모든 지도와 지명, 이야기가 그에 따릅니다. 다른 곳에서 본 지도가 여기와 다르다면 그 이유가 이것입니다.</string>
+    <string name="sovereignty_note">첫 실행 때와 설정에서 모든 여행자에게 표시됩니다.</string>
+    <string name="sovereignty_understood">알겠습니다</string>
+    <string name="sovereignty_close">닫기</string>
+    <string name="sovereignty_map_country">Việt Nam</string>
+    <string name="sovereignty_map_sea">Biển Đông</string>
+
+    <string name="settings_section_about">정보</string>
+    <string name="settings_sovereignty">Biển Đông에 대한 우리의 입장</string>
+    <string name="settings_sovereignty_summary">Hoàng Sa &amp; Trường Sa · Việt Nam</string>
+</resources>

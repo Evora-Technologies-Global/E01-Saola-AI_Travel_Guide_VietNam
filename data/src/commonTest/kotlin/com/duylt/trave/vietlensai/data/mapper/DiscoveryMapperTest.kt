@@ -42,13 +42,13 @@ class DiscoveryMapperTest {
         val domain = payload
             .toEntity(
                 id = "id-1",
-                imagePath = "/data/img.jpg",
+                imageName = "capture_1.jpg",
                 location = GeoPoint(21.0287, 105.8524),
                 provinceId = "VN-HN",
                 modelUsed = "gemini-3.5-flash",
                 createdAt = now,
             )
-            .toDomain()
+            .toDomain { "/captures/$it" }
 
         assertEquals("Temple of Literature", domain.title)
         assertEquals("Văn Miếu - Quốc Tử Giám", domain.localName)
@@ -69,12 +69,12 @@ class DiscoveryMapperTest {
     fun `clamps a confidence score outside the legal range`() {
         val overconfident = DiscoveryPayload(recognized = true, title = "X", confidence = 4.2f)
             .toEntity("id", null, null, null, null, now)
-            .toDomain()
+            .toDomain { "/captures/$it" }
         assertEquals(1f, overconfident.confidence, 0.001f)
 
         val negative = DiscoveryPayload(recognized = true, title = "X", confidence = -0.5f)
             .toEntity("id", null, null, null, null, now)
-            .toDomain()
+            .toDomain { "/captures/$it" }
         assertEquals(0f, negative.confidence, 0.001f)
     }
 
@@ -82,7 +82,7 @@ class DiscoveryMapperTest {
     fun `maps an unknown category to OTHER rather than failing`() {
         val domain = DiscoveryPayload(recognized = true, title = "X", category = "SPACESHIP")
             .toEntity("id", null, null, null, null, now)
-            .toDomain()
+            .toDomain { "/captures/$it" }
         assertEquals(DiscoveryCategory.OTHER, domain.category)
     }
 
@@ -91,14 +91,14 @@ class DiscoveryMapperTest {
         val entity = DiscoveryPayload(recognized = true, title = "X")
             .toEntity("id", null, null, null, null, now)
             .copy(latitude = 21.0)
-        assertNull(entity.toDomain().location)
+        assertNull(entity.toDomain { "/captures/$it" }.location)
     }
 
     @Test
     fun `treats a blank local name as absent`() {
         val domain = DiscoveryPayload(recognized = true, title = "X", localName = "   ")
             .toEntity("id", null, null, null, null, now)
-            .toDomain()
+            .toDomain { "/captures/$it" }
         assertNull(domain.localName)
     }
 
@@ -106,7 +106,7 @@ class DiscoveryMapperTest {
     fun `flags a low-confidence match so the UI can warn`() {
         val domain = DiscoveryPayload(recognized = true, title = "X", confidence = 0.3f)
             .toEntity("id", null, null, null, null, now)
-            .toDomain()
+            .toDomain { "/captures/$it" }
         assertTrue(!domain.isConfident)
     }
 }

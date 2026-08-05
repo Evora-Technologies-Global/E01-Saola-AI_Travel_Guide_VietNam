@@ -3,33 +3,50 @@ package com.duylt.trave.vietlensai.testing
 import com.duylt.trave.vietlensai.domain.model.AppLanguage
 import com.duylt.trave.vietlensai.domain.model.AppSettings
 import com.duylt.trave.vietlensai.domain.model.CaptureImage
+import com.duylt.trave.vietlensai.domain.model.ChatMessage
+import com.duylt.trave.vietlensai.domain.model.ChatRole
 import com.duylt.trave.vietlensai.domain.model.Discovery
 import com.duylt.trave.vietlensai.domain.model.DiscoveryCategory
 import com.duylt.trave.vietlensai.domain.model.GeminiModel
 import com.duylt.trave.vietlensai.domain.model.GeoPoint
 import com.duylt.trave.vietlensai.domain.model.LensMode
+import com.duylt.trave.vietlensai.domain.model.NearbyPlace
+import com.duylt.trave.vietlensai.domain.model.PlaceDetails
 import com.duylt.trave.vietlensai.domain.model.ThemePreference
 import com.duylt.trave.vietlensai.domain.model.CultureCollection
+import com.duylt.trave.vietlensai.domain.model.DiscoveryNote
 import com.duylt.trave.vietlensai.domain.model.JournalDay
 import com.duylt.trave.vietlensai.domain.model.JournalStats
 import com.duylt.trave.vietlensai.domain.model.Province
+import com.duylt.trave.vietlensai.domain.model.TranslateLanguage
+import com.duylt.trave.vietlensai.domain.model.TranslationBlock
+import com.duylt.trave.vietlensai.domain.model.TranslationResult
 import com.duylt.trave.vietlensai.domain.model.TravelPassport
 import com.duylt.trave.vietlensai.domain.model.TripSummary
+import com.duylt.trave.vietlensai.domain.repository.DemoDataSeeder
+import com.duylt.trave.vietlensai.domain.repository.CaptureMaintenance
 import com.duylt.trave.vietlensai.domain.repository.CatalogRepository
+import com.duylt.trave.vietlensai.domain.repository.ChatRepository
 import com.duylt.trave.vietlensai.domain.repository.JournalRepository
+import com.duylt.trave.vietlensai.domain.repository.NoteRepository
+import com.duylt.trave.vietlensai.domain.repository.PlaceRepository
 import com.duylt.trave.vietlensai.domain.repository.ProvinceRepository
 import com.duylt.trave.vietlensai.domain.repository.CaptureStore
 import com.duylt.trave.vietlensai.domain.repository.DiscoveryRepository
 import com.duylt.trave.vietlensai.domain.repository.LocationRepository
 import com.duylt.trave.vietlensai.domain.repository.SettingsRepository
+import com.duylt.trave.vietlensai.domain.repository.TranslationRepository
 import com.duylt.trave.vietlensai.domain.util.AppError
 import com.duylt.trave.vietlensai.domain.util.AppResult
+import com.duylt.trave.vietlensai.voice.TextToSpeechManager
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelStore
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.datetime.LocalDate
 import kotlin.time.Instant
 
@@ -130,17 +147,45 @@ class FakeDiscoveryRepository : DiscoveryRepository {
     override fun observeDiscovery(id: String): Flow<Discovery?> =
         flowOf(discoveries.value.firstOrNull { it.id == id })
 
-    override fun observeByProvince(provinceId: String): Flow<List<Discovery>> = discoveries
+    /**
+     * What was captured in each province, published only once a test says so.
+     *
+     * A province absent from this map emits *nothing* rather than an empty list, and that is
+     * the point: Room takes a tick to answer, so the frame between tapping a province and its
+     * photographs arriving is a real frame the traveller sees. A fake that answered
+     * synchronously would paper over exactly the state worth asserting — the previous
+     * province's photographs still on screen under the new province's name.
+     */
+    val provinceDiscoveries = MutableStateFlow<Map<String, List<Discovery>>>(emptyMap())
+
+    override fun observeByProvince(provinceId: String): Flow<List<Discovery>> =
+        provinceDiscoveries.mapNotNull { it[provinceId] }
     override suspend fun getDiscovery(id: String): Discovery? =
         discoveries.value.firstOrNull { it.id == id }
 
     var throwOnToggleFavorite: Throwable? = null
 
+    // Both spellings of "it did not work", because a ViewModel has to answer both and they
+    // are separate code paths: `failOn…` is the ordinary handled failure a repository returns,
+    // `throwOn…` the unwrapped one it promises never to produce. Four of this app's silent
+    // failures lived on the first of those, which no `throwOn…` hook can reach.
+    var failOnToggleFavorite: AppError? = null
+    var failOnDelete: AppError? = null
+    val deleted = mutableListOf<String>()
+
     override suspend fun toggleFavorite(id: String): AppResult<Unit> {
         throwOnToggleFavorite?.let { throw it }
+        failOnToggleFavorite?.let { return AppResult.Failure(it) }
         return AppResult.Success(Unit)
     }
-    override suspend fun delete(id: String): AppResult<Unit> = AppResult.Success(Unit)
+
+    override suspend fun delete(id: String): AppResult<Unit> {
+        deleted += id
+        failOnDelete?.let { return AppResult.Failure(it) }
+        discoveries.value = discoveries.value.filterNot { it.id == id }
+        return AppResult.Success(Unit)
+    }
+
     override suspend fun deleteAll(): AppResult<Unit> = AppResult.Success(Unit)
 }
 
@@ -183,10 +228,6 @@ class FakeSettingsRepository : SettingsRepository {
 
     override suspend fun setApiKey(key: String?) = write {
         state.value = state.value.copy(apiKey = key)
-    }
-
-    override suspend fun setLanguage(language: AppLanguage) = write {
-        state.value = state.value.copy(language = language)
     }
 
     override suspend fun setModel(model: GeminiModel) = write {
@@ -235,6 +276,10 @@ class FakeCaptureStore : CaptureStore {
     val deleted = mutableListOf<String?>()
 
     override fun newCapturePath(): String = nextPath
+
+    override fun nameOf(nameOrPath: String): String = nameOrPath.substringAfterLast('/')
+
+    override fun resolve(nameOrPath: String): String = "/captures/${nameOf(nameOrPath)}"
 
     override suspend fun read(path: String): AppResult<CaptureImage> {
         throwOnRead?.let { throw it }
@@ -291,17 +336,287 @@ class FakeJournalRepository : JournalRepository {
     }
 }
 
+/**
+ * The follow-up conversation, keyed by discovery so a test can prove which one is being read.
+ *
+ * [threads] is a map rather than a single list on purpose: the guide column on a large window
+ * takes its discovery id from the caller instead of from a route, and the failure that change
+ * guards against — the guide answering about the wrong place — is only visible if the fake can
+ * hold two conversations at once.
+ */
+class FakeChatRepository : ChatRepository {
+
+    val threads = MutableStateFlow<Map<String, List<ChatMessage>>>(emptyMap())
+
+    var throwOnAsk: Throwable? = null
+    var failOnAsk: AppError? = null
+    val askedFor = mutableListOf<Pair<String, String>>()
+    val clearedThreads = mutableListOf<String>()
+
+    override fun observeMessages(discoveryId: String): Flow<List<ChatMessage>> =
+        threads.map { it[discoveryId].orEmpty() }
+
+    override suspend fun ask(discoveryId: String, question: String): AppResult<ChatMessage> {
+        askedFor += discoveryId to question
+        throwOnAsk?.let { throw it }
+        failOnAsk?.let { return AppResult.Failure(it) }
+        val answer = ChatMessage(
+            id = "a${askedFor.size}",
+            discoveryId = discoveryId,
+            role = ChatRole.ASSISTANT,
+            content = "Answer about $discoveryId",
+            createdAt = Instant.fromEpochSeconds(1_700_000_000),
+        )
+        threads.value = threads.value + (discoveryId to (threads.value[discoveryId].orEmpty() + answer))
+        return AppResult.Success(answer)
+    }
+
+    override suspend fun clearThread(discoveryId: String): AppResult<Unit> {
+        clearedThreads += discoveryId
+        threads.value = threads.value - discoveryId
+        return AppResult.Success(Unit)
+    }
+}
+
+/** Records what was spoken, so a test can assert the guide's reply was read aloud — or was not. */
+class FakeTextToSpeech : TextToSpeechManager {
+    override val isSpeaking = MutableStateFlow(false)
+    override val currentUtteranceId = MutableStateFlow<String?>(null)
+
+    val spoken = mutableListOf<String>()
+    var stopCalls = 0
+
+    override fun initialise() = Unit
+
+    override fun speak(text: String, language: AppLanguage, utteranceId: String) {
+        spoken += text
+        isSpeaking.value = true
+        currentUtteranceId.value = utteranceId
+    }
+
+    override fun speak(text: String, bcp47: String, utteranceId: String) {
+        speak(text, AppLanguage.ENGLISH, utteranceId)
+    }
+
+    override fun stop() {
+        stopCalls++
+        isSpeaking.value = false
+        currentUtteranceId.value = null
+    }
+
+    override fun shutdown() = stop()
+}
+
 class FakeProvinceRepository : ProvinceRepository {
     val passport = MutableStateFlow(TravelPassport(stamps = emptyList()))
+
+    /**
+     * The backfill runs in `init` and is the one call on this screen with no button behind
+     * it, so a throw from it has no user action to be reported against — which is exactly
+     * why it needs a switch of its own.
+     */
+    var throwOnBackfill: Throwable? = null
+    var backfillCalls = 0
 
     override suspend fun provinces(): List<Province> = emptyList()
     override suspend fun provinceAt(location: GeoPoint): Province? = null
     override fun observePassport(): Flow<TravelPassport> = passport
-    override suspend fun backfillProvinces(): Int = 0
+    override suspend fun backfillProvinces(): Int {
+        backfillCalls++
+        throwOnBackfill?.let { throw it }
+        return 0
+    }
 }
 
 class FakeCatalogRepository : CatalogRepository {
     val collection = MutableStateFlow(CultureCollection(sections = emptyList()))
 
     override fun observeCollection(): Flow<CultureCollection> = collection
+}
+
+/** The canonical nearby place, so a suite can name one without spelling out fifteen fields. */
+fun nearbyPlace(
+    id: String = "p1",
+    name: String = "Hoan Kiem Lake",
+    location: GeoPoint = GeoPoint(21.0287, 105.8524),
+): NearbyPlace = NearbyPlace(
+    id = id,
+    name = name,
+    category = DiscoveryCategory.LANDMARK,
+    typeLabel = null,
+    location = location,
+    summary = null,
+    photoUrl = null,
+    distanceMeters = 400,
+    monthlyReaders = null,
+    mappingDetail = 1,
+    openingHours = null,
+    website = null,
+    phone = null,
+    cuisine = null,
+    wikipediaTitle = null,
+)
+
+/**
+ * The open map of the world, with both ways it can go wrong.
+ *
+ * `failOn…` is the handled path the repository promises; `throwOn…` is the crash floor —
+ * the read that was never wrapped. Explore keeps a spinner flag up across both calls, so
+ * which of the two happens decides whether the screen ever comes back.
+ */
+class FakePlaceRepository : PlaceRepository {
+
+    var places: AppResult<List<NearbyPlace>> = AppResult.Success(emptyList())
+    var details: AppResult<PlaceDetails> = AppResult.Success(PlaceDetails.empty("p1"))
+
+    var throwOnNearby: Throwable? = null
+    var throwOnDetails: Throwable? = null
+
+    /** Virtual-clock delays, so a test can leave a request in flight and start another. */
+    var nearbyDelayMillis: Long = 0
+    var detailsDelayMillis: Long = 0
+
+    var nearbyCalls = 0
+    val detailsAskedFor = mutableListOf<String>()
+
+    override suspend fun nearbyPlaces(
+        center: GeoPoint,
+        radiusMeters: Int,
+        language: AppLanguage,
+        forceRefresh: Boolean,
+    ): AppResult<List<NearbyPlace>> {
+        nearbyCalls++
+        throwOnNearby?.let { throw it }
+        if (nearbyDelayMillis > 0) delay(nearbyDelayMillis)
+        return places
+    }
+
+    override suspend fun placeDetails(
+        place: NearbyPlace,
+        language: AppLanguage,
+    ): AppResult<PlaceDetails> {
+        detailsAskedFor += place.id
+        throwOnDetails?.let { throw it }
+        if (detailsDelayMillis > 0) delay(detailsDelayMillis)
+        return details
+    }
+}
+
+/**
+ * The traveller's own writing.
+ *
+ * [throwOnSave] is the one that matters most in this file: a note is the only thing in the
+ * app the traveller typed themselves, and the screen raises a saving flag before the call
+ * that both disables the button and guards re-entry.
+ */
+class FakeNoteRepository : NoteRepository {
+
+    val notes = MutableStateFlow<Map<String, DiscoveryNote>>(emptyMap())
+
+    var throwOnSave: Throwable? = null
+    var throwOnDelete: Throwable? = null
+    var failOnSave: AppError? = null
+    var failOnDelete: AppError? = null
+    val saved = mutableListOf<Pair<String, String>>()
+
+    override fun observeNote(discoveryId: String): Flow<DiscoveryNote?> =
+        notes.map { it[discoveryId] }
+
+    override suspend fun save(
+        discoveryId: String,
+        body: String,
+        photoPaths: List<String>,
+    ): AppResult<Unit> {
+        saved += discoveryId to body
+        throwOnSave?.let { throw it }
+        failOnSave?.let { return AppResult.Failure(it) }
+        notes.value = notes.value + (
+            discoveryId to DiscoveryNote(
+                discoveryId = discoveryId,
+                body = body,
+                photoPaths = photoPaths,
+                createdAt = Instant.fromEpochSeconds(1_700_000_000),
+                updatedAt = Instant.fromEpochSeconds(1_700_000_000),
+            )
+            )
+        return AppResult.Success(Unit)
+    }
+
+    override suspend fun delete(discoveryId: String): AppResult<Unit> {
+        throwOnDelete?.let { throw it }
+        failOnDelete?.let { return AppResult.Failure(it) }
+        notes.value = notes.value - discoveryId
+        return AppResult.Success(Unit)
+    }
+}
+
+/** The canonical translation, with one block so `translatedText` is non-empty. */
+fun translationResult(id: String = "t1"): TranslationResult = TranslationResult(
+    id = id,
+    imagePath = "/captures/capture_1.jpg",
+    detectedLanguage = "vi",
+    targetLanguage = "en",
+    blocks = listOf(
+        TranslationBlock(original = "Phở bò", translated = "Beef noodle soup", note = null, price = null),
+    ),
+    contextNote = null,
+    createdAt = Instant.fromEpochSeconds(1_700_000_000),
+)
+
+class FakeTranslationRepository : TranslationRepository {
+
+    val translations = MutableStateFlow<List<TranslationResult>>(emptyList())
+
+    var result: AppResult<TranslationResult> = AppResult.Success(translationResult())
+    var throwOnTranslate: Throwable? = null
+
+    /** Long enough for a test to prove the screen's own timeout fires before the call returns. */
+    var translateDelayMillis: Long = 0
+    var translateCalls = 0
+
+    override suspend fun translate(
+        imagePath: String,
+        sourceLanguage: TranslateLanguage?,
+        targetLanguage: TranslateLanguage,
+    ): AppResult<TranslationResult> {
+        translateCalls++
+        throwOnTranslate?.let { throw it }
+        if (translateDelayMillis > 0) delay(translateDelayMillis)
+        return result
+    }
+
+    override fun observeTranslations(): Flow<List<TranslationResult>> = translations
+    override fun observeTranslation(id: String): Flow<TranslationResult?> =
+        translations.map { list -> list.firstOrNull { it.id == id } }
+
+    override suspend fun delete(id: String): AppResult<Unit> = AppResult.Success(Unit)
+}
+
+/** The launch-time orphan sweep, which nobody is waiting on and nothing reports. */
+class FakeCaptureMaintenance : CaptureMaintenance {
+    var throwOnSweep: Throwable? = null
+    var sweepCalls = 0
+
+    override suspend fun sweepOrphans(): Int {
+        sweepCalls++
+        throwOnSweep?.let { throw it }
+        return 0
+    }
+}
+
+/**
+ * Records that the window host asked for a seed, and can refuse.
+ *
+ * `throwOnSeed` exists because the real implementation promises never to throw and the window
+ * host has no `try` of its own around the call — so the only way to prove that promise is load
+ * bearing is to break it here and watch the sweep behind it still run.
+ */
+class FakeDemoDataSeeder : DemoDataSeeder {
+    var throwOnSeed: Throwable? = null
+    var seedCalls = 0
+
+    override suspend fun seedIfEmpty() {
+        seedCalls++
+        throwOnSeed?.let { throw it }
+    }
 }

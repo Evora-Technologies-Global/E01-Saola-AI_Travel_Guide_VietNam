@@ -94,7 +94,12 @@ class TranslationViewModel(
         // Retry replaces rather than queues: pressing it again means "that one,
         // now", not "both of them".
         translateJob?.cancel()
-        translateJob = launchSafely(onError = { setState { copy(error = it) } }) {
+        // `isLoading = false` as well as the error. An unwrapped throw reaches none of the
+        // three arms below, and a spinner left turning over an error card states two things
+        // that cannot both be true — the photograph is either still being read or it is not.
+        translateJob = launchSafely(
+            onError = { setState { copy(isLoading = false, error = it) } },
+        ) {
             setState { copy(isLoading = true, error = null) }
             val from = currentState.sourceLanguage
             val to = currentState.targetLanguage

@@ -22,7 +22,8 @@ data class DiscoveryEntity(
     val title: String,
     val localName: String?,
     val category: String,
-    val imagePath: String?,
+    /** The capture's file **name**, never a path — see `CaptureStore.nameOf`. */
+    val imageName: String?,
     val summary: String,
     val sectionsJson: String,
     val funFactsJson: String,
@@ -100,7 +101,8 @@ data class ChatMessageEntity(
 data class DiscoveryNoteEntity(
     @PrimaryKey val discoveryId: String,
     val body: String,
-    val photoPathsJson: String,
+    /** JSON array of capture file **names**, never paths — see `CaptureStore.nameOf`. */
+    val photoNamesJson: String,
     val createdAt: Long,
     val updatedAt: Long,
 )
@@ -111,7 +113,8 @@ data class DiscoveryNoteEntity(
 )
 data class TranslationEntity(
     @PrimaryKey val id: String,
-    val imagePath: String?,
+    /** The capture's file **name**, never a path — see `CaptureStore.nameOf`. */
+    val imageName: String?,
     val detectedLanguage: String,
     val targetLanguage: String,
     val blocksJson: String,

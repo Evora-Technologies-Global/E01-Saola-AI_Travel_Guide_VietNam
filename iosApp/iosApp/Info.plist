@@ -51,10 +51,41 @@
 		     any device or simulator this app supports, and validation rejects the bundle. -->
 		<string>arm64</string>
 	</array>
+	<!--
+	  iPhone: portrait and both landscapes. Unlocked 05.08.2026 by phase 10.
+
+	  It was portrait-only because the ten phone screens were framed for the tall edge, and
+	  the survey that phase opened with found that claim was true of exactly one of them.
+	  Nine either scroll or fit at 832 × 384dp — measured on a Galaxy A16, which is the same
+	  window an iPhone gives sideways — and the lens, which does neither, now arranges as a
+	  row below `StackableMinHeight`. See `mobile/feature/camera/LensScreen.kt`.
+
+	  Upside down is left out, and that is not an oversight carried over: a phone has a right
+	  way up and the earpiece is at the top of it. An iPad below does include it, for the
+	  opposite reason.
+	-->
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
-		<!-- Portrait only, like the Android build: the viewfinder is framed for it. -->
 		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<!--
+	  iPad: all four, which is what makes the large-window branch reachable at all.
+
+	  `VietLensRoot` picks the tablet shell from the window's own measurements — 840dp wide
+	  and 600dp tall — and an iPad locked to portrait is 834 points across, six short of the
+	  threshold. Measured on an iPad Pro 11-inch (M4) simulator on 04.08.2026: portrait 834 ×
+	  1210 draws the phone's bottom bar, landscape 1210 × 834 draws the rail and the panel.
+	  Without this key the branch exists in the binary and nothing can ever show it.
+	  Upside down is included deliberately: an iPad has no single right way up.
+	-->
+	<key>UISupportedInterfaceOrientations~ipad</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<!--
 	  Required by Compose Multiplatform, which refuses to start without it.

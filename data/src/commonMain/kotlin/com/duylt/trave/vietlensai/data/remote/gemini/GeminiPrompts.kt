@@ -14,17 +14,54 @@ import com.duylt.trave.vietlensai.domain.model.TranslateLanguage
  * what travellers already have and do not want. Second, the model is told to admit
  * uncertainty; a confidently wrong temple name is worse than "I'm not sure, try
  * the entrance gate".
+ *
+ * What may never come out — scope, tone, historical accuracy and sovereignty — is
+ * [GeminiGuardrails], appended to the three instructions that generate prose about
+ * Vietnam. Line translation is the deliberate exception: it renders text the traveller
+ * has physically pointed a camera at, and a guardrail there would refuse to translate a
+ * war-museum caption or a headstone, which is precisely when they most need it.
  */
 internal object GeminiPrompts {
 
+    /**
+     * Which language to answer in, and what to do with the Vietnamese names inside it.
+     *
+     * Vietnamese is the only one of the eight where the place names need no handling —
+     * they are already the reader's own. Every other language is a visitor's language,
+     * so the rule is the same in all seven: keep the Vietnamese name with its diacritics
+     * and gloss it, because "Văn Miếu" is what is written on the gate they are standing
+     * at and a translated name cannot be pointed to or asked about.
+     */
     private fun languageDirective(language: AppLanguage): String = when (language) {
         AppLanguage.VIETNAMESE ->
             "Write every field in natural Vietnamese with correct diacritics. " +
                 "Use warm, conversational language, not textbook prose."
-        AppLanguage.ENGLISH ->
-            "Write every field in natural English. Keep Vietnamese proper nouns in " +
-                "Vietnamese with diacritics, followed by a short gloss on first use."
+        else ->
+            "Write every field in natural, fluent ${language.englishName}, the way a " +
+                "guide who grew up speaking it would talk — not translated-sounding " +
+                "prose. Keep Vietnamese proper nouns in Vietnamese with their " +
+                "diacritics, followed by a short gloss in ${language.englishName} on " +
+                "first use, so the traveller can still read the sign in front of them."
     }
+
+    /**
+     * The language's name in English, for the prompt itself.
+     *
+     * `displayName` is the endonym — 日本語, ไทย — which is what a picker should show a
+     * native reader, but naming the target language to the model in its own script is a
+     * needless indirection when every other word of the instruction is English.
+     */
+    private val AppLanguage.englishName: String
+        get() = when (this) {
+            AppLanguage.VIETNAMESE -> "Vietnamese"
+            AppLanguage.ENGLISH -> "English"
+            AppLanguage.JAPANESE -> "Japanese"
+            AppLanguage.KOREAN -> "Korean"
+            AppLanguage.CHINESE -> "Simplified Chinese"
+            AppLanguage.FRENCH -> "French"
+            AppLanguage.SPANISH -> "Spanish"
+            AppLanguage.THAI -> "Thai"
+        }
 
     private const val GUIDE_PERSONA =
         "You are VietLens, a Vietnamese local guide walking beside a traveller. " +
@@ -43,6 +80,8 @@ internal object GeminiPrompts {
             "Return only data that fits the provided schema. Do not use markdown, " +
                 "bullet characters or emoji inside any field.",
         )
+        append("\n\n")
+        append(GeminiGuardrails.forGuide)
     }
 
     fun recognitionPrompt(
@@ -86,6 +125,8 @@ internal object GeminiPrompts {
             )
         }
         append("\n\n")
+        append(GeminiGuardrails.RECOGNITION_REFUSAL)
+        append("\n\n")
         append(languageDirective(language))
     }
 
@@ -93,6 +134,13 @@ internal object GeminiPrompts {
         append(GUIDE_PERSONA)
         append(' ')
         append(languageDirective(language))
+        append("\n\n")
+        // Ahead of the discovery context rather than after it. The chat is the one place a
+        // traveller types whatever they like, so the rules are read before the model has a
+        // subject to be enthusiastic about.
+        append(GeminiGuardrails.forGuide)
+        append("\n\n")
+        append(GeminiGuardrails.CHAT_REDIRECT)
         append("\n\n")
         append("The traveller is standing in front of: ")
         append(discovery.title)
@@ -179,6 +227,11 @@ internal object GeminiPrompts {
         )
         append(' ')
         append(languageDirective(language))
+        append("\n\n")
+        // A traveller's own note is free text that goes straight into a prompt, and the
+        // instruction above tells the model to build the paragraph around it. That is the
+        // whole reason the summary carries the guardrails too.
+        append(GeminiGuardrails.forGuide)
     }
 
     fun summaryPrompt(

@@ -1,0 +1,1041 @@
+{
+  "note": "Demo content for tools/seed_demo.py. Photographs are named by their Wikimedia Commons file name and fetched through Special:FilePath, so the set is reproducible rather than whatever an article happens to lead with today. `day` is an offset in days back from the seeding date, which is what groups the journal. `province` is only a label for the operator — the app resolves the real provinceId from lat/lon on first open.",
+  "discoveries": [
+    {
+      "id": "van-mieu",
+      "day": 6,
+      "hour": 9,
+      "title": "Văn Miếu – Quốc Tử Giám",
+      "localName": "Temple of Literature",
+      "category": "LANDMARK",
+      "commons": "Hanoi Temple of Literature (cropped).jpg",
+      "lat": 21.0287,
+      "lon": 105.8354,
+      "province": "Hà Nội",
+      "placeHint": "58 Quốc Tử Giám, Đống Đa, Hà Nội",
+      "confidence": 0.97,
+      "favorite": true,
+      "summary": "Quần thể Văn Miếu – Quốc Tử Giám được vua Lý Thánh Tông cho dựng năm 1070 để thờ Khổng Tử, và sáu năm sau Quốc Tử Giám ra đời ngay phía sau, trở thành trường đại học đầu tiên của Đại Việt. Suốt hơn bảy thế kỷ, đây là nơi đào tạo và vinh danh tầng lớp trí thức của cả nước.",
+      "sections": [
+        {
+          "title": "Lịch sử",
+          "body": "Văn Miếu được khởi dựng năm 1070 dưới triều Lý Thánh Tông. Năm 1076, Lý Nhân Tông lập Quốc Tử Giám bên cạnh, ban đầu chỉ dành cho con vua và quý tộc, về sau mở rộng cho những học trò xuất sắc trong dân. Kỳ thi Nho học đầu tiên tổ chức năm 1075; kỳ cuối cùng diễn ra năm 1919, khép lại 844 năm khoa cử của người Việt."
+        },
+        {
+          "title": "Kiến trúc",
+          "body": "Toàn bộ khu di tích trải trên năm lớp sân nối tiếp nhau theo trục bắc – nam, ngăn cách bởi những bức tường gạch và cổng riêng. Khuê Văn Các dựng năm 1805 ở lớp thứ hai, là gác gỗ hai tầng tám mái với bốn ô cửa tròn tượng trưng cho sao Khuê — ngôi sao chủ về văn chương. Hình ảnh gác này hiện là biểu tượng chính thức của thành phố Hà Nội."
+        },
+        {
+          "title": "Bia tiến sĩ",
+          "body": "Hai dãy nhà bia ở sân thứ ba lưu giữ 82 tấm bia đá đặt trên lưng rùa, khắc tên và quê quán của 1.304 vị đỗ tiến sĩ qua 82 khoa thi từ 1442 đến 1779. Bộ bia này được UNESCO ghi danh là Di sản tư liệu thế giới năm 2010. Rùa là một trong tứ linh, tượng trưng cho sự trường tồn — đặt bia lên lưng rùa là gửi gắm mong muốn danh tiếng người đỗ đạt còn mãi."
+        },
+        {
+          "title": "Nên xem gì",
+          "body": "Đi hết trục chính rồi vòng lại sân bia đá vào lúc chiều muộn, khi nắng xiên làm nổi rõ nét chữ Hán khắc chìm. Khu Thái Học phía trong cùng là công trình phục dựng năm 2000, thờ ba vị vua có công với nền giáo dục: Lý Thánh Tông, Lý Nhân Tông và Lê Thánh Tông."
+        }
+      ],
+      "funFacts": [
+        "Khuê Văn Các được in trên tờ tiền polymer 100.000 đồng.",
+        "Trong 82 bia tiến sĩ, tấm cổ nhất dựng năm 1484 nhưng ghi lại khoa thi năm 1442 — tức là được khắc bổ sung sau 42 năm.",
+        "Tục xoa đầu rùa lấy may đã bị cấm từ năm 2013 vì làm mòn đá."
+      ],
+      "tags": ["văn miếu", "quốc tử giám", "khuê văn các", "bia tiến sĩ", "di tích quốc gia đặc biệt", "nho học"],
+      "nearby": [
+        { "name": "Hồ Văn", "reason": "Hồ bán nguyệt ngay trước cổng, xưa là nơi các sĩ tử bình thơ.", "category": "NATURE", "walkingMinutes": 2 },
+        { "name": "Bảo tàng Mỹ thuật Việt Nam", "reason": "Bộ sưu tập điêu khắc đình chùa và tranh sơn mài lớn nhất nước.", "category": "CULTURE", "walkingMinutes": 8 },
+        { "name": "Ga Hà Nội", "reason": "Nhà ga đầu thế kỷ 20, phần chính giữa xây lại sau chiến tranh.", "category": "ARCHITECTURE", "walkingMinutes": 14 }
+      ],
+      "suggestedQuestions": [
+        "Vì sao bia tiến sĩ lại đặt trên lưng rùa?",
+        "Khoa thi Nho học ngày xưa diễn ra thế nào?",
+        "Khuê Văn Các có gì khác với các gác chuông khác?"
+      ]
+    },
+    {
+      "id": "bia-tien-si",
+      "day": 6,
+      "hour": 10,
+      "title": "Bia tiến sĩ Văn Miếu",
+      "localName": "Bia đá đội rùa",
+      "category": "ARTIFACT",
+      "commons": "BiaTienSi1442.jpg",
+      "lat": 21.0281,
+      "lon": 105.8356,
+      "province": "Hà Nội",
+      "placeHint": "Sân bia, Văn Miếu – Quốc Tử Giám",
+      "confidence": 0.93,
+      "favorite": false,
+      "summary": "Tấm bia đá đặt trên lưng rùa, khắc danh sách những người đỗ tiến sĩ của một khoa thi. Đây là loại hiện vật đặc trưng của Nho học Việt Nam và gần như không thấy ở quy mô tương tự tại các nước đồng văn khác.",
+      "sections": [
+        {
+          "title": "Cách đọc một tấm bia",
+          "body": "Trán bia khắc tên khoa thi và niên hiệu. Phần thân chia hai: bài ký nêu lý do dựng bia và ca ngợi việc học, rồi đến danh sách người đỗ xếp theo thứ hạng — trạng nguyên, bảng nhãn, thám hoa, rồi hoàng giáp và đồng tiến sĩ. Mỗi tên đi kèm quê quán tới cấp xã, nên bộ bia này đồng thời là một nguồn sử liệu về địa danh thế kỷ 15–18."
+        },
+        {
+          "title": "Vật liệu và tạo tác",
+          "body": "Bia làm bằng đá xanh khai thác ở vùng núi Thanh Hóa, chuyển về kinh thành bằng đường sông. Phong cách trang trí trên trán bia thay đổi rõ theo thời kỳ: bia thế kỷ 15 chạm hoa văn giản dị, sang thế kỷ 17–18 thì rồng mây và hoa lá dày đặc hơn hẳn."
+        }
+      ],
+      "funFacts": [
+        "Rùa đội bia ở Văn Miếu không con nào giống con nào — mỗi con là một tác phẩm riêng.",
+        "82 bia hiện còn là số sống sót; sử chép có ít nhất 117 khoa thi được dựng bia."
+      ],
+      "tags": ["bia tiến sĩ", "bia đá", "rùa đội bia", "nho học", "di sản tư liệu"],
+      "nearby": [
+        { "name": "Khuê Văn Các", "reason": "Ngay lớp sân trước đó, biểu tượng của Hà Nội.", "category": "ARCHITECTURE", "walkingMinutes": 1 }
+      ],
+      "suggestedQuestions": [
+        "Trạng nguyên khác gì bảng nhãn và thám hoa?",
+        "Bia đá này khắc bằng công cụ gì?"
+      ]
+    },
+    {
+      "id": "chua-mot-cot",
+      "day": 6,
+      "hour": 14,
+      "title": "Chùa Một Cột",
+      "localName": "Chùa Diên Hựu",
+      "category": "LANDMARK",
+      "commons": "Hanoi, Vietnam (12041825854).jpg",
+      "lat": 21.0359,
+      "lon": 105.8339,
+      "province": "Hà Nội",
+      "placeHint": "Phố Chùa Một Cột, Ba Đình, Hà Nội",
+      "confidence": 0.95,
+      "favorite": false,
+      "summary": "Ngôi chùa gỗ nhỏ dựng trên một cột đá giữa hồ, mô phỏng hình đóa sen nở. Dựng năm 1049 dưới triều Lý Thái Tông, đây là một trong những công trình được nhận diện rộng rãi nhất của kiến trúc Phật giáo Việt Nam.",
+      "sections": [
+        {
+          "title": "Truyền thuyết khởi dựng",
+          "body": "Sử chép vua Lý Thái Tông tuổi cao chưa có con nối dõi, nằm mộng thấy Quan Âm ngồi trên đài sen trao cho một bé trai. Sau khi hoàng tử ra đời, vua cho dựng ngôi chùa hình đóa sen trên cột đá giữa hồ để tạ ơn, đặt tên Diên Hựu — nghĩa là phúc lành dài lâu."
+        },
+        {
+          "title": "Kết cấu",
+          "body": "Toàn bộ điện thờ 3×3 mét đặt trên một trụ đá đường kính 1,2 mét, đỡ bằng hệ đấu củng gỗ xòe ra như đài hoa. Công trình hiện tại được phục dựng năm 1955 theo đúng mẫu cũ, sau khi bản gốc bị phá năm 1954."
+        }
+      ],
+      "funFacts": [
+        "Cột đá gốc thời Lý cao hơn và cả cụm chùa xưa lớn hơn nhiều so với những gì còn thấy hôm nay.",
+        "Chùa nằm trong khuôn viên Quảng trường Ba Đình, cách Lăng Chủ tịch Hồ Chí Minh vài phút đi bộ."
+      ],
+      "tags": ["chùa một cột", "diên hựu", "kiến trúc phật giáo", "triều lý", "hà nội"],
+      "nearby": [
+        { "name": "Lăng Chủ tịch Hồ Chí Minh", "reason": "Cùng khuôn viên Quảng trường Ba Đình.", "category": "LANDMARK", "walkingMinutes": 4 },
+        { "name": "Bảo tàng Hồ Chí Minh", "reason": "Ngay sau lưng chùa.", "category": "CULTURE", "walkingMinutes": 3 }
+      ],
+      "suggestedQuestions": [
+        "Vì sao chùa lại xây trên một cột?",
+        "Kiến trúc thời Lý có đặc điểm gì?"
+      ]
+    },
+    {
+      "id": "pho",
+      "day": 6,
+      "hour": 7,
+      "title": "Phở bò",
+      "localName": "Phở",
+      "category": "FOOD",
+      "commons": "Phở bò, Cầu Giấy, Hà Nội.jpg",
+      "lat": 21.0333,
+      "lon": 105.7994,
+      "province": "Hà Nội",
+      "placeHint": "Cầu Giấy, Hà Nội",
+      "confidence": 0.96,
+      "favorite": true,
+      "summary": "Bánh phở dẹt màu trắng ngà chan nước dùng ninh xương bò, điểm hành lá và rau thơm. Món ăn hình thành ở miền Bắc đầu thế kỷ 20 và ngày nay là món Việt được biết đến nhiều nhất ngoài biên giới.",
+      "sections": [
+        {
+          "title": "Nước dùng",
+          "body": "Xương ống bò ninh 6–12 tiếng cùng gừng và hành nướng cháy xém để khử mùi, thêm quế, hồi, thảo quả, đinh hương. Nước phải trong — đục là dấu hiệu ninh quá lửa hoặc không hớt bọt. Phở Hà Nội chuộng vị thanh, phở Sài Gòn thường ngọt hơn và nhiều gia vị hơn."
+        },
+        {
+          "title": "Khác biệt hai miền",
+          "body": "Bát phở Hà Nội thường chỉ có hành lá và chút rau mùi, đôi khi thêm quẩy. Bát phở Sài Gòn đi kèm đĩa giá, húng quế, ngò gai, chanh và tương đen tương ớt để thực khách tự nêm. Cả hai đều đúng — chỉ là hai quan niệm khác nhau về việc ai nên quyết định vị của bát phở."
+        },
+        {
+          "title": "Cách gọi",
+          "body": "Tái là thịt bò thái mỏng chín bằng nước dùng nóng; chín là thịt đã luộc kỹ; nạm là phần thịt bụng có gân; gầu là phần mỡ giòn ở ức. Gọi 'tái chín' để có cả hai loại trong một bát."
+        }
+      ],
+      "funFacts": [
+        "Từ 'phở' nhiều khả năng bắt nguồn từ 'pot-au-feu' của tiếng Pháp — cũng là món hầm xương bò.",
+        "Người Hà Nội ăn phở chủ yếu vào buổi sáng; nhiều hàng phở gia truyền đóng cửa trước 10 giờ.",
+        "Năm 2018, Nhật Bản chọn ngày 4 tháng 12 làm 'Ngày của Phở'."
+      ],
+      "tags": ["phở", "phở bò", "ẩm thực hà nội", "món nước", "bánh phở"],
+      "nearby": [
+        { "name": "Chợ Nghĩa Tân", "reason": "Khu ăn sáng bình dân lâu năm của người Cầu Giấy.", "category": "CULTURE", "walkingMinutes": 6 }
+      ],
+      "suggestedQuestions": [
+        "Phở Hà Nội và phở Sài Gòn khác nhau ra sao?",
+        "Nước dùng phở ninh trong bao lâu?",
+        "Ăn phở đúng cách thì nêm gì trước?"
+      ]
+    },
+    {
+      "id": "bun-cha",
+      "day": 6,
+      "hour": 12,
+      "title": "Bún chả",
+      "localName": "Bún chả Hà Nội",
+      "category": "FOOD",
+      "commons": "Bún chả Vietnamese food.jpg",
+      "lat": 21.0301,
+      "lon": 105.8515,
+      "province": "Hà Nội",
+      "placeHint": "Phố cổ Hà Nội",
+      "confidence": 0.94,
+      "favorite": false,
+      "summary": "Thịt lợn nướng than hoa gồm chả miếng và chả viên, thả trong bát nước mắm pha chua ngọt có đu đủ và cà rốt, ăn kèm bún rối và một rổ rau sống. Đây là món trưa đặc trưng nhất của Hà Nội.",
+      "sections": [
+        {
+          "title": "Hai loại chả trong một bát",
+          "body": "Chả miếng là thịt ba chỉ thái mỏng ướp nước mắm, đường, hành khô rồi kẹp vỉ nướng. Chả viên làm từ thịt vai băm, nặn dẹt, nướng cùng lúc. Hai loại cho hai kết cấu khác nhau — miếng dai và ngọt mỡ, viên mềm và đậm hơn."
+        },
+        {
+          "title": "Bát nước chấm",
+          "body": "Nước mắm pha loãng với đường, giấm và nước, thả đu đủ xanh và cà rốt thái mỏng đã ngâm giấm. Nước chấm được làm ấm và thịt nướng thả ngay vào, nên bát nước chấm cũng chính là bát canh — đây là điểm khiến bún chả khác hẳn các món bún chấm khác."
+        }
+      ],
+      "funFacts": [
+        "Bún chả được nhắc đến trong sách của Vũ Bằng từ những năm 1950 như một món riêng có của Hà Nội.",
+        "Nhiều hàng bún chả vẫn nướng bằng than hoa ngay trên vỉa hè — mùi khói là cách người Hà Nội tìm quán."
+      ],
+      "tags": ["bún chả", "ẩm thực hà nội", "món nướng", "bún"],
+      "nearby": [
+        { "name": "Hồ Hoàn Kiếm", "reason": "Trung tâm phố cổ, đi bộ vài phút.", "category": "NATURE", "walkingMinutes": 7 }
+      ],
+      "suggestedQuestions": [
+        "Bún chả khác bún thịt nướng miền Nam thế nào?",
+        "Vì sao nước chấm lại có đu đủ?"
+      ]
+    },
+    {
+      "id": "mua-roi-nuoc",
+      "day": 6,
+      "hour": 19,
+      "title": "Múa rối nước",
+      "localName": "Water puppetry",
+      "category": "CULTURE",
+      "commons": "Thang Long Water Puppet Theatre2.JPG",
+      "lat": 21.0312,
+      "lon": 105.8536,
+      "province": "Hà Nội",
+      "placeHint": "Nhà hát Múa rối Thăng Long, 57B Đinh Tiên Hoàng",
+      "confidence": 0.92,
+      "favorite": false,
+      "summary": "Loại hình sân khấu dân gian có từ thế kỷ 11 ở đồng bằng Bắc Bộ, trong đó con rối gỗ được điều khiển bằng sào ngầm dưới mặt nước, còn nghệ nhân đứng khuất sau tấm mành.",
+      "sections": [
+        {
+          "title": "Cơ chế điều khiển",
+          "body": "Nghệ nhân đứng ngâm mình trong nước sau bức mành tre, điều khiển con rối qua hệ sào tre dài và dây luồn dưới mặt nước. Mặt nước vừa là sân khấu vừa là thứ che giấu toàn bộ cơ cấu — đó là lý do trò diễn ra đời ở làng quê ngập nước chứ không phải trong cung đình."
+        },
+        {
+          "title": "Tích trò",
+          "body": "Các tích quen thuộc lấy từ đời sống nông nghiệp và truyền thuyết: chú Tễu dẫn chuyện, cảnh cày cấy, đánh cá, chọi trâu, rước kiệu, và tích Lê Lợi trả gươm cho rùa vàng ở hồ Hoàn Kiếm. Dàn nhạc dân tộc và người hát chèo ngồi hai bên, hát đối đáp với con rối."
+        }
+      ],
+      "funFacts": [
+        "Con rối làm bằng gỗ sung — loại gỗ nhẹ, nổi tốt và ít nứt khi ngâm nước.",
+        "Nghề rối nước xưa được giữ trong phạm vi từng làng, có làng chỉ truyền cho con trai."
+      ],
+      "tags": ["múa rối nước", "rối nước", "nghệ thuật dân gian", "chèo", "văn hóa bắc bộ"],
+      "nearby": [
+        { "name": "Đền Ngọc Sơn", "reason": "Cùng bên hồ Hoàn Kiếm, đi bộ 3 phút.", "category": "LANDMARK", "walkingMinutes": 3 }
+      ],
+      "suggestedQuestions": [
+        "Người điều khiển rối đứng ở đâu?",
+        "Chú Tễu là nhân vật thế nào?"
+      ]
+    },
+    {
+      "id": "trong-dong",
+      "day": 6,
+      "hour": 16,
+      "title": "Trống đồng Đông Sơn",
+      "localName": "Trống đồng",
+      "category": "ARTIFACT",
+      "commons": "Tambour-song-da2.jpg",
+      "lat": 21.0246,
+      "lon": 105.8600,
+      "province": "Hà Nội",
+      "placeHint": "Bảo tàng Lịch sử quốc gia, 1 Tràng Tiền",
+      "confidence": 0.91,
+      "favorite": true,
+      "summary": "Trống đúc bằng đồng thau của văn hóa Đông Sơn, niên đại khoảng 700 TCN đến 100 SCN. Mặt trống khắc ngôi sao nhiều cánh ở giữa, vây quanh là các vành hoa văn hình chim Lạc, người múa và thuyền.",
+      "sections": [
+        {
+          "title": "Kỹ thuật đúc",
+          "body": "Trống được đúc liền khối bằng khuôn sáp mất bản — nghĩa là mỗi chiếc trống chỉ đúc được một lần và khuôn bị phá khi lấy sản phẩm ra. Hợp kim đồng – thiếc – chì cho phép đổ thành mỏng đều mà vẫn giữ được âm vang. Với công nghệ cách đây hơn hai nghìn năm, đây là trình độ luyện kim rất cao."
+        },
+        {
+          "title": "Đọc hoa văn mặt trống",
+          "body": "Ngôi sao ở tâm thường có 12 hoặc 14 cánh, được cho là biểu tượng mặt trời. Vành ngoài khắc đoàn người đội mũ lông chim đang múa và giã gạo, xen với hình nhà sàn mái cong và chim Lạc bay ngược chiều kim đồng hồ. Toàn bộ là một bản ghi hình về đời sống cư dân trồng lúa nước thời kỳ đó."
+        }
+      ],
+      "funFacts": [
+        "Trống đồng Ngọc Lũ, chiếc đẹp nhất còn lại, được tìm thấy tình cờ khi đắp đê ở Hà Nam năm 1893.",
+        "Hình chim Lạc trên mặt trống là nguồn gốc của tên gọi 'con Lạc cháu Hồng'.",
+        "Trống đồng từng được dùng như nhạc khí nghi lễ, biểu tượng quyền lực và cả đồ tùy táng."
+      ],
+      "tags": ["trống đồng", "đông sơn", "khảo cổ", "luyện kim", "chim lạc"],
+      "nearby": [
+        { "name": "Nhà hát Lớn Hà Nội", "reason": "Công trình kiểu Pháp năm 1911, ngay cuối phố.", "category": "ARCHITECTURE", "walkingMinutes": 5 }
+      ],
+      "suggestedQuestions": [
+        "Trống đồng được đúc bằng cách nào?",
+        "Hoa văn trên mặt trống nói lên điều gì?"
+      ]
+    },
+    {
+      "id": "gom-bat-trang",
+      "day": 5,
+      "hour": 10,
+      "title": "Gốm Bát Tràng",
+      "localName": "Bat Trang ceramics",
+      "category": "ARTIFACT",
+      "commons": "Bát Tràng DSC 0095.JPG",
+      "lat": 20.9773,
+      "lon": 105.9139,
+      "province": "Hà Nội",
+      "placeHint": "Làng gốm Bát Tràng, Gia Lâm, Hà Nội",
+      "confidence": 0.9,
+      "favorite": false,
+      "summary": "Làng nghề gốm ven sông Hồng, hoạt động liên tục từ thế kỷ 14. Bát Tràng nổi tiếng với men rạn, men lam và men ngọc, cùng dòng đồ thờ và đồ gia dụng bán khắp cả nước.",
+      "sections": [
+        {
+          "title": "Vì sao lại là chỗ này",
+          "body": "Làng nằm trên một dải đất sét trắng ven sông Hồng, nguyên liệu tại chỗ và đường sông đưa hàng thẳng vào kinh thành. Tên 'Bát Tràng' nghĩa là sân gốm — cái tên đã nói ra nghề."
+        },
+        {
+          "title": "Các dòng men",
+          "body": "Men lam vẽ bằng ô-xít cô-ban dưới lớp men trong, xuất hiện từ thế kỷ 14 và là dòng xuất khẩu chính. Men rạn — lớp men nứt thành mạng chân chim do co ngót khác nhau giữa men và xương gốm — vốn là một lỗi kỹ thuật, sau được chủ động tạo ra như một hiệu ứng thẩm mỹ."
+        }
+      ],
+      "funFacts": [
+        "Gốm Bát Tràng từng theo tàu buôn Hà Lan và Nhật Bản ra thị trường Đông Á từ thế kỷ 16–17.",
+        "Nhiều lò hiện vẫn nung bằng lò bầu truyền thống bên cạnh lò ga hiện đại."
+      ],
+      "tags": ["gốm bát tràng", "bát tràng", "làng nghề", "men lam", "men rạn"],
+      "nearby": [
+        { "name": "Chợ gốm Bát Tràng", "reason": "Khu chợ trung tâm làng, hàng trăm gian hàng.", "category": "CULTURE", "walkingMinutes": 3 }
+      ],
+      "suggestedQuestions": [
+        "Men rạn được tạo ra thế nào?",
+        "Gốm Bát Tràng khác gốm Chu Đậu ra sao?"
+      ]
+    },
+    {
+      "id": "ha-long",
+      "day": 5,
+      "hour": 15,
+      "title": "Vịnh Hạ Long",
+      "localName": "Ha Long Bay",
+      "category": "NATURE",
+      "commons": "Vịnh Hạ Long - NKS.jpg",
+      "lat": 20.9101,
+      "lon": 107.1839,
+      "province": "Quảng Ninh",
+      "placeHint": "Vịnh Hạ Long, Quảng Ninh",
+      "confidence": 0.98,
+      "favorite": true,
+      "summary": "Gần 1.600 hòn đảo đá vôi nhô lên khỏi mặt vịnh, hình thành qua khoảng 500 triệu năm kiến tạo và xâm thực. Được UNESCO công nhận Di sản thiên nhiên thế giới năm 1994 và mở rộng công nhận năm 2000.",
+      "sections": [
+        {
+          "title": "Địa chất",
+          "body": "Nền đá vôi ở đây dày tới hơn 1.000 mét, tích tụ từ kỷ Carbon và Permi. Nước mưa hơi a-xít hòa tan đá vôi theo các khe nứt suốt hàng triệu năm, tạo nên hệ hang động và những khối núi sót. Khi mực nước biển dâng sau kỷ băng hà cuối cùng, thung lũng bị ngập và các đỉnh núi trở thành đảo — đây là dạng địa hình karst bị biển xâm nhập, thuộc nhóm đẹp nhất thế giới."
+        },
+        {
+          "title": "Hang động",
+          "body": "Hang Sửng Sốt, hang Đầu Gỗ và động Thiên Cung là những hang lớn mở cho khách tham quan, đều có hệ thạch nhũ và măng đá còn đang phát triển. Nhiều hang nhỏ chỉ vào được bằng thuyền nan khi thủy triều xuống."
+        },
+        {
+          "title": "Làng chài",
+          "body": "Cửa Vạn và Vung Viêng từng là những làng nổi có trường học và chợ ngay trên mặt nước. Cư dân đã được chuyển lên bờ từ năm 2014, nhưng khu nhà bè vẫn còn và là điểm dừng của các tuyến du thuyền."
+        }
+      ],
+      "funFacts": [
+        "Tên 'Hạ Long' nghĩa là rồng đáp xuống, gắn với truyền thuyết đàn rồng phun ngọc thành đảo để chặn giặc.",
+        "Khoảng 1.969 hòn đảo trong vịnh, nhưng chỉ chừng 40 hòn có tên riêng trong dân gian.",
+        "Vịnh Bái Tử Long liền kề có cảnh quan tương tự nhưng vắng hơn nhiều."
+      ],
+      "tags": ["vịnh hạ long", "núi đá vôi", "karst", "di sản thế giới", "hang động", "quảng ninh"],
+      "nearby": [
+        { "name": "Hang Sửng Sốt", "reason": "Hang lớn nhất mở cho khách trên đảo Bồ Hòn.", "category": "NATURE", "walkingMinutes": 0 },
+        { "name": "Đảo Ti Tốp", "reason": "Bãi tắm nhỏ và đường lên đỉnh ngắm toàn vịnh.", "category": "NATURE", "walkingMinutes": 0 }
+      ],
+      "suggestedQuestions": [
+        "Các đảo đá vôi này hình thành thế nào?",
+        "Nên đi vịnh Hạ Long vào mùa nào?",
+        "Hạ Long và Bái Tử Long khác gì nhau?"
+      ]
+    },
+    {
+      "id": "ruong-bac-thang",
+      "day": 4,
+      "hour": 8,
+      "title": "Ruộng bậc thang Sa Pa",
+      "localName": "Terraced fields",
+      "category": "NATURE",
+      "commons": "Terraced fields Sa Pa 1.jpg",
+      "lat": 22.3364,
+      "lon": 103.8438,
+      "province": "Lào Cai",
+      "placeHint": "Thung lũng Mường Hoa, Sa Pa, Lào Cai",
+      "confidence": 0.95,
+      "favorite": false,
+      "summary": "Những thửa ruộng bậc thang do người H'Mông và Dao đỏ khai phá trên sườn núi Hoàng Liên Sơn, một số thửa đã canh tác liên tục hơn ba trăm năm.",
+      "sections": [
+        {
+          "title": "Vì sao phải làm bậc thang",
+          "body": "Lúa nước cần mặt ruộng phẳng để giữ nước, trong khi sườn núi ở đây dốc 25–45 độ. Bậc thang biến sườn dốc thành chuỗi mặt bằng nhỏ, mỗi bậc có bờ giữ nước riêng, và nước từ khe suối trên cao được dẫn xuống lần lượt qua từng bậc. Đây là kỹ thuật thủy lợi thuần thủ công, đắp bằng đất nện và duy trì bằng công sửa bờ mỗi năm."
+        },
+        {
+          "title": "Ruộng đổi màu theo mùa",
+          "body": "Tháng 4–5 là mùa đổ nước, mặt ruộng thành những tấm gương phản chiếu trời. Tháng 6–8 ruộng xanh. Cuối tháng 9 đến giữa tháng 10 là mùa lúa chín, cả sườn núi chuyển vàng — đây là thời điểm đông khách nhất."
+        }
+      ],
+      "funFacts": [
+        "Ruộng bậc thang Sa Pa nằm trong danh thắng quốc gia thung lũng Mường Hoa, cùng khu với bãi đá cổ khắc hình.",
+        "Mỗi hộ thường chỉ sở hữu vài chục thửa nhỏ nằm rải rác, không liền một dải."
+      ],
+      "tags": ["ruộng bậc thang", "sa pa", "mường hoa", "h'mông", "nông nghiệp vùng cao", "lào cai"],
+      "nearby": [
+        { "name": "Bản Cát Cát", "reason": "Bản người H'Mông ngay dưới thị trấn, có thác nước.", "category": "CULTURE", "walkingMinutes": 0 },
+        { "name": "Đỉnh Fansipan", "reason": "Nóc nhà Đông Dương, 3.147 m, có cáp treo.", "category": "NATURE", "walkingMinutes": 0 }
+      ],
+      "suggestedQuestions": [
+        "Ruộng bậc thang giữ nước bằng cách nào?",
+        "Mùa lúa chín ở Sa Pa vào tháng mấy?"
+      ]
+    },
+    {
+      "id": "kinh-thanh-hue",
+      "day": 3,
+      "hour": 9,
+      "title": "Đại Nội Huế",
+      "localName": "Hoàng thành Huế",
+      "category": "LANDMARK",
+      "commons": "Đại nội.jpg",
+      "lat": 16.4698,
+      "lon": 107.5786,
+      "province": "Huế",
+      "placeHint": "Kinh thành Huế, phường Đông Ba",
+      "confidence": 0.97,
+      "favorite": true,
+      "summary": "Kinh đô của triều Nguyễn từ 1802 đến 1945, gồm ba vòng thành lồng nhau: Kinh thành, Hoàng thành và Tử Cấm Thành. Quần thể di tích cố đô Huế là di sản thế giới đầu tiên của Việt Nam được UNESCO công nhận, năm 1993.",
+      "sections": [
+        {
+          "title": "Ba vòng thành",
+          "body": "Kinh thành là vòng ngoài chu vi khoảng 10 km, xây theo kiểu pháo đài Vauban của Pháp nhưng bố cục bên trong theo phong thủy phương Đông. Hoàng thành ở giữa là nơi làm việc của triều đình, vào qua Ngọ Môn. Tử Cấm Thành trong cùng là khu ở của hoàng gia, xưa cấm người ngoài."
+        },
+        {
+          "title": "Ngọ Môn và điện Thái Hòa",
+          "body": "Ngọ Môn xây năm 1833, cổng chính phía nam Hoàng thành, bên trên là lầu Ngũ Phụng năm tòa mái. Qua sân Đại Triều Nghi lát đá là điện Thái Hòa — nơi đặt ngai vàng và diễn ra đại lễ. Trần và cột điện sơn son thếp vàng, trên mỗi cột chạm rồng vờn mây."
+        },
+        {
+          "title": "Mất mát và phục dựng",
+          "body": "Trong 160 công trình gốc của Tử Cấm Thành, chỉ chừng 10 còn nguyên sau chiến tranh, đặc biệt là trận Mậu Thân 1968. Công cuộc trùng tu do UNESCO hỗ trợ vẫn đang tiếp tục — điện Kiến Trung được phục dựng và mở cửa lại năm 2024."
+        }
+      ],
+      "funFacts": [
+        "Kỳ Đài trước Kinh thành cao 37 m, là cột cờ cao nhất Việt Nam.",
+        "Cửu Đỉnh — chín chiếc đỉnh đồng đúc năm 1835 đặt trước Thế Miếu — được UNESCO ghi danh Di sản tư liệu năm 2024.",
+        "Sông Hương chảy ngay trước Kinh thành đóng vai trò 'minh đường' trong bố cục phong thủy."
+      ],
+      "tags": ["kinh thành huế", "đại nội", "ngọ môn", "triều nguyễn", "di sản thế giới", "huế"],
+      "nearby": [
+        { "name": "Chùa Thiên Mụ", "reason": "Tháp Phước Duyên bảy tầng bên sông Hương.", "category": "LANDMARK", "walkingMinutes": 0 },
+        { "name": "Chợ Đông Ba", "reason": "Chợ lớn nhất Huế, ngay bên kia cầu Trường Tiền.", "category": "CULTURE", "walkingMinutes": 15 }
+      ],
+      "suggestedQuestions": [
+        "Tử Cấm Thành Huế có gì khác Tử Cấm Thành Bắc Kinh?",
+        "Cửu Đỉnh khắc những gì?",
+        "Vì sao kinh đô lại đặt ở Huế?"
+      ]
+    },
+    {
+      "id": "bun-bo-hue",
+      "day": 3,
+      "hour": 7,
+      "title": "Bún bò Huế",
+      "localName": "Bún bò",
+      "category": "FOOD",
+      "commons": "Bún bò Huế - Chợ Đông Ba (2024) - img 02.jpg",
+      "lat": 16.4712,
+      "lon": 107.5919,
+      "province": "Huế",
+      "placeHint": "Chợ Đông Ba, Huế",
+      "confidence": 0.95,
+      "favorite": false,
+      "summary": "Sợi bún tròn to trong nước dùng đỏ cay dậy mùi sả và mắm ruốc, thường có một khoanh giò heo và vài lát chả cua. Món ăn gắn với Huế nhưng nay phổ biến khắp cả nước.",
+      "sections": [
+        {
+          "title": "Vì sao có màu đỏ",
+          "body": "Màu đến từ ớt bột chưng với dầu điều và sả băm, đánh vào nồi lúc gần xong. Vị nền lại đến từ mắm ruốc — mắm tôm Huế lên men — được hòa loãng, lắng bỏ cặn rồi mới cho vào nồi. Bỏ ruốc thì nồi nước vẫn cay và thơm sả, nhưng mất hẳn chiều sâu."
+        },
+        {
+          "title": "Ăn kèm gì",
+          "body": "Rau sống gồm bắp chuối bào, giá, rau thơm và một miếng chanh. Người Huế thường thêm ớt sa tế riêng thay vì để nồi quá cay từ đầu."
+        }
+      ],
+      "funFacts": [
+        "Sợi bún dùng cho món này to hơn hẳn bún của các món khác, để không bị nát trong nước dùng đậm.",
+        "Tên đầy đủ trong dân gian là 'bún bò giò heo' — giò heo là phần không thể thiếu."
+      ],
+      "tags": ["bún bò huế", "bún bò", "ẩm thực huế", "mắm ruốc", "món cay"],
+      "nearby": [
+        { "name": "Cầu Trường Tiền", "reason": "Cầu thép sáu nhịp bắc qua sông Hương.", "category": "ARCHITECTURE", "walkingMinutes": 5 }
+      ],
+      "suggestedQuestions": [
+        "Mắm ruốc trong bún bò Huế có vai trò gì?",
+        "Bún bò Huế ở Sài Gòn khác gì bản gốc?"
+      ]
+    },
+    {
+      "id": "ao-dai",
+      "day": 3,
+      "hour": 16,
+      "title": "Áo dài",
+      "localName": "Áo dài Huế",
+      "category": "CULTURE",
+      "commons": "Áo dài hoa phượng - Phát Trương - 51231007393 (cropped).jpg",
+      "lat": 16.4637,
+      "lon": 107.5909,
+      "province": "Huế",
+      "placeHint": "Huế",
+      "confidence": 0.93,
+      "favorite": false,
+      "summary": "Áo dài tay, thân ôm, xẻ tà từ eo xuống, mặc cùng quần lụa ống rộng. Dáng áo hiện đại định hình từ thập niên 1930 nhưng gốc gác là áo ngũ thân của thế kỷ 18.",
+      "sections": [
+        {
+          "title": "Từ áo ngũ thân đến áo dài",
+          "body": "Chúa Nguyễn Phúc Khoát quy định trang phục áo ngũ thân cho Đàng Trong từ năm 1744. Đến những năm 1930, họa sĩ nhóm Cát Tường ở Hà Nội cắt lại thân áo cho ôm sát, bỏ bớt thân phụ, nâng cổ và kéo dài tà — tạo ra dáng áo dài như hôm nay."
+        },
+        {
+          "title": "Huế và màu tím",
+          "body": "Áo dài tím gắn với hình ảnh nữ sinh Đồng Khánh và trở thành một chỉ dấu văn hóa riêng của Huế. Thành phố này cũng là nơi duy nhất đưa áo dài ngũ thân nam trở lại làm lễ phục công sở trong một số dịp."
+        }
+      ],
+      "funFacts": [
+        "Áo dài không có size chuẩn — hầu hết vẫn được đo may riêng cho từng người.",
+        "Áo dài nam ngũ thân có năm thân tượng trưng cho tứ thân phụ mẫu và bản thân người mặc."
+      ],
+      "tags": ["áo dài", "trang phục truyền thống", "huế", "ngũ thân"],
+      "nearby": [
+        { "name": "Trường Quốc Học Huế", "reason": "Ngôi trường 1896, kiến trúc gạch đỏ đặc trưng.", "category": "ARCHITECTURE", "walkingMinutes": 6 }
+      ],
+      "suggestedQuestions": [
+        "Áo dài khác sườn xám Trung Quốc thế nào?",
+        "Áo ngũ thân là gì?"
+      ]
+    },
+    {
+      "id": "non-la",
+      "day": 3,
+      "hour": 17,
+      "title": "Nón lá",
+      "localName": "Nón bài thơ",
+      "category": "CULTURE",
+      "commons": "Vietnamese conical hat nonla.jpg",
+      "lat": 16.4550,
+      "lon": 107.5820,
+      "province": "Huế",
+      "placeHint": "Làng nón Tây Hồ, Phú Vang, Huế",
+      "confidence": 0.9,
+      "favorite": false,
+      "summary": "Nón hình chóp làm từ lá cọ khâu lên khung tre bằng chỉ cước. Nón bài thơ của Huế còn ép thêm hình ảnh và câu thơ vào giữa hai lớp lá, chỉ hiện ra khi soi ngược sáng.",
+      "sections": [
+        {
+          "title": "Cách làm",
+          "body": "Lá cọ non được phơi sương cho mềm rồi là phẳng trên lưỡi cày nóng. Khung nón gồm 16 vòng tre uốn theo cỡ giảm dần, đặt lên khuôn gỗ hình chóp. Người thợ xếp lá thành hai lớp rồi khâu bằng chỉ cước theo từng vòng — một chiếc nón khéo phải có đường kim đều và không nhìn thấy mối nối."
+        },
+        {
+          "title": "Nón bài thơ",
+          "body": "Đặc sản riêng của Huế từ những năm 1960: giữa hai lớp lá, người thợ lồng hình cắt giấy cảnh sông Hương, cầu Trường Tiền và một bài thơ. Soi lên nắng thì hình và chữ hiện lên rõ, còn nhìn bình thường thì nón vẫn trơn như mọi chiếc khác."
+        }
+      ],
+      "funFacts": [
+        "Nón lá còn dùng để quạt, che mưa và múc nước — không chỉ để đội.",
+        "Làng Tây Hồ ở Huế được coi là nơi khai sinh nón bài thơ."
+      ],
+      "tags": ["nón lá", "nón bài thơ", "làng nghề", "huế", "thủ công"],
+      "nearby": [
+        { "name": "Chợ Đông Ba", "reason": "Nơi bán nón bài thơ nhiều nhất Huế.", "category": "CULTURE", "walkingMinutes": 0 }
+      ],
+      "suggestedQuestions": [
+        "Nón bài thơ làm thế nào để hiện chữ?",
+        "Một chiếc nón lá làm mất bao lâu?"
+      ]
+    },
+    {
+      "id": "chua-cau",
+      "day": 2,
+      "hour": 10,
+      "title": "Chùa Cầu Hội An",
+      "localName": "Lai Viễn Kiều",
+      "category": "LANDMARK",
+      "commons": "Cau Nhat Ban.jpg",
+      "lat": 15.8772,
+      "lon": 108.3270,
+      "province": "Đà Nẵng",
+      "placeHint": "Phố cổ Hội An, Đà Nẵng",
+      "confidence": 0.96,
+      "favorite": true,
+      "summary": "Cây cầu gỗ có mái che bắc qua một lạch nhỏ trong phố cổ Hội An, do thương nhân Nhật Bản dựng khoảng đầu thế kỷ 17. Đây là biểu tượng của Hội An và là cây cầu duy nhất ở Việt Nam có ngôi miếu gắn liền trên thân cầu.",
+      "sections": [
+        {
+          "title": "Cầu và chùa",
+          "body": "Cầu dài 18 mét, kết cấu gỗ trên móng trụ đá, mái lợp ngói âm dương. Giữa cầu, phía bắc, có một gian miếu nhỏ thờ Bắc Đế Trấn Vũ — vị thần trấn giữ sông nước. Chính gian miếu này khiến người ta gọi là 'chùa', dù về công năng nó là cầu."
+        },
+        {
+          "title": "Khỉ và chó đá",
+          "body": "Hai đầu cầu đặt tượng khỉ và chó bằng gỗ. Cách giải thích phổ biến nhất là công trình khởi công vào năm Thân và hoàn thành vào năm Tuất. Một cách giải thích khác gắn với truyền thuyết con Cù — con thủy quái đầu ở Ấn Độ, thân ở Việt Nam và đuôi ở Nhật Bản, mỗi lần cựa mình là gây động đất; cầu được dựng như thanh kiếm ghim vào lưng nó."
+        },
+        {
+          "title": "Trùng tu 2022–2024",
+          "body": "Cầu được hạ giải toàn bộ để trùng tu trong hai năm, thay các cấu kiện gỗ mục và gia cố móng. Việc mở cửa lại năm 2024 kéo theo tranh luận về màu sơn mới — một minh chứng cho việc trùng tu di sản luôn phải chọn giữa 'trông như cũ' và 'bền như mới'."
+        }
+      ],
+      "funFacts": [
+        "Tên 'Lai Viễn Kiều' — cầu đón khách phương xa — do chúa Nguyễn Phúc Chu đặt năm 1719.",
+        "Hình Chùa Cầu được in trên tờ tiền polymer 20.000 đồng.",
+        "Trong cầu không thờ Phật, nên gọi là chùa thực ra không chính xác."
+      ],
+      "tags": ["chùa cầu", "cầu nhật bản", "lai viễn kiều", "hội an", "ngói âm dương", "di sản thế giới"],
+      "nearby": [
+        { "name": "Nhà cổ Tấn Ký", "reason": "Nhà ống thương gia 200 năm tuổi, còn nguyên nội thất.", "category": "ARCHITECTURE", "walkingMinutes": 4 },
+        { "name": "Hội quán Phúc Kiến", "reason": "Hội quán người Hoa lộng lẫy nhất phố cổ.", "category": "ARCHITECTURE", "walkingMinutes": 6 }
+      ],
+      "suggestedQuestions": [
+        "Vì sao gọi là chùa mà lại là cầu?",
+        "Tượng khỉ và chó ở hai đầu cầu có ý nghĩa gì?",
+        "Hội An còn giữ được bao nhiêu nhà cổ?"
+      ]
+    },
+    {
+      "id": "den-long",
+      "day": 2,
+      "hour": 19,
+      "title": "Đèn lồng Hội An",
+      "localName": "Lồng đèn",
+      "category": "CULTURE",
+      "commons": "Hoi An lanterns at night.jpg",
+      "lat": 15.8801,
+      "lon": 108.3260,
+      "province": "Đà Nẵng",
+      "placeHint": "Phố cổ Hội An về đêm",
+      "confidence": 0.94,
+      "favorite": true,
+      "summary": "Đèn lồng khung tre bọc lụa treo kín các mặt tiền phố cổ. Vào ngày rằm hằng tháng, cả khu phố tắt đèn điện và chỉ thắp đèn lồng cùng nến thả sông.",
+      "sections": [
+        {
+          "title": "Cách làm",
+          "body": "Nan tre được chẻ mỏng, ngâm nước muối chống mối rồi uốn thành khung có thể gập lại. Vải lụa hoặc gấm căng lên khung khi còn ẩm, khô lại sẽ tự căng phẳng. Đèn Hội An gập được nên thành món quà lưu niệm dễ mang đi — đó là một phần lý do nghề này sống khỏe."
+        },
+        {
+          "title": "Đêm rằm phố cổ",
+          "body": "Từ năm 1998, vào ngày 14 âm lịch hằng tháng, phố cổ tắt toàn bộ đèn điện từ 18 đến 22 giờ. Thay vào đó là đèn lồng, nến và hoa đăng thả trên sông Hoài. Xe máy cũng bị cấm trong khung giờ này."
+        }
+      ],
+      "funFacts": [
+        "Màu và hình dáng đèn có ý nghĩa riêng: đèn tròn cầu bình an, đèn củ tỏi cầu tài lộc.",
+        "Nghề làm đèn lồng ở Hội An gắn với cộng đồng người Hoa định cư từ thế kỷ 16–17."
+      ],
+      "tags": ["đèn lồng", "lồng đèn", "hội an", "phố cổ", "thủ công"],
+      "nearby": [
+        { "name": "Chợ đêm Nguyễn Hoàng", "reason": "Bên kia cầu An Hội, hàng trăm sạp đèn lồng.", "category": "CULTURE", "walkingMinutes": 5 }
+      ],
+      "suggestedQuestions": [
+        "Đêm rằm phố cổ diễn ra vào ngày nào?",
+        "Đèn lồng Hội An làm bằng gì?"
+      ]
+    },
+    {
+      "id": "my-son",
+      "day": 2,
+      "hour": 8,
+      "title": "Thánh địa Mỹ Sơn",
+      "localName": "My Son Sanctuary",
+      "category": "LANDMARK",
+      "commons": "2024 - Mỹ Sơn Group B, C and D - img 23.jpg",
+      "lat": 15.7639,
+      "lon": 108.1244,
+      "province": "Đà Nẵng",
+      "placeHint": "Duy Phú, Duy Xuyên, Đà Nẵng",
+      "confidence": 0.94,
+      "favorite": false,
+      "summary": "Quần thể hơn 70 đền tháp Chăm xây bằng gạch trong một thung lũng khuất, là trung tâm tôn giáo của vương quốc Chăm Pa suốt từ thế kỷ 4 đến thế kỷ 13. Được UNESCO công nhận năm 1999.",
+      "sections": [
+        {
+          "title": "Kỹ thuật xây gạch",
+          "body": "Các tháp xây bằng gạch nung xếp khít nhau gần như không thấy mạch vữa, và hoa văn được chạm trực tiếp lên tường gạch đã dựng xong chứ không chạm sẵn từng viên. Chất kết dính vẫn là câu hỏi chưa có lời đáp thống nhất — giả thuyết được nhắc nhiều nhất là nhựa cây dầu rái trộn bột gạch."
+        },
+        {
+          "title": "Bố cục một nhóm tháp",
+          "body": "Mỗi nhóm gồm tháp chính (kalan) thờ linga-yoni, tháp cổng, nhà dài chuẩn bị lễ vật và các tháp phụ, bao quanh bởi tường. Các nhóm được ký hiệu A đến N theo cách đặt tên của người Pháp đầu thế kỷ 20."
+        },
+        {
+          "title": "Chiến tranh và hiện trạng",
+          "body": "Nhóm A từng có tháp A1 cao 24 mét, được coi là kiệt tác kiến trúc Chăm, đã bị phá hủy trong một trận ném bom năm 1969. Khoảng 20 công trình còn tương đối nguyên vẹn trên tổng số hơn 70. Công tác trùng tu hiện do chuyên gia Ấn Độ và Ý phối hợp thực hiện."
+        }
+      ],
+      "funFacts": [
+        "Mỹ Sơn bị rừng nuốt và chỉ được người Pháp phát hiện lại năm 1898.",
+        "Bia ký ở đây viết bằng cả tiếng Phạn và tiếng Chăm cổ, là nguồn sử liệu chính về vương quốc Chăm Pa.",
+        "Tháp Chăm không có cửa sổ — ánh sáng duy nhất vào từ cửa chính hướng đông."
+      ],
+      "tags": ["mỹ sơn", "tháp chăm", "chăm pa", "di sản thế giới", "linga", "kiến trúc gạch"],
+      "nearby": [
+        { "name": "Bảo tàng Điêu khắc Chăm Đà Nẵng", "reason": "Bộ sưu tập điêu khắc Chăm lớn nhất thế giới.", "category": "CULTURE", "walkingMinutes": 0 }
+      ],
+      "suggestedQuestions": [
+        "Người Chăm gắn kết gạch bằng gì?",
+        "Tháp Chăm ở Mỹ Sơn thờ ai?",
+        "Vương quốc Chăm Pa tồn tại đến khi nào?"
+      ]
+    },
+    {
+      "id": "thuyen-thung",
+      "day": 2,
+      "hour": 15,
+      "title": "Thuyền thúng",
+      "localName": "Thúng chai",
+      "category": "ARTIFACT",
+      "commons": "Da-Nang Vietnam Coracles-01.jpg",
+      "lat": 16.0000,
+      "lon": 108.2500,
+      "province": "Đà Nẵng",
+      "placeHint": "Bãi biển Đà Nẵng",
+      "confidence": 0.89,
+      "favorite": false,
+      "summary": "Thuyền tròn đan bằng nan tre, trét dầu rái chống nước, chèo bằng một mái chèo duy nhất theo động tác xoáy. Loại thuyền này gần như chỉ thấy ở ven biển miền Trung Việt Nam.",
+      "sections": [
+        {
+          "title": "Vì sao lại tròn",
+          "body": "Hình tròn không có mũi để sóng đánh vỡ và có thể xoay tại chỗ, rất hợp với vùng bãi ngang sóng lớn, nơi thuyền phải đẩy thẳng từ bờ ra. Thúng cũng nhẹ, một người có thể vác ngược lên đầu mang về nhà."
+        },
+        {
+          "title": "Cách làm",
+          "body": "Nan tre già chẻ mỏng, đan mắt cáo rồi ép vào khuôn tròn, viền miệng bằng tre cuộn. Mặt ngoài quét nhiều lớp phân bò trộn dầu rái — hỗn hợp này bịt kín khe nan và co giãn theo tre, thứ mà sơn cứng không làm được. Một chiếc thúng dùng được vài năm nếu phơi khô sau mỗi chuyến."
+        }
+      ],
+      "funFacts": [
+        "Có giai thoại rằng thúng chai ra đời để lách thuế thuyền thời Pháp — vì nó không phải 'thuyền'.",
+        "Ở Hội An, chèo thúng trong rừng dừa Bảy Mẫu đã thành một sản phẩm du lịch riêng."
+      ],
+      "tags": ["thuyền thúng", "thúng chai", "nghề cá", "dầu rái", "miền trung"],
+      "nearby": [
+        { "name": "Rừng dừa Bảy Mẫu", "reason": "Nơi chèo thúng phổ biến nhất cho khách.", "category": "NATURE", "walkingMinutes": 0 }
+      ],
+      "suggestedQuestions": [
+        "Thúng chai chống nước bằng cách nào?",
+        "Chèo thuyền thúng thế nào cho đi thẳng?"
+      ]
+    },
+    {
+      "id": "cong-chieng",
+      "day": 1,
+      "hour": 18,
+      "title": "Cồng chiêng Tây Nguyên",
+      "localName": "Cồng chiêng",
+      "category": "ARTIFACT",
+      "commons": "Cong chieng Tay nguyen.jpg",
+      "lat": 12.6667,
+      "lon": 108.0500,
+      "province": "Đắk Lắk",
+      "placeHint": "Buôn Ma Thuột, Đắk Lắk",
+      "confidence": 0.91,
+      "favorite": false,
+      "summary": "Bộ nhạc cụ đồng của các dân tộc Tây Nguyên, đánh theo dàn nhiều người, mỗi người giữ một chiếc. Không gian văn hóa cồng chiêng Tây Nguyên được UNESCO ghi danh năm 2005.",
+      "sections": [
+        {
+          "title": "Một người một chiếc",
+          "body": "Khác với dàn gõ phương Tây, mỗi nhạc công ở đây chỉ giữ một chiếc chiêng và đánh đúng một nốt của mình. Giai điệu chỉ xuất hiện khi cả dàn khớp vào nhau — nên đây là loại nhạc cụ không thể diễn tấu một mình. Dàn chiêng Ê Đê thường có 9 hoặc 10 chiếc; dàn Gia Rai có thể tới 15."
+        },
+        {
+          "title": "Chiêng có hồn",
+          "body": "Người Tây Nguyên tin mỗi chiếc chiêng có một vị thần trú ngụ, và chiêng càng cổ thì thần càng mạnh. Chiêng vì thế vừa là nhạc cụ, vừa là tài sản, vừa là vật thiêng dùng trong lễ bỏ mả, lễ mừng lúa mới và lễ cúng bến nước."
+        }
+      ],
+      "funFacts": [
+        "Cồng có núm ở giữa, chiêng thì mặt phẳng — hai loại khác nhau dù thường được gọi gộp.",
+        "Nghề chỉnh chiêng là một nghề riêng: người thợ gõ búa vào mặt chiêng để nắn lại cao độ."
+      ],
+      "tags": ["cồng chiêng", "chiêng", "tây nguyên", "ê đê", "gia rai", "di sản phi vật thể"],
+      "nearby": [
+        { "name": "Bảo tàng Đắk Lắk", "reason": "Trưng bày dân tộc học Tây Nguyên đầy đủ nhất vùng.", "category": "CULTURE", "walkingMinutes": 0 }
+      ],
+      "suggestedQuestions": [
+        "Cồng và chiêng khác nhau thế nào?",
+        "Một dàn chiêng có bao nhiêu người?"
+      ]
+    },
+    {
+      "id": "doi-cat",
+      "day": 1,
+      "hour": 6,
+      "title": "Đồi cát Mũi Né",
+      "localName": "Đồi cát bay",
+      "category": "NATURE",
+      "commons": "Mui Ne2.jpg",
+      "lat": 10.9430,
+      "lon": 108.2870,
+      "province": "Lâm Đồng",
+      "placeHint": "Mũi Né, Phan Thiết",
+      "confidence": 0.92,
+      "favorite": false,
+      "summary": "Dải cồn cát ven biển đổi hình liên tục theo gió, với hai khu nổi tiếng: đồi cát vàng gần Hòn Rơm và đồi cát trắng ở Bàu Trắng cách đó chừng 25 km.",
+      "sections": [
+        {
+          "title": "Vì sao cát đổi màu",
+          "body": "Sắc vàng, đỏ và trắng đến từ hàm lượng ô-xít sắt khác nhau trong cát. Khu cát đỏ ở Mũi Né có nguồn gốc từ đá phong hóa lâu năm; cát trắng Bàu Trắng gần như là thạch anh tinh khiết."
+        },
+        {
+          "title": "Đồi cát bay",
+          "body": "Gió mùa liên tục nắn lại sống cồn, nên hình dáng đồi thay đổi rõ giữa hai lần đến cách nhau vài tháng. Đi lúc bình minh hoặc trước hoàng hôn — giữa trưa cát đủ nóng để bỏng chân trần."
+        }
+      ],
+      "funFacts": [
+        "Bàu Trắng có một hồ sen nước ngọt nằm ngay giữa cồn cát.",
+        "Trượt cát bằng tấm nhựa là trò chơi phổ biến, do trẻ em địa phương cho thuê ngay tại chỗ."
+      ],
+      "tags": ["đồi cát", "cồn cát", "mũi né", "bàu trắng", "phan thiết"],
+      "nearby": [
+        { "name": "Suối Tiên", "reason": "Khe suối chảy giữa vách cát đỏ, lội bộ được.", "category": "NATURE", "walkingMinutes": 0 },
+        { "name": "Làng chài Mũi Né", "reason": "Chợ cá sáng sớm ngay trên bãi.", "category": "CULTURE", "walkingMinutes": 0 }
+      ],
+      "suggestedQuestions": [
+        "Vì sao cát ở đây có màu đỏ?",
+        "Nên đi đồi cát vào giờ nào?"
+      ]
+    },
+    {
+      "id": "nha-tho-duc-ba",
+      "day": 0,
+      "hour": 9,
+      "title": "Nhà thờ Đức Bà Sài Gòn",
+      "localName": "Vương cung thánh đường Đức Bà",
+      "category": "LANDMARK",
+      "commons": "Basílica de Nuestra Señora, Ciudad Ho Chi Minh, Vietnam, 2013-08-14, DD 03.JPG",
+      "lat": 10.7797,
+      "lon": 106.6990,
+      "province": "Hồ Chí Minh",
+      "placeHint": "Công xã Paris, Quận 1, TP.HCM",
+      "confidence": 0.96,
+      "favorite": true,
+      "summary": "Nhà thờ chính tòa xây từ 1877 đến 1880 theo phong cách Roman pha Gothic, với toàn bộ vật liệu chở từ Pháp sang. Hai tháp chuông cao 57 mét là điểm nhấn của trung tâm Sài Gòn.",
+      "sections": [
+        {
+          "title": "Vật liệu chở từ Pháp",
+          "body": "Gạch đỏ đặt làm ở Marseille và tới nay vẫn giữ màu mà chưa từng phải sơn phủ — mặt gạch không bám rêu nhờ độ nung cao. Ngói, kính màu và toàn bộ thép cũng nhập từ Pháp. Kiến trúc sư là Jules Bourard, người thắng cuộc thi thiết kế năm 1876."
+        },
+        {
+          "title": "Tháp chuông và bộ chuông",
+          "body": "Hai tháp ban đầu cao 36,6 m, được thêm phần chóp nhọn năm 1895 nâng lên 57 m. Bên trong treo 6 quả chuông tổng nặng khoảng 28,85 tấn, chỉ đổ đồng loạt vào đêm Giáng sinh và Phục sinh."
+        },
+        {
+          "title": "Trùng tu kéo dài",
+          "body": "Nhà thờ đóng cửa trùng tu từ năm 2017, thay toàn bộ mái ngói và gia cố kết cấu. Việc tìm được ngói đúng loại từ Pháp là một phần lý do dự án kéo dài hơn dự kiến nhiều năm."
+        }
+      ],
+      "funFacts": [
+        "Tượng Đức Mẹ Hòa Bình bằng đá cẩm thạch Ý trước nhà thờ được dựng năm 1959.",
+        "Năm 1962 Tòa Thánh nâng nhà thờ lên hàng vương cung thánh đường.",
+        "Bưu điện Trung tâm ngay bên cạnh do một kiến trúc sư người Pháp khác thiết kế, hoàn thành năm 1891."
+      ],
+      "tags": ["nhà thờ đức bà", "vương cung thánh đường sài gòn", "kiến trúc pháp", "nhà thờ", "quận 1"],
+      "nearby": [
+        { "name": "Bưu điện Trung tâm Sài Gòn", "reason": "Ngay cạnh, mái vòm thép và bản đồ vẽ tay 1892.", "category": "ARCHITECTURE", "walkingMinutes": 1 },
+        { "name": "Đường sách Nguyễn Văn Bình", "reason": "Con phố sách râm mát nối hai công trình.", "category": "CULTURE", "walkingMinutes": 2 }
+      ],
+      "suggestedQuestions": [
+        "Gạch của nhà thờ vì sao không bám rêu?",
+        "Nhà thờ đang trùng tu đến bao giờ?",
+        "Kiến trúc Roman khác Gothic ở điểm nào?"
+      ]
+    },
+    {
+      "id": "ca-phe-sua-da",
+      "day": 0,
+      "hour": 10,
+      "title": "Cà phê sữa đá",
+      "localName": "Cà phê phin",
+      "category": "FOOD",
+      "commons": "Viet-coffee.jpg",
+      "lat": 10.7756,
+      "lon": 106.7019,
+      "province": "Hồ Chí Minh",
+      "placeHint": "Quận 1, TP.HCM",
+      "confidence": 0.95,
+      "favorite": false,
+      "summary": "Cà phê rang đậm nhỏ giọt qua phin nhôm xuống lớp sữa đặc, khuấy đều rồi đổ lên đá. Đây là cách uống cà phê phổ biến nhất ở Việt Nam.",
+      "sections": [
+        {
+          "title": "Vì sao là sữa đặc",
+          "body": "Sữa tươi gần như không có ở Việt Nam thời thuộc địa, nên sữa đặc có đường đóng hộp trở thành lựa chọn thay thế và rồi thành chuẩn mực. Nó cũng hợp với hạt robusta rang đậm — vị đắng gắt của robusta cần một thứ đủ ngọt và béo để cân lại."
+        },
+        {
+          "title": "Cái phin",
+          "body": "Phin nhôm gồm cốc lọc, nắp gài nén bột và đĩa hứng. Nước nóng nhỏ giọt qua lớp bột nén trong 4–6 phút — chậm hơn hẳn espresso, cho ra thứ nước cốt đặc mà không cần áp suất. Nén quá chặt thì tắc, quá lỏng thì loãng."
+        }
+      ],
+      "funFacts": [
+        "Việt Nam là nước xuất khẩu cà phê robusta lớn nhất thế giới.",
+        "Cà phê trứng ở Hà Nội ra đời những năm 1940 khi sữa khan hiếm — lòng đỏ trứng đánh bông thay sữa.",
+        "Gọi 'bạc xỉu' là được cốc nhiều sữa ít cà phê — tên gốc tiếng Quảng Đông."
+      ],
+      "tags": ["cà phê sữa đá", "cà phê phin", "cà phê đá", "robusta", "sài gòn"],
+      "nearby": [
+        { "name": "Chung cư 42 Nguyễn Huệ", "reason": "Toà chung cư cũ đầy quán cà phê nhìn xuống phố đi bộ.", "category": "ARCHITECTURE", "walkingMinutes": 6 }
+      ],
+      "suggestedQuestions": [
+        "Pha phin bao lâu là đúng?",
+        "Robusta khác arabica thế nào?",
+        "Bạc xỉu là gì?"
+      ]
+    },
+    {
+      "id": "banh-mi",
+      "day": 0,
+      "hour": 7,
+      "title": "Bánh mì",
+      "localName": "Bánh mì thịt",
+      "category": "FOOD",
+      "commons": "Bánh mì thịt nướng.png",
+      "lat": 10.7720,
+      "lon": 106.6980,
+      "province": "Hồ Chí Minh",
+      "placeHint": "Quận 1, TP.HCM",
+      "confidence": 0.94,
+      "favorite": false,
+      "summary": "Ổ bánh mì vỏ giòn ruột rỗng kẹp pa-tê, thịt, đồ chua, rau mùi và ớt. Là kết quả trực tiếp của việc bánh mì Pháp gặp gia vị Việt, và nay là món ăn đường phố Việt được biết tới nhiều nhất thế giới.",
+      "sections": [
+        {
+          "title": "Ổ bánh khác baguette",
+          "body": "Bánh mì Việt Nam pha bột gạo vào bột mì, cho vỏ mỏng giòn và ruột rỗng xốp nhẹ hơn hẳn baguette Pháp. Ổ cũng ngắn và mập hơn, vừa một suất ăn cầm tay — hình dáng đã được định lại theo cách người ta ăn nó."
+        },
+        {
+          "title": "Bên trong có gì",
+          "body": "Lớp nền là pa-tê gan và bơ hoặc sốt mayonnaise. Nhân có thể là thịt nguội, xíu mại, thịt nướng, chả lụa hay trứng ốp la. Bắt buộc phải có đồ chua — cà rốt và củ cải trắng ngâm giấm — cùng dưa leo, rau mùi, vài lát ớt và một chút nước tương hoặc nước thịt."
+        }
+      ],
+      "funFacts": [
+        "Từ 'banh mi' được đưa vào từ điển Oxford năm 2011.",
+        "Bánh mì Hội An và bánh mì Sài Gòn khác nhau ở nước sốt — Hội An chan nước thịt đậm hơn.",
+        "Ổ bánh mì thường được nướng lại trước khi kẹp, để vỏ giòn trở lại."
+      ],
+      "tags": ["bánh mì", "banh mi", "ẩm thực đường phố", "đồ chua", "pa-tê"],
+      "nearby": [
+        { "name": "Chợ Bến Thành", "reason": "Chợ trung tâm với khu ăn uống phía trong.", "category": "CULTURE", "walkingMinutes": 8 }
+      ],
+      "suggestedQuestions": [
+        "Bánh mì Việt Nam khác baguette ra sao?",
+        "Đồ chua ngâm bao lâu thì ăn được?"
+      ]
+    },
+    {
+      "id": "cho-noi",
+      "day": 0,
+      "hour": 6,
+      "title": "Chợ nổi Cái Răng",
+      "localName": "Chợ nổi",
+      "category": "CULTURE",
+      "commons": "Một cảnh ở chợ nổi Cái Răng.jpg",
+      "lat": 10.0022,
+      "lon": 105.7500,
+      "province": "Cần Thơ",
+      "placeHint": "Sông Cần Thơ, quận Cái Răng",
+      "confidence": 0.93,
+      "favorite": false,
+      "summary": "Chợ đầu mối họp trên sông từ trước bình minh, nơi ghe lớn bán sỉ nông sản cho ghe nhỏ. Chợ nổi Cái Răng là chợ nổi lớn nhất còn hoạt động ở đồng bằng sông Cửu Long.",
+      "sections": [
+        {
+          "title": "Cây bẹo",
+          "body": "Mỗi ghe dựng một cây sào dài trước mũi và treo lên đó thứ mình bán — treo quả khóm là bán khóm, treo củ khoai là bán khoai. Cách quảng cáo này ra đời vì giữa sông thì không ai nghe được tiếng rao và cũng không thể ghé từng ghe để hỏi. Có bốn quy ước dân gian: 'treo gì bán nấy', 'treo mà không bán' (quần áo phơi), 'bán mà không treo' (hàng ăn uống), và 'treo cái này bán cái kia' (treo lá dừa là bán chính chiếc ghe)."
+        },
+        {
+          "title": "Giờ họp chợ",
+          "body": "Chợ đông nhất từ 5 đến 7 giờ sáng và tan dần trước 9 giờ. Đi sau 8 giờ thì phần lớn ghe sỉ đã rời đi, chỉ còn ghe hàng ăn phục vụ khách du lịch."
+        },
+        {
+          "title": "Đang thu hẹp",
+          "body": "Số ghe giảm rõ rệt qua từng năm khi đường bộ về tận xã và thương lái chuyển sang xe tải. Chợ nổi Cái Răng được công nhận Di sản văn hóa phi vật thể quốc gia năm 2016, một phần chính vì lý do này."
+        }
+      ],
+      "funFacts": [
+        "Bún riêu và cà phê cũng được bán ngay trên ghe, chuyền qua mạn thuyền cho khách.",
+        "Chợ nổi Phong Điền gần đó nhỏ hơn nhưng còn giữ nhịp buôn bán thật nhiều hơn."
+      ],
+      "tags": ["chợ nổi", "cái răng", "cây bẹo", "miền tây", "cần thơ", "đồng bằng sông cửu long"],
+      "nearby": [
+        { "name": "Bến Ninh Kiều", "reason": "Điểm xuất phát của hầu hết chuyến thuyền ra chợ.", "category": "CULTURE", "walkingMinutes": 0 },
+        { "name": "Nhà cổ Bình Thuỷ", "reason": "Nhà vườn 1870 pha Đông – Tây, từng làm bối cảnh phim.", "category": "ARCHITECTURE", "walkingMinutes": 0 }
+      ],
+      "suggestedQuestions": [
+        "Cây bẹo hoạt động thế nào?",
+        "Mấy giờ nên ra chợ nổi?",
+        "Vì sao chợ nổi ngày càng ít ghe?"
+      ]
+    }
+  ],
+  "chat": {
+    "discoveryId": "van-mieu",
+    "messages": [
+      { "role": "user", "text": "Vì sao bia tiến sĩ lại đặt trên lưng rùa?" },
+      { "role": "model", "text": "Rùa là một trong tứ linh của văn hóa Á Đông — long, ly, quy, phụng — và là con vật duy nhất trong bốn con có thật. Nó tượng trưng cho sự trường tồn và bền bỉ.\n\nĐặt bia lên lưng rùa vì thế mang hai lớp nghĩa. Về biểu tượng, đó là mong muốn tên tuổi người đỗ đạt còn mãi cùng thời gian. Về thực tế, phần đế rùa rộng và thấp giúp tấm bia đá nặng hàng tạ đứng vững trên nền đất, điều mà một chân đế mỏng không làm được.\n\nĐiều thú vị là ở Văn Miếu, 82 con rùa không con nào giống con nào — mỗi con do một nhóm thợ khác nhau tạc, cách nhau hàng trăm năm." },
+      { "role": "user", "text": "Người đỗ tiến sĩ ngày xưa được gì?" },
+      { "role": "model", "text": "Đỗ tiến sĩ mở ra con đường làm quan, nhưng phần thưởng ngay lập tức mang tính nghi lễ nhiều hơn.\n\nNgười đỗ được vua ban mũ áo, dự yến Quỳnh Lâm trong cung, và được rước về làng bằng lễ 'vinh quy bái tổ' — làng phải ra tận đầu đường đón. Tên được khắc lên bia đá ở đây, là hình thức lưu danh cao nhất mà một người học trò có thể đạt tới.\n\nSau đó họ được bổ nhiệm vào các chức quan trong triều hoặc ở địa phương, tùy thứ hạng. Ba người đứng đầu — trạng nguyên, bảng nhãn, thám hoa — thường được giữ lại kinh thành." },
+      { "role": "user", "text": "Có phụ nữ nào từng đi thi không?" },
+      { "role": "model", "text": "Chính thức thì không — khoa cử Nho học chỉ nhận thí sinh nam trong suốt 844 năm tồn tại.\n\nTrường hợp được nhắc đến nhiều nhất là Nguyễn Thị Duệ, sống ở thế kỷ 17. Theo ghi chép, bà giả trai lấy tên Nguyễn Du để đi thi dưới triều Mạc ở Cao Bằng và đỗ đầu. Khi bị phát hiện, bà không bị trị tội mà được vua Mạc trọng dụng, sau này trở thành người dạy học trong cung.\n\nTên bà không có trên bia ở Văn Miếu, vì các khoa thi của nhà Mạc thời kỳ lưu vong ở Cao Bằng không được triều Lê ghi nhận." }
+    ]
+  },
+  "tripSummaries": [
+    {
+      "day": 6,
+      "headline": "Một ngày đi hết chiều dài chữ nghĩa của Hà Nội",
+      "narrative": "Buổi sáng bắt đầu bằng một bát phở ở Cầu Giấy rồi đi thẳng vào Văn Miếu, nơi bạn dành gần hai tiếng ở sân bia đá — đủ lâu để nhận ra 82 con rùa không con nào giống con nào. Trưa là bún chả trong phố cổ, chiều sang Bảo tàng Lịch sử xem trống đồng Đông Sơn, và ngày khép lại ở Chùa Một Cột lúc nắng xế cùng một buổi rối nước bên hồ Hoàn Kiếm.\n\nNhìn lại thì cả ngày là một mạch: từ chữ khắc trên đá thế kỷ 15, lùi về hoa văn đúc trên đồng cách đây hai nghìn năm, rồi kết ở thứ nghệ thuật mà người làng vẫn đang diễn trên mặt nước.",
+      "highlights": [
+        "82 bia tiến sĩ ở Văn Miếu, tấm sớm nhất ghi khoa thi 1442",
+        "Trống đồng Đông Sơn — luyện kim đỉnh cao cách đây hơn 2.000 năm",
+        "Rối nước Thăng Long: nghệ nhân đứng ngâm nước sau tấm mành"
+      ],
+      "tomorrowIdeas": [
+        "Làng gốm Bát Tràng, khoảng 40 phút đi từ trung tâm",
+        "Bảo tàng Dân tộc học nếu muốn nối tiếp mạch văn hóa vùng cao",
+        "Đi sớm ra Hạ Long để kịp chuyến tàu chiều"
+      ]
+    },
+    {
+      "day": 2,
+      "headline": "Hội An từ sáng sớm tới lúc phố tắt đèn",
+      "narrative": "Bạn rời Đà Nẵng lúc trời còn mờ để vào Mỹ Sơn trước khi nắng lên — thung lũng vắng và những khối gạch Chăm hiện lên rõ nét hơn hẳn so với giữa trưa. Về Hội An buổi trưa, bạn dừng ở Chùa Cầu và ở lại đủ lâu để đọc hết câu chuyện con Cù cùng hai tượng khỉ, chó ở hai đầu.\n\nChiều ra biển gặp mấy chiếc thúng chai đang phơi ngược, và tối thì phố cổ tắt điện đúng ngày rằm — chỉ còn đèn lồng và nến trên sông Hoài.",
+      "highlights": [
+        "Mỹ Sơn lúc 8 giờ sáng, chưa có đoàn khách nào",
+        "Chùa Cầu sau đợt trùng tu 2022–2024",
+        "Đêm rằm phố cổ: toàn bộ đèn điện tắt từ 18 đến 22 giờ"
+      ],
+      "tomorrowIdeas": [
+        "Bảo tàng Điêu khắc Chăm ở Đà Nẵng để nối tiếp Mỹ Sơn",
+        "Rừng dừa Bảy Mẫu nếu muốn tự chèo thúng",
+        "Cao lầu ở phố Trần Phú — món chỉ Hội An mới có"
+      ]
+    },
+    {
+      "day": 0,
+      "headline": "Sài Gòn buổi sáng và một khúc sông ở Cần Thơ",
+      "narrative": "Ngày mở đầu từ rất sớm trên sông Cần Thơ, giữa những chiếc ghe treo cây bẹo ở chợ nổi Cái Răng — bạn kịp có mặt trước 7 giờ, lúc chợ còn đang buôn thật chứ chưa chỉ còn ghe hàng ăn.\n\nVề tới Sài Gòn thì trời đã nắng. Một ổ bánh mì ở quận 1, một ly cà phê sữa đá pha phin đủ chậm để ngồi được nửa tiếng, rồi Nhà thờ Đức Bà — vẫn trong hàng rào trùng tu, nhưng gạch Marseille sau gần 150 năm vẫn chưa cần một lớp sơn nào.",
+      "highlights": [
+        "Chợ nổi Cái Răng trước 7 giờ sáng, khi ghe sỉ còn đông",
+        "Cà phê phin: 4–6 phút nhỏ giọt, không cần áp suất",
+        "Gạch đỏ Marseille của Nhà thờ Đức Bà chưa từng phải sơn phủ"
+      ],
+      "tomorrowIdeas": [
+        "Địa đạo Củ Chi, khoảng 1 tiếng rưỡi từ trung tâm",
+        "Bảo tàng Chứng tích Chiến tranh",
+        "Chợ Bình Tây ở Chợ Lớn để xem một khu người Hoa còn nguyên nhịp"
+      ]
+    }
+  ],
+  "note2": "Tags are matched against the culture catalogue as whole words with diacritics kept, so a discovery unlocks its tile only when a tag or the title really is one of that item's aliases."
+}

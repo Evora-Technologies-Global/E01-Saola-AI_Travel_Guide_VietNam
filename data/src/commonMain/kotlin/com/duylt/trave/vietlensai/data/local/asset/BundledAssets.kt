@@ -11,6 +11,15 @@ package com.duylt.trave.vietlensai.data.local.asset
  * Returns null rather than throwing when the file is missing — a corrupt or absent asset
  * must leave the map empty, not take the whole app down.
  */
-internal fun interface BundledAssets {
+internal interface BundledAssets {
     suspend fun readText(name: String): String?
+
+    /**
+     * The same file, unparsed.
+     *
+     * Only the demo seeder needs this, and only on a development build, where the assets it
+     * asks for are packaged by `:app`'s debug variant alone. On any other build the file is
+     * genuinely absent and null is the correct answer, not a failure.
+     */
+    suspend fun readBytes(name: String): ByteArray?
 }

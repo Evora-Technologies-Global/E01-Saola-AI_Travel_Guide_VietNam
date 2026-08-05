@@ -33,6 +33,8 @@
     <string name="camera_timer_10">Hẹn giờ 10 giây</string>
     <string name="camera_cancel_timer">Huỷ hẹn giờ</string>
     <string name="camera_open_journal">Mở nhật ký</string>
+    <string name="camera_ready_to_scan">Sẵn sàng quét</string>
+    <string name="camera_recent_scans">Quét gần đây</string>
     <string name="camera_ae_af_locked">ĐÃ KHOÁ NÉT &amp; SÁNG</string>
     <string name="camera_hint_auto">Hướng vào di tích, món ăn hoặc hiện vật</string>
     <string name="camera_hint_landmark">Lấy trọn công trình vào khung hình</string>
@@ -127,6 +129,7 @@
     <!-- Chat -->
     <string name="chat_title">Hỏi hướng dẫn viên</string>
     <string name="chat_subtitle">Hỏi người bản địa</string>
+    <string name="chat_about">Về %1$s</string>
     <string name="chat_suggestions_kicker">Thử hỏi</string>
     <string name="chat_input_hint">Hỏi bất cứ điều gì về nơi này…</string>
     <string name="chat_send">Gửi</string>
@@ -230,7 +233,6 @@
     <string name="settings_model_scholar">Chuyên sâu</string>
     <string name="settings_model_scholar_summary">Lịch sử và văn hóa sâu nhất. Chậm hơn.</string>
     <string name="settings_section_experience">Trải nghiệm</string>
-    <string name="settings_language">Ngôn ngữ kể chuyện</string>
     <string name="settings_speak">Đọc to câu trả lời</string>
     <string name="settings_speak_summary">Đọc phần mô tả và câu trả lời trong khung chat</string>
     <string name="settings_section_appearance">Giao diện</string>

@@ -13,7 +13,7 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.duylt.trave.vietlensai.core.designsystem.theme.VietLensTheme
 import com.duylt.trave.vietlensai.core.util.VolumeShutterBus
-import com.duylt.trave.vietlensai.navigation.VietLensApp
+import com.duylt.trave.vietlensai.navigation.VietLensRoot
 import com.duylt.trave.vietlensai.voice.TextToSpeechManager
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -39,46 +39,61 @@ class MainActivity : ComponentActivity() {
         // the wrong theme and then snaps to the right one a frame later.
         splash.setKeepOnScreenCondition { !viewModel.isReady.value }
 
+        // Both bars transparent and the page drawn under them. The status bar keeps no
+        // scrim of its own, so what shows through it is whatever the screen painted up to
+        // the top of the window — which is the point: the bar sits on the page rather than
+        // in a band above it.
         enableEdgeToEdge()
-        hideSystemBars()
+        hideNavigationBar()
         textToSpeech.initialise()
 
         setContent {
             val settings by viewModel.settings.collectAsStateWithLifecycle()
             VietLensTheme(themePreference = settings.darkTheme) {
-                VietLensApp()
+                // One call, and the fork is inside it: the phone shell and the large-window
+                // shell are chosen by the window's own measurements, never by the host.
+                VietLensRoot()
             }
         }
     }
 
     /**
-     * Hides the status and navigation bars for the whole app.
+     * Hides the navigation bar, and only that one.
      *
-     * The screen is the viewfinder and the page both, and the app's own furniture —
-     * the lens controls, the four tabs — already sits where the system bars would.
-     * Two rows of chrome saying the same thing is one too many.
+     * **The status bar stays.** The clock, the battery and the signal are what a traveller
+     * checks without thinking — abroad, on a phone that has been out taking photographs all
+     * day, more than usually — and the app has nothing to put in that strip that is worth
+     * more than those three. It costs no layout either: it is transparent, the page runs
+     * under it, and every screen already insets its *contents* with `screenInsetsPadding()`
+     * while its background reaches the top of the window.
      *
-     * Transient rather than locked away: a swipe from either edge brings the bars
-     * back over the content for a few seconds, so the clock and the back gesture are
+     * The navigation bar is a different question and still goes: the app's own furniture —
+     * the four tabs, the shutter row — already sits exactly where it would, and two rows of
+     * chrome at the foot of a viewfinder is one too many. Transient rather than locked away:
+     * a swipe from the bottom edge brings it back for a few seconds, so the back gesture is
      * never actually taken from the traveller.
+     *
+     * The icon colour is **not** set here. It follows the theme, which is not known until
+     * settings have loaded, so `VietLensTheme` owns it through `DefaultSystemBarIcons` —
+     * one answer for both platforms rather than a copy of the `when` in each host.
      */
-    private fun hideSystemBars() {
+    private fun hideNavigationBar() {
         val controller = WindowCompat.getInsetsController(window, window.decorView)
         controller.systemBarsBehavior =
             WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-        controller.hide(WindowInsetsCompat.Type.systemBars())
+        controller.hide(WindowInsetsCompat.Type.navigationBars())
     }
 
     /**
-     * Re-hides them on the way back in.
+     * Re-hides it on the way back in.
      *
-     * The system shows the bars again whenever another window takes focus — the
-     * permission dialog, the gallery picker, the recents switcher — and they stay up
-     * until something asks for them to go.
+     * The system shows the bar again whenever another window takes focus — the
+     * permission dialog, the gallery picker, the recents switcher — and it stays up
+     * until something asks for it to go.
      */
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
-        if (hasFocus) hideSystemBars()
+        if (hasFocus) hideNavigationBar()
     }
 
     /**

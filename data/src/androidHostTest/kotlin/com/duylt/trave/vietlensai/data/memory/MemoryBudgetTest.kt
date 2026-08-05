@@ -271,8 +271,16 @@ class MemoryBudgetTest {
         /** Today ~189KB. */
         const val PROVINCES_BUDGET_KB = 260L
 
-        /** Today ~27KB. */
-        const val CATALOG_BUDGET_KB = 64L
+        /**
+         * Today ~94KB, up from ~27KB when the app shipped two languages instead of eight.
+         *
+         * Raised deliberately, and it is a smaller change than it looks: the extra bulk is
+         * seven translations per entry that `CatalogAssetSource` reads and throws away —
+         * `CatalogItem` still holds one name and one hint, so resident memory barely moved.
+         * What grew is the transient parse. Raise it again only for another language; a
+         * jump with the same eight means something changed in kind.
+         */
+        const val CATALOG_BUDGET_KB = 160L
 
         /** Today ~100KB. */
         const val SOVEREIGNTY_BUDGET_KB = 160L

@@ -115,9 +115,15 @@ class JournalViewModelTest {
      * An unwrapped throw skips every `when` branch below it, so before this it only lowered
      * the spinner — indistinguishable from success. `launchSafely`'s `onError` now raises the
      * same effect an ordinary failure does.
+     *
+     * The name has no comma in it, and that is not a style choice: Kotlin/Native rejects `,`
+     * `.` `;` `:` and brackets inside a backticked identifier outright — *"Name contains
+     * illegal characters"* — while the JVM accepts all of them. This test read
+     * "…is reported, not swallowed" and was the second thing keeping `commonTest` off iOS,
+     * hidden behind the first until it was removed. `LLM.md` §11 row #14.
      */
     @Test
-    fun `an exception while writing the story is reported, not swallowed`() =
+    fun `an exception while writing the story is reported rather than swallowed`() =
         runTest(timeout = 30.seconds) {
             journalRepository.throwOnGenerate = IllegalStateException("model exploded")
             val vm = viewModel()

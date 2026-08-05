@@ -21,6 +21,32 @@ interface CaptureStore {
     /** An absolute path for a capture that has not been written yet. */
     fun newCapturePath(): String
 
+    /**
+     * The portable half of a capture's location — its file name, with no directory.
+     *
+     * **This, and never an absolute path, is what may be written to the database.** The
+     * directory a capture lives in is not stable for the life of an install: on iOS the
+     * app's container is re-homed under a fresh UUID whenever the app is reinstalled,
+     * updated or restored from a backup, so a path stored yesterday names a directory that
+     * no longer exists. Apple says as much in the File System Programming Guide, and it
+     * cost this app every photograph once already — not by failing to load them, but by
+     * deleting them: [listCaptures] reported the new directory, the database still held
+     * the old one, and the orphan sweep found no overlap between the two and swept the lot.
+     *
+     * Lenient about what it is given because a name and a path are both `String` and the
+     * compiler cannot tell a caller which one it holds.
+     */
+    fun nameOf(nameOrPath: String): String
+
+    /**
+     * Where the capture named [nameOrPath] actually is, right now.
+     *
+     * The inverse of [nameOf], and the only supported way to turn something read out of
+     * the database back into a path an image loader or a recogniser can open. Resolve
+     * late — the answer is good for this launch and is not worth keeping.
+     */
+    fun resolve(nameOrPath: String): String
+
     /** The capture, upright and downscaled. */
     suspend fun read(path: String): AppResult<CaptureImage>
 
@@ -50,11 +76,16 @@ interface CaptureStore {
     suspend fun flattenOrientation(path: String): AppResult<Unit>
 
     /**
-     * Every capture file currently on disk, whether or not anything still points at it.
+     * The **name** of every capture file currently on disk, whether or not anything still
+     * points at it.
      *
      * The counterpart to [newCapturePath]: handing out paths is what creates files nothing
      * owns yet, so something has to be able to ask what is actually there. Only the orphan
      * sweep uses this — no screen should be listing storage.
+     *
+     * Names rather than paths because the sweep's whole job is to compare this list against
+     * what the database references, and the database holds names. Returning paths here is
+     * what made the two sides incomparable the first time; see [nameOf].
      */
     suspend fun listCaptures(): List<String>
 }

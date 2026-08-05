@@ -69,6 +69,7 @@ val repositoryModule: Module = module {
         ProvinceRepositoryImpl(
             assetSource = get(),
             discoveryDao = get(),
+            captureStore = get(),
             ioDispatcher = get(IoDispatcher),
         )
     }
@@ -126,6 +127,7 @@ val repositoryModule: Module = module {
             translationDao = get(),
             remote = get(),
             textRecognizer = get(),
+            captureStore = get(),
             settingsRepository = get(),
             ioDispatcher = get(IoDispatcher),
         )
@@ -145,6 +147,7 @@ val repositoryModule: Module = module {
             summaryDao = get(),
             noteDao = get(),
             remote = get(),
+            captureStore = get(),
             settingsRepository = get(),
             timeZone = get(),
             ioDispatcher = get(IoDispatcher),

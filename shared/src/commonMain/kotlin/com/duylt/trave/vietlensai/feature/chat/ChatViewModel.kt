@@ -15,8 +15,21 @@ import com.duylt.trave.vietlensai.voice.TextToSpeechManager
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
+/**
+ * @param explicitDiscoveryId which place the conversation is about, when the caller already
+ *   knows. Null on the phone, where the chat is a screen of its own and the id arrives in
+ *   [savedStateHandle] from the `chat/{discoveryId}` route it was opened with.
+ *
+ *   The tablet has no such route: the guide is a column beside the story, composed inside the
+ *   discovery's own back-stack entry, and it names the discovery outright. That entry does in
+ *   fact carry an argument of the same name — `discovery/{discoveryId}` — so the fallback
+ *   below would answer correctly today. It is a coincidence of two routes agreeing on a
+ *   spelling, not a contract, and a guide column that depends on it is one route rename away
+ *   from talking about the wrong place with nothing in a build log to say so.
+ */
 class ChatViewModel(
     savedStateHandle: SavedStateHandle,
+    explicitDiscoveryId: String? = null,
     observeDiscovery: ObserveDiscoveryUseCase,
     observeChat: ObserveChatUseCase,
     observeSettings: ObserveSettingsUseCase,
@@ -25,7 +38,8 @@ class ChatViewModel(
     private val textToSpeech: TextToSpeechManager,
 ) : MviViewModel<ChatState, ChatIntent, ChatEffect>(ChatState()) {
 
-    private val discoveryId: String = checkNotNull(savedStateHandle[Routes.ARG_DISCOVERY_ID])
+    private val discoveryId: String =
+        explicitDiscoveryId ?: checkNotNull(savedStateHandle[Routes.ARG_DISCOVERY_ID])
 
     init {
         observeDiscovery(discoveryId)
@@ -74,7 +88,13 @@ class ChatViewModel(
     }
 
     private fun send(question: String) {
-        launchSafely(onError = { setState { copy(error = it) } }) {
+        // `isSending` is lowered here as well as in both `AppResult` arms. It used to be set
+        // only on the handled paths, so an *unwrapped* throw — a corrupt Room row, a mapper
+        // meeting a column an older version wrote — left the thinking card on screen with
+        // nothing left to take it down, and the composer disabled behind it because
+        // `canSend` reads the same flag. The traveller's only way out was to leave the
+        // conversation. Covered by `ChatViewModelTest`.
+        launchSafely(onError = { setState { copy(isSending = false, error = it) } }) {
             setState { copy(isSending = true, input = "", error = null) }
             when (val result = askFollowUp(discoveryId, question)) {
                 // The failure goes into state and nowhere else: ChatScreen draws the error

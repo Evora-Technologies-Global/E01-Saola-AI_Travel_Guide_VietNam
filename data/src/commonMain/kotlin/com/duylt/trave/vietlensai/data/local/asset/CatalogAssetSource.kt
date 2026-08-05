@@ -1,6 +1,8 @@
 package com.duylt.trave.vietlensai.data.local.asset
 
+import com.duylt.trave.vietlensai.data.platform.deviceLanguage
 import com.duylt.trave.vietlensai.data.util.log
+import com.duylt.trave.vietlensai.domain.model.AppLanguage
 import com.duylt.trave.vietlensai.domain.model.CatalogItem
 import com.duylt.trave.vietlensai.domain.model.DiscoveryCategory
 import kotlinx.coroutines.CoroutineDispatcher
@@ -65,10 +67,13 @@ internal class CatalogAssetSource(
  * so it would sit on the board permanently locked, and the traveller would have no way
  * to tell that from something they simply have not found yet.
  */
-internal fun parseCatalog(text: String): List<CatalogItem> =
+internal fun parseCatalog(
+    text: String,
+    language: AppLanguage = deviceLanguage(),
+): List<CatalogItem> =
     catalogJson.decodeFromString(CatalogFileDto.serializer(), text)
         .items
-        .map { it.toDomain() }
+        .map { it.toDomain(language) }
         .filter { it.aliases.isNotEmpty() && it.id.isNotBlank() }
 
 private val catalogJson = Json { ignoreUnknownKeys = true }
@@ -79,23 +84,46 @@ private class CatalogFileDto(
     val items: List<CatalogItemDto> = emptyList(),
 )
 
+/**
+ * @param name and [hint] are the Vietnamese originals; [names] and [hints] are keyed by
+ *   language code for the other seven. Vietnamese stays out of the maps because it is
+ *   also what the aliases are written in — one entry, not two that could disagree.
+ */
 @Serializable
 private class CatalogItemDto(
     val id: String = "",
     val category: String = "",
     val name: String = "",
-    val nameEn: String = "",
     val hint: String = "",
-    val hintEn: String = "",
+    val names: Map<String, String> = emptyMap(),
+    val hints: Map<String, String> = emptyMap(),
     val aliases: List<String> = emptyList(),
 )
 
-private fun CatalogItemDto.toDomain(): CatalogItem = CatalogItem(
+private fun CatalogItemDto.toDomain(language: AppLanguage): CatalogItem = CatalogItem(
     id = id,
     category = DiscoveryCategory.fromWire(category),
-    name = name,
-    nameEn = nameEn,
-    hint = hint,
-    hintEn = hintEn,
+    name = names.pick(language, fallback = name),
+    hint = hints.pick(language, fallback = hint),
     aliases = aliases.filter { it.isNotBlank() },
 )
+
+/**
+ * The language asked for, then English, then the Vietnamese original.
+ *
+ * Vietnamese short-circuits to [fallback] because it is not *in* the map — it is the
+ * `name`/`hint` field itself. Without that first line the map lookup missed, English won
+ * the second, and a phone set to Vietnamese read its own catalogue in English. Caught by
+ * `CatalogMatcherTest`, which parses the shipped asset once per language and requires the
+ * eight hints to come out different.
+ *
+ * The remaining two fallbacks answer different failures: a translation missing for Thai
+ * should still read as English rather than as Vietnamese, and an entry added to the asset
+ * with no translations at all should still show *something*.
+ */
+private fun Map<String, String>.pick(language: AppLanguage, fallback: String): String {
+    if (language == AppLanguage.VIETNAMESE) return fallback
+    return this[language.code]?.takeIf { it.isNotBlank() }
+        ?: this[AppLanguage.ENGLISH.code]?.takeIf { it.isNotBlank() }
+        ?: fallback
+}

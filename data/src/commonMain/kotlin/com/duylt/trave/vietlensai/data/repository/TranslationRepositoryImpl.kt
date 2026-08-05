@@ -6,6 +6,7 @@ import com.duylt.trave.vietlensai.data.mapper.toEntity
 import com.duylt.trave.vietlensai.data.remote.gemini.GeminiRemoteDataSource
 import com.duylt.trave.vietlensai.domain.model.TranslateLanguage
 import com.duylt.trave.vietlensai.domain.model.TranslationResult
+import com.duylt.trave.vietlensai.domain.repository.CaptureStore
 import com.duylt.trave.vietlensai.domain.repository.SettingsRepository
 import com.duylt.trave.vietlensai.domain.repository.TextRecognizer
 import com.duylt.trave.vietlensai.domain.repository.TranslationRepository
@@ -24,6 +25,7 @@ internal class TranslationRepositoryImpl(
     private val translationDao: TranslationDao,
     private val remote: GeminiRemoteDataSource,
     private val textRecognizer: TextRecognizer,
+    private val captureStore: CaptureStore,
     private val settingsRepository: SettingsRepository,
     private val ioDispatcher: CoroutineDispatcher,
 ) : TranslationRepository {
@@ -42,7 +44,7 @@ internal class TranslationRepositoryImpl(
         sourceLanguage: TranslateLanguage?,
         targetLanguage: TranslateLanguage,
     ): AppResult<TranslationResult> = withContext(ioDispatcher) {
-        val recognized = when (val read = textRecognizer.recognize(imagePath, sourceLanguage)) {
+        val recognized = when (val read = textRecognizer.recognize(captureStore.resolve(imagePath), sourceLanguage)) {
             is AppResult.Failure -> return@withContext read
             is AppResult.Success -> read.data
         }
@@ -68,7 +70,8 @@ internal class TranslationRepositoryImpl(
 
         val entity = response.value.toEntity(
             id = Uuid.random().toString(),
-            imagePath = imagePath,
+            // Stored as a name; see `CaptureStore.nameOf`.
+            imageName = captureStore.nameOf(imagePath),
             recognized = recognized,
             target = targetLanguage,
             createdAt = Clock.System.now(),
@@ -77,18 +80,18 @@ internal class TranslationRepositoryImpl(
             translationDao.upsert(entity)
         }
         if (stored is AppResult.Failure) return@withContext stored
-        AppResult.Success(entity.toDomain())
+        AppResult.Success(entity.toDomain(captureStore::resolve))
     }
 
     override fun observeTranslations(): Flow<List<TranslationResult>> =
         translationDao.observeAll()
-            .map { entities -> entities.map { it.toDomain() } }
+            .map { entities -> entities.map { it.toDomain(captureStore::resolve) } }
             .flowOn(ioDispatcher)
             .fallbackOnFailure(emptyList(), what = "observe translations")
 
     override fun observeTranslation(id: String): Flow<TranslationResult?> =
         translationDao.observeById(id)
-            .map { it?.toDomain() }
+            .map { it?.toDomain(captureStore::resolve) }
             .flowOn(ioDispatcher)
             .fallbackOnFailure(null, what = "observe translation $id")
 

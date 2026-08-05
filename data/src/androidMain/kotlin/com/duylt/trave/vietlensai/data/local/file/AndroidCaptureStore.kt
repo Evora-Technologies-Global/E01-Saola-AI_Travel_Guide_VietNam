@@ -29,6 +29,11 @@ internal class AndroidCaptureStore(
     override fun newCapturePath(): String =
         File(imagesDir, ImagePolicy.captureFileName(System.currentTimeMillis())).absolutePath
 
+    override fun nameOf(nameOrPath: String): String = ImagePolicy.fileNameOf(nameOrPath)
+
+    override fun resolve(nameOrPath: String): String =
+        File(imagesDir, nameOf(nameOrPath)).absolutePath
+
     override suspend fun read(path: String): AppResult<CaptureImage> =
         withContext(ioDispatcher) {
             val oriented = when (val read = readOriented(path)) {
@@ -69,7 +74,7 @@ internal class AndroidCaptureStore(
 
     override suspend fun delete(path: String?) {
         withContext(ioDispatcher) {
-            path?.let { runCatching { File(it).delete() } }
+            path?.let { runCatching { File(resolve(it)).delete() } }
         }
     }
 
@@ -87,7 +92,7 @@ internal class AndroidCaptureStore(
                 is AppResult.Success -> read.data
             }
             try {
-                File(path).writeBytes(upright.bytes)
+                File(resolve(path)).writeBytes(upright.bytes)
                 AppResult.Success(Unit)
             } catch (e: Exception) {
                 log.e(e) { "Could not rewrite $path upright" }
@@ -96,7 +101,7 @@ internal class AndroidCaptureStore(
         }
 
     override suspend fun listCaptures(): List<String> = withContext(ioDispatcher) {
-        runCatching { imagesDir.listFiles()?.map { it.absolutePath }.orEmpty() }
+        runCatching { imagesDir.listFiles()?.map { it.name }.orEmpty() }
             .onFailure { log.w(it) { "Could not list the captures directory" } }
             .getOrDefault(emptyList())
     }
@@ -111,7 +116,7 @@ internal class AndroidCaptureStore(
      */
     internal suspend fun readOriented(path: String): AppResult<Bitmap> =
         withContext(ioDispatcher) {
-            val file = File(path)
+            val file = File(resolve(path))
             if (!file.exists()) {
                 return@withContext AppResult.Failure(
                     AppError.ImageUnavailable("File not found: $path"),

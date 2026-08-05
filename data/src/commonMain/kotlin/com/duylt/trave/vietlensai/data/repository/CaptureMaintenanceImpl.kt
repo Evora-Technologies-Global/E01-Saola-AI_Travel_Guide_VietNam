@@ -15,9 +15,14 @@ import kotlin.time.Clock
 /**
  * The orphan sweep.
  *
- * Every table that can hold a capture path has to be asked, and the cost of forgetting one
+ * Every table that can hold a capture name has to be asked, and the cost of forgetting one
  * is a traveller's photo deleted out from under them — so the three sources are gathered in
  * one place here rather than left to each repository to remember.
+ *
+ * Works in capture **names** throughout, on both sides of the comparison. `CaptureStore`
+ * hands out absolute paths for live use and the database stores names, and this is the one
+ * place the two meet — which is why it is also the place that got it wrong and deleted
+ * everything. Both guards below exist because of that.
  */
 internal class CaptureMaintenanceImpl(
     private val discoveryDao: DiscoveryDao,
@@ -40,9 +45,9 @@ internal class CaptureMaintenanceImpl(
         // not recoverable.
         val referenced = try {
             buildSet<String> {
-                addAll(discoveryDao.getAllImagePaths())
-                addAll(translationDao.getAllImagePaths())
-                noteDao.getAll().forEach { addAll(it.photoPaths()) }
+                addAll(discoveryDao.getAllImageNames())
+                addAll(translationDao.getAllImageNames())
+                noteDao.getAll().forEach { addAll(it.photoNames()) }
             }
         } catch (e: CancellationException) {
             throw e
@@ -51,12 +56,29 @@ internal class CaptureMaintenanceImpl(
             return@withContext 0
         }
 
+        // The second thing that must be true before anything is deleted: the two sides have
+        // to be speaking the same language. Both are capture *names* — never paths — but
+        // that is a convention the compiler cannot enforce, and the one time it was broken
+        // this sweep deleted every photograph in the app. It looked exactly like this: a
+        // database full of references, a disk full of files, and not one name in common.
+        //
+        // A traveller whose captures really are all orphaned is indistinguishable from that
+        // bug, and is also not in a hurry — they lose nothing but some storage until the
+        // files age out one at a time alongside a reference that does match.
+        if (referenced.isNotEmpty() && onDisk.none { it in referenced }) {
+            log.e {
+                "Sweeping nothing: ${onDisk.size} capture(s) on disk and " +
+                    "${referenced.size} referenced, with no name in common"
+            }
+            return@withContext 0
+        }
+
         val cutoff = Clock.System.now().toEpochMilliseconds() - GRACE_PERIOD_MILLIS
-        val orphans = onDisk.filter { path ->
-            if (path in referenced) return@filter false
+        val orphans = onDisk.filter { name ->
+            if (name in referenced) return@filter false
             // A capture the sweep cannot date is one it cannot prove is stale, and a
             // recent one is more likely mid-recognition than abandoned. Both are kept.
-            val createdAt = ImagePolicy.capturedAtMillis(path) ?: return@filter false
+            val createdAt = ImagePolicy.capturedAtMillis(name) ?: return@filter false
             createdAt < cutoff
         }
 

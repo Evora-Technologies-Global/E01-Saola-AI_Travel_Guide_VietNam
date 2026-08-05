@@ -8,7 +8,7 @@ import co.touchlab.kermit.Severity
 import com.duylt.trave.vietlensai.core.designsystem.theme.VietLensTheme
 import com.duylt.trave.vietlensai.di.appModules
 import com.duylt.trave.vietlensai.domain.model.AppSettings
-import com.duylt.trave.vietlensai.navigation.VietLensApp
+import com.duylt.trave.vietlensai.navigation.VietLensRoot
 import com.duylt.trave.vietlensai.platform.IosStatusBarStyle
 import com.duylt.trave.vietlensai.voice.TextToSpeechManager
 import org.koin.core.context.startKoin
@@ -74,7 +74,9 @@ private class VietLensRootViewController :
         // controller's, and this controller is only ever the root one.
         val settings: AppSettings by viewModel.settings.collectAsState()
         VietLensTheme(themePreference = settings.darkTheme) {
-            VietLensApp()
+            // The same one call `MainActivity` makes; the branch fork lives inside it, so
+            // neither platform can end up on a shell the other does not have.
+            VietLensRoot()
         }
     }
 
@@ -99,12 +101,13 @@ private class VietLensRootViewController :
     override fun preferredStatusBarStyle(): UIStatusBarStyle = IosStatusBarStyle.current
 
     /*
-     * The Android build hides the system bars, because the whole screen is a viewfinder and the
-     * app's own furniture already sits where they would be. There is no equivalent here:
+     * The Android build hides the navigation bar, because the app's own furniture — the four
+     * tabs, the shutter row — already sits where it would be. There is no equivalent here:
      * `prefersHomeIndicatorAutoHidden` is exposed to Kotlin as a read-only extension property
      * rather than an overridable method, so the home indicator stays visible on iOS. Compose
      * draws under it either way — the lens controls use safe-area insets — so the difference is
-     * a thin line over the bottom of the viewfinder, not a layout problem.
+     * a thin line over the bottom of the viewfinder, not a layout problem. The status bar is
+     * shown on both platforms and its icons follow the theme; see `DefaultSystemBarIcons`.
      */
 
     override fun viewDidDisappear(animated: Boolean) {

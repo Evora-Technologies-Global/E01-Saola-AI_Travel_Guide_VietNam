@@ -1,6 +1,5 @@
 package com.duylt.trave.vietlensai.domain.repository
 
-import com.duylt.trave.vietlensai.domain.model.AppLanguage
 import com.duylt.trave.vietlensai.domain.model.AppSettings
 import com.duylt.trave.vietlensai.domain.model.GeminiModel
 import com.duylt.trave.vietlensai.domain.model.ThemePreference
@@ -33,7 +32,8 @@ interface SettingsRepository {
      */
     suspend fun setApiKey(key: String?): AppResult<Unit>
 
-    suspend fun setLanguage(language: AppLanguage): AppResult<Unit>
+    // No setLanguage. `AppSettings.language` follows the phone's language and is not a
+    // stored preference — see `deviceLanguage()` in :data.
 
     suspend fun setModel(model: GeminiModel): AppResult<Unit>
 

@@ -184,7 +184,7 @@ class LensViewModelCrashTest {
     @Test
     fun `an exception from the location provider does not crash the capture`() = runTest(timeout = 30.seconds) {
         locationRepository.permission = true
-        locationRepository.throwOnCurrentLocation = SecurityException("caller lacks permission")
+        locationRepository.throwOnCurrentLocation = PermissionRevoked("caller lacks permission")
         val vm = viewModel()
 
         vm.onIntent(LensIntent.PhotoCaptured("/captures/capture_1.jpg"))
@@ -466,6 +466,21 @@ class LensViewModelCrashTest {
 
         assertFalse(shutterBus.isArmed)
     }
+
+    /**
+     * The platform's "you had the permission a moment ago" throw, written in common Kotlin.
+     *
+     * This was `SecurityException` — the class Android's `FusedLocationProviderClient` and
+     * iOS's `CLLocationManager` bridge actually raise when a permission is revoked while the
+     * app holds a fix. But `SecurityException` is a JVM class with no `kotlin.` twin, so
+     * `commonTest` compiled for the Android host and failed `compileTestKotlinIosSimulatorArm64`,
+     * which meant `:shared:allTests` had never once been green on the platform half the
+     * presentation layer ships to. The probe does not need the platform's own type: what is
+     * under test is that *an unwrapped throw* from the location call lowers the scrim instead
+     * of killing the screen, and `launchSafely` catches by `Throwable`. Naming it says which
+     * failure is being simulated, which the type used to say. `LLM.md` §11 row #14.
+     */
+    private class PermissionRevoked(message: String) : RuntimeException(message)
 
     private companion object {
         /**
