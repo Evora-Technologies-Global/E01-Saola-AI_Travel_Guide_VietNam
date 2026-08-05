@@ -6,6 +6,7 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import com.duylt.trave.vietlensai.core.designsystem.component.DefaultSystemBarIcons
 import com.duylt.trave.vietlensai.domain.model.ThemePreference
 
 private val LightColors = lightColorScheme(
@@ -87,6 +88,15 @@ fun VietLensTheme(
     }
 
     val colorScheme = if (darkTheme) DarkColors else LightColors
+
+    // The status bar is transparent and every page runs under it, so its icons are read
+    // against the scheme's own background and have to be told which one that is. Here rather
+    // than in `MainActivity` or `VietLensViewController` because this is the one place the
+    // preference is resolved into an answer — a host that repeated the `when` above would be
+    // a second answer to the same question, and iOS and Android would drift apart on it.
+    // Screens that paint their own background regardless of the theme pin over this; see
+    // `PinSystemBarIcons`.
+    DefaultSystemBarIcons(darkIcons = !darkTheme)
 
     MaterialTheme(
         colorScheme = colorScheme,

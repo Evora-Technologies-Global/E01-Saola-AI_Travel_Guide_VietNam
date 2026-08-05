@@ -40,6 +40,8 @@
     <string name="camera_timer_10">ตั้งเวลา 10 วินาที</string>
     <string name="camera_cancel_timer">ยกเลิกการตั้งเวลา</string>
     <string name="camera_open_journal">เปิดบันทึก</string>
+    <string name="camera_ready_to_scan">พร้อมสแกน</string>
+    <string name="camera_recent_scans">สแกนล่าสุด</string>
     <string name="camera_ae_af_locked">ล็อก AE/AF</string>
     <string name="camera_hint_auto">เล็งไปที่สถานที่ อาหาร หรือวัตถุจัดแสดง</string>
     <string name="camera_hint_landmark">จัดให้เห็นอาคารหรืออนุสรณ์ทั้งหลัง</string>
@@ -132,6 +134,7 @@
     <!-- Chat -->
     <string name="chat_title">ถามไกด์ของคุณ</string>
     <string name="chat_subtitle">ถามไกด์ท้องถิ่น</string>
+    <string name="chat_about">เกี่ยวกับ %1$s</string>
     <string name="chat_suggestions_kicker">ลองถามดู</string>
     <string name="chat_input_hint">ถามอะไรก็ได้เกี่ยวกับที่นี่…</string>
     <string name="chat_send">ส่ง</string>

@@ -16,8 +16,7 @@ import com.duylt.trave.vietlensai.domain.model.ThemePreference
 import com.duylt.trave.vietlensai.domain.model.TranslateLanguage
 import com.duylt.trave.vietlensai.domain.model.TranslationBlock
 import com.duylt.trave.vietlensai.domain.model.TranslationResult
-import com.duylt.trave.vietlensai.feature.translate.TranslationScreen
-import com.duylt.trave.vietlensai.feature.translate.TranslationState
+import com.duylt.trave.vietlensai.mobile.feature.translate.TranslationScreen
 import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test

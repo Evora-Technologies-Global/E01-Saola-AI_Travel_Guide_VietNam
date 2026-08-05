@@ -130,9 +130,15 @@ val presentationModule: Module = module {
     // `SavedStateHandle` is resolved by Koin's ViewModel support from the navigation entry's
     // own saved state, which is how the chat, discovery and translation screens read the
     // route arguments they were opened with.
+    //
+    // Chat also accepts the id outright, because the tablet's guide column is not a
+    // destination and has no route of its own to read — `parametersOf(discoveryId)` at the
+    // call site lands in the same holder, looked up by type. `getOrNull` rather than `get`:
+    // the phone passes nothing and falls back to the handle. See `ChatViewModel`'s KDoc.
     viewModel { params ->
         ChatViewModel(
             savedStateHandle = params.get(),
+            explicitDiscoveryId = params.getOrNull<String>(),
             observeDiscovery = get(),
             observeChat = get(),
             observeSettings = get(),

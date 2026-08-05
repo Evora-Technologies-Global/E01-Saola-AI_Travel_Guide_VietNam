@@ -23,15 +23,31 @@ object IosStatusBarStyle {
 
     private val requests = mutableListOf<UIStatusBarStyle>()
 
+    /**
+     * What an empty stack falls back to: the theme's own answer, published by
+     * `DefaultSystemBarIcons`.
+     *
+     * Held beside the stack rather than at the bottom of it. A theme change has to be able
+     * to replace this while a screen is pinned, and `pop` removes the last entry — so a base
+     * pushed like a request would be popped by whichever screen closed next.
+     *
+     * Light content until the theme resolves, which is the app's dark-first default and the
+     * value the launch screen is drawn with.
+     */
+    private var base: UIStatusBarStyle = UIStatusBarStyleLightContent
+
     /** Called by the hosting view controller so it can re-ask iOS for the bar style. */
     var onChanged: (() -> Unit)? = null
 
-    /**
-     * Light content by default: the app is dark-first, and the viewfinder behind the
-     * status bar is a camera preview.
-     */
     val current: UIStatusBarStyle
-        get() = requests.lastOrNull() ?: UIStatusBarStyleLightContent
+        get() = requests.lastOrNull() ?: base
+
+    internal fun setBase(darkContent: Boolean) {
+        val style = if (darkContent) UIStatusBarStyleDarkContent else UIStatusBarStyleLightContent
+        if (style == base) return
+        base = style
+        onChanged?.invoke()
+    }
 
     internal fun push(darkContent: Boolean) {
         requests += if (darkContent) UIStatusBarStyleDarkContent else UIStatusBarStyleLightContent

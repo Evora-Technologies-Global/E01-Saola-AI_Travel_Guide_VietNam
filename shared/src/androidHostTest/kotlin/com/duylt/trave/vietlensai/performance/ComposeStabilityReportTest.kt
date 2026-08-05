@@ -52,13 +52,35 @@ class ComposeStabilityReportTest {
      *  - `…Route(viewModel)` — a ViewModel holds jobs and mutable fields, so it is unstable
      *    by construction. Koin hands the same instance back for the lifetime of the nav
      *    entry, and a Route composable's body is one call to its screen.
-     *  - `navController` — same shape, owned by the nav host.
+     *    Two Routes take more than one, and both rest on the same argument as the first: they
+     *    are the large-window screens that show more than one feature at once, and every extra
+     *    ViewModel is resolved from the same nav entry so Koin hands back the identical
+     *    instance for as long as that screen is open. `DiscoveryTabletRoute` has the guide's
+     *    `ChatViewModel` beside the discovery's, keyed on `discoveryId`.
+     *    `JournalTabletRoute` has the passport's and the collection's beside the journal's,
+     *    because on a large window those two are the pane next to the day column rather than
+     *    screens of their own — see `tablet/feature/journal/JournalTabletScreen.kt`. Resolving
+     *    them on the Route rather than inside each pane is what keeps §5 true: only a Route
+     *    touches a ViewModel, and the panes below take `state` and `onIntent`.
+     *  - `LensHost(viewModel)`, `ExploreHost(viewModel)` and `SettingsHost(viewModel)` — the
+     *    same argument as a Route's, because each *is* its screen's Route: the half both
+     *    arrangements share, lifted out of them so the capture coroutine, the map's permission
+     *    bridge and the settings snackbar rule exist once rather than twice. See
+     *    `feature/camera/LensHost.kt`, `feature/explore/ExploreHost.kt` and
+     *    `feature/settings/SettingsHost.kt`.
+     *  - `navController` — same shape, remembered once in `VietLensRoot` and passed down
+     *    through whichever branch shell the window size selects.
      *  - `controller` — [com.duylt.trave.vietlensai.feature.camera.CameraController], which
      *    wraps the platform camera session and is `remember`ed for the screen's lifetime.
      *  - `model: Any?` on `AppAsyncImage` — Coil's model parameter is `Any?` by design.
      *  - `map` — the sovereignty outlines, `List<DoubleArray>`. Arrays are mutable, so
      *    unstable is the *correct* answer; the value is parsed from an asset once and
-     *    remembered, never edited.
+     *    remembered, never edited. It reaches five entries on 04.08.2026, when the statement
+     *    was split into a Route and a stateless document so a large window could arrange it
+     *    (`LLM.md` §11 row #13): the map is now threaded from the Route through the screen or
+     *    the overlay into the document and its panel. Every one of them is the same instance
+     *    the ViewModel parsed once, so the reference comparison is doing exactly what it does
+     *    on the Route — and the whole chain changes value once in the screen's life.
      *  - `effects` / `onEffect` on [com.duylt.trave.vietlensai.core.mvi.CollectEffects] —
      *    `Flow` is an interface Compose cannot see inside, and a suspend lambda is never
      *    stable. Neither is a remembered singleton in the usual sense, and this entry rests
@@ -78,21 +100,38 @@ class ComposeStabilityReportTest {
         "CameraPreview" to setOf("controller"),
         "LensRoute" to setOf("viewModel"),
         "LensScreen" to setOf("controller"),
+        "LensTabletRoute" to setOf("viewModel"),
+        "LensTabletScreen" to setOf("controller"),
+        "LensHost" to setOf("viewModel"),
+        "ViewfinderPane" to setOf("controller"),
+        "CameraFrame" to setOf("controller"),
         "Viewfinder" to setOf("controller"),
         "rememberZoomDriver" to setOf("controller"),
         "ChatRoute" to setOf("viewModel"),
         "CollectionRoute" to setOf("viewModel"),
         "DiscoveryRoute" to setOf("viewModel"),
+        "DiscoveryTabletRoute" to setOf("viewModel", "chatViewModel"),
         "ExploreRoute" to setOf("viewModel"),
+        "ExploreTabletRoute" to setOf("viewModel"),
+        "ExploreHost" to setOf("viewModel"),
         "JournalRoute" to setOf("viewModel"),
+        "JournalTabletRoute" to setOf("viewModel", "passportViewModel", "collectionViewModel"),
         "PassportRoute" to setOf("viewModel"),
         "SettingsRoute" to setOf("viewModel"),
+        "SettingsTabletRoute" to setOf("viewModel"),
+        "SettingsHost" to setOf("viewModel"),
         "SovereigntyRoute" to setOf("viewModel"),
+        "SovereigntyTabletRoute" to setOf("viewModel"),
         "TranslationRoute" to setOf("viewModel"),
         "SovereigntyMapCanvas" to setOf("map"),
-        "MapCard" to setOf("map"),
+        "SovereigntyMapPanel" to setOf("map"),
+        "SovereigntyScreen" to setOf("map"),
+        "SovereigntyOverlay" to setOf("map"),
+        "VietLensRoot" to setOf("navController"),
         "VietLensApp" to setOf("navController"),
+        "VietLensTabletApp" to setOf("navController"),
         "VietLensNavHost" to setOf("navController"),
+        "VietLensTabletNavHost" to setOf("navController"),
     )
 
     /**
@@ -318,8 +357,16 @@ class ComposeStabilityReportTest {
          * normally exactly the regression the gate exists to catch; it is accepted here only
          * because this state is never passed to a composable and changes once in the screen's
          * life. Nothing else may use that as a precedent.
+         *
+         * Raised to 21 on 04.08.2026 by the tablet lens: `ZoomDriver` moved out of
+         * `LensScreen.kt`, where it was `private` and invisible to this report, into
+         * `feature/camera/component/ZoomDial.kt`, where both arrangements can reach it. The
+         * class did not change — it holds a `glide: Job?` it cancels and replaces, so
+         * unstable is the correct answer and no `compose-stability.conf` entry could honestly
+         * say otherwise. What changed is that it is now counted. It is never a composable
+         * parameter: the dial receives three function references off it, never the driver.
          */
-        const val UNSTABLE_CLASS_CEILING = 20
+        const val UNSTABLE_CLASS_CEILING = 21
 
         val DECLARATION = Regex("""fun ([\w.]+)\(""")
         val UNSTABLE_PARAM = Regex("""^\s+unstable (\w+):""")

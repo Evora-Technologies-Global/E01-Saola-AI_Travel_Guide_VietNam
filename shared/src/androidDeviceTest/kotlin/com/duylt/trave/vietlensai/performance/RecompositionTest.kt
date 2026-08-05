@@ -12,16 +12,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.test.junit4.createComposeRule
 import com.duylt.trave.vietlensai.core.designsystem.theme.VietLensTheme
-import com.duylt.trave.vietlensai.domain.model.Discovery
-import com.duylt.trave.vietlensai.domain.model.DiscoveryCategory
-import com.duylt.trave.vietlensai.domain.model.GeoPoint
 import com.duylt.trave.vietlensai.domain.model.LensMode
 import com.duylt.trave.vietlensai.feature.camera.LensState
 import com.duylt.trave.vietlensai.feature.chat.ChatState
+import com.duylt.trave.vietlensai.testing.discovery
 import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
-import kotlin.time.Instant
 
 /**
  * Recomposition counted on a real device, rather than inferred from a compiler report.
@@ -309,24 +306,4 @@ class RecompositionTest {
             stampMismatches.isNotEmpty(),
         )
     }
-
-    private fun discovery(id: String) = Discovery(
-        id = id,
-        title = "Temple $id",
-        localName = null,
-        category = DiscoveryCategory.LANDMARK,
-        imagePath = null,
-        summary = "",
-        sections = emptyList(),
-        funFacts = emptyList(),
-        tags = emptyList(),
-        nearbySuggestions = emptyList(),
-        suggestedQuestions = emptyList(),
-        confidence = 0.9f,
-        location = GeoPoint(21.0, 105.0),
-        placeHint = null,
-        isFavorite = false,
-        modelUsed = null,
-        createdAt = Instant.fromEpochSeconds(0),
-    )
 }

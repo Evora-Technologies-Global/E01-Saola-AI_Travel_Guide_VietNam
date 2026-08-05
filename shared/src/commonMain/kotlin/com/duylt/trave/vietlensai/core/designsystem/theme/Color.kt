@@ -1,6 +1,7 @@
 package com.duylt.trave.vietlensai.core.designsystem.theme
 
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.compositeOver
 
 /**
  * A palette drawn from Vietnamese material culture rather than from a generic
@@ -13,7 +14,6 @@ import androidx.compose.ui.graphics.Color
 
 // Lacquer red — the primary accent, from sơn mài lacquerware and temple gates.
 val LacquerRed = Color(0xFFB3261E)
-val LacquerRedLight = Color(0xFFDA3B32)
 val LacquerRedDark = Color(0xFF8C1D18)
 val LacquerContainer = Color(0xFFFFDAD6)
 val LacquerContainerDark = Color(0xFF73342D)
@@ -26,7 +26,6 @@ val TempleGoldContainerDark = Color(0xFF5C4405)
 
 // Jade — tertiary, for translation and "verified" affordances.
 val Jade = Color(0xFF2E6B5E)
-val JadeLight = Color(0xFF4E9C8A)
 val JadeContainer = Color(0xFFB9F0E0)
 val JadeContainerDark = Color(0xFF124F44)
 
@@ -51,6 +50,45 @@ val PaperCream = Color(0xFFFBF6EC)
 val Marigold = Color(0xFFE3A93C)
 val Vermilion = Color(0xFFB4181F)
 val InkBrown = Color(0xFF2A1A12)
+
+/**
+ * The seven tints the conversation with the guide is drawn in.
+ *
+ * All derived from the four above, and fixed in both schemes for the same reason the lens is:
+ * the guide is a page in the same notebook as the passport and the journal cards, and a dark
+ * variant would make it a different object rather than a dimmer one. `LLM.md` §11 row #16 is
+ * the standing note that this is a colour-system decision nobody has taken yet — and it asked
+ * for exactly this, the palette written up here beside the lens and the flag rather than left
+ * as seven `private val`s at the top of one screen.
+ *
+ * They moved here when the tablet gained a guide **column**: two branches drawing the same
+ * conversation cannot each own a copy of its colours, or the pair drift and the phone and the
+ * iPad end up two shades of cream apart. Whoever eventually converts this screen to the colour
+ * scheme changes this object and nothing else.
+ */
+object GuidePalette {
+    /** The paper the whole conversation sits on. */
+    val page = PaperCream
+
+    /** Behind the heading — a breath of marigold, so the title band is not the same cream. */
+    val header = Marigold.copy(alpha = 0.10f).compositeOver(PaperCream)
+
+    /** Behind the input row, warmed the other way so the two ends of the page differ. */
+    val composer = Vermilion.copy(alpha = 0.07f).compositeOver(PaperCream)
+
+    /** The guide's own bubbles: a shade lighter than the page, so they lift off it. */
+    val card = Color(0xFFFFFCF6)
+    val cardBorder = Marigold.copy(alpha = 0.35f)
+
+    /** Ink stepped back for metadata — the subtitle, the kicker, the placeholder. */
+    val inkMuted = InkBrown.copy(alpha = 0.60f)
+
+    /** The text field's resting edge. */
+    val hairline = InkBrown.copy(alpha = 0.10f)
+
+    /** Behind the back chip, which on this page is ink on paper rather than a scheme surface. */
+    val backChip = InkBrown.copy(alpha = 0.07f)
+}
 
 /**
  * The national flag, in its own two colours rather than in the app's.

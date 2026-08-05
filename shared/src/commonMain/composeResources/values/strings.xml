@@ -54,6 +54,8 @@
     <string name="camera_timer_10">10-second timer</string>
     <string name="camera_cancel_timer">Cancel timer</string>
     <string name="camera_open_journal">Open journal</string>
+    <string name="camera_ready_to_scan">Ready to scan</string>
+    <string name="camera_recent_scans">Recent scans</string>
     <string name="camera_ae_af_locked">AE/AF LOCK</string>
     <string name="camera_hint_auto">Point at a landmark, dish or artifact</string>
     <string name="camera_hint_landmark">Frame the whole building or monument</string>
@@ -153,6 +155,7 @@
     <!-- Chat -->
     <string name="chat_title">Ask your guide</string>
     <string name="chat_subtitle">Ask a local guide</string>
+    <string name="chat_about">About %1$s</string>
     <string name="chat_suggestions_kicker">Try asking</string>
     <string name="chat_input_hint">Ask anything about this place…</string>
     <string name="chat_send">Send</string>

@@ -129,6 +129,46 @@ viewModelScope.launch { repository.doSomething() }
 superseded request, a screen that has left. Swallowing it turns every ordinary cancellation
 into a spurious error banner and breaks structured concurrency.
 
+#### `onError` must lower every flag the call raised
+
+This is the rule that gets forgotten, because the code reads as if it were already handled:
+the flag *is* lowered in each `AppResult` arm, and those are the only two outcomes anybody
+pictures. `onError` is the third, and it reaches none of them.
+
+```kotlin
+// ❌ isLoading is raised here and lowered in the two arms below — but not on this path
+setState { copy(isLoading = true) }
+launchSafely(onError = { setState { copy(error = it) } }) { … }
+```
+
+The cost is not a spinner. **A busy flag is usually also the re-entry guard**, so a screen
+that strands one refuses the very action that would clear it:
+
+```kotlin
+private fun search() {
+    if (currentState.isLoading) return          // ← the flag above never comes down,
+    …                                            //   so this returns for ever
+}
+```
+
+Four screens shipped this way and were found on 04.08.2026 — Explore twice, Translation and
+Discovery once each; the Discovery one took the *default* `onError`, so the traveller's own
+unsaved note sat behind a save button that had silently stopped working. `LensViewModel` and
+`ChatViewModel` are the shape to copy.
+
+**Test it by retrying, not by reading the flag.** A flag nobody reads would pass
+`assertFalse(state.isLoading)`; only a second call proves the screen recovered:
+
+```kotlin
+repository.throwOnNext = IllegalStateException("Room is corrupt")
+vm.onIntent(Refresh); runCurrent()
+assertFalse(vm.state.value.isLoading)
+
+repository.throwOnNext = null
+vm.onIntent(Refresh); runCurrent()
+assertEquals(2, repository.calls)               // ← the assertion that matters
+```
+
 ---
 
 ## 2. The Contract file
@@ -457,6 +497,30 @@ is AppResult.Success -> setState { copy(generatingDate = null) }
 
 Two composables, always. `XRoute` is public and stateful; `XScreen` is private and pure.
 
+**The screen is the only part of a feature that a form factor may have twice.** This project
+splits its presentation layer into `mobile/` and `tablet/` (`LLM.md` §3, §5): the Contract
+and the ViewModel stay in `feature/<name>/`, one copy each, while `XScreen.kt` lives under a
+branch. Everything in this section applies unchanged inside a branch, plus one rule:
+
+> **A branch screen arranges; it never decides.** No `if` on data, no derived business
+> value, no ViewModel of its own. Two arrangements of one state — if the tablet needs to
+> *know* something the phone does not, that knowledge belongs on the shared `XState` as a
+> computed `val`, where both branches read the same answer.
+
+The reason is the failure mode, not tidiness: a rule computed in one branch is a rule the
+other branch does not have, and the divergence surfaces as "it works on my phone" months
+later. Duplicating a *layout* is cheap and visible; duplicating a *decision* is neither.
+A composable both branches draw is lifted into `feature/<name>/` — never copied.
+
+**A branch `Route` may hold more than one ViewModel; nothing below it may hold any.** A large
+window shows two features at once — the guide beside the discovery, the passport and the
+collection beside the journal's day column — and the feature living in the pane still needs
+its own ViewModel. It is resolved on the host Route, from the same back-stack entry, and the
+pane below takes `state` + `onIntent` like any other stateless piece. The alternative, a pane
+that calls `koinViewModel()` itself, is a Route with no destination, and there would be one
+per pane before anyone noticed. Name those files `XPane.kt` so the tree says which is which,
+and list every extra parameter in `ComposeStabilityReportTest`'s allowlist.
+
 ```kotlin
 @Composable
 fun LensRoute(
@@ -576,6 +640,15 @@ fun <E : UiEffect> CollectEffects(effects: Flow<E>, onEffect: suspend (E) -> Uni
   belongs on the state class.
 - No `remember { mutableStateOf(…) }` for anything the ViewModel should own. Purely visual
   local state (a `SnackbarHostState`, a `LazyListState`, an animation target) is fine.
+- **Visual local state that belongs to a *control* lives in the control, not in the screen
+  above it.** Whether a picker is open is one of these: it survives a rotation and nothing
+  else, so it is right that no ViewModel holds it — but it is a fact about that row, not about
+  the arrangement drawing the row. `ThemeRow` therefore owns its `rememberSaveable` and draws
+  both the row and the dialog it opens, and the phone and the large window each call it once.
+  Left in the two screens, the flag is declared twice and the second declaration is the one
+  that misses the next change to it. Ask which of the two the state describes: a
+  `LazyListState` hoisted above a pane switch belongs to the *screen* (see
+  `JournalTabletScreen`), and an open/closed flag belongs to the thing that opens.
 - Every parameter must be **stable**, or the composable can never skip and re-executes on
   every parent recomposition.
 - Passes `onIntent` down as-is. Do not wrap it in a new lambda per item in a list — that
@@ -686,7 +759,7 @@ architecture it is fully testable: no Android, no Compose, no `Context`.
 | Reducers | `vm.onIntent(X); assertEquals(expected, vm.state.value.field)` |
 | Effects | `vm.effects.test { assertTrue(awaitItem() is XEffect.Y); expectNoEvents() }` |
 | Crash containment | a fake that throws → `state.error is AppError.Unexpected`, **not** a thrown test |
-| Stuck states | a request that never answers → the spinner **must** come down at the timeout |
+| Stuck states | a request that never answers → the spinner **must** come down at the timeout; and a repository that **throws** → the flag comes down *and* the next attempt reaches the repository |
 | Unbounded growth | 500 rows in the fake → `assertEquals(5, state.recent.size)` |
 
 **Intent fuzzing** is the standard for any ViewModel with more than two concurrent jobs.
@@ -794,9 +867,15 @@ val onIntent = remember(viewModel) { viewModel::onIntent }
 
 Cheap subtrees do not need this and most screens here do not do it. Reach for it when the
 tree below contains something that costs more than a layout pass — a map, a camera
-preview, a `Canvas` that projects geometry. On `ExploreScreen` re-running `PlaceMap`
+preview, a `Canvas` that projects geometry. On Explore, re-running `PlaceMap`
 means crossing into the Maps SDK once per marker on Android and re-running the whole
 `UIKitView` update on iOS, and it was doing that for emissions that only moved a spinner.
+
+**Where two arrangements draw the same expensive subtree, the line belongs above both of
+them.** Explore keeps it in `feature/explore/ExploreHost.kt` rather than in each branch's
+Route: an optimisation that has to be remembered twice is one that will be present on one
+form factor and absent on the other, and the symptom — a map re-entering the SDK on every
+spinner tick — is invisible in a screenshot.
 
 ### Warm a heavy platform engine before its composable needs it
 
@@ -813,13 +892,18 @@ the exact frame the traveller is watching. Two halves to the fix, and it needs b
    flag and draws a plain surface until it returns. The method is `static synchronized`,
    so this is the identical work moved somewhere it does not show.
 2. **Compose the view early, behind an opaque cover**, rather than swapping it in when the
-   data arrives. `ExploreScreen` composes the map as soon as the permission is answered
-   and draws the loading and failure states *over* it — so the engine starts while the
-   fix and the search are still in flight, and the cover lifts onto a map that is warm.
+   data arrives. Both of Explore's arrangements compose the map as soon as the permission
+   is answered and draw the loading and failure states *over* it — so the engine starts
+   while the fix and the search are still in flight, and the cover lifts onto a warm map.
 
 A cover over a live view has to **swallow touches** as well as be opaque, or the drag goes
 straight through to a map nobody can see. An empty `Modifier.pointerInput(Unit) {}` is
 hit-tested like any other pointer node and stops the sibling below being tested at all.
+
+The guard belongs on **everything** floated over the live view, not only on the covers. A
+large window puts a scrolling column of results over the map, and a scroller consumes drags
+only in its own direction and only while it has somewhere left to go — so without the same
+empty `pointerInput`, flicking past the end of the list pans the map underneath it.
 
 Composing early also means the view is created before the first camera target exists, so
 it opens on a fallback. **Apply the first camera move without an animation** — otherwise
@@ -843,6 +927,8 @@ every visit to the tab begins by flying the traveller in from the fallback city.
 - [ ] `onIntent` is the **only** public method
 - [ ] The `when` is exhaustive with no `else`
 - [ ] Every coroutine goes through `launchSafely`; `CancellationException` is rethrown
+- [ ] Every flag raised before a suspend call is lowered in `onError` too — and a test
+      proves the *retry* reaches the repository, not just that the flag came down
 - [ ] Every network/IO wait is bounded (`withTimeoutOrNull`)
 - [ ] Superseding requests cancel the previous job
 - [ ] Sub-jobs are structural children, not fields
@@ -860,6 +946,17 @@ every visit to the tab begins by flying the traveller in from the fallback city.
 - [ ] Nothing below `XRoute` sees the ViewModel
 - [ ] No business logic in a composable
 - [ ] File under 200 lines
+
+**Arrangement** (`LLM.md` §3, `docs/large-screen-layout.md`)
+- [ ] The screen has a large-window arrangement under `tablet/feature/<name>/`, **or** the
+      reason it does not is written down — in its own KDoc and in `large-screen-layout.md`.
+      "Nobody asked for it yet" is not a reason; "it is the same picture at any width" is
+- [ ] Every composable both arrangements draw lives in `feature/<name>/component/`, not
+      `private` inside one of them
+- [ ] Nothing under `mobile/` or `tablet/` decides anything — no use case, no business rule,
+      no second answer to a question the ViewModel already answers
+- [ ] A new route is registered in **both** shells, with the same `navArgument` defaults, or
+      resizing the window clears the back stack
 
 **Screen chrome** (§11)
 - [ ] The screen renders `PageHeader` or `OverlayHeader`, never a header of its own
@@ -898,7 +995,7 @@ every visit to the tab begins by flying the traveller in from the fallback city.
 | `single { }` for a ViewModel | It outlives its screen with all its state and jobs. |
 | Plain `ViewModel` instead of `MviViewModel` for a **screen** | No effect channel, no crash floor, untestable in the same way as everything else. *Was* live: `SovereigntyViewModel`. The window host is the one stated exception — see §3. |
 | A screen building its own header | Five screens did, and produced five header boxes and four title sizes for one job. Nothing looked wrong on any single screen. See §11. |
-| `statusBarsPadding()` on a screen | The app hides the system bars, so the inset is **zero** and the notch is still there. **Cost a real defect**: five controls on the discovery page sat under the cutout. Use `screenInsetsPadding()` or `OverlayHeader`. |
+| `statusBarsPadding()` on a screen | Held sideways, the notch is on an edge the status bar does not report, so the inset is **wrong** and the control sits under the cutout. **Cost a real defect**: five controls on the discovery page did. Use `screenInsetsPadding()` or `OverlayHeader`. |
 | A `.dp` or `.sp` literal in `feature/` | It compiles to the same bytecode as the token, so no reviewer and no other test can see it. There were 57 hardcoded radii at twelve values and 195 spacing literals at nineteen before `DesignTokenTest`. |
 
 ---
@@ -925,11 +1022,13 @@ sizes. Nothing on any one screen looked wrong. The app looked wrong, because a t
 crosses three of them in about four seconds and the heading moved every time.
 
 **And a real defect, not just an inconsistency.** The discovery page reached for
-`statusBarsPadding()` in five places instead of `screenInsetsPadding()`. This app hides the
-system bars, so that inset is zero — and the notch is still a hole in the glass. The page's
-close and delete, the photo viewer's close and the note camera's close and flip all sat
-under the cutout on every phone that has one. `OverlayHeader` owning the inset is what stops
-the next screen repeating it.
+`statusBarsPadding()` in five places instead of `screenInsetsPadding()`. The app hid the
+system bars at the time, so that inset was zero — and the notch is a hole in the glass that
+was still there. The page's close and delete, the photo viewer's close and the note camera's
+close and flip all sat under the cutout on every phone that has one. The status bar has since
+come back, which fixes the phone held upright and nothing else: turn it sideways and the
+cutout is on an edge no bar reports. `OverlayHeader` owning the inset is what stops the next
+screen repeating it.
 
 **A second inset trap, found while reviewing this refactor.** Material3's `Surface` chains
 the caller's `modifier` *ahead of* its own `.background(...)`, so an inset passed to a

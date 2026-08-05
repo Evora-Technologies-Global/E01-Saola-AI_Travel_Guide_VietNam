@@ -39,6 +39,8 @@
     <string name="camera_timer_10">10초 타이머</string>
     <string name="camera_cancel_timer">타이머 취소</string>
     <string name="camera_open_journal">일지 열기</string>
+    <string name="camera_ready_to_scan">스캔 준비 완료</string>
+    <string name="camera_recent_scans">최근 스캔</string>
     <string name="camera_ae_af_locked">AE/AF 잠금</string>
     <string name="camera_hint_auto">명소나 음식, 전시품을 향해 주세요</string>
     <string name="camera_hint_landmark">건물이나 기념물 전체를 담아 주세요</string>
@@ -131,6 +133,7 @@
     <!-- Chat -->
     <string name="chat_title">가이드에게 묻기</string>
     <string name="chat_subtitle">현지 가이드에게 묻기</string>
+    <string name="chat_about">%1$s 정보</string>
     <string name="chat_suggestions_kicker">이렇게 물어보세요</string>
     <string name="chat_input_hint">이곳에 대해 무엇이든 물어보세요…</string>
     <string name="chat_send">보내기</string>

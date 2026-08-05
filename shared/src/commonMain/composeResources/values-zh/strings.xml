@@ -40,6 +40,8 @@
     <string name="camera_timer_10">10 秒定时</string>
     <string name="camera_cancel_timer">取消定时</string>
     <string name="camera_open_journal">打开日志</string>
+    <string name="camera_ready_to_scan">准备扫描</string>
+    <string name="camera_recent_scans">最近扫描</string>
     <string name="camera_ae_af_locked">AE/AF 锁定</string>
     <string name="camera_hint_auto">对准地标、菜肴或展品</string>
     <string name="camera_hint_landmark">把整座建筑或纪念碑框进来</string>
@@ -132,6 +134,7 @@
     <!-- Chat -->
     <string name="chat_title">问问你的向导</string>
     <string name="chat_subtitle">向本地向导提问</string>
+    <string name="chat_about">关于 %1$s</string>
     <string name="chat_suggestions_kicker">可以这样问</string>
     <string name="chat_input_hint">关于这个地方，随便问…</string>
     <string name="chat_send">发送</string>

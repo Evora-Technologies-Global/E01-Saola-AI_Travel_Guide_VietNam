@@ -54,10 +54,12 @@ class RegionMap(
     /**
      * Width to height of the frame once projected.
      *
-     * The card sizes itself to this rather than the drawing being fitted into a card
-     * of some other shape: fit and there is a band of dead red down one side, fill
-     * and the frame is cropped — and the frame was chosen so that nothing in it is
-     * expendable.
+     * **This is the shape to give the map wherever the caller is free to choose one**,
+     * and the phone is: its panel sizes itself to this, so the frame and the canvas
+     * agree and the drawing comes out undistorted with nothing cropped. A caller that
+     * hands [SovereigntyMapCanvas] any other shape is asking for the frame to be
+     * stretched into it — see `RegionProjection`, which says what that costs and why
+     * the large window pays it.
      */
     val aspectRatio: Float
         get() {
@@ -255,6 +257,25 @@ private fun DrawScope.drawPlaceLabel(
  * projection the passport map uses, for the same reason: over this few degrees it is
  * indistinguishable from a conformal one and it is two lines long.
  *
+ * **The frame is laid onto whatever canvas it is given, corner to corner.** It used
+ * to take one scale — `minOf` of the two — and centre the result, which is the right
+ * answer when the caller is free to shape the canvas: the phone sizes its panel to
+ * [RegionMap.aspectRatio], the two agree to the pixel, and one scale is what that
+ * produces. A pane in a large window is not free that way. Its height is the window's
+ * and its width is what the document leaves, and against a frame half again as wide as
+ * it is tall the old scale drew the map across the middle with a third of the panel
+ * empty above and below it.
+ *
+ * So the two axes scale independently, and the cost is stated rather than hidden: on a
+ * canvas whose shape is not the frame's, **the drawing is stretched**. Nothing is
+ * cropped and nothing moves relative to anything else — Hoàng Sa stays north of Trường
+ * Sa, both stay east of the coast and west of the Philippines, which is the whole claim
+ * this figure makes — but Việt Nam is drawn narrower than it is. That is a deliberate
+ * trade against the two alternatives, both of which cost more: scaling to cover crops
+ * the sides, and at the pane this screen actually has that takes 0.84° off the country's
+ * own north-west, and re-cutting the frame taller means rebuilding the asset that the
+ * phone draws from.
+ *
  * There is no clamping or inversion here. Nothing on this map is tapped or dragged.
  */
 private class RegionProjection(private val frame: GeoBounds, size: Size) {
@@ -263,20 +284,15 @@ private class RegionProjection(private val frame: GeoBounds, size: Size) {
     private val worldWidth = frame.longitudeSpan * cosLatitude
     private val worldHeight = frame.latitudeSpan
 
-    private val scale: Double = if (worldWidth <= 0.0 || worldHeight <= 0.0) {
-        1.0
-    } else {
-        minOf(size.width / worldWidth, size.height / worldHeight)
-    }
-    private val originX = (size.width - worldWidth * scale) / 2.0
-    private val originY = (size.height - worldHeight * scale) / 2.0
+    private val scaleX: Double = if (worldWidth <= 0.0) 1.0 else size.width / worldWidth
+    private val scaleY: Double = if (worldHeight <= 0.0) 1.0 else size.height / worldHeight
 
     val height: Float = size.height
 
     fun at(longitude: Double, latitude: Double): Offset = Offset(
-        x = (originX + (longitude - frame.minLongitude) * cosLatitude * scale).toFloat(),
+        x = ((longitude - frame.minLongitude) * cosLatitude * scaleX).toFloat(),
         // Latitude grows north, screen y grows down.
-        y = (originY + (frame.maxLatitude - latitude) * scale).toFloat(),
+        y = ((frame.maxLatitude - latitude) * scaleY).toFloat(),
     )
 }
 

@@ -39,6 +39,8 @@
     <string name="camera_timer_10">10秒タイマー</string>
     <string name="camera_cancel_timer">タイマーを中止</string>
     <string name="camera_open_journal">日誌を開く</string>
+    <string name="camera_ready_to_scan">撮影の準備完了</string>
+    <string name="camera_recent_scans">最近の撮影</string>
     <string name="camera_ae_af_locked">AE/AF ロック</string>
     <string name="camera_hint_auto">名所・料理・展示品に向けてください</string>
     <string name="camera_hint_landmark">建物や記念碑の全体を入れてください</string>
@@ -131,6 +133,7 @@
     <!-- Chat -->
     <string name="chat_title">ガイドに聞く</string>
     <string name="chat_subtitle">地元のガイドに聞く</string>
+    <string name="chat_about">%1$s について</string>
     <string name="chat_suggestions_kicker">こんな質問はどうですか</string>
     <string name="chat_input_hint">この場所について何でも聞いてください…</string>
     <string name="chat_send">送信</string>

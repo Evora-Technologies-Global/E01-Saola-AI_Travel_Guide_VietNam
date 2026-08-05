@@ -136,7 +136,14 @@ class DiscoveryViewModel(
                 val editor = currentState.noteEditor ?: return
                 if (currentState.isSavingNote) return
                 setState { copy(isSavingNote = true) }
-                launchSafely {
+                // `isSavingNote = false` on the throw path too, and it is the flag rather
+                // than the message that matters here. The guard two lines up reads the same
+                // flag, so a write that raised it and died without lowering it left the
+                // composer holding the traveller's own writing behind a save button that
+                // had stopped doing anything — permanently, with nothing else in the app
+                // able to lower it again. The editor is deliberately *not* cleared: closing
+                // it would discard the words in the one place they exist.
+                launchSafely(onError = { setState { copy(isSavingNote = false) } }) {
                     saveNote(discoveryId, editor.body, editor.photoPaths)
                     setState { copy(isSavingNote = false, noteEditor = null) }
                 }

@@ -39,6 +39,8 @@
     <string name="camera_timer_10">Retardateur 10 s</string>
     <string name="camera_cancel_timer">Annuler le retardateur</string>
     <string name="camera_open_journal">Ouvrir le journal</string>
+    <string name="camera_ready_to_scan">Prêt à scanner</string>
+    <string name="camera_recent_scans">Scans récents</string>
     <string name="camera_ae_af_locked">AE/AF VERROUILLÉ</string>
     <string name="camera_hint_auto">Visez un monument, un plat ou un objet</string>
     <string name="camera_hint_landmark">Cadrez le bâtiment ou le monument en entier</string>
@@ -132,6 +134,7 @@
     <!-- Chat -->
     <string name="chat_title">Demandez à votre guide</string>
     <string name="chat_subtitle">Demandez à un guide local</string>
+    <string name="chat_about">À propos de %1$s</string>
     <string name="chat_suggestions_kicker">Essayez de demander</string>
     <string name="chat_input_hint">Posez n'importe quelle question sur ce lieu…</string>
     <string name="chat_send">Envoyer</string>

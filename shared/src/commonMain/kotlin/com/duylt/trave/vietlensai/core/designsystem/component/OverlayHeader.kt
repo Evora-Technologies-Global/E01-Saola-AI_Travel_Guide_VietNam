@@ -75,12 +75,13 @@ enum class OverlayHeaderStyle {
  * the inset itself, nothing does.
  *
  * Which is exactly what went wrong. The discovery page reached for `statusBarsPadding()`
- * in five places instead. The app hides the system bars, so that inset is zero — but the
- * notch is a hole in the glass and is still there, so on a cutout phone the page's close
- * and delete, the photo viewer's close, and the note camera's close and flip all sat
- * *under* the camera. `screenInsetsPadding()` was written for
- * precisely this and unions the cutout in; putting it inside this component is what stops
- * the next overlay from getting it wrong again.
+ * in five places instead. The app hid the system bars at the time, so that inset was zero —
+ * but the notch is a hole in the glass and was still there, so on a cutout phone the page's
+ * close and delete, the photo viewer's close, and the note camera's close and flip all sat
+ * *under* the camera. The status bar has since come back, which fixes the phone held upright
+ * and nothing else: turn it sideways and the cutout is on an edge no bar reports.
+ * `screenInsetsPadding()` was written for precisely this and unions the cutout in; putting
+ * it inside this component is what stops the next overlay from getting it wrong again.
  *
  * @param subtitle drawn as a [Kicker] under the title — on an overlay it is metadata
  *   ("14 nearby"), never a second sentence.
