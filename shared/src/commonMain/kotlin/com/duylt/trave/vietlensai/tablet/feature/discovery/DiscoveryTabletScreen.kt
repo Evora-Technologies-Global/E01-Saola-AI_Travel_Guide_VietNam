@@ -11,8 +11,8 @@ import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -21,7 +21,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -31,12 +33,14 @@ import androidx.compose.material.icons.outlined.DeleteOutline
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,6 +48,7 @@ import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.duylt.trave.vietlensai.core.designsystem.component.AppSnackbarHost
 import com.duylt.trave.vietlensai.core.designsystem.component.ErrorState
 import com.duylt.trave.vietlensai.core.designsystem.component.LoadingState
 import com.duylt.trave.vietlensai.core.designsystem.component.OverlayHeader
@@ -51,6 +56,7 @@ import com.duylt.trave.vietlensai.core.designsystem.component.OverlayHeaderStyle
 import com.duylt.trave.vietlensai.core.designsystem.component.OverlayIconButton
 import com.duylt.trave.vietlensai.core.designsystem.component.PageHeader
 import com.duylt.trave.vietlensai.core.designsystem.component.PageHeaderDefaults
+import com.duylt.trave.vietlensai.core.designsystem.component.showError
 import com.duylt.trave.vietlensai.core.designsystem.theme.GuidePalette
 import com.duylt.trave.vietlensai.core.designsystem.theme.InkBrown
 import com.duylt.trave.vietlensai.core.designsystem.theme.Motion
@@ -62,6 +68,7 @@ import com.duylt.trave.vietlensai.core.designsystem.theme.screenInsetsPadding
 import com.duylt.trave.vietlensai.core.mvi.CollectEffects
 import com.duylt.trave.vietlensai.core.util.accentColor
 import com.duylt.trave.vietlensai.core.util.rememberCameraPermissionState
+import com.duylt.trave.vietlensai.core.util.userMessage
 import com.duylt.trave.vietlensai.domain.model.Discovery
 import com.duylt.trave.vietlensai.feature.chat.ChatIntent
 import com.duylt.trave.vietlensai.feature.chat.ChatState
@@ -102,6 +109,7 @@ import com.duylt.trave.vietlensai.resources.discovery_delete
 import com.duylt.trave.vietlensai.resources.discovery_not_found
 import com.duylt.trave.vietlensai.resources.discovery_share_body
 import com.duylt.trave.vietlensai.tablet.navigation.TwoPaneScaffold
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -144,6 +152,8 @@ fun DiscoveryTabletRoute(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val chatState by chatViewModel.state.collectAsStateWithLifecycle()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
 
     CollectEffects(viewModel.effects) { effect ->
         when (effect) {
@@ -154,6 +164,13 @@ fun DiscoveryTabletRoute(
             // saying "ask this", and where that lands is the arrangement's business.
             is DiscoveryEffect.OpenChat -> effect.prefill?.let { question ->
                 chatViewModel.onIntent(ChatIntent.SubmitQuestion(question))
+            }
+
+            // Resolved off the effect's payload rather than out of state, per `LLM.md` §11
+            // row #15. Both arrangements say the same thing in the same words; where the
+            // notice sits is the only difference between them, which is the whole rule.
+            is DiscoveryEffect.ShowMessage -> scope.launch {
+                snackbarHostState.showError(effect.error.userMessage())
             }
         }
     }
@@ -171,6 +188,22 @@ fun DiscoveryTabletRoute(
         onBack = onBack,
         modifier = modifier,
     )
+
+    // Centred on the window rather than tucked into the story pane. A failure here belongs to
+    // whichever pane the traveller was working in — the note composer is in the story column,
+    // the delete is in its header — and a notice pinned inside one of them would be read as
+    // being about that column alone. It clears the window's own bottom edge and no bar: the
+    // discovery is a detail route on this branch too, so the rail is not drawn.
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
+        AppSnackbarHost(
+            snackbarHostState,
+            modifier = Modifier
+                .widthIn(max = PaneWidth.sheet)
+                .padding(ScreenGutter)
+                .navigationBarsPadding()
+                .imePadding(),
+        )
+    }
 }
 
 /**

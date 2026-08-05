@@ -6,6 +6,7 @@ import com.duylt.trave.vietlensai.core.mvi.UiState
 import com.duylt.trave.vietlensai.domain.model.AppLanguage
 import com.duylt.trave.vietlensai.domain.model.Discovery
 import com.duylt.trave.vietlensai.domain.model.DiscoveryNote
+import com.duylt.trave.vietlensai.domain.util.AppError
 
 data class DiscoveryState(
     val isLoading: Boolean = true,
@@ -70,4 +71,27 @@ sealed interface DiscoveryIntent : UiIntent {
 sealed interface DiscoveryEffect : UiEffect {
     data object NavigateBack : DiscoveryEffect
     data class OpenChat(val discoveryId: String, val prefill: String?) : DiscoveryEffect
+
+    /**
+     * Something the traveller asked for did not happen, and they need to be told.
+     *
+     * The last of the app's writing screens to get one — `LLM.md` §11 row #26. Discovery was
+     * the exception because neither of its two arrangements had a snackbar host, so the
+     * message had nowhere to land; both now have one.
+     *
+     * **There is deliberately no `error` field on [DiscoveryState] beside this.** Nothing on
+     * this page renders a failure inline, so a field written on every failure and read by
+     * nobody is exactly what turned a failed day summary into a spinner that just stopped —
+     * §11 row #15. The route resolves the text with `userMessage()` at the moment it handles
+     * the effect; resolving from state instead depends on a recomposition that has not
+     * happened yet, which is how the message used to be lost.
+     *
+     * Every one of this screen's four writes now raises it. That is a wider fix than row #26
+     * asked for and it is the same defect four times: `saveNote`, `deleteNote`,
+     * `toggleFavorite` and `deleteDiscovery` all return `AppResult` and all four results were
+     * being discarded, so a *handled* failure — the ordinary path, not a throw — took the
+     * success branch. The note was the worst of the four because that branch closes the
+     * composer, which threw away the traveller's own writing in the one place it existed.
+     */
+    data class ShowMessage(val error: AppError) : DiscoveryEffect
 }

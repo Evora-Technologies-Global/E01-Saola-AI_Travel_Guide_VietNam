@@ -13,6 +13,9 @@ import com.duylt.trave.vietlensai.domain.usecase.ObserveNoteUseCase
 import com.duylt.trave.vietlensai.domain.usecase.ObserveSettingsUseCase
 import com.duylt.trave.vietlensai.domain.usecase.SaveNoteUseCase
 import com.duylt.trave.vietlensai.domain.usecase.ToggleFavoriteUseCase
+import com.duylt.trave.vietlensai.domain.util.AppError
+import com.duylt.trave.vietlensai.domain.util.onFailure
+import com.duylt.trave.vietlensai.domain.util.onSuccess
 import com.duylt.trave.vietlensai.navigation.Routes
 import com.duylt.trave.vietlensai.voice.TextToSpeechManager
 import kotlinx.coroutines.CoroutineScope
@@ -60,7 +63,13 @@ class DiscoveryViewModel(
 
     override fun onIntent(intent: DiscoveryIntent) {
         when (intent) {
-            DiscoveryIntent.ToggleFavorite -> launchSafely { toggleFavorite(discoveryId) }
+            // The heart is drawn from the observed discovery rather than from a local flag,
+            // so a refused write corrects itself on the next emission and the only thing
+            // missing was the reason. `report` covers the throw path and `onFailure` the
+            // handled one; both exist because a repository may do either.
+            DiscoveryIntent.ToggleFavorite -> launchSafely(onError = ::report) {
+                toggleFavorite(discoveryId).onFailure(::report)
+            }
 
             DiscoveryIntent.ToggleSpeech -> {
                 val discovery = currentState.discovery ?: return
@@ -74,11 +83,16 @@ class DiscoveryViewModel(
             DiscoveryIntent.RequestDelete -> setState { copy(showDeleteConfirm = true) }
             DiscoveryIntent.CancelDelete -> setState { copy(showDeleteConfirm = false) }
 
-            DiscoveryIntent.ConfirmDelete -> launchSafely {
+            // **Back only on success.** Leaving the page was unconditional, so a delete that
+            // failed took the traveller to the journal with the discovery still in it —
+            // which reads as a list that has not refreshed rather than as a failure, and is
+            // the one wrong outcome here that nothing later corrects.
+            DiscoveryIntent.ConfirmDelete -> launchSafely(onError = ::report) {
                 setState { copy(showDeleteConfirm = false) }
                 textToSpeech.stop()
                 deleteDiscovery(discoveryId)
-                sendEffect(DiscoveryEffect.NavigateBack)
+                    .onSuccess { sendEffect(DiscoveryEffect.NavigateBack) }
+                    .onFailure(::report)
             }
 
             is DiscoveryIntent.AskSuggested -> {
@@ -143,18 +157,46 @@ class DiscoveryViewModel(
                 // had stopped doing anything — permanently, with nothing else in the app
                 // able to lower it again. The editor is deliberately *not* cleared: closing
                 // it would discard the words in the one place they exist.
-                launchSafely(onError = { setState { copy(isSavingNote = false) } }) {
+                launchSafely(
+                    onError = { error ->
+                        setState { copy(isSavingNote = false) }
+                        report(error)
+                    },
+                ) {
                     saveNote(discoveryId, editor.body, editor.photoPaths)
-                    setState { copy(isSavingNote = false, noteEditor = null) }
+                        // The composer closes on this line and on no other. It used to close
+                        // unconditionally, one statement after a call whose `AppResult` was
+                        // discarded — so an ordinary handled failure looked exactly like a
+                        // save, and the words went with the composer.
+                        .onSuccess { setState { copy(isSavingNote = false, noteEditor = null) } }
+                        .onFailure { error ->
+                            setState { copy(isSavingNote = false) }
+                            report(error)
+                        }
                 }
             }
 
-            DiscoveryIntent.DeleteNote -> launchSafely {
+            // Same shape one size down: the editor closes only if the row really went.
+            DiscoveryIntent.DeleteNote -> launchSafely(onError = ::report) {
                 deleteNote(discoveryId)
-                setState { copy(noteEditor = null) }
+                    .onSuccess { setState { copy(noteEditor = null) } }
+                    .onFailure(::report)
             }
         }
     }
+
+    /**
+     * Tells the traveller a write did not happen.
+     *
+     * One private method rather than the effect spelled out at eight call sites — four
+     * writes, each with a handled-failure arm and an unwrapped-throw arm — because that is
+     * eight chances for one of them to be forgotten, which is precisely how this screen came
+     * to have four silent failures on it in the first place.
+     *
+     * It raises an effect and writes nothing to state; see the note on
+     * [DiscoveryEffect.ShowMessage] for why there is no `error` field to write to.
+     */
+    private fun report(error: AppError) = sendEffect(DiscoveryEffect.ShowMessage(error))
 
     /**
      * Takes what fits into the composer and deletes the rest.

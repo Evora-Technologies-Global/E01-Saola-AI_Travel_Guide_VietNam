@@ -164,11 +164,27 @@ class FakeDiscoveryRepository : DiscoveryRepository {
 
     var throwOnToggleFavorite: Throwable? = null
 
+    // Both spellings of "it did not work", because a ViewModel has to answer both and they
+    // are separate code paths: `failOn…` is the ordinary handled failure a repository returns,
+    // `throwOn…` the unwrapped one it promises never to produce. Four of this app's silent
+    // failures lived on the first of those, which no `throwOn…` hook can reach.
+    var failOnToggleFavorite: AppError? = null
+    var failOnDelete: AppError? = null
+    val deleted = mutableListOf<String>()
+
     override suspend fun toggleFavorite(id: String): AppResult<Unit> {
         throwOnToggleFavorite?.let { throw it }
+        failOnToggleFavorite?.let { return AppResult.Failure(it) }
         return AppResult.Success(Unit)
     }
-    override suspend fun delete(id: String): AppResult<Unit> = AppResult.Success(Unit)
+
+    override suspend fun delete(id: String): AppResult<Unit> {
+        deleted += id
+        failOnDelete?.let { return AppResult.Failure(it) }
+        discoveries.value = discoveries.value.filterNot { it.id == id }
+        return AppResult.Success(Unit)
+    }
+
     override suspend fun deleteAll(): AppResult<Unit> = AppResult.Success(Unit)
 }
 
@@ -499,6 +515,7 @@ class FakeNoteRepository : NoteRepository {
     var throwOnSave: Throwable? = null
     var throwOnDelete: Throwable? = null
     var failOnSave: AppError? = null
+    var failOnDelete: AppError? = null
     val saved = mutableListOf<Pair<String, String>>()
 
     override fun observeNote(discoveryId: String): Flow<DiscoveryNote?> =
@@ -526,6 +543,7 @@ class FakeNoteRepository : NoteRepository {
 
     override suspend fun delete(discoveryId: String): AppResult<Unit> {
         throwOnDelete?.let { throw it }
+        failOnDelete?.let { return AppResult.Failure(it) }
         notes.value = notes.value - discoveryId
         return AppResult.Success(Unit)
     }

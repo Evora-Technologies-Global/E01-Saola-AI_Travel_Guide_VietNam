@@ -36,6 +36,7 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Lightbulb
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -43,6 +44,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -52,11 +54,13 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.duylt.trave.vietlensai.core.designsystem.component.AppSnackbarHost
 import com.duylt.trave.vietlensai.core.designsystem.component.ErrorState
 import com.duylt.trave.vietlensai.core.designsystem.component.LoadingState
 import com.duylt.trave.vietlensai.core.designsystem.component.OverlayHeader
 import com.duylt.trave.vietlensai.core.designsystem.component.OverlayHeaderStyle
 import com.duylt.trave.vietlensai.core.designsystem.component.OverlayIconButton
+import com.duylt.trave.vietlensai.core.designsystem.component.showError
 import com.duylt.trave.vietlensai.core.designsystem.theme.Corner
 import com.duylt.trave.vietlensai.core.designsystem.theme.Motion
 import com.duylt.trave.vietlensai.core.designsystem.theme.PaperCream
@@ -67,6 +71,7 @@ import com.duylt.trave.vietlensai.core.designsystem.theme.Vermilion
 import com.duylt.trave.vietlensai.core.mvi.CollectEffects
 import com.duylt.trave.vietlensai.core.util.accentColor
 import com.duylt.trave.vietlensai.core.util.rememberCameraPermissionState
+import com.duylt.trave.vietlensai.core.util.userMessage
 import com.duylt.trave.vietlensai.domain.model.Discovery
 import com.duylt.trave.vietlensai.feature.discovery.DiscoveryEffect
 import com.duylt.trave.vietlensai.feature.discovery.DiscoveryIntent
@@ -100,6 +105,7 @@ import com.duylt.trave.vietlensai.resources.discovery_delete
 import com.duylt.trave.vietlensai.resources.discovery_not_found
 import com.duylt.trave.vietlensai.resources.discovery_share
 import com.duylt.trave.vietlensai.resources.discovery_share_body
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -111,11 +117,20 @@ fun DiscoveryRoute(
     viewModel: DiscoveryViewModel = koinViewModel(),
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
 
+    // The message is resolved off the effect's own payload through `userMessage()`, never
+    // read back out of state — the same rule the journal, settings and explore routes follow
+    // and for the same reason: an effect is handled one main-queue turn after `sendEffect`,
+    // before the frame that would have produced the string. See `LLM.md` §11 row #15.
     CollectEffects(viewModel.effects) { effect ->
         when (effect) {
             DiscoveryEffect.NavigateBack -> onBack()
             is DiscoveryEffect.OpenChat -> onOpenChat(effect.discoveryId)
+            is DiscoveryEffect.ShowMessage -> scope.launch {
+                snackbarHostState.showError(effect.error.userMessage())
+            }
         }
     }
 
@@ -126,6 +141,17 @@ fun DiscoveryRoute(
         onOpenChat = onOpenChat,
         modifier = modifier,
     )
+
+    // Over the page and against the bottom edge, not lifted by `PageSpacing.snackbarLift`:
+    // this is a detail route, so the bottom bar is already gone and there is nothing down
+    // there for a notice to clear. The note composer is the one thing it can land on, which
+    // is exactly where a failed save needs to be read.
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
+        AppSnackbarHost(
+            snackbarHostState,
+            modifier = Modifier.padding(ScreenGutter).navigationBarsPadding().imePadding(),
+        )
+    }
 }
 
 /**

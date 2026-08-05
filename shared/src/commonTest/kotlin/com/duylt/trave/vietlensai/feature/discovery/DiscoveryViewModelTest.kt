@@ -10,6 +10,7 @@ import com.duylt.trave.vietlensai.domain.usecase.ObserveNoteUseCase
 import com.duylt.trave.vietlensai.domain.usecase.ObserveSettingsUseCase
 import com.duylt.trave.vietlensai.domain.usecase.SaveNoteUseCase
 import com.duylt.trave.vietlensai.domain.usecase.ToggleFavoriteUseCase
+import com.duylt.trave.vietlensai.domain.util.AppError
 import com.duylt.trave.vietlensai.navigation.Routes
 import com.duylt.trave.vietlensai.testing.FakeCaptureStore
 import com.duylt.trave.vietlensai.testing.FakeDiscoveryRepository
@@ -231,6 +232,127 @@ class DiscoveryViewModelTest {
         runCurrent()
 
         assertNotNull(vm.state.value.discovery, "the page is still readable")
+    }
+
+    // ---- Every write reports, on both of its failure paths — `LLM.md` §11 row #26 ----
+    //
+    // All four of this screen's writes return `AppResult` and all four results were being
+    // discarded, so the *handled* failure — the ordinary one, not a throw — silently took the
+    // success branch. `failOn…` on the fakes is what reaches that path; `throwOn…` reaches
+    // the other. Both are checked for each write, because they are separate code and the
+    // existing suite only ever exercised the throw.
+
+    @Test
+    fun `a note that fails to save keeps the words and says why`() = runTest {
+        notes.failOnSave = AppError.Storage("disk full")
+        val vm = viewModel()
+        runCurrent()
+        vm.onIntent(DiscoveryIntent.StartEditNote)
+        vm.onIntent(DiscoveryIntent.NoteBodyChanged("Went at dawn"))
+
+        vm.effects.test {
+            vm.onIntent(DiscoveryIntent.SaveNote)
+            runCurrent()
+            val effect = awaitItem()
+            assertTrue(effect is DiscoveryEffect.ShowMessage, "the traveller has to be told")
+            assertEquals(AppError.Storage("disk full"), effect.error)
+        }
+
+        // The regression this exists for: the composer used to close one statement after the
+        // discarded result, which threw the writing away in the only place it existed.
+        assertEquals(
+            "Went at dawn",
+            vm.state.value.noteEditor?.body,
+            "the words survive a failed save",
+        )
+        assertFalse(vm.state.value.isSavingNote, "and the save button comes back")
+
+        // And the flag really is lowered rather than merely re-read: a retry reaches storage.
+        notes.failOnSave = null
+        vm.onIntent(DiscoveryIntent.SaveNote)
+        runCurrent()
+        assertEquals(2, notes.saved.size)
+        assertNull(vm.state.value.noteEditor)
+    }
+
+    @Test
+    fun `a note that throws while saving also reports`() = runTest {
+        notes.throwOnSave = IllegalStateException("Room is corrupt")
+        val vm = viewModel()
+        runCurrent()
+        vm.onIntent(DiscoveryIntent.StartEditNote)
+        vm.onIntent(DiscoveryIntent.NoteBodyChanged("Went at dawn"))
+
+        vm.effects.test {
+            vm.onIntent(DiscoveryIntent.SaveNote)
+            runCurrent()
+            assertTrue(awaitItem() is DiscoveryEffect.ShowMessage)
+        }
+        assertNotNull(vm.state.value.noteEditor)
+    }
+
+    @Test
+    fun `a delete that fails does not take the traveller back to a discovery still there`() =
+        runTest {
+            discoveries.failOnDelete = AppError.Storage("disk full")
+            val vm = viewModel()
+            runCurrent()
+            vm.onIntent(DiscoveryIntent.RequestDelete)
+
+            vm.effects.test {
+                vm.onIntent(DiscoveryIntent.ConfirmDelete)
+                runCurrent()
+                // The whole point: a message, and *not* a NavigateBack. Leaving was
+                // unconditional, so a failed delete dropped the traveller into a journal that
+                // still listed the discovery — which reads as a stale list, not as a failure.
+                assertTrue(awaitItem() is DiscoveryEffect.ShowMessage)
+                expectNoEvents()
+            }
+            assertNotNull(vm.state.value.discovery, "the page is still the one they were on")
+        }
+
+    @Test
+    fun `a delete that succeeds still navigates back exactly once`() = runTest {
+        val vm = viewModel()
+        runCurrent()
+        vm.onIntent(DiscoveryIntent.RequestDelete)
+
+        vm.effects.test {
+            vm.onIntent(DiscoveryIntent.ConfirmDelete)
+            runCurrent()
+            assertTrue(awaitItem() is DiscoveryEffect.NavigateBack)
+            expectNoEvents()
+        }
+        assertContentEquals(listOf("d1"), discoveries.deleted)
+    }
+
+    @Test
+    fun `a note that fails to delete keeps the note and says why`() = runTest {
+        notes.save("d1", "Went at dawn", emptyList())
+        notes.failOnDelete = AppError.Storage("disk full")
+        val vm = viewModel()
+        runCurrent()
+        vm.onIntent(DiscoveryIntent.StartEditNote)
+
+        vm.effects.test {
+            vm.onIntent(DiscoveryIntent.DeleteNote)
+            runCurrent()
+            assertTrue(awaitItem() is DiscoveryEffect.ShowMessage)
+        }
+        assertNotNull(vm.state.value.noteEditor, "the composer stays open on a failed delete")
+    }
+
+    @Test
+    fun `a favourite that fails to stick says so`() = runTest {
+        discoveries.failOnToggleFavorite = AppError.Storage("disk full")
+        val vm = viewModel()
+        runCurrent()
+
+        vm.effects.test {
+            vm.onIntent(DiscoveryIntent.ToggleFavorite)
+            runCurrent()
+            assertTrue(awaitItem() is DiscoveryEffect.ShowMessage)
+        }
     }
 
     @Test
