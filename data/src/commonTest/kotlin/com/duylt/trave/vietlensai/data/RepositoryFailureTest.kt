@@ -503,8 +503,21 @@ class RepositoryFailureTest {
         ioDispatcher = Dispatchers.Unconfined,
     )
 
+    /**
+     * An asset reader holding one province and no photographs.
+     *
+     * An object rather than a lambda since `BundledAssets` gained [BundledAssets.readBytes]
+     * for the demo seeder and stopped being a `fun interface`. Bytes are deliberately null:
+     * nothing in this suite reads a binary asset, and answering with an empty array instead
+     * would look like a file that exists and is corrupt.
+     */
+    private fun oneProvinceAsset() = object : BundledAssets {
+        override suspend fun readText(name: String) = ONE_PROVINCE_ASSET
+        override suspend fun readBytes(name: String): ByteArray? = null
+    }
+
     private fun provinceRepository(discoveryDao: DiscoveryDao) = ProvinceRepositoryImpl(
-        assetSource = ProvinceAssetSource(BundledAssets { ONE_PROVINCE_ASSET }, Dispatchers.Unconfined),
+        assetSource = ProvinceAssetSource(oneProvinceAsset(), Dispatchers.Unconfined),
         discoveryDao = discoveryDao,
         captureStore = FakeCaptureStore(),
         ioDispatcher = Dispatchers.Unconfined,

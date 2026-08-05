@@ -137,8 +137,13 @@ class AppGraphTest {
         // Dropping a summand still compiles and `startKoin` still succeeds; the app then dies
         // on the first screen that needed the missing half. Counted rather than named because
         // the names are `internal` to `:shared` and `:data` — what this pins is the arithmetic.
-        val expected = 5 + 1 + 1 + 1 // data's five, use cases, presentation, platform UI
+        val expected = 6 + 1 + 1 + 1 // data's six, use cases, presentation, platform UI
         assertEquals(expected, appModules(isDebug = true).size)
+
+        // The same count either way, and that is the claim worth pinning: `seedModule` swaps
+        // *which* `DemoDataSeeder` is bound for a release build, it does not drop the module.
+        // A graph that lost a binding on one build type and not the other would resolve here
+        // and fail on a device carrying the other APK.
         assertEquals(expected, appModules(isDebug = false).size)
     }
 }

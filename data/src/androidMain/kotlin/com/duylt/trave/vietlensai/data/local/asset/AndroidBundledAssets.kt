@@ -15,4 +15,15 @@ internal class AndroidBundledAssets(private val context: Context) : BundledAsset
             null
         }
     }
+
+    override suspend fun readBytes(name: String): ByteArray? = withContext(platformIoDispatcher()) {
+        try {
+            context.assets.open(name).use { it.readBytes() }
+        } catch (e: Exception) {
+            // Debug logged rather than error: the seed assets are packaged by `:app`'s debug
+            // variant only, so a release build reaching here is the design working, not a fault.
+            log.d { "Bundled asset $name is not packaged in this build" }
+            null
+        }
+    }
 }

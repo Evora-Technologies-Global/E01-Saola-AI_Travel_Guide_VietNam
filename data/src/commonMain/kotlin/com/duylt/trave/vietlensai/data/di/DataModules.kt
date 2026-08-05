@@ -18,5 +18,6 @@ fun dataModules(isDebug: Boolean): List<Module> = listOf(
     networkModule(isDebug),
     databaseModule,
     repositoryModule,
+    seedModule(isDebug),
     platformDataModule,
 )

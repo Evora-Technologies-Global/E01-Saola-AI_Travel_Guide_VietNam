@@ -74,7 +74,8 @@ Root package: `com.duylt.trave.vietlensai`
 ```
 src/
 ├── commonMain/kotlin/com/duylt/trave/vietlensai/
-│   ├── MainViewModel.kt              App-level state: theme, splash gate, startup sweep.
+│   ├── MainViewModel.kt              App-level state: theme, splash gate, and the two
+│   │                                 startup jobs — demo seed, then the orphan sweep.
 │   │                                 The ONE plain ViewModel — see the exemption below
 │   ├── core/
 │   │   ├── mvi/MviViewModel.kt       THE MVI CONTRACT — read this first
@@ -342,6 +343,15 @@ internal expect val platformUiModule: Module   // actual per platform
 fun appModules(isDebug: Boolean): List<Module> =
     dataModules(isDebug) + useCaseModule + presentationModule + platformUiModule
 ```
+
+**`isDebug` decides two bindings, not one.** `networkModule(isDebug)` installs Ktor's `Logging`
+plugin or does not, and `seedModule(isDebug)` binds either `BundledDemoDataSeeder` or a no-op
+`DemoDataSeeder`. Both are bindings rather than an `if` inside the implementation, so a release
+build has no path to the code at all — and in the seeder's case the guarantee does not rest on
+the flag either: `:app` packages the demo assets into the **debug variant only**
+(`stageSeedAssets`), so `release` and `fastRelease` have nothing to seed *from*. The count of
+modules is the same for both build types, and `AppGraphTest` pins that: a module that vanished
+on one build type would resolve on the other and fail on a device.
 
 Rules:
 - ViewModels are `viewModel { }`, never `single { }` — one per `ViewModelStoreOwner`
@@ -612,6 +622,7 @@ test can find the sources.
 | A business rule | `:domain/usecase/XUseCase.kt` | Register in `useCaseModule`. Never in a ViewModel |
 | A data model | `:domain/model/` | Immutable `data class`. Add its package to `compose-stability.conf` if new |
 | A repository | Interface in `:domain/repository/`, impl in `:data/` | ViewModels depend on the interface |
+| Something only a **development build** may do | A port in `:domain/repository/`, two impls in `:data/`, chosen by `xModule(isDebug)` | Never `if (BuildConfig.DEBUG)` inside the implementation — `:data` and `:shared` are single-variant and cannot see it. `seedModule` is the worked example; if it also needs *data*, package that from `:app`'s debug variant so a release APK has nothing to act on |
 | A reusable composable | `core/designsystem/component/` | Only if used by ≥2 features |
 | A page header | Nothing — call `PageHeader` or `OverlayHeader` | §13. A screen never writes its own; `DesignTokenTest` fails the build |
 | A colour / dimension / duration | `core/designsystem/theme/` | Never a magic number in a screen. §13 |

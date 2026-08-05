@@ -23,6 +23,7 @@ import com.duylt.trave.vietlensai.domain.model.TranslationBlock
 import com.duylt.trave.vietlensai.domain.model.TranslationResult
 import com.duylt.trave.vietlensai.domain.model.TravelPassport
 import com.duylt.trave.vietlensai.domain.model.TripSummary
+import com.duylt.trave.vietlensai.domain.repository.DemoDataSeeder
 import com.duylt.trave.vietlensai.domain.repository.CaptureMaintenance
 import com.duylt.trave.vietlensai.domain.repository.CatalogRepository
 import com.duylt.trave.vietlensai.domain.repository.ChatRepository
@@ -600,5 +601,22 @@ class FakeCaptureMaintenance : CaptureMaintenance {
         sweepCalls++
         throwOnSweep?.let { throw it }
         return 0
+    }
+}
+
+/**
+ * Records that the window host asked for a seed, and can refuse.
+ *
+ * `throwOnSeed` exists because the real implementation promises never to throw and the window
+ * host has no `try` of its own around the call — so the only way to prove that promise is load
+ * bearing is to break it here and watch the sweep behind it still run.
+ */
+class FakeDemoDataSeeder : DemoDataSeeder {
+    var throwOnSeed: Throwable? = null
+    var seedCalls = 0
+
+    override suspend fun seedIfEmpty() {
+        seedCalls++
+        throwOnSeed?.let { throw it }
     }
 }

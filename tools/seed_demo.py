@@ -3,6 +3,12 @@
 Seed a demo device with a week's worth of discoveries, so the journal, the passport map
 and the culture collection can be looked at without standing in front of a temple.
 
+**The Android debug build now does this by itself** on first launch, from the same
+`seed/demo-content.json` and the same photographs, packaged into that variant only — see
+`BundledDemoDataSeeder`. This script stays for two jobs it is still the only way to do:
+seeding an **iOS simulator**, which has no debug-variant assets, and re-seeding a device
+whose journal is not empty (the in-app seeder deliberately refuses).
+
 Photographs are real: each entry in tools/seed/demo-content.json names a Wikimedia Commons
 file, fetched through Special:FilePath and re-encoded to the same 1024 px JPEG the app's
 own ImagePolicy produces. Naming the file rather than following an article's lead image is
@@ -10,7 +16,8 @@ what makes the set reproducible — an article's lead image changes, and for sev
 it is a location map rather than a photograph.
 
 The re-encoded copies are tracked in git under tools/seed/.work, so a normal run needs no
-network at all: a photograph is only fetched when its file is missing.
+network at all: a photograph is only fetched when its file is missing. That directory is
+also what `:app`'s `stageSeedAssets` packages into the debug APK.
 
 provinceId is deliberately left NULL: that forces the app's backfill path to resolve every
 row on open, which exercises the same geometry a real capture would use.

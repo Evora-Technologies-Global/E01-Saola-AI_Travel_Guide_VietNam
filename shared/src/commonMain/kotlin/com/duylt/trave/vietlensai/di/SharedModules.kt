@@ -112,6 +112,7 @@ val presentationModule: Module = module {
         MainViewModel(
             observeSettings = get(),
             sweepOrphanCaptures = get(),
+            seedDemoData = get(),
         )
     }
 

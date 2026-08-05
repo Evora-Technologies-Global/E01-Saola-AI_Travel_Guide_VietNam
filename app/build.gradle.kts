@@ -52,6 +52,73 @@ val canSignRelease: Boolean = releaseKeystore != null &&
     !localProperties["RELEASE_KEY_PASSWORD"].isNullOrBlank()
 
 /**
+ * Stages the demo trip's photographs and text where the asset packager can reach them.
+ *
+ * A task of its own rather than a `Sync`, because AGP 9 will only accept a generated asset
+ * directory through the variant API, and that needs a task exposing a [DirectoryProperty] it
+ * can assign — `Sync` has no such property, and passing a plain provider to the source-set
+ * API is rejected outright with "You cannot add Provider instances to the Android SourceSet
+ * API".
+ *
+ * The files are staged rather than checked into `src/debug/assets` because they are already
+ * in version control once, under `tools/seed/.work`, where `tools/seed_demo.py` also reads
+ * them. A second tracked copy would be 3.5 MB kept in step by hand.
+ */
+@CacheableTask
+abstract class StageSeedAssets : DefaultTask() {
+
+    @get:InputFiles
+    @get:PathSensitive(PathSensitivity.RELATIVE)
+    abstract val sources: ConfigurableFileCollection
+
+    /** Assigned by AGP through `addGeneratedSourceDirectory`; never set here. */
+    @get:OutputDirectory
+    abstract val outputDirectory: DirectoryProperty
+
+    @TaskAction
+    fun stage() {
+        // Nested under `seed/` so the names the app asks for — `seed/demo-content.json`,
+        // `seed/pho.jpg` — cannot collide with `:data`'s own assets, which merge into the
+        // same namespace.
+        val target = outputDirectory.get().asFile.resolve("seed")
+        target.deleteRecursively()
+        target.mkdirs()
+        sources.files.filter(File::isFile).forEach { it.copyTo(target.resolve(it.name), overwrite = true) }
+    }
+}
+
+val stageSeedAssets = tasks.register<StageSeedAssets>("stageSeedAssets") {
+    description = "Stages the demo trip's photographs and text as debug-only assets."
+    val seedDir = rootProject.layout.projectDirectory.dir("tools/seed")
+
+    // `*.jpg` only: the same directory holds the working copy of a device database that
+    // `seed_demo.py` pulls, which is git-ignored and has no business in an APK.
+    sources.from(seedDir.dir(".work").asFileTree.matching { include("*.jpg") })
+    sources.from(seedDir.file("demo-content.json"))
+}
+
+/*
+ * Debug and nothing else.
+ *
+ * This is the half of "a development build opens on a seeded journal" that a runtime flag
+ * cannot do. `:data` and `:shared` are single-variant multiplatform modules, so the seeding
+ * *code* is linked into every build type and only `seedModule(isDebug)` keeps it from
+ * running. The 3.5 MB of photographs is the part worth keeping out of a release APK
+ * altogether, and a variant-specific asset directory is the only place that decision can be
+ * made. It also makes the guarantee independent of the flag: `release` and `fastRelease` have
+ * nothing to seed *from*, so `BundledAssets.readBytes` answers null and the seeder — were it
+ * ever bound there by mistake — writes nothing.
+ */
+androidComponents {
+    onVariants(selector().withBuildType("debug")) { variant ->
+        variant.sources.assets?.addGeneratedSourceDirectory(
+            stageSeedAssets,
+            StageSeedAssets::outputDirectory,
+        )
+    }
+}
+
+/**
  * The app version, declared once in the root `gradle.properties` and read by `:shared` too.
  *
  * Through the provider API, so an override on the command line invalidates the configuration
@@ -165,8 +232,9 @@ android {
          * watching the demo can perceive.
          *
          * Named for what it *is* rather than what it is for: `demo` would have read as
-         * "the build with the seeded demo data" next to `tools/seed_demo.py`, which is
-         * a different thing entirely and orthogonal to this one.
+         * "the build with the seeded demo data", which is now precisely what `debug` is —
+         * `stageSeedAssets` packages the demo trip into that variant and no other, so this
+         * one opens on an empty journal exactly like `release`.
          *
          * `release` is still what ships. Anything that only reproduces under
          * obfuscation — a missing keep rule, a serializer resolved by name — is
