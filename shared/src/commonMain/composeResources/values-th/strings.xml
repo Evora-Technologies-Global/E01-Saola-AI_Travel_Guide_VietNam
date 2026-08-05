@@ -6,7 +6,7 @@
   date the app shows is CE, and mixing the two would read as a bug. See DateNames.kt.
 -->
 <resources>
-    <string name="app_name">VietLens AI</string>
+    <string name="app_name">Saola</string>
 
     <string name="resource_language">th</string>
 
@@ -18,12 +18,12 @@
 
     <!-- Camera -->
     <string name="camera_permission_title">ต้องขอใช้กล้อง</string>
-    <string name="camera_permission_body">VietLens ใช้กล้องเพื่อรู้จักสถานที่สำคัญ อาหาร และป้ายต่าง ๆ รอบตัวคุณ รูปภาพจะอยู่ในเครื่องของคุณเท่านั้น</string>
+    <string name="camera_permission_body">Saola ใช้กล้องเพื่อรู้จักสถานที่สำคัญ อาหาร และป้ายต่าง ๆ รอบตัวคุณ รูปภาพจะอยู่ในเครื่องของคุณเท่านั้น</string>
     <string name="camera_permission_grant">อนุญาตให้ใช้กล้อง</string>
-    <string name="camera_permission_blocked_body">สิทธิ์กล้องของ VietLens ถูกปิดไว้ และ Android จะไม่ถามอีก เปิดในการตั้งค่าแอปเพื่อใช้งานต่อ</string>
+    <string name="camera_permission_blocked_body">สิทธิ์กล้องของ Saola ถูกปิดไว้ และ Android จะไม่ถามอีก เปิดในการตั้งค่าแอปเพื่อใช้งานต่อ</string>
     <string name="location_permission_title">ประทับตราหนังสือเดินทางของคุณ</string>
     <string name="location_permission_body">เมื่อเปิดตำแหน่ง ทุกรูปจะรู้ว่าถ่ายในจังหวัดใด และจังหวัดนั้นจะถูกเติมสีบนแผนที่หนังสือเดินทางของคุณ</string>
-    <string name="location_permission_blocked_body">สิทธิ์ตำแหน่งของ VietLens ถูกปิดไว้ และ Android จะไม่ถามอีก เปิดในการตั้งค่าแอปเพื่อให้รูปของคุณประทับตราลงแผนที่</string>
+    <string name="location_permission_blocked_body">สิทธิ์ตำแหน่งของ Saola ถูกปิดไว้ และ Android จะไม่ถามอีก เปิดในการตั้งค่าแอปเพื่อให้รูปของคุณประทับตราลงแผนที่</string>
     <string name="location_permission_grant">อนุญาต</string>
     <string name="location_permission_later">ไว้ก่อน</string>
     <string name="permission_open_settings">เปิดการตั้งค่า</string>
@@ -102,7 +102,7 @@
     <string name="discovery_listen_meta">%1$d นาที · เล่าเป็นภาษา%2$s</string>
     <string name="discovery_favorite_saved">บันทึกแล้ว</string>
     <string name="discovery_share">แชร์</string>
-    <string name="discovery_share_body">%1$s\n\n%2$s\n\nแชร์จาก VietLens AI</string>
+    <string name="discovery_share_body">%1$s\n\n%2$s\n\nแชร์จาก Saola</string>
     <plurals name="discovery_notice_count">
         <item quantity="other">%1$d จุดที่น่าสังเกต</item>
     </plurals>
@@ -125,8 +125,8 @@
     <string name="discovery_note_take_photo">ถ่ายรูป</string>
     <string name="discovery_note_camera_flip">สลับกล้อง</string>
     <string name="discovery_note_camera_permission_title">ถ่ายรูปสำหรับโน้ตนี้ไหม</string>
-    <string name="discovery_note_camera_permission_body">VietLens ต้องใช้กล้องเพื่อถ่ายรูปที่คุณจะเก็บไว้กับโน้ตนี้ รูปจะถูกบันทึกไว้ในเครื่องนี้เท่านั้น และไม่ถูกอัปโหลด</string>
-    <string name="discovery_note_camera_permission_blocked_body">กล้องของ VietLens ถูกปิดไว้ และ Android จะไม่ถามอีก เปิดใหม่ในการตั้งค่าแอปเพื่อถ่ายรูป — ระหว่างนี้ยังเพิ่มรูปจากคลังภาพได้</string>
+    <string name="discovery_note_camera_permission_body">Saola ต้องใช้กล้องเพื่อถ่ายรูปที่คุณจะเก็บไว้กับโน้ตนี้ รูปจะถูกบันทึกไว้ในเครื่องนี้เท่านั้น และไม่ถูกอัปโหลด</string>
+    <string name="discovery_note_camera_permission_blocked_body">กล้องของ Saola ถูกปิดไว้ และ Android จะไม่ถามอีก เปิดใหม่ในการตั้งค่าแอปเพื่อถ่ายรูป — ระหว่างนี้ยังเพิ่มรูปจากคลังภาพได้</string>
     <string name="discovery_note_camera_permission_allow">อนุญาต</string>
     <string name="discovery_note_camera_permission_deny">ไว้ก่อน</string>
     <string name="discovery_note_in_diary">ไกด์จะใช้โน้ตนี้ตอนเขียนบันทึกประจำวันให้คุณ</string>
@@ -196,7 +196,7 @@
     <string name="explore_empty_body">มุมนี้มีสถานที่บน OpenStreetMap น้อยมาก ลองอีกครั้งเมื่อย้ายที่แล้ว หรือลากแผนที่เพื่อดูรอบ ๆ</string>
     <string name="explore_permission_title">การดูรอบตัวต้องใช้ตำแหน่งของคุณ</string>
     <string name="explore_permission_body">แผนที่จะยึดตำแหน่งที่คุณยืนอยู่เป็นจุดกลาง แล้วหาที่ที่ควรเดินไปในรัศมี 5 กม. ตำแหน่งของคุณถูกส่งไปในฐานะจุดกลางของการค้นหานั้นเท่านั้น</string>
-    <string name="explore_permission_blocked_body">ตำแหน่งของ VietLens ถูกปิดไว้ และระบบจะไม่ถามอีก เปิดในการตั้งค่าแอปเพื่อดูว่ามีอะไรอยู่รอบตัวคุณ</string>
+    <string name="explore_permission_blocked_body">ตำแหน่งของ Saola ถูกปิดไว้ และระบบจะไม่ถามอีก เปิดในการตั้งค่าแอปเพื่อดูว่ามีอะไรอยู่รอบตัวคุณ</string>
     <string name="explore_source_note">สถานที่จาก OpenStreetMap · คำอธิบายและภาพจาก Wikipedia และ Wikimedia Commons</string>
     <string name="explore_read_more">อ่านบทความเต็ม</string>
     <string name="explore_readers">ผู้อ่าน %1$s คน</string>

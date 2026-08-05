@@ -16,7 +16,7 @@ kotlin {
     // rather than through the top-level `android { }` of `com.android.library`.
     // (`androidLibrary { }` was the AGP 8 spelling and is deprecated.)
     android {
-        namespace = "com.duylt.trave.vietlensai.domain"
+        namespace = "com.evora.technologies.saola.domain"
         compileSdk = 37
         minSdk = 26
 

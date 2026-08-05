@@ -107,7 +107,7 @@ gate silently re-laying-out a phone. `WindowClassTest` walks both boundaries.
 
 ## 3. One controller, two shells
 
-`navigation/VietLensRoot.kt` remembers **one** `NavHostController` above the fork and hands the
+`navigation/SaolaRoot.kt` remembers **one** `NavHostController` above the fork and hands the
 same instance to whichever shell the window selects. Rotate an iPad, unfold a fold, leave
 split-screen: the arrangement changes and nothing else — same screen, same back stack.
 

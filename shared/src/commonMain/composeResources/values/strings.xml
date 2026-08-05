@@ -7,7 +7,7 @@
 -->
 <resources>
     <!-- Brand name: identical in every locale. -->
-    <string name="app_name">VietLens AI</string>
+    <string name="app_name">Saola</string>
 
     <!--
       Which of these eight files the resource system picked.
@@ -31,12 +31,12 @@
 
     <!-- Camera -->
     <string name="camera_permission_title">Camera access needed</string>
-    <string name="camera_permission_body">VietLens uses the camera to recognise landmarks, dishes and signs around you. Photos stay on your device.</string>
+    <string name="camera_permission_body">Saola uses the camera to recognise landmarks, dishes and signs around you. Photos stay on your device.</string>
     <string name="camera_permission_grant">Allow camera</string>
-    <string name="camera_permission_blocked_body">Camera access is turned off for VietLens, and Android will not ask again. Turn it on in app settings to keep going.</string>
+    <string name="camera_permission_blocked_body">Camera access is turned off for Saola, and Android will not ask again. Turn it on in app settings to keep going.</string>
     <string name="location_permission_title">Stamp your passport</string>
     <string name="location_permission_body">With location on, every photo knows which province it was taken in, and that province fills in on your passport map.</string>
-    <string name="location_permission_blocked_body">Location access is turned off for VietLens, and Android will not ask again. Turn it on in app settings to have your photos stamp your passport map.</string>
+    <string name="location_permission_blocked_body">Location access is turned off for Saola, and Android will not ask again. Turn it on in app settings to have your photos stamp your passport map.</string>
     <string name="location_permission_grant">Allow</string>
     <string name="location_permission_later">Not now</string>
     <!-- Shared by every permission prompt that has run out of ways to ask. -->
@@ -120,7 +120,7 @@
     <string name="discovery_listen_meta">%1$d min · narrated in %2$s</string>
     <string name="discovery_favorite_saved">Saved</string>
     <string name="discovery_share">Share</string>
-    <string name="discovery_share_body">%1$s\n\n%2$s\n\nShared from VietLens AI</string>
+    <string name="discovery_share_body">%1$s\n\n%2$s\n\nShared from Saola</string>
     <plurals name="discovery_notice_count">
         <item quantity="one">One thing to notice</item>
         <item quantity="other">%1$d things to notice</item>
@@ -146,8 +146,8 @@
     <string name="discovery_note_camera_flip">Switch camera</string>
     <!-- Asked in the app's own words before the system dialog, which never says why. -->
     <string name="discovery_note_camera_permission_title">Take a photo for this note?</string>
-    <string name="discovery_note_camera_permission_body">VietLens needs the camera to take the photo you keep with this note. It is saved on this device only, and never uploaded.</string>
-    <string name="discovery_note_camera_permission_blocked_body">The camera is turned off for VietLens and Android will not ask again. Turn it back on in app settings to take a photo — you can still add one from your gallery in the meantime.</string>
+    <string name="discovery_note_camera_permission_body">Saola needs the camera to take the photo you keep with this note. It is saved on this device only, and never uploaded.</string>
+    <string name="discovery_note_camera_permission_blocked_body">The camera is turned off for Saola and Android will not ask again. Turn it back on in app settings to take a photo — you can still add one from your gallery in the meantime.</string>
     <string name="discovery_note_camera_permission_allow">Allow</string>
     <string name="discovery_note_camera_permission_deny">Not now</string>
     <string name="discovery_note_in_diary">Your guide will use this when it writes your diary for the day.</string>
@@ -220,7 +220,7 @@
     <string name="explore_empty_body">This corner has few places on OpenStreetMap. Try again once you have moved on, or drag the map to see what is around you.</string>
     <string name="explore_permission_title">Explore needs your location</string>
     <string name="explore_permission_body">The map centres on where you are standing and finds the places worth walking to within 5 km. Your position is only ever sent as the centre of that search.</string>
-    <string name="explore_permission_blocked_body">Location is turned off for VietLens and the system will not ask again. Turn it on in app settings to see what is around you.</string>
+    <string name="explore_permission_blocked_body">Location is turned off for Saola and the system will not ask again. Turn it on in app settings to see what is around you.</string>
     <string name="explore_source_note">Places from OpenStreetMap · descriptions and photographs from Wikipedia and Wikimedia Commons</string>
     <string name="explore_read_more">Read the full article</string>
     <string name="explore_readers">%1$s readers</string>

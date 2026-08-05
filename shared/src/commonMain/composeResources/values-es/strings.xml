@@ -6,7 +6,7 @@
   Multiplatform does not unescape them. See values/strings.xml for the rest.
 -->
 <resources>
-    <string name="app_name">VietLens AI</string>
+    <string name="app_name">Saola</string>
 
     <string name="resource_language">es</string>
 
@@ -18,12 +18,12 @@
 
     <!-- Camera -->
     <string name="camera_permission_title">Se necesita acceso a la cámara</string>
-    <string name="camera_permission_body">VietLens usa la cámara para reconocer monumentos, platos y carteles a tu alrededor. Las fotos se quedan en tu dispositivo.</string>
+    <string name="camera_permission_body">Saola usa la cámara para reconocer monumentos, platos y carteles a tu alrededor. Las fotos se quedan en tu dispositivo.</string>
     <string name="camera_permission_grant">Permitir la cámara</string>
-    <string name="camera_permission_blocked_body">El acceso a la cámara está desactivado para VietLens y Android no volverá a preguntar. Actívalo en los ajustes de la aplicación para continuar.</string>
+    <string name="camera_permission_blocked_body">El acceso a la cámara está desactivado para Saola y Android no volverá a preguntar. Actívalo en los ajustes de la aplicación para continuar.</string>
     <string name="location_permission_title">Sella tu pasaporte</string>
     <string name="location_permission_body">Con la ubicación activada, cada foto sabe en qué provincia se tomó, y esa provincia se rellena en el mapa de tu pasaporte.</string>
-    <string name="location_permission_blocked_body">La ubicación está desactivada para VietLens y Android no volverá a preguntar. Actívala en los ajustes para que tus fotos sellen el mapa de tu pasaporte.</string>
+    <string name="location_permission_blocked_body">La ubicación está desactivada para Saola y Android no volverá a preguntar. Actívala en los ajustes para que tus fotos sellen el mapa de tu pasaporte.</string>
     <string name="location_permission_grant">Permitir</string>
     <string name="location_permission_later">Ahora no</string>
     <string name="permission_open_settings">Abrir ajustes</string>
@@ -102,7 +102,7 @@
     <string name="discovery_listen_meta">%1$d min · narrada en %2$s</string>
     <string name="discovery_favorite_saved">Guardado</string>
     <string name="discovery_share">Compartir</string>
-    <string name="discovery_share_body">%1$s\n\n%2$s\n\nCompartido desde VietLens AI</string>
+    <string name="discovery_share_body">%1$s\n\n%2$s\n\nCompartido desde Saola</string>
     <plurals name="discovery_notice_count">
         <item quantity="one">Un detalle en el que fijarse</item>
         <item quantity="other">%1$d detalles en los que fijarse</item>
@@ -126,8 +126,8 @@
     <string name="discovery_note_take_photo">Hacer una foto</string>
     <string name="discovery_note_camera_flip">Cambiar de cámara</string>
     <string name="discovery_note_camera_permission_title">¿Hacer una foto para esta nota?</string>
-    <string name="discovery_note_camera_permission_body">VietLens necesita la cámara para la foto que guardas con esta nota. Se guarda solo en este dispositivo y nunca se envía.</string>
-    <string name="discovery_note_camera_permission_blocked_body">La cámara está desactivada para VietLens y Android no volverá a preguntar. Vuelve a activarla en los ajustes para hacer fotos — mientras tanto, puedes añadir una desde tu galería.</string>
+    <string name="discovery_note_camera_permission_body">Saola necesita la cámara para la foto que guardas con esta nota. Se guarda solo en este dispositivo y nunca se envía.</string>
+    <string name="discovery_note_camera_permission_blocked_body">La cámara está desactivada para Saola y Android no volverá a preguntar. Vuelve a activarla en los ajustes para hacer fotos — mientras tanto, puedes añadir una desde tu galería.</string>
     <string name="discovery_note_camera_permission_allow">Permitir</string>
     <string name="discovery_note_camera_permission_deny">Ahora no</string>
     <string name="discovery_note_in_diary">Tu guía la usará cuando escriba tu diario del día.</string>
@@ -199,7 +199,7 @@
     <string name="explore_empty_body">Este rincón tiene pocos lugares en OpenStreetMap. Inténtalo de nuevo cuando te hayas movido, o arrastra el mapa para ver qué hay cerca.</string>
     <string name="explore_permission_title">Explorar necesita tu ubicación</string>
     <string name="explore_permission_body">El mapa se centra donde estás y busca los lugares que merecen una caminata en 5 km. Tu posición solo se envía como centro de esa búsqueda.</string>
-    <string name="explore_permission_blocked_body">La ubicación está desactivada para VietLens y el sistema no volverá a preguntar. Actívala en los ajustes para ver qué hay a tu alrededor.</string>
+    <string name="explore_permission_blocked_body">La ubicación está desactivada para Saola y el sistema no volverá a preguntar. Actívala en los ajustes para ver qué hay a tu alrededor.</string>
     <string name="explore_source_note">Lugares de OpenStreetMap · descripciones y fotografías de Wikipedia y Wikimedia Commons</string>
     <string name="explore_read_more">Leer el artículo completo</string>
     <string name="explore_readers">%1$s lectores</string>

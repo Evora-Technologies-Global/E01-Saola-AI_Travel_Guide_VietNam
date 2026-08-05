@@ -2,7 +2,7 @@
   <artifact type="jar" name="domain">
     <output-path>$PROJECT_DIR$/domain/build/libs</output-path>
     <root id="archive" name="domain.jar">
-      <element id="module-output" name="VietLensAI.domain.androidMain" />
+      <element id="module-output" name="Saola.domain.androidMain" />
     </root>
   </artifact>
 </component>

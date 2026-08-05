@@ -1,4 +1,4 @@
-# VietLens AI — Technical appendix
+# Saola — Technical appendix
 
 Everything that used to live in `README.md` and is too detailed for it. Kept in English
 because it is the same register as [`LLM.md`](LLM.md) and quotes code identifiers verbatim;
@@ -21,7 +21,7 @@ Four Gradle modules, dependencies pointing inwards:
 :shared     THE WHOLE PRESENTATION LAYER — every screen, every ViewModel, the
             navigation graph, the design system. Compose Multiplatform.
             Two arrangement layers over one ViewModel layer: mobile/ and tablet/.
-            Produces VietLensShared.framework (static) for iOS.
+            Produces SaolaShared.framework (static) for iOS.
               ↓
 :domain     Models, use cases, repository *interfaces*, AppResult/AppError.
             Pure Kotlin. No Compose, no Android, no Ktor, no Room.
@@ -565,7 +565,7 @@ MAPS_API_KEY=your_maps_sdk_key
 ```
 
 Enable **Maps SDK for Android** on it, and restrict it to this app: package
-`com.duylt.trave.vietlensai` (plus `.dev` for debug builds) and your signing SHA-1. It is
+`com.evora.technologies.saola` (plus `.dev` for debug builds) and your signing SHA-1. It is
 substituted into `com.google.android.geo.API_KEY` in the app manifest.
 
 Without it the Explore tab still works — the markers, the sheet and the directions button are
@@ -603,7 +603,7 @@ genuinely empty — 24 discoveries, 6 chat turns and 3 day summaries are written
 says so:
 
 ```
-I VietLens: Seeded 24 demo discoveries, 6 chat turns
+I Saola: Seeded 24 demo discoveries, 6 chat turns
 ```
 
 **Release and fastRelease never seed, and cannot.** There are two independent gates:
@@ -686,18 +686,18 @@ data that R8 cannot touch — the code R8 *can* touch shrinks by roughly 8×.
 `com.android.kotlin.multiplatform.library`, which produces a **single** Android variant — the
 debug APK and the release APK link the very same class files. So nothing inside them can ask
 which build type it ended up in, and a generated `DEBUG` constant there is a trap: it used to
-come from `-Pvietlens.debug`, default `true`, which meant a plain `:app:assembleRelease`
+come from `-Psaola.debug`, default `true`, which meant a plain `:app:assembleRelease`
 shipped with Ktor's `Logging` plugin installed.
 
 The flag is passed in at startup instead, by the one caller per platform that knows the
 answer:
 
 ```kotlin
-// VietLensApplication.kt (Android)
+// SaolaApplication.kt (Android)
 modules(appModules(BuildConfig.DEBUG))
 
 // iOSApp.swift -> MainViewController.kt
-MainViewControllerKt.startVietLens(debug: true)   // inside #if DEBUG
+MainViewControllerKt.startSaola(debug: true)   // inside #if DEBUG
 ```
 
 `appModules(isDebug)` threads it down to `networkModule(isDebug)`, the only consumer. In a
@@ -705,8 +705,8 @@ release build the `Logging` plugin is then never referenced, so R8 drops Ktor's 
 path out of the APK rather than leaving it dormant — verified in `mapping.txt`, which contains
 no `io.ktor.client.plugins.logging` class at all.
 
-The app version works the same way, for the same reason: `vietlens.versionName` and
-`vietlens.versionCode` live in the root `gradle.properties`, because `:app` stamps the APK
+The app version works the same way, for the same reason: `saola.versionName` and
+`saola.versionCode` live in the root `gradle.properties`, because `:app` stamps the APK
 with them and `:shared` compiles the version into the Settings footer. Written out separately
 they had already drifted — the APK said 1.0 while the footer said 1.0.0.
 
@@ -716,17 +716,17 @@ Signing material is read from the git-ignored `local.properties`; the keystore i
 git-ignored too:
 
 ```properties
-RELEASE_STORE_FILE=vietlens-release.jks
+RELEASE_STORE_FILE=saola-release.jks
 RELEASE_STORE_PASSWORD=…
-RELEASE_KEY_ALIAS=vietlens
+RELEASE_KEY_ALIAS=saola
 RELEASE_KEY_PASSWORD=…
 ```
 
 Create one with:
 
 ```bash
-keytool -genkeypair -v -keystore app/vietlens-release.jks \
-        -alias vietlens -keyalg RSA -keysize 2048 -validity 10000
+keytool -genkeypair -v -keystore app/saola-release.jks \
+        -alias saola -keyalg RSA -keysize 2048 -validity 10000
 ```
 
 If the keystore or its credentials are missing the build still succeeds and produces an
@@ -734,7 +734,7 @@ If the keystore or its credentials are missing the build still succeeds and prod
 a fresh clone.
 
 ```bash
-./gradlew :app:assembleRelease   # -> app/build/outputs/apk/release/VietLensAI_v1.0.0_build100_<date>.apk
+./gradlew :app:assembleRelease   # -> app/build/outputs/apk/release/Saola_v1.0.0_build100_<date>.apk
 ./gradlew :app:installRelease    # build, sign and install
 ```
 

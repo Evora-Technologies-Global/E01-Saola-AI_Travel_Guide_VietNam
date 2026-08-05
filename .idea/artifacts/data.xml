@@ -2,7 +2,7 @@
   <artifact type="jar" name="data">
     <output-path>$PROJECT_DIR$/data/build/libs</output-path>
     <root id="archive" name="data.jar">
-      <element id="module-output" name="VietLensAI.data.androidMain" />
+      <element id="module-output" name="Saola.data.androidMain" />
     </root>
   </artifact>
 </component>

@@ -8,7 +8,7 @@
 > from becoming a second app, read
 > [`docs/large-screen-layout.md`](docs/large-screen-layout.md).
 
-**Reference implementation:** `VietLensAI` — Kotlin Multiplatform + Compose Multiplatform,
+**Reference implementation:** `Saola` — Kotlin Multiplatform + Compose Multiplatform,
 Android + iOS from one presentation layer. The structure below is the standard for this
 project and for any mobile app project this `.claude/` config is copied into.
 
@@ -37,7 +37,7 @@ project and for any mobile app project this `.claude/` config is copied into.
             TWO ARRANGEMENT LAYERS OVER ONE VIEWMODEL LAYER: `mobile/` and
             `tablet/` each hold screens and a shell; everything that decides
             what the app knows or does sits below both. See §3.
-            Produces `VietLensShared.framework` (static) for iOS.
+            Produces `SaolaShared.framework` (static) for iOS.
               ↓
 :domain     Models, use cases, repository *interfaces*, AppResult/AppError.
             Pure Kotlin. NO Compose, NO Android, NO Ktor, NO Room.
@@ -69,11 +69,11 @@ also why `shared/compose-stability.conf` exists — see §8.
 
 ## 3. Package layout inside `:shared`
 
-Root package: `com.duylt.trave.vietlensai`
+Root package: `com.evora.technologies.saola`
 
 ```
 src/
-├── commonMain/kotlin/com/duylt/trave/vietlensai/
+├── commonMain/kotlin/com/evora/technologies/saola/
 │   ├── MainViewModel.kt              App-level state: theme, splash gate, and the two
 │   │                                 startup jobs — demo seed, then the orphan sweep.
 │   │                                 The ONE plain ViewModel — see the exemption below
@@ -82,7 +82,7 @@ src/
 │   │   ├── mvi/CollectEffects.kt     The one effect collector every XRoute uses
 │   │   ├── designsystem/
 │   │   │   ├── theme/                Color (+ GuidePalette), Type (+ StampType,
-│   │   │   │                         VietLensShapes), Dimens (Spacing, PageSpacing,
+│   │   │   │                         SaolaShapes), Dimens (Spacing, PageSpacing,
 │   │   │   │                         PaneWidth), Motion, Insets, Theme
 │   │   │   └── component/            One composable per file, as under `feature/*/component/`:
 │   │   │                             PageHeader, OverlayHeader, AppSnackbar, AppAsyncImage,
@@ -101,13 +101,13 @@ src/
 │   ├── mobile/                       PRESENTATION BRANCH — what a phone draws
 │   │   ├── navigation/
 │   │   │   ├── BottomDestinations.kt TopLevelDestination enum — the four tabs
-│   │   │   └── VietLensApp.kt        NavHost, scaffold, bottom bar
+│   │   │   └── SaolaApp.kt        NavHost, scaffold, bottom bar
 │   │   └── feature/<name>/XScreen.kt Route + Screen + private children
 │   ├── tablet/                       PRESENTATION BRANCH — what a large window draws
 │   │   ├── navigation/
 │   │   │   ├── RailDestinations.kt   RailDestination enum + railDestination(), which is
 │   │   │   │                         also what decides whether a rail is drawn at all
-│   │   │   ├── VietLensTabletApp.kt  the shell: Row { NavigationRail · NavHost }
+│   │   │   ├── SaolaTabletApp.kt  the shell: Row { NavigationRail · NavHost }
 │   │   │   ├── TabletNavGraph.kt     the NavHost — one composable() per route
 │   │   │   └── TwoPaneScaffold.kt    Row { fixed pane · flexible pane }, the only
 │   │   │                             reader of PaneWidth's three content widths
@@ -117,7 +117,7 @@ src/
 │   ├── navigation/
 │   │   ├── Routes.kt                 Routes object + TOP_LEVEL + urlEncoded(). Both branches
 │   │   ├── TopLevelNavigation.kt     isTopLevel / navigateToTopLevel / restartAtLens
-│   │   └── VietLensRoot.kt           THE FORK — the one composable both entry points call
+│   │   └── SaolaRoot.kt           THE FORK — the one composable both entry points call
 │   ├── di/SharedModules.kt           useCaseModule + presentationModule + appModules()
 │   ├── platform/                     expect: Platform, PlatformActions
 │   └── voice/                        expect: SpeechRecognizer, TextToSpeech
@@ -368,7 +368,7 @@ Rules:
   explicit one is not redundant: the discovery route happens to spell its argument the same
   way, so the fallback would answer correctly today and silently stop the day either route is
   renamed. Held to it by `ChatViewModelTest`.
-- Both entry points (`VietLensApplication` on Android, `startVietLens` on iOS) pass exactly
+- Both entry points (`SaolaApplication` on Android, `startSaola` on iOS) pass exactly
   `appModules(isDebug)`, so neither platform can get a graph the other does not have.
 - Adding a ViewModel means adding **one** `viewModel { }` block here. Adding a use case
   means **one** `factory { }` line.
@@ -383,11 +383,11 @@ Split across the branch line, and the split is the point:
 |---|---|---|
 | `navigation/Routes.kt` | every route string, every `ARG_*`, `TOP_LEVEL`, `urlEncoded()` | **shared.** One route table, or a deep link works on one form factor and not the other |
 | `navigation/TopLevelNavigation.kt` | `isTopLevel()`, `navigateToTopLevel(route)`, `restartAtLens()` | **shared.** "Never stack a duplicate tab" is the app's behaviour, not a bar's; copied into the second shell it becomes a second answer |
-| `navigation/VietLensRoot.kt` | the branch fork, and the `NavHostController` both shells share | **shared.** The one composable `MainActivity` and `MainViewController` call |
+| `navigation/SaolaRoot.kt` | the branch fork, and the `NavHostController` both shells share | **shared.** The one composable `MainActivity` and `MainViewController` call |
 | `mobile/navigation/BottomDestinations.kt` | `TopLevelDestination` — the four tabs, their icons and labels | a bottom bar is one branch's answer; the tablet puts the same four places on a rail |
-| `mobile/navigation/VietLensApp.kt` | the `NavHost`, the scaffold, the bar | the shell *is* the arrangement |
+| `mobile/navigation/SaolaApp.kt` | the `NavHost`, the scaffold, the bar | the shell *is* the arrangement |
 | `tablet/navigation/RailDestinations.kt` | `RailDestination` — the same four, plus `railDestination()`, which is also the rail's *visibility* test | the rail's own list, for the same reason the bar has one — and its own reading of which routes count as a place |
-| `tablet/navigation/VietLensTabletApp.kt` | the large-window shell: rail, and the sovereignty seal below it | same, for the other arrangement |
+| `tablet/navigation/SaolaTabletApp.kt` | the large-window shell: rail, and the sovereignty seal below it | same, for the other arrangement |
 | `tablet/navigation/TabletNavGraph.kt` | the tablet `NavHost`, and `NavBackStackEntry.discoveryId()` | its own file because phases 04–08 each rewrite one `composable` block in it, in parallel |
 | `tablet/navigation/TwoPaneScaffold.kt` | `Row { fixed pane · flexible pane }` | the shape three tablet screens share, and the only reader of `PaneWidth`'s content widths |
 
@@ -439,7 +439,7 @@ Split across the branch line, and the split is the point:
   the discovery — which is the line §3 draws.
 - **A new route is registered in every branch shell that exists, identically.** Nothing
   enforces this — it is a `composable(Routes.X)` block per shell — so adding one to
-  `VietLensApp` and not to `TabletNavGraph` shows up as a blank screen on one device and
+  `SaolaApp` and not to `TabletNavGraph` shows up as a blank screen on one device and
   nowhere in a build log. The second failure is worse and quieter: `NavController.setGraph`
   compares the incoming graph with the one it holds **structurally**, and only two graphs it
   judges equal take the update-in-place path that swaps each destination's composable and
@@ -450,7 +450,7 @@ Split across the branch line, and the split is the point:
   three `Routes.TRANSLATION` defaults. Measured on a Pixel Tablet, 04.08.2026: passport open,
   1280 × 800 dp → 337 × 731 dp → back, still on the passport, and back once more returns to
   the journal.
-- **One `NavHostController`, created above the fork.** `VietLensRoot` remembers it and hands
+- **One `NavHostController`, created above the fork.** `SaolaRoot` remembers it and hands
   the same instance to whichever shell the window size selects, which is why resizing —
   rotating an iPad, unfolding a fold, leaving split-screen — changes the arrangement and
   nothing else: the traveller stays on the screen they were reading, with their back stack.
@@ -605,7 +605,7 @@ Two source-reading gates live in `androidHostTest`, because both need `java.io.F
   `LensScreen.kt` is.
 
 Build gates: `tasks.withType<Test>` depends on `compileAndroidMain` so the Compose reports
-exist before the stability test reads them, and sets `vietlens.commonMainDir` so the token
+exist before the stability test reads them, and sets `saola.commonMainDir` so the token
 test can find the sources.
 
 ---
@@ -664,7 +664,7 @@ the file.
 
 | # | Deviation | Fixed by |
 |---|---|---|
-| 29 | **The passport opened with an empty province panel already peeking**, its drag handle standing 80 dp up the screen with the sovereignty banner hidden behind it, on a map where nothing had been selected. A hidden sheet is parked immediately below the *scaffold*, not below the window, and `PassportScreen`'s scaffold changes height once on its own: the screen is pushed from the journal, where the shell's tab bar is on screen, and `VietLensApp` hands its 80 dp back a frame or two later when the bar finishes sliding away. The sheet does not re-settle onto the `Hidden` anchor that moves with it — it stays where the bottom edge *used to* be. **Only visible with animations off**, which is why it survived months of being looked at on a phone: with them on, the bar's height comes back long after the sheet has settled and it lands correctly by luck of timing. Every AVD ships with all three animation scales at `0`, and so does a real device in battery saver or with the developer setting off — this was never emulator-only. | **Fixed 05.08.2026:** the hide is keyed on the scaffold's own height as well as on the selection, so every height the scaffold takes puts the sheet back on the real bottom edge. `PassportPane` is deliberately **not** given the same line: the large-window shell stands its navigation on a rail, so that scaffold is one height for the life of the screen — verified at 1067 × 667 dp with the scales at 0, banner fully visible and no handle. Measured rather than eyeballed both ways: with the scales at 0 the sheet's top edge sat at `y = 2840` of a 3120 px window (280 px = the tab bar's 80 dp) and `uiautomator dump` reported a `Nút kéo` node; after the fix there is no such node and the banner reports its full `[56,2812][1384,3064]`. Selecting a province still peeks at exactly `SheetPeekHeight`, tapping across the map keeps the dragged height, and back still dismisses — all re-checked with the scales at 0 *and* at 1. |
+| 29 | **The passport opened with an empty province panel already peeking**, its drag handle standing 80 dp up the screen with the sovereignty banner hidden behind it, on a map where nothing had been selected. A hidden sheet is parked immediately below the *scaffold*, not below the window, and `PassportScreen`'s scaffold changes height once on its own: the screen is pushed from the journal, where the shell's tab bar is on screen, and `SaolaApp` hands its 80 dp back a frame or two later when the bar finishes sliding away. The sheet does not re-settle onto the `Hidden` anchor that moves with it — it stays where the bottom edge *used to* be. **Only visible with animations off**, which is why it survived months of being looked at on a phone: with them on, the bar's height comes back long after the sheet has settled and it lands correctly by luck of timing. Every AVD ships with all three animation scales at `0`, and so does a real device in battery saver or with the developer setting off — this was never emulator-only. | **Fixed 05.08.2026:** the hide is keyed on the scaffold's own height as well as on the selection, so every height the scaffold takes puts the sheet back on the real bottom edge. `PassportPane` is deliberately **not** given the same line: the large-window shell stands its navigation on a rail, so that scaffold is one height for the life of the screen — verified at 1067 × 667 dp with the scales at 0, banner fully visible and no handle. Measured rather than eyeballed both ways: with the scales at 0 the sheet's top edge sat at `y = 2840` of a 3120 px window (280 px = the tab bar's 80 dp) and `uiautomator dump` reported a `Nút kéo` node; after the fix there is no such node and the banner reports its full `[56,2812][1384,3064]`. Selecting a province still peeks at exactly `SheetPeekHeight`, tapping across the map keeps the dragged height, and back still dismisses — all re-checked with the scales at 0 *and* at 1. |
 | 18 | **`androidDeviceTest` could not run on API 37.** Every instrumented test failed in `Espresso.onIdle` with `NoSuchMethodException: android.hardware.input.InputManager.getInstance` — a reflection call Espresso makes that the platform removed — before any test body executed. The row was rescoped on 04.08.2026 after being wrong in the expensive direction: it had said "Android 15 or newer", so for two plans nobody ran the device leg at all, when in fact API 35 and 36 were green the whole time. | **Fixed 05.08.2026.** It was never a Compose problem and upgrading `ui-test-junit4` would not have helped — at Compose **1.12** that artifact still declares `espresso-core:3.5.0` and `androidx.test:runner:1.5.0`, both 2022 artifacts, and nothing else in the graph was high enough to win the conflict. Naming them explicitly in `libs.versions.toml` and adding them to `:shared`'s device suite and `:app`'s `androidTest` is what lets Gradle resolve **espresso 3.7.0 / runner 1.7.0**. Proved both ways on the same Pixel_7_Pro API 37 AVD in the same hour: with 3.5.0 the run dies with that exact `NoSuchMethodException`, with 3.7.0 it is **12 / 12 green**. Also still 12 / 12 on a Galaxy A16 at API 36, so nothing was traded away. |
 | 26 | **A note that fails to save said nothing at all** — and, on the path nobody had looked at, said nothing *and closed the composer*. `DiscoveryViewModel` discarded the `AppResult` of all four of its writes, so an ordinary handled failure fell straight through to the success branch: `saveNote` cleared `noteEditor` one statement later, which threw the traveller's own writing away in the one place it existed; `deleteDiscovery` sent `NavigateBack` regardless, dropping them into a journal that still listed the discovery; `deleteNote` and `toggleFavorite` were silent. The row as written named only the note and only the throw path, because the throw path was the only one the suite could reach. | **Fixed 05.08.2026:** `DiscoveryEffect.ShowMessage` exists and every write raises it through one private `report(AppError)` — eight call sites otherwise, which is how four silent failures accumulated on one screen in the first place. State keeps no `error` field, per row #15: the routes resolve the text off the effect's payload with `userMessage()`. The composer closes on `onSuccess` and nowhere else, and `NavigateBack` likewise. Both arrangements gained an `AppSnackbarHost` — the phone's against the bottom edge under `imePadding()` so a failed save lands over the composer it is about, the tablet's centred on the window at `PaneWidth.sheet` because a notice pinned inside one pane reads as being about that pane alone. Covered by six new cases in `DiscoveryViewModelTest`, each driving *both* failure paths — the fakes gained `failOn…` hooks beside their `throwOn…` ones, because no `throwOn…` can reach the branch that caused this. |
 | 1 | `ChatScreen` never collects `viewModel.effects` | Already fixed before the refactor: `ChatEffect` is now an empty sealed interface, `ScrollToBottom` / `ShowMessage` / `RequestMicPermission` were removed, and scrolling and the error banner are both driven from state. `ChatRoute` correctly has no collector. |
@@ -740,7 +740,7 @@ Do not "improve" these; they are deliberate and documented in the code:
   they cost. The status bar is transparent with no scrim of its own and every page runs *under*
   it, which is why a screen's background goes on before `screenInsetsPadding()` and never after:
   reversed, the page starts below the bar and leaves a band of window colour across the top.
-  The icons follow the theme through `DefaultSystemBarIcons`, called once by `VietLensTheme` —
+  The icons follow the theme through `DefaultSystemBarIcons`, called once by `SaolaTheme` —
   **not** by either host, because a host repeating the `ThemePreference` `when` is how iOS and
   Android come to disagree about what dark mode means. `PinSystemBarIcons` is the override for
   the two screens that paint their own background regardless of the theme, and it sits *over*

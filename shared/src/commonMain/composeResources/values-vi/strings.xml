@@ -11,12 +11,12 @@
 
     <!-- Camera -->
     <string name="camera_permission_title">Cần quyền truy cập camera</string>
-    <string name="camera_permission_body">VietLens dùng camera để nhận diện di tích, món ăn và biển báo quanh bạn. Ảnh chỉ được lưu trên máy của bạn.</string>
+    <string name="camera_permission_body">Saola dùng camera để nhận diện di tích, món ăn và biển báo quanh bạn. Ảnh chỉ được lưu trên máy của bạn.</string>
     <string name="camera_permission_grant">Cho phép camera</string>
-    <string name="camera_permission_blocked_body">Quyền camera đang tắt cho VietLens và Android sẽ không hỏi lại nữa. Bạn hãy bật lại trong cài đặt ứng dụng để tiếp tục.</string>
+    <string name="camera_permission_blocked_body">Quyền camera đang tắt cho Saola và Android sẽ không hỏi lại nữa. Bạn hãy bật lại trong cài đặt ứng dụng để tiếp tục.</string>
     <string name="location_permission_title">Đóng dấu hộ chiếu</string>
     <string name="location_permission_body">Có vị trí, mỗi tấm ảnh sẽ biết mình được chụp ở tỉnh nào, và tỉnh đó hiện lên trên bản đồ hộ chiếu của bạn.</string>
-    <string name="location_permission_blocked_body">Quyền vị trí đang tắt cho VietLens và Android sẽ không hỏi lại nữa. Bạn hãy bật lại trong cài đặt ứng dụng để ảnh có thể đóng dấu lên bản đồ hộ chiếu.</string>
+    <string name="location_permission_blocked_body">Quyền vị trí đang tắt cho Saola và Android sẽ không hỏi lại nữa. Bạn hãy bật lại trong cài đặt ứng dụng để ảnh có thể đóng dấu lên bản đồ hộ chiếu.</string>
     <string name="location_permission_grant">Cho phép</string>
     <string name="location_permission_later">Để sau</string>
     <string name="permission_open_settings">Mở cài đặt</string>
@@ -95,7 +95,7 @@
     <string name="discovery_listen_meta">%1$d phút · tường thuật bằng %2$s</string>
     <string name="discovery_favorite_saved">Đã lưu</string>
     <string name="discovery_share">Chia sẻ</string>
-    <string name="discovery_share_body">%1$s\n\n%2$s\n\nChia sẻ từ VietLens AI</string>
+    <string name="discovery_share_body">%1$s\n\n%2$s\n\nChia sẻ từ Saola</string>
     <plurals name="discovery_notice_count">
         <item quantity="other">%1$d điều đáng chú ý</item>
     </plurals>
@@ -120,8 +120,8 @@
     <string name="discovery_note_camera_flip">Đổi camera</string>
     <!-- Asked in the app's own words before the system dialog, which never says why. -->
     <string name="discovery_note_camera_permission_title">Chụp một tấm cho ghi chú này?</string>
-    <string name="discovery_note_camera_permission_body">VietLens cần quyền camera để chụp tấm ảnh bạn giữ cùng ghi chú. Ảnh chỉ lưu trên máy của bạn và không được tải lên đâu cả.</string>
-    <string name="discovery_note_camera_permission_blocked_body">Quyền camera đang tắt cho VietLens và Android sẽ không hỏi lại nữa. Bạn hãy bật lại trong cài đặt ứng dụng để chụp ảnh — trong lúc đó vẫn có thể chọn ảnh từ thư viện.</string>
+    <string name="discovery_note_camera_permission_body">Saola cần quyền camera để chụp tấm ảnh bạn giữ cùng ghi chú. Ảnh chỉ lưu trên máy của bạn và không được tải lên đâu cả.</string>
+    <string name="discovery_note_camera_permission_blocked_body">Quyền camera đang tắt cho Saola và Android sẽ không hỏi lại nữa. Bạn hãy bật lại trong cài đặt ứng dụng để chụp ảnh — trong lúc đó vẫn có thể chọn ảnh từ thư viện.</string>
     <string name="discovery_note_camera_permission_allow">Đồng ý</string>
     <string name="discovery_note_camera_permission_deny">Từ chối</string>
     <string name="discovery_note_in_diary">Hướng dẫn viên sẽ dùng ghi chú này khi viết nhật ký ngày cho bạn.</string>
@@ -192,7 +192,7 @@
     <string name="explore_empty_body">Khu này có ít địa điểm trên OpenStreetMap. Thử lại khi bạn đã đi xa hơn, hoặc kéo bản đồ để xem xung quanh.</string>
     <string name="explore_permission_title">Khám phá cần vị trí của bạn</string>
     <string name="explore_permission_body">Bản đồ lấy chỗ bạn đang đứng làm tâm và tìm những địa điểm đáng ghé trong bán kính 5 km. Vị trí chỉ được gửi đi với vai trò tâm của vòng tìm kiếm đó.</string>
-    <string name="explore_permission_blocked_body">Quyền vị trí đang tắt cho VietLens và hệ thống sẽ không hỏi lại nữa. Bật lại trong cài đặt ứng dụng để xem quanh bạn có gì.</string>
+    <string name="explore_permission_blocked_body">Quyền vị trí đang tắt cho Saola và hệ thống sẽ không hỏi lại nữa. Bật lại trong cài đặt ứng dụng để xem quanh bạn có gì.</string>
     <string name="explore_source_note">Địa điểm từ OpenStreetMap · mô tả và ảnh từ Wikipedia và Wikimedia Commons</string>
     <string name="explore_read_more">Đọc bài đầy đủ</string>
     <string name="explore_readers">%1$s lượt đọc</string>

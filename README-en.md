@@ -1,4 +1,4 @@
-# VietLens AI 🇻🇳
+# Saola 🇻🇳
 
 > Point the camera at a temple roof, a bowl of noodles or a street sign — the app recognises
 > it, tells the story behind it, and keeps it in your journey.
@@ -9,7 +9,7 @@
 
 ## 1. What this app is
 
-VietLens AI is a travel app that uses **Google Gemini** to turn the phone camera into a local
+Saola is a travel app that uses **Google Gemini** to turn the phone camera into a local
 guide.
 
 Instead of searching Google, reading Wikipedia and opening a separate translation app, the

@@ -4,7 +4,7 @@
 > **how** to write an MVI screen. Read the relevant section before writing a ViewModel or a
 > screen composable.
 
-Every rule below is derived from the `VietLensAI` codebase (Kotlin Multiplatform + Compose
+Every rule below is derived from the `Saola` codebase (Kotlin Multiplatform + Compose
 Multiplatform, Android + iOS). Snippets are real, not illustrative. Applies unchanged to a
 pure-Android Jetpack Compose project — drop the `expect/actual` parts.
 
@@ -820,8 +820,8 @@ kotlin.ranges.IntRange
 kotlin.time.Instant
 kotlinx.datetime.LocalDate
 androidx.compose.ui.graphics.ImageBitmap
-com.duylt.trave.vietlensai.domain.model.*
-com.duylt.trave.vietlensai.domain.util.*
+com.evora.technologies.saola.domain.model.*
+com.evora.technologies.saola.domain.util.*
 ```
 
 Wire the reports and gate on them:

@@ -1,5 +1,5 @@
 # =============================================================================
-#  VietLens AI — R8 keep rules
+#  Saola — R8 keep rules
 #
 #  This file is almost empty on purpose, and that is a finding rather than an
 #  oversight. A full minified `:app:assembleRelease` was run with this file
@@ -36,19 +36,19 @@
 #
 #  * Room — nothing needed, and less than the usual advice suggests. In its
 #    multiplatform mode Room does not load the implementation by name at all:
-#    VietLensDatabase is `@ConstructedBy(VietLensDatabaseConstructor::class)`,
+#    SaolaDatabase is `@ConstructedBy(SaolaDatabaseConstructor::class)`,
 #    and KSP generates an `actual object` whose `initialize()` returns
-#    `VietLensDatabase_Impl()` as a direct call, so R8 can rename the whole chain.
+#    `SaolaDatabase_Impl()` as a direct call, so R8 can rename the whole chain.
 #    room-runtime's own `-keep class * extends androidx.room.RoomDatabase`
 #    applies regardless. Entities and DAOs are only ever touched by generated code.
 #
 #  * Koin — nothing needed; this is where the Hilt note used to be, before DI
 #    moved to Koin for the multiplatform build. Koin keys its definitions on
 #    `KClass`, not on a class-name string: `single<HttpClient>` and
-#    `get<VietLensDatabase>()` build the same qualifier from the same (renamed)
+#    `get<SaolaDatabase>()` build the same qualifier from the same (renamed)
 #    class, so definition and lookup move together under obfuscation. The
 #    ViewModel factory path has consumer rules of its own in koin-android and
-#    koin-compose-viewmodel-android. MainActivity and VietLensApplication are
+#    koin-compose-viewmodel-android. MainActivity and SaolaApplication are
 #    kept by AGP's manifest-derived aapt_rules.txt.
 #
 #  * Ktor — the engine is bound explicitly via `HttpClient(OkHttp)`, so the

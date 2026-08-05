@@ -1,4 +1,4 @@
-# VietLens AI 🇻🇳
+# Saola 🇻🇳
 
 > Hướng máy ảnh vào một mái đình, một tô bún hay một tấm biển — ứng dụng nhận ra nó, kể
 > câu chuyện đằng sau, và ghi lại vào hành trình của bạn.
@@ -9,7 +9,7 @@
 
 ## 1. Ứng dụng này là gì
 
-VietLens AI là ứng dụng du lịch dùng **Google Gemini** để biến chiếc máy ảnh trên điện thoại
+Saola là ứng dụng du lịch dùng **Google Gemini** để biến chiếc máy ảnh trên điện thoại
 thành một hướng dẫn viên bản địa.
 
 Thay vì phải tra Google, đọc Wikipedia rồi mở thêm app dịch, người dùng chỉ cần giơ máy lên.

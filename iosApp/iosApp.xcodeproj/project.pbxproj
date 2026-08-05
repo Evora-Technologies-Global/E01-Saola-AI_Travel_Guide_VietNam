@@ -19,7 +19,7 @@
 		A1000003 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A1000004 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A1000005 /* SharedAssets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = SharedAssets; sourceTree = "<group>"; };
-		A1000006 /* VietLensAI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VietLensAI.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A1000006 /* Saola.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Saola.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -46,7 +46,7 @@
 		A1000102 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				A1000006 /* VietLensAI.app */,
+				A1000006 /* Saola.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -68,7 +68,7 @@
 			);
 			name = iosApp;
 			productName = iosApp;
-			productReference = A1000006 /* VietLensAI.app */;
+			productReference = A1000006 /* Saola.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -222,10 +222,10 @@
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-framework",
-					VietLensShared,
+					SaolaShared,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.duylt.trave.vietlensai;
-				PRODUCT_NAME = VietLensAI;
+				PRODUCT_BUNDLE_IDENTIFIER = com.evora.technologies.saola;
+				PRODUCT_NAME = Saola;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -256,10 +256,10 @@
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-framework",
-					VietLensShared,
+					SaolaShared,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.duylt.trave.vietlensai;
-				PRODUCT_NAME = VietLensAI;
+				PRODUCT_BUNDLE_IDENTIFIER = com.evora.technologies.saola;
+				PRODUCT_NAME = Saola;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;

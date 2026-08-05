@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>vi</string>
 	<key>CFBundleDisplayName</key>
-	<string>VietLens AI</string>
+	<string>Saola</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -35,7 +35,7 @@
 
 	<!-- Every prompt the app can raise, in the traveller's own terms. -->
 	<key>NSCameraUsageDescription</key>
-	<string>VietLens points its lens at landmarks, dishes and signs so it can tell you what you are looking at.</string>
+	<string>Saola points its lens at landmarks, dishes and signs so it can tell you what you are looking at.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Your rough location tells apart two temples that look alike, and fills in the province on your travel passport.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
@@ -73,7 +73,7 @@
 	<!--
 	  iPad: all four, which is what makes the large-window branch reachable at all.
 
-	  `VietLensRoot` picks the tablet shell from the window's own measurements — 840dp wide
+	  `SaolaRoot` picks the tablet shell from the window's own measurements — 840dp wide
 	  and 600dp tall — and an iPad locked to portrait is 834 points across, six short of the
 	  threshold. Measured on an iPad Pro 11-inch (M4) simulator on 04.08.2026: portrait 834 ×
 	  1210 draws the phone's bottom bar, landscape 1210 × 834 draws the rail and the panel.

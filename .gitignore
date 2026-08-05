@@ -36,9 +36,9 @@ tools/provinces/*.png
 # Wikimedia Commons are tracked, so seeding is reproducible without a network round trip and
 # so the exact images in the screenshots can be reviewed in a diff. Only the working copy of
 # the device database is transient.
-tools/seed/.work/vietlens.db
-tools/seed/.work/vietlens.db-wal
-tools/seed/.work/vietlens.db-shm
+tools/seed/.work/saola.db
+tools/seed/.work/saola.db-wal
+tools/seed/.work/saola.db-shm
 
 # Room's exported schemas. Generated on every build from the `@Database` declaration, so
 # they are output, not source. Their one real use is auto-migrations and migration tests,

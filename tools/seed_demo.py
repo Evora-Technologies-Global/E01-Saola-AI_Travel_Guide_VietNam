@@ -32,11 +32,11 @@ import argparse, json, os, sqlite3, subprocess, sys, time, uuid
 HERE = os.path.dirname(os.path.abspath(__file__))
 CONTENT = os.path.join(HERE, "seed", "demo-content.json")
 WORK = os.path.join(HERE, "seed", ".work")
-DB_LOCAL = os.path.join(WORK, "vietlens.db")
+DB_LOCAL = os.path.join(WORK, "saola.db")
 
-ANDROID_PKG = "com.duylt.trave.vietlensai.dev"
-IOS_BUNDLE = "com.duylt.trave.vietlensai"
-UA = "VietLensAI-seed/1.0 (hackathon demo; lothanhduy2003@gmail.com)"
+ANDROID_PKG = "com.evora.technologies.saola.dev"
+IOS_BUNDLE = "com.evora.technologies.saola"
+UA = "Saola-seed/1.0 (hackathon demo; lothanhduy2003@gmail.com)"
 MAX_EDGE_PX = 1024   # ImagePolicy.MAX_EDGE_PX
 JPEG_QUALITY = 85    # ImagePolicy.JPEG_QUALITY
 
@@ -87,16 +87,16 @@ class Android:
 
     def pull_db(self):
         for suffix in ("", "-wal", "-shm"):
-            sh(f"{self.adb} shell run-as {ANDROID_PKG} cat databases/vietlens.db{suffix} "
+            sh(f"{self.adb} shell run-as {ANDROID_PKG} cat databases/saola.db{suffix} "
                f"> '{DB_LOCAL}{suffix}'")
 
     def push_db(self):
-        sh(f"{self.adb} shell run-as {ANDROID_PKG} rm -f databases/vietlens.db-wal "
-           f"databases/vietlens.db-shm")
-        sh(f"{self.adb} push '{DB_LOCAL}' /data/local/tmp/vietlens.db")
-        sh(f"{self.adb} shell run-as {ANDROID_PKG} cp /data/local/tmp/vietlens.db "
-           f"databases/vietlens.db")
-        sh(f"{self.adb} shell rm -f /data/local/tmp/vietlens.db")
+        sh(f"{self.adb} shell run-as {ANDROID_PKG} rm -f databases/saola.db-wal "
+           f"databases/saola.db-shm")
+        sh(f"{self.adb} push '{DB_LOCAL}' /data/local/tmp/saola.db")
+        sh(f"{self.adb} shell run-as {ANDROID_PKG} cp /data/local/tmp/saola.db "
+           f"databases/saola.db")
+        sh(f"{self.adb} shell rm -f /data/local/tmp/saola.db")
 
     def push_photos(self, pairs):
         sh(f"{self.adb} shell run-as {ANDROID_PKG} mkdir -p files/captures")
@@ -128,7 +128,7 @@ class Ios:
     def pull_db(self):
         import shutil
         for suffix in ("", "-wal", "-shm"):
-            src = os.path.join(self.support, "vietlens.db" + suffix)
+            src = os.path.join(self.support, "saola.db" + suffix)
             if os.path.exists(src):
                 shutil.copy(src, DB_LOCAL + suffix)
             elif os.path.exists(DB_LOCAL + suffix):
@@ -137,10 +137,10 @@ class Ios:
     def push_db(self):
         import shutil
         for suffix in ("-wal", "-shm"):
-            stale = os.path.join(self.support, "vietlens.db" + suffix)
+            stale = os.path.join(self.support, "saola.db" + suffix)
             if os.path.exists(stale):
                 os.remove(stale)
-        shutil.copy(DB_LOCAL, os.path.join(self.support, "vietlens.db"))
+        shutil.copy(DB_LOCAL, os.path.join(self.support, "saola.db"))
 
     def push_photos(self, pairs):
         import shutil

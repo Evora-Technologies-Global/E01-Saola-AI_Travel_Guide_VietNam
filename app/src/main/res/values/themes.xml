@@ -7,16 +7,16 @@
       flash of the wrong colour and an unwanted action bar during startup.
       values-night/ carries the dark variant.
     -->
-    <style name="Theme.VietLensAI" parent="android:Theme.Material.Light.NoActionBar">
+    <style name="Theme.Saola" parent="android:Theme.Material.Light.NoActionBar">
         <item name="android:windowBackground">@color/window_background</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar">true</item>
     </style>
 
-    <style name="Theme.VietLensAI.Splash" parent="Theme.SplashScreen">
+    <style name="Theme.Saola.Splash" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/window_background</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
-        <item name="postSplashScreenTheme">@style/Theme.VietLensAI</item>
+        <item name="postSplashScreenTheme">@style/Theme.Saola</item>
     </style>
 </resources>

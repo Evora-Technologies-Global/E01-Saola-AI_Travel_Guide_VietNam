@@ -5,7 +5,7 @@
   written only that way. See values/strings.xml for the rest of the conventions.
 -->
 <resources>
-    <string name="app_name">VietLens AI</string>
+    <string name="app_name">Saola</string>
 
     <string name="resource_language">fr</string>
 
@@ -17,12 +17,12 @@
 
     <!-- Camera -->
     <string name="camera_permission_title">Accès à l'appareil photo requis</string>
-    <string name="camera_permission_body">VietLens utilise l'appareil photo pour reconnaître les monuments, les plats et les panneaux autour de vous. Vos photos restent sur votre téléphone.</string>
+    <string name="camera_permission_body">Saola utilise l'appareil photo pour reconnaître les monuments, les plats et les panneaux autour de vous. Vos photos restent sur votre téléphone.</string>
     <string name="camera_permission_grant">Autoriser l'appareil photo</string>
-    <string name="camera_permission_blocked_body">L'accès à l'appareil photo est désactivé pour VietLens et Android ne le redemandera pas. Activez-le dans les réglages de l'application pour continuer.</string>
+    <string name="camera_permission_blocked_body">L'accès à l'appareil photo est désactivé pour Saola et Android ne le redemandera pas. Activez-le dans les réglages de l'application pour continuer.</string>
     <string name="location_permission_title">Tamponnez votre passeport</string>
     <string name="location_permission_body">Avec la localisation activée, chaque photo sait dans quelle province elle a été prise, et cette province se remplit sur la carte de votre passeport.</string>
-    <string name="location_permission_blocked_body">La localisation est désactivée pour VietLens et Android ne la redemandera pas. Activez-la dans les réglages pour que vos photos tamponnent la carte de votre passeport.</string>
+    <string name="location_permission_blocked_body">La localisation est désactivée pour Saola et Android ne la redemandera pas. Activez-la dans les réglages pour que vos photos tamponnent la carte de votre passeport.</string>
     <string name="location_permission_grant">Autoriser</string>
     <string name="location_permission_later">Pas maintenant</string>
     <string name="permission_open_settings">Ouvrir les réglages</string>
@@ -101,7 +101,7 @@
     <string name="discovery_listen_meta">%1$d min · racontée en %2$s</string>
     <string name="discovery_favorite_saved">Enregistré</string>
     <string name="discovery_share">Partager</string>
-    <string name="discovery_share_body">%1$s\n\n%2$s\n\nPartagé depuis VietLens AI</string>
+    <string name="discovery_share_body">%1$s\n\n%2$s\n\nPartagé depuis Saola</string>
     <plurals name="discovery_notice_count">
         <item quantity="one">Un détail à remarquer</item>
         <item quantity="other">%1$d détails à remarquer</item>
@@ -125,8 +125,8 @@
     <string name="discovery_note_take_photo">Prendre une photo</string>
     <string name="discovery_note_camera_flip">Changer d'appareil photo</string>
     <string name="discovery_note_camera_permission_title">Prendre une photo pour cette note ?</string>
-    <string name="discovery_note_camera_permission_body">VietLens a besoin de l'appareil photo pour la photo que vous gardez avec cette note. Elle est enregistrée uniquement sur cet appareil et n'est jamais envoyée.</string>
-    <string name="discovery_note_camera_permission_blocked_body">L'appareil photo est désactivé pour VietLens et Android ne le redemandera pas. Réactivez-le dans les réglages pour photographier — en attendant, vous pouvez toujours ajouter une image depuis votre galerie.</string>
+    <string name="discovery_note_camera_permission_body">Saola a besoin de l'appareil photo pour la photo que vous gardez avec cette note. Elle est enregistrée uniquement sur cet appareil et n'est jamais envoyée.</string>
+    <string name="discovery_note_camera_permission_blocked_body">L'appareil photo est désactivé pour Saola et Android ne le redemandera pas. Réactivez-le dans les réglages pour photographier — en attendant, vous pouvez toujours ajouter une image depuis votre galerie.</string>
     <string name="discovery_note_camera_permission_allow">Autoriser</string>
     <string name="discovery_note_camera_permission_deny">Pas maintenant</string>
     <string name="discovery_note_in_diary">Votre guide s'en servira pour écrire votre journal de la journée.</string>
@@ -198,7 +198,7 @@
     <string name="explore_empty_body">Ce coin compte peu de lieux sur OpenStreetMap. Réessayez après avoir avancé, ou faites glisser la carte pour voir ce qu'il y a autour.</string>
     <string name="explore_permission_title">Explorer a besoin de votre position</string>
     <string name="explore_permission_body">La carte se centre là où vous êtes et cherche les lieux qui méritent une marche dans un rayon de 5 km. Votre position n'est envoyée que comme centre de cette recherche.</string>
-    <string name="explore_permission_blocked_body">La localisation est désactivée pour VietLens et le système ne la redemandera pas. Activez-la dans les réglages pour voir ce qui vous entoure.</string>
+    <string name="explore_permission_blocked_body">La localisation est désactivée pour Saola et le système ne la redemandera pas. Activez-la dans les réglages pour voir ce qui vous entoure.</string>
     <string name="explore_source_note">Lieux issus d'OpenStreetMap · descriptions et photographies de Wikipédia et Wikimedia Commons</string>
     <string name="explore_read_more">Lire l'article complet</string>
     <string name="explore_readers">%1$s lecteurs</string>

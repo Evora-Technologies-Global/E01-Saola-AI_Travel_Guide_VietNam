@@ -6,7 +6,7 @@
   archipelagos are named as Việt Nam names them, and the sea as Biển Đông.
 -->
 <resources>
-    <string name="app_name">VietLens AI</string>
+    <string name="app_name">Saola</string>
 
     <string name="resource_language">zh</string>
 
@@ -18,12 +18,12 @@
 
     <!-- Camera -->
     <string name="camera_permission_title">需要使用相机</string>
-    <string name="camera_permission_body">VietLens 用相机识别你身边的地标、菜肴和标识。照片只留在你的设备上。</string>
+    <string name="camera_permission_body">Saola 用相机识别你身边的地标、菜肴和标识。照片只留在你的设备上。</string>
     <string name="camera_permission_grant">允许使用相机</string>
-    <string name="camera_permission_blocked_body">VietLens 的相机权限已关闭，Android 不会再次询问。请在应用设置中开启后继续。</string>
+    <string name="camera_permission_blocked_body">Saola 的相机权限已关闭，Android 不会再次询问。请在应用设置中开启后继续。</string>
     <string name="location_permission_title">给护照盖章</string>
     <string name="location_permission_body">开启定位后，每张照片都会记住拍摄于哪个省，那个省就会在护照地图上填色。</string>
-    <string name="location_permission_blocked_body">VietLens 的定位权限已关闭，Android 不会再次询问。请在应用设置中开启，照片才能为护照地图盖章。</string>
+    <string name="location_permission_blocked_body">Saola 的定位权限已关闭，Android 不会再次询问。请在应用设置中开启，照片才能为护照地图盖章。</string>
     <string name="location_permission_grant">允许</string>
     <string name="location_permission_later">暂不</string>
     <string name="permission_open_settings">打开设置</string>
@@ -102,7 +102,7 @@
     <string name="discovery_listen_meta">%1$d 分钟 · 用%2$s朗读</string>
     <string name="discovery_favorite_saved">已保存</string>
     <string name="discovery_share">分享</string>
-    <string name="discovery_share_body">%1$s\n\n%2$s\n\n来自 VietLens AI</string>
+    <string name="discovery_share_body">%1$s\n\n%2$s\n\n来自 Saola</string>
     <plurals name="discovery_notice_count">
         <item quantity="other">%1$d 处值得留意</item>
     </plurals>
@@ -125,8 +125,8 @@
     <string name="discovery_note_take_photo">拍照</string>
     <string name="discovery_note_camera_flip">切换摄像头</string>
     <string name="discovery_note_camera_permission_title">为这条笔记拍张照片？</string>
-    <string name="discovery_note_camera_permission_body">VietLens 需要相机来拍下与笔记一同保存的照片。它只存在本机，绝不会上传。</string>
-    <string name="discovery_note_camera_permission_blocked_body">VietLens 的相机已关闭，Android 不会再次询问。请在应用设置中重新开启以拍照 — 在此之前你仍可以从相册添加。</string>
+    <string name="discovery_note_camera_permission_body">Saola 需要相机来拍下与笔记一同保存的照片。它只存在本机，绝不会上传。</string>
+    <string name="discovery_note_camera_permission_blocked_body">Saola 的相机已关闭，Android 不会再次询问。请在应用设置中重新开启以拍照 — 在此之前你仍可以从相册添加。</string>
     <string name="discovery_note_camera_permission_allow">允许</string>
     <string name="discovery_note_camera_permission_deny">暂不</string>
     <string name="discovery_note_in_diary">向导写当天日记时会用上这条笔记。</string>
@@ -196,7 +196,7 @@
     <string name="explore_empty_body">这个角落在 OpenStreetMap 上收录很少。换个地方再试，或者拖动地图看看周围。</string>
     <string name="explore_permission_title">周边功能需要你的位置</string>
     <string name="explore_permission_body">地图会以你所在的位置为中心，找出 5 公里内值得步行前往的地方。你的位置只作为这次搜索的中心点发送。</string>
-    <string name="explore_permission_blocked_body">VietLens 的定位已关闭，系统不会再次询问。请在应用设置中开启以查看周围。</string>
+    <string name="explore_permission_blocked_body">Saola 的定位已关闭，系统不会再次询问。请在应用设置中开启以查看周围。</string>
     <string name="explore_source_note">地点来自 OpenStreetMap · 描述与图片来自 Wikipedia 和 Wikimedia Commons</string>
     <string name="explore_read_more">阅读完整条目</string>
     <string name="explore_readers">%1$s 次阅读</string>
