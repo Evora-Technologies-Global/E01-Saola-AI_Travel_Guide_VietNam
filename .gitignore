@@ -1,12 +1,12 @@
 *.iml
 .gradle
 /local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
+# The whole IDE directory, not a list of its noisier files. What was tracked here
+# was machine-local state — the last deployment target, the device manager's cache,
+# an artifacts entry per module — none of which another clone wants, and all of
+# which the IDE rewrites on its own. Anything the build genuinely needs lives in
+# Gradle, not in .idea.
+/.idea/
 .DS_Store
 # Every module's build output, not just the root one. A leading slash would match
 # `/build` alone and quietly track app/build, data/build and domain/build — 393 MB
