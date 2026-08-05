@@ -19,11 +19,15 @@ import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.backhandler.BackHandler
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.duylt.trave.vietlensai.core.designsystem.component.EmptyState
 import com.duylt.trave.vietlensai.core.designsystem.component.PageHeader
@@ -126,7 +130,23 @@ private fun PassportScreen(
     val scope = rememberCoroutineScope()
     val selectedId = state.selectedProvinceId
 
-    LaunchedEffect(selectedId) {
+    // Keyed on the scaffold's height as well as on the selection, because a hidden sheet is
+    // parked below the *scaffold* rather than below the window and this scaffold changes
+    // height once on its own: pushed from the journal, it is first measured with the shell's
+    // tab bar still on screen, and `VietLensApp` hands that 80 dp back a frame or two later
+    // when the bar has slid away. The sheet does not re-settle onto the anchor that moves
+    // with it — left alone it stays where the bottom edge *used to* be, and its drag handle
+    // stands 80 dp up a map on which nothing has been selected, over the sovereignty banner.
+    //
+    // Only visible with animations off, which is why looking at it on a phone never showed
+    // it: with them on the bar's height comes back long after the sheet has settled. Off is
+    // not a rare state — every AVD ships that way, as does a phone in battery saver.
+    //
+    // `PassportPane` does not carry this and should not gain it by symmetry: the large window
+    // stands its navigation on a rail, so that scaffold is one height. `LLM.md` §11 row #29.
+    var scaffoldHeight by remember { mutableIntStateOf(0) }
+
+    LaunchedEffect(selectedId, scaffoldHeight) {
         when {
             selectedId == null -> sheetState.hide()
             // Only a panel that was closed is opened at its peek. Moving from one
@@ -154,7 +174,7 @@ private fun PassportScreen(
 
     BottomSheetScaffold(
         scaffoldState = scaffoldState,
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize().onSizeChanged { scaffoldHeight = it.height },
         sheetPeekHeight = SheetPeekHeight,
         // Squared off at the bottom, where the edge is off screen anyway. Built from
         // `SheetCorner` rather than from `MaterialTheme.shapes` because `SheetEdge`
