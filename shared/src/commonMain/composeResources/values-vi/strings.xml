@@ -356,4 +356,8 @@
     <string name="settings_section_about">Về ứng dụng</string>
     <string name="settings_sovereignty">Lập trường của chúng tôi về Biển Đông</string>
     <string name="settings_sovereignty_summary">Hoàng Sa &amp; Trường Sa · Việt Nam</string>
+
+    <!-- Bộ sưu tập: chế độ hướng dẫn -->
+    <string name="collection_show_guide">Xem cách nhận biết</string>
+    <string name="collection_show_board">Xem dạng lưới</string>
 </resources>

@@ -358,4 +358,8 @@
     <string name="settings_section_about">このアプリについて</string>
     <string name="settings_sovereignty">Biển Đông についての私たちの立場</string>
     <string name="settings_sovereignty_summary">Hoàng Sa &amp; Trường Sa · Việt Nam</string>
+
+    <!-- コレクション: ガイド表示 -->
+    <string name="collection_show_guide">見分け方を表示</string>
+    <string name="collection_show_board">一覧を表示</string>
 </resources>

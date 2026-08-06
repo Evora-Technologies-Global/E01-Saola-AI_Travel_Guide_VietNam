@@ -1,5 +1,7 @@
 package com.evora.technologies.saola.testing
 
+import com.evora.technologies.saola.domain.model.CatalogItem
+import com.evora.technologies.saola.domain.model.CollectionEntry
 import com.evora.technologies.saola.domain.model.Discovery
 import com.evora.technologies.saola.domain.model.DiscoveryCategory
 import com.evora.technologies.saola.domain.model.GeoPoint
@@ -49,6 +51,23 @@ internal fun discovery(
     isFavorite = isFavorite,
     modelUsed = null,
     createdAt = Instant.fromEpochSeconds(0),
+)
+
+/** One catalogue entry, collected when [discovery] is non-null. */
+internal fun collectionEntry(
+    id: String,
+    name: String = id,
+    hint: String = "how to spot a $id",
+    discovery: Discovery? = null,
+) = CollectionEntry(
+    item = CatalogItem(
+        id = id,
+        category = DiscoveryCategory.FOOD,
+        name = name,
+        hint = hint,
+        aliases = listOf(id),
+    ),
+    discovery = discovery,
 )
 
 private const val HANOI_LAT = 21.0

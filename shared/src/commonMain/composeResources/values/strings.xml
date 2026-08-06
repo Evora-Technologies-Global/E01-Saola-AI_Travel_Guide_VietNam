@@ -394,4 +394,8 @@
     <string name="settings_section_about">About</string>
     <string name="settings_sovereignty">Our position on the East Sea</string>
     <string name="settings_sovereignty_summary">Hoàng Sa &amp; Trường Sa · Việt Nam</string>
+
+    <!-- Collection: guide mode -->
+    <string name="collection_show_guide">Show how to recognise these</string>
+    <string name="collection_show_board">Show the board</string>
 </resources>

@@ -363,4 +363,8 @@
     <string name="settings_section_about">Acerca de</string>
     <string name="settings_sovereignty">Nuestra posición sobre el Biển Đông</string>
     <string name="settings_sovereignty_summary">Hoàng Sa &amp; Trường Sa · Việt Nam</string>
+
+    <!-- Colección: modo guía -->
+    <string name="collection_show_guide">Ver cómo reconocerlos</string>
+    <string name="collection_show_board">Ver la cuadrícula</string>
 </resources>

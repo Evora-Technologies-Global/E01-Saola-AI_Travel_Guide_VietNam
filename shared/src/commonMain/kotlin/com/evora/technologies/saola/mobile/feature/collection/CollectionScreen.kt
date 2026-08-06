@@ -19,6 +19,7 @@ import com.evora.technologies.saola.feature.collection.CollectionIntent
 import com.evora.technologies.saola.feature.collection.CollectionState
 import com.evora.technologies.saola.feature.collection.CollectionViewModel
 import com.evora.technologies.saola.feature.collection.component.CollectionProgress
+import com.evora.technologies.saola.feature.collection.component.CollectionViewToggle
 import com.evora.technologies.saola.feature.collection.component.EntrySheet
 import com.evora.technologies.saola.feature.collection.component.collectionBoard
 import com.evora.technologies.saola.resources.Res
@@ -98,6 +99,12 @@ private fun CollectionScreen(
                     title = stringResource(Res.string.collection_title),
                     subtitle = stringResource(Res.string.collection_subtitle),
                     onBack = onBack,
+                    trailing = {
+                        CollectionViewToggle(
+                            isGuide = state.isGuide,
+                            onToggle = { onIntent(CollectionIntent.ToggleView) },
+                        )
+                    },
                 )
             }
 
@@ -121,6 +128,7 @@ private fun CollectionScreen(
             collectionBoard(
                 sections = state.collection.sections,
                 columns = COLUMNS,
+                isGuide = state.isGuide,
                 onOpenDiscovery = onOpenDiscovery,
                 onShowHint = { id -> onIntent(CollectionIntent.Select(id)) },
             )

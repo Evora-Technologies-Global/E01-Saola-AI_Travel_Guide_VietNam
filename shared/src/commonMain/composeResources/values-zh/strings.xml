@@ -359,4 +359,8 @@
     <string name="settings_section_about">关于</string>
     <string name="settings_sovereignty">我们对 Biển Đông 的立场</string>
     <string name="settings_sovereignty_summary">Hoàng Sa &amp; Trường Sa · Việt Nam</string>
+
+    <!-- 收藏：指南模式 -->
+    <string name="collection_show_guide">看怎么认出来</string>
+    <string name="collection_show_board">看格子图</string>
 </resources>

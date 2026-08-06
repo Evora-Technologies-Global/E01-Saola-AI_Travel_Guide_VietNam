@@ -16,6 +16,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNull
+import kotlin.test.assertTrue
 
 /**
  * The culture board, which has no request to make and therefore no failure to render.
@@ -56,6 +57,35 @@ class CollectionViewModelTest {
 
         vm.onIntent(CollectionIntent.DismissSelection)
         assertNull(vm.state.value.selectedItemId)
+    }
+
+    @Test
+    fun `the switch turns the board into the guide and back`() = runTest {
+        val vm = viewModel()
+        runCurrent()
+
+        assertFalse(vm.state.value.isGuide, "the board is what the screen opens on")
+
+        vm.onIntent(CollectionIntent.ToggleView)
+        assertTrue(vm.state.value.isGuide)
+
+        vm.onIntent(CollectionIntent.ToggleView)
+        assertFalse(vm.state.value.isGuide, "one intent both ways, so it has to come back")
+    }
+
+    @Test
+    fun `switching to the guide leaves an open sheet where it was`() = runTest {
+        val vm = viewModel()
+        runCurrent()
+
+        vm.onIntent(CollectionIntent.Select("ao-dai"))
+        vm.onIntent(CollectionIntent.ToggleView)
+
+        // The two are independent facts about the screen and the reducer must not tangle
+        // them: a traveller who opened a hint and then asked to see all of them has not
+        // asked for the sheet to close, and closing it would lose the entry they were on.
+        assertEquals("ao-dai", vm.state.value.selectedItemId)
+        assertTrue(vm.state.value.isGuide)
     }
 
     @Test

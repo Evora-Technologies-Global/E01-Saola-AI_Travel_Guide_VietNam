@@ -358,4 +358,8 @@
     <string name="settings_section_about">정보</string>
     <string name="settings_sovereignty">Biển Đông에 대한 우리의 입장</string>
     <string name="settings_sovereignty_summary">Hoàng Sa &amp; Trường Sa · Việt Nam</string>
+
+    <!-- 컬렉션: 가이드 보기 -->
+    <string name="collection_show_guide">알아보는 법 보기</string>
+    <string name="collection_show_board">격자로 보기</string>
 </resources>

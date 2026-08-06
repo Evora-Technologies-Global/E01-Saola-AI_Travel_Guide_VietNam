@@ -31,6 +31,7 @@ class CollectionViewModel(
         when (intent) {
             is CollectionIntent.Select -> setState { copy(selectedItemId = intent.itemId) }
             CollectionIntent.DismissSelection -> setState { copy(selectedItemId = null) }
+            CollectionIntent.ToggleView -> setState { copy(isGuide = !isGuide) }
         }
     }
 }
