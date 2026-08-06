@@ -58,7 +58,9 @@ crêpe folded into a half-moon"* rather than only a name you already knew.
 **OpenStreetMap + Wikipedia + Wikimedia Commons** — no API key, no billing. Ranked by
 Wikipedia readership over the last 60 days and by how carefully somebody mapped the place.
 **There are no star ratings**, because no open source carries them — better to be missing a
-number than to invent one.
+number than to invent one. Place names follow the device's language wherever OSM holds a
+translation, with the Vietnamese name under the title on the detail sheet — because the sign
+on the street still says the Vietnamese one.
 
 **📖 Travel journal.** Grouped by day, with an AI-written summary of each day and ideas for
 tomorrow.
@@ -249,6 +251,7 @@ travellers — the two groups whose main tool is a phone and who have no guide b
 | "In your collection" card on the recognition result | ✅ |
 | Both maps usable with a screen reader | ✅ |
 | Licences screen + ODbL credit on the maps | ✅ |
+| Explore place names in the device's language (`name:en` from OSM) | ✅ |
 | Voice dictation | ❌ removed — the code was finished but no button ever reached it |
 | AI-generated destination suggestions | ❌ removed — addresses and prices were invented; replaced by **Explore** |
 
@@ -270,7 +273,7 @@ all 34 plus both archipelagos, and a double-tap opens the province panel. Verifi
 
 **Near term — done on 06.08.2026**
 
-Every one of the five was "bring out what is already there"; none needed new data:
+Every one of the six was "bring out what is already there"; none needed new data:
 
 - ✅ **The unlock moment is no longer silent.** The recognition result carries a card — *In your
   collection · Phở · 29/61* — that opens the board. State rather than a snackbar, so it survives
@@ -288,11 +291,22 @@ Every one of the five was "bring out what is already there"; none needed new dat
 - ✅ **Tests for the UI layer.** Six of them, on a real device: the passport map's projection and
   hit test, its semantics tree, and the board/guide switch. `:shared` went from 118/107 to
   **123/112**, the project total from 455 to **465**, and the device suite from 12 to **18**.
+- ✅ **Place names in the device's language.** Explore reads `name:<language>` and then `name:en`
+  from OSM, so an English phone opens on *Vietnam Military History Museum* rather than *Bảo tàng
+  Lịch sử Quân sự Việt Nam*. That data was **already in the Overpass response** and was being
+  discarded, so it costs no extra request. The Vietnamese name is not lost — it sits under the
+  title on the detail sheet, because the sign in front of the traveller still carries it. A
+  Vietnamese phone deliberately does **not** take the English fallback: for exactly one language
+  it is a downgrade. Measured on a Galaxy A16 by pinning the app to `en-US` and back to `vi-VN`
+  against the same 40 results. `:data` went from 120/86 to **126/92**, the project total to
+  **477**.
 
 **Near term — what is left**
 
-- Marker clustering on the explore map, where 40 places overlap
-- Read `name:en` from OSM for the ~47% of places that already have an English name
+- Marker clustering on the explore map, where 40 places overlap. Android stacks the pins, so the
+  covered one cannot be tapped; iOS **hides** the loser by `displayPriority`, so the place leaves
+  the map entirely. The ranked list beside it still carries all 40, which makes this a loss at
+  the drawing layer rather than a loss of data.
 
 **Medium term — extend the capability**
 

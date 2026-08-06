@@ -56,6 +56,8 @@ tráng mỏng vàng nghệ gập đôi hình bán nguyệt"* thay vì chỉ mộ
 **5 km**. Dữ liệu lấy từ **OpenStreetMap + Wikipedia + Wikimedia Commons** — không cần API
 key, không tính phí. Xếp hạng theo lượt đọc Wikipedia 60 ngày gần nhất và mức độ chi tiết của
 dữ liệu bản đồ. **Không có sao đánh giá**, vì không nguồn mở nào có — thà thiếu còn hơn bịa.
+Tên địa điểm hiện theo ngôn ngữ của máy ở những nơi OSM đã có bản dịch, và tên tiếng Việt nằm
+ngay dưới tiêu đề trong thẻ chi tiết — vì tấm biển ngoài đường vẫn ghi bằng tiếng Việt.
 
 **📖 Nhật ký hành trình.** Gom theo ngày, mỗi ngày có một đoạn tổng kết do AI viết cùng gợi ý
 cho hôm sau.
@@ -243,6 +245,7 @@ dùng điện thoại làm công cụ chính và không có hướng dẫn viên
 | Thẻ "đã vào bộ sưu tập" trên trang kết quả nhận diện | ✅ |
 | Trình đọc màn hình dùng được hai bản đồ | ✅ |
 | Màn hình giấy phép + ghi nhận ODbL trên bản đồ | ✅ |
+| Tên địa điểm khám phá theo ngôn ngữ của máy (`name:en` từ OSM) | ✅ |
 | Nhập liệu bằng giọng nói | ❌ đã gỡ — code hoàn chỉnh nhưng chưa có nút gọi tới |
 | Gợi ý điểm đến do AI tự sinh | ❌ đã gỡ — địa chỉ và giá đều bịa; thay bằng **Khám phá** |
 
@@ -264,7 +267,7 @@ trên Galaxy A16: 36 node, trước đó là 0.
 
 **Ngắn hạn — xong ngày 06.08.2026**
 
-Cả năm mục đều là "đưa thứ đang có ra ngoài", không mục nào cần thêm dữ liệu mới:
+Cả sáu mục đều là "đưa thứ đang có ra ngoài", không mục nào cần thêm dữ liệu mới:
 
 - ✅ **Khoảnh khắc "mở khoá" không còn âm thầm.** Trang kết quả nhận diện hiện thẻ *Trong bộ sưu
   tập · Phở · 29/61*, chạm vào là mở bảng. Là state chứ không phải snackbar, nên nó sống qua
@@ -281,11 +284,21 @@ Cả năm mục đều là "đưa thứ đang có ra ngoài", không mục nào 
 - ✅ **Kiểm thử lớp giao diện.** 6 test chạy trên máy thật: phép chiếu và hit-test của bản đồ
   hộ chiếu, cây semantics của nó, và công tắc Lưới ⇄ Hướng dẫn. `:shared` đi từ 118/107 lên
   **123/112**, tổng dự án 455 → **465**, và bộ device test 12 → **18**.
+- ✅ **Tên địa điểm theo ngôn ngữ của máy.** Bản đồ khám phá đọc `name:<ngôn ngữ>` rồi
+  `name:en` từ OSM, nên máy tiếng Anh mở ra *Vietnam Military History Museum* thay vì *Bảo
+  tàng Lịch sử Quân sự Việt Nam*. Dữ liệu này **đã nằm sẵn** trong phản hồi Overpass và đang
+  bị vứt đi, nên không tốn thêm một request nào. Tên tiếng Việt không mất — nó nằm ngay dưới
+  tiêu đề trong thẻ chi tiết, vì tấm biển trước mặt vẫn ghi bằng tiếng Việt. Máy tiếng Việt
+  cố ý **không** nhận bước dự phòng tiếng Anh: với đúng một ngôn ngữ, nó là bước lùi. Đo trên
+  Galaxy A16 bằng cách ghim app sang `en-US` rồi về `vi-VN` trên cùng 40 kết quả. `:data` đi
+  từ 120/86 lên **126/92**, tổng dự án 465 → **477**.
 
 **Ngắn hạn — còn lại**
 
-- Gom nhóm ghim (marker clustering) trên bản đồ khám phá khi có 40 địa điểm chồng nhau
-- Đọc `name:en` từ OSM cho ~47% địa điểm đã có sẵn tên tiếng Anh
+- Gom nhóm ghim (marker clustering) trên bản đồ khám phá khi có 40 địa điểm chồng nhau.
+  Android xếp chồng nên ghim dưới không chạm được; iOS thì **ẩn hẳn** ghim thua theo
+  `displayPriority`, tức là địa điểm biến mất khỏi bản đồ. Danh sách xếp hạng bên cạnh vẫn
+  giữ đủ cả 40, nên đây là mất mát ở tầng vẽ chứ không phải mất dữ liệu.
 
 **Trung hạn — mở rộng năng lực**
 

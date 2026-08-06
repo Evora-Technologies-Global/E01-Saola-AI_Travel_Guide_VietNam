@@ -573,7 +573,7 @@ not contain `,` `.` `;` `:` or brackets** — Kotlin/Native rejects the identifi
 `:shared:allTests`, not `:shared:testAndroidHostTest`, or half the platforms this presentation
 layer ships to are never compiled against. Currently **123 on the JVM, 112 on the iOS
 simulator** — the difference is the two source-reading gates below, which need `java.io.File`.
-Project total **465**, with `:data` at 120 / 86, `:domain` at 10 / 10 and `:app` at 4, plus
+Project total **477**, with `:data` at 126 / 92, `:domain` at 10 / 10 and `:app` at 4, plus
 **18 on a device**.
 
 **These counts are read off `build/test-results`, not remembered.** The figures here before
@@ -830,6 +830,19 @@ Do not "improve" these; they are deliberate and documented in the code:
   that thing*. That answer stays true on a later visit, which is why the card doubles as the link
   between a photograph and its tile. See `CollectionUnlockCard` for why the moment is carried by
   the entrance animation instead.
+- **`NearbyPlace.mappedName` is the key for comparing places; `name` is only for showing
+  them.** Explore reads OSM's `name:<the traveller's language>` and falls back to `name:en`,
+  and only about half of what is around Hoàn Kiếm has been translated — so within a single
+  search some names come out English and the rest Vietnamese, and the same node is named
+  differently on two phones. Two comparisons must therefore keep reading the plain OSM
+  `name`: deduplication, which keyed on the displayed name stops collapsing two branches of
+  one café chain the moment a mapper translates one of them; and the junk filter in
+  `PlaceMappers`, whose rules are written against what a Vietnamese mapper types — "Vườn hoa
+  …", "Lư", "0 km" — so a planted roundabout given a `name:en` would walk straight past a
+  filter reading the translation. Vietnamese is excluded from the English fallback on
+  purpose: the `name` tag in Vietnam *is* the Vietnamese name, so for that one language the
+  fallback is a downgrade. `PlaceNamingTest` drives the whole search rather than the mapper,
+  because none of this is visible from `toDomain` alone.
 - `val onIntent = remember(viewModel) { viewModel::onIntent }` in `ExploreHost`, and only
   there. A ViewModel is `unstable`, so the bound reference cannot be memoised and is a new
   object every recomposition — which denies every child below it the skip its `skippable`
