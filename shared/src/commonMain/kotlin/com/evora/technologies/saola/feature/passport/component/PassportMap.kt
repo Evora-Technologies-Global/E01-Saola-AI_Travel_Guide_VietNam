@@ -8,14 +8,19 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import com.evora.technologies.saola.core.designsystem.component.MapSourceNote
 import com.evora.technologies.saola.core.designsystem.theme.ScreenGutter
 import com.evora.technologies.saola.core.designsystem.theme.Spacing
 import com.evora.technologies.saola.core.designsystem.theme.Vermilion
 import com.evora.technologies.saola.feature.passport.PassportState
 import com.evora.technologies.saola.feature.passport.VietnamMapCanvas
+import com.evora.technologies.saola.resources.Res
+import com.evora.technologies.saola.resources.map_source_osm
+import org.jetbrains.compose.resources.stringResource
 
 /**
  * The map in a framed card.
@@ -28,6 +33,12 @@ import com.evora.technologies.saola.feature.passport.VietnamMapCanvas
  * `Canvas` and so already fits whatever it is given, and it is one of the three files
  * `DesignTokenTest` allows to write a type size — an allowlist keyed on the file name, which
  * moving the file would quietly empty.
+ *
+ * **The source credit is in this file rather than in either arrangement, and that is the
+ * point of it being here.** Every outline the canvas traces is derived from OpenStreetMap's
+ * boundary relations, so ODbL asks for the notice wherever the result is drawn — and both the
+ * phone's screen and the large window's pane draw exactly this. Put in the two arrangements
+ * instead, it would be worded twice and dropped from the next one.
  */
 @Composable
 internal fun PassportMap(
@@ -62,6 +73,17 @@ internal fun PassportMap(
             insetLabel = MaterialTheme.colorScheme.onSurfaceVariant,
             selectedStroke = Vermilion,
             modifier = Modifier.fillMaxSize(),
+        )
+
+        // Bottom-left, which on this projection is open sea in every window this card is
+        // given: Vietnam is far taller than it is wide, so the aspect-fit always leaves that
+        // corner empty. It is inside the frame rather than under it because the credit is
+        // about the drawing, and a line under the card reads as a caption for the page.
+        MapSourceNote(
+            text = stringResource(Res.string.map_source_osm),
+            modifier = Modifier
+                .align(Alignment.BottomStart)
+                .padding(Spacing.xs),
         )
     }
 }

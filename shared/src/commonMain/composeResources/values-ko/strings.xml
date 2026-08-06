@@ -359,6 +359,23 @@
     <string name="settings_sovereignty">Biển Đông에 대한 우리의 입장</string>
     <string name="settings_sovereignty_summary">Hoàng Sa &amp; Trường Sa · Việt Nam</string>
 
+    <!-- 데이터 출처와 라이선스 -->
+    <string name="map_source_osm">© OpenStreetMap contributors</string>
+    <string name="licenses_title">라이선스와 데이터 출처</string>
+    <string name="licenses_kicker">출처 표시</string>
+    <string name="licenses_intro">Saola는 열린 데이터 위에 세워졌습니다. 화면에 보이는 것들의 출처와 라이선스입니다.</string>
+    <string name="licenses_open">라이선스 열기</string>
+    <string name="licenses_osm_title">OpenStreetMap</string>
+    <string name="licenses_osm_body">여권 지도의 34개 성·시 경계와 '내 주변' 지도의 모든 장소. © OpenStreetMap contributors, Open Database License (ODbL) 1.0에 따릅니다.</string>
+    <string name="licenses_natural_earth_title">Natural Earth</string>
+    <string name="licenses_natural_earth_body">해안 지역의 경계를 잘라내는 데 쓰는 해안선. 퍼블릭 도메인입니다.</string>
+    <string name="licenses_wikipedia_title">Wikipedia</string>
+    <string name="licenses_wikipedia_body">장소 설명과 순위에 쓰는 최근 60일 조회수. CC BY-SA 4.0에 따릅니다.</string>
+    <string name="licenses_commons_title">Wikimedia Commons</string>
+    <string name="licenses_commons_body">장소에 표시되는 사진. 각 사진은 파일 페이지에 적힌 자체 라이선스를 따릅니다.</string>
+    <string name="licenses_footer">당신이 찍은 사진은 당신의 것입니다. 이 기기에 남아 있고, 인식을 위해 Gemini로 보낼 때만 기기를 떠납니다.</string>
+    <string name="settings_licenses">라이선스와 데이터 출처</string>
+    <string name="settings_licenses_summary">OpenStreetMap · Wikipedia · Natural Earth</string>
     <!-- 컬렉션: 가이드 보기 -->
     <string name="collection_show_guide">알아보는 법 보기</string>
     <string name="collection_show_board">격자로 보기</string>

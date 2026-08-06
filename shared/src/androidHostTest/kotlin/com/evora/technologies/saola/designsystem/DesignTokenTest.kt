@@ -490,6 +490,12 @@ class DesignTokenTest {
          * where two titled pages sit side by side be the one arrangement nothing checks, and
          * a hand-rolled header there is *more* visible than on a phone, not less: the
          * traveller sees it next to a compliant one rather than four seconds after it.
+         *
+         * **`LicensesScreen.kt` is in the list although it has no ViewModel.** This rule is
+         * about what a page *draws*, not about what holds its state — and the licences page is
+         * the plainest kind of document screen there is: a title band over a scroll. It is also
+         * the one most likely to be written by whoever is in a hurry to satisfy a licence
+         * obligation, which is exactly when a hand-rolled `Text` in a `Row` gets typed.
          */
         val HEADER_OWNERS = listOf(
             "JournalScreen.kt",
@@ -506,6 +512,7 @@ class DesignTokenTest {
             "TranslationScreen.kt",
             "ExploreScreen.kt",
             "ExploreTabletScreen.kt",
+            "LicensesScreen.kt",
         )
     }
 }

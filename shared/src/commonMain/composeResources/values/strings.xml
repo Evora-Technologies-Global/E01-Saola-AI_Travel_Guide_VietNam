@@ -395,6 +395,23 @@
     <string name="settings_sovereignty">Our position on the East Sea</string>
     <string name="settings_sovereignty_summary">Hoàng Sa &amp; Trường Sa · Việt Nam</string>
 
+    <!-- Data sources and licences -->
+    <string name="map_source_osm">© OpenStreetMap contributors</string>
+    <string name="licenses_title">Licences and data sources</string>
+    <string name="licenses_kicker">Credits</string>
+    <string name="licenses_intro">Saola is built on open data. Here is where each thing you see comes from, and the licence it carries.</string>
+    <string name="licenses_open">Open the licence</string>
+    <string name="licenses_osm_title">OpenStreetMap</string>
+    <string name="licenses_osm_body">The 34 province boundaries on the passport map, and every place on the Around you map. © OpenStreetMap contributors, under the Open Database License (ODbL) 1.0.</string>
+    <string name="licenses_natural_earth_title">Natural Earth</string>
+    <string name="licenses_natural_earth_body">The coastline the coastal provinces are clipped against. Public domain.</string>
+    <string name="licenses_wikipedia_title">Wikipedia</string>
+    <string name="licenses_wikipedia_body">Place descriptions, and the 60-day readership the ranking is built on. Under CC BY-SA 4.0.</string>
+    <string name="licenses_commons_title">Wikimedia Commons</string>
+    <string name="licenses_commons_body">The photographs shown for a place. Each carries its own licence, stated on its file page.</string>
+    <string name="licenses_footer">Your own photographs are yours. They stay on this device, and leave it only when one is sent to Gemini to be recognised.</string>
+    <string name="settings_licenses">Licences and data sources</string>
+    <string name="settings_licenses_summary">OpenStreetMap · Wikipedia · Natural Earth</string>
     <!-- Collection: guide mode -->
     <string name="collection_show_guide">Show how to recognise these</string>
     <string name="collection_show_board">Show the board</string>

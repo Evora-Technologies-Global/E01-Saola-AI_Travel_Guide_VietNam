@@ -8,6 +8,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.evora.technologies.saola.mobile.feature.licenses.LicensesRoute
 import com.evora.technologies.saola.mobile.feature.translate.TranslationRoute
 import com.evora.technologies.saola.navigation.Routes
 import com.evora.technologies.saola.navigation.navigateToTopLevel
@@ -115,7 +116,14 @@ internal fun SaolaTabletNavHost(navController: NavHostController) {
         composable(Routes.SETTINGS) {
             SettingsTabletRoute(
                 onOpenSovereignty = { navController.navigate(Routes.SOVEREIGNTY) },
+                onOpenLicenses = { navController.navigate(Routes.LICENSES) },
             )
+        }
+
+        // The phone's screen, like `Routes.TRANSLATION` below and for the same reason: the
+        // licences page is a scrolling document, which is the same picture at any width.
+        composable(Routes.LICENSES) {
+            LicensesRoute(onBack = navController::popBackStack)
         }
 
         composable(Routes.DISCOVERY) { entry ->

@@ -357,6 +357,23 @@
     <string name="settings_sovereignty">Lập trường của chúng tôi về Biển Đông</string>
     <string name="settings_sovereignty_summary">Hoàng Sa &amp; Trường Sa · Việt Nam</string>
 
+    <!-- Nguồn dữ liệu và giấy phép -->
+    <string name="map_source_osm">© OpenStreetMap contributors</string>
+    <string name="licenses_title">Giấy phép và nguồn dữ liệu</string>
+    <string name="licenses_kicker">Ghi nhận</string>
+    <string name="licenses_intro">Saola dựng trên dữ liệu mở. Đây là nguồn của từng thứ bạn nhìn thấy, và giấy phép đi kèm.</string>
+    <string name="licenses_open">Mở giấy phép</string>
+    <string name="licenses_osm_title">OpenStreetMap</string>
+    <string name="licenses_osm_body">Ranh giới 34 tỉnh thành trên bản đồ hộ chiếu, và mọi địa điểm trên bản đồ Quanh bạn. © OpenStreetMap contributors, theo Open Database License (ODbL) 1.0.</string>
+    <string name="licenses_natural_earth_title">Natural Earth</string>
+    <string name="licenses_natural_earth_body">Đường bờ biển dùng để cắt ranh giới các tỉnh ven biển. Thuộc phạm vi công cộng.</string>
+    <string name="licenses_wikipedia_title">Wikipedia</string>
+    <string name="licenses_wikipedia_body">Mô tả địa điểm, và lượt đọc 60 ngày gần nhất dùng để xếp hạng. Theo CC BY-SA 4.0.</string>
+    <string name="licenses_commons_title">Wikimedia Commons</string>
+    <string name="licenses_commons_body">Ảnh minh hoạ cho một địa điểm. Mỗi tấm theo giấy phép riêng ghi trên trang mô tả của nó.</string>
+    <string name="licenses_footer">Ảnh bạn chụp là của bạn. Chúng nằm trên máy này, và chỉ rời đi khi được gửi tới Gemini để nhận diện.</string>
+    <string name="settings_licenses">Giấy phép và nguồn dữ liệu</string>
+    <string name="settings_licenses_summary">OpenStreetMap · Wikipedia · Natural Earth</string>
     <!-- Bộ sưu tập: chế độ hướng dẫn -->
     <string name="collection_show_guide">Xem cách nhận biết</string>
     <string name="collection_show_board">Xem dạng lưới</string>

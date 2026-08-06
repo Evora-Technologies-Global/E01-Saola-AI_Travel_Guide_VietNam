@@ -28,6 +28,7 @@ import com.evora.technologies.saola.mobile.feature.discovery.DiscoveryRoute
 import com.evora.technologies.saola.mobile.feature.explore.ExploreRoute
 import com.evora.technologies.saola.mobile.feature.journal.JournalRoute
 import com.evora.technologies.saola.mobile.feature.passport.PassportRoute
+import com.evora.technologies.saola.mobile.feature.licenses.LicensesRoute
 import com.evora.technologies.saola.mobile.feature.settings.SettingsRoute
 import com.evora.technologies.saola.mobile.feature.sovereignty.SovereigntyRoute
 import com.evora.technologies.saola.mobile.feature.translate.TranslationRoute
@@ -183,7 +184,12 @@ private fun SaolaNavHost(navController: NavHostController) {
         composable(Routes.SETTINGS) {
             SettingsRoute(
                 onOpenSovereignty = { navController.navigate(Routes.SOVEREIGNTY) },
+                onOpenLicenses = { navController.navigate(Routes.LICENSES) },
             )
+        }
+
+        composable(Routes.LICENSES) {
+            LicensesRoute(onBack = navController::popBackStack)
         }
 
         composable(Routes.DISCOVERY) {

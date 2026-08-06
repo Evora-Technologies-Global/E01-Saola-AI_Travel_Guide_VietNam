@@ -28,6 +28,7 @@ import com.evora.technologies.saola.feature.settings.component.ApiKeyCard
 import com.evora.technologies.saola.feature.settings.component.ClearHistoryDialog
 import com.evora.technologies.saola.feature.settings.component.DestructiveRow
 import com.evora.technologies.saola.feature.settings.component.ModelPicker
+import com.evora.technologies.saola.feature.settings.component.NavRow
 import com.evora.technologies.saola.feature.settings.component.SettingsCard
 import com.evora.technologies.saola.feature.settings.component.SettingsFooter
 import com.evora.technologies.saola.feature.settings.component.SovereigntyCard
@@ -37,6 +38,8 @@ import com.evora.technologies.saola.resources.Res
 import com.evora.technologies.saola.resources.settings_clear_history
 import com.evora.technologies.saola.resources.settings_clear_history_summary
 import com.evora.technologies.saola.resources.settings_kicker
+import com.evora.technologies.saola.resources.settings_licenses
+import com.evora.technologies.saola.resources.settings_licenses_summary
 import com.evora.technologies.saola.resources.settings_section_about
 import com.evora.technologies.saola.resources.settings_section_ai
 import com.evora.technologies.saola.resources.settings_section_appearance
@@ -69,6 +72,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun SettingsTabletRoute(
     onOpenSovereignty: () -> Unit,
+    onOpenLicenses: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: SettingsViewModel = koinViewModel(),
 ) {
@@ -78,6 +82,7 @@ fun SettingsTabletRoute(
             onIntent = onIntent,
             snackbarHostState = snackbarHostState,
             onOpenSovereignty = onOpenSovereignty,
+            onOpenLicenses = onOpenLicenses,
             modifier = modifier,
         )
     }
@@ -89,6 +94,7 @@ private fun SettingsTabletScreen(
     onIntent: (SettingsIntent) -> Unit,
     snackbarHostState: SnackbarHostState,
     onOpenSovereignty: () -> Unit,
+    onOpenLicenses: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier.fillMaxSize()) {
@@ -120,7 +126,10 @@ private fun SettingsTabletScreen(
                         ExperienceGroup(state = state, onIntent = onIntent)
                         AppearanceGroup(state = state, onIntent = onIntent)
                         DataGroup(onIntent = onIntent)
-                        AboutGroup(onOpenSovereignty = onOpenSovereignty)
+                        AboutGroup(
+                            onOpenSovereignty = onOpenSovereignty,
+                            onOpenLicenses = onOpenLicenses,
+                        )
                     }
                 }
             }
@@ -193,9 +202,19 @@ private fun ColumnScope.DataGroup(onIntent: (SettingsIntent) -> Unit) {
 
 /** The statement, and the version — the foot of the page, in the column that has room for it. */
 @Composable
-private fun ColumnScope.AboutGroup(onOpenSovereignty: () -> Unit) {
+private fun ColumnScope.AboutGroup(
+    onOpenSovereignty: () -> Unit,
+    onOpenLicenses: () -> Unit,
+) {
     SectionHeader(stringResource(Res.string.settings_section_about))
     SovereigntyCard(onClick = onOpenSovereignty)
+    SettingsCard {
+        NavRow(
+            title = stringResource(Res.string.settings_licenses),
+            summary = stringResource(Res.string.settings_licenses_summary),
+            onClick = onOpenLicenses,
+        )
+    }
     SettingsFooter()
 }
 

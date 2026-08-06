@@ -22,6 +22,7 @@ import com.evora.technologies.saola.feature.settings.component.ApiKeyCard
 import com.evora.technologies.saola.feature.settings.component.ClearHistoryDialog
 import com.evora.technologies.saola.feature.settings.component.DestructiveRow
 import com.evora.technologies.saola.feature.settings.component.ModelPicker
+import com.evora.technologies.saola.feature.settings.component.NavRow
 import com.evora.technologies.saola.feature.settings.component.SettingsCard
 import com.evora.technologies.saola.feature.settings.component.SettingsFooter
 import com.evora.technologies.saola.feature.settings.component.SovereigntyCard
@@ -31,6 +32,8 @@ import com.evora.technologies.saola.resources.Res
 import com.evora.technologies.saola.resources.settings_clear_history
 import com.evora.technologies.saola.resources.settings_clear_history_summary
 import com.evora.technologies.saola.resources.settings_kicker
+import com.evora.technologies.saola.resources.settings_licenses
+import com.evora.technologies.saola.resources.settings_licenses_summary
 import com.evora.technologies.saola.resources.settings_section_about
 import com.evora.technologies.saola.resources.settings_section_ai
 import com.evora.technologies.saola.resources.settings_section_appearance
@@ -60,6 +63,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun SettingsRoute(
     onOpenSovereignty: () -> Unit,
+    onOpenLicenses: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: SettingsViewModel = koinViewModel(),
 ) {
@@ -69,6 +73,7 @@ fun SettingsRoute(
             onIntent = onIntent,
             snackbarHostState = snackbarHostState,
             onOpenSovereignty = onOpenSovereignty,
+            onOpenLicenses = onOpenLicenses,
             modifier = modifier,
         )
     }
@@ -80,6 +85,7 @@ private fun SettingsScreen(
     onIntent: (SettingsIntent) -> Unit,
     snackbarHostState: SnackbarHostState,
     onOpenSovereignty: () -> Unit,
+    onOpenLicenses: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -162,10 +168,23 @@ private fun SettingsScreen(
                 SectionHeader(stringResource(Res.string.settings_section_about))
             }
             item(key = "sovereignty") {
-                // The one row here rather than in "Experience": it is not a setting. It is the
-                // way back to something the app has already said once, on first launch, and
-                // nothing about it can be turned off.
+                // Here rather than in "Experience": it is not a setting. It is the way back to
+                // something the app has already said once, on first launch, and nothing about
+                // it can be turned off.
                 SovereigntyCard(onClick = onOpenSovereignty)
+            }
+
+            item(key = "licenses") {
+                // Under "About" for the same reason, and it is the app's end of a bargain
+                // rather than a preference: ODbL, CC BY-SA and Commons' per-file terms all
+                // ask to be credited, and this row is where the credit is stated in full.
+                SettingsCard {
+                    NavRow(
+                        title = stringResource(Res.string.settings_licenses),
+                        summary = stringResource(Res.string.settings_licenses_summary),
+                        onClick = onOpenLicenses,
+                    )
+                }
             }
 
             item(key = "footer") { SettingsFooter() }

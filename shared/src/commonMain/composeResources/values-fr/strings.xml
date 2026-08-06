@@ -363,6 +363,23 @@
     <string name="settings_sovereignty">Notre position sur la Biển Đông</string>
     <string name="settings_sovereignty_summary">Hoàng Sa &amp; Trường Sa · Việt Nam</string>
 
+    <!-- Sources de données et licences -->
+    <string name="map_source_osm">© OpenStreetMap contributors</string>
+    <string name="licenses_title">Licences et sources des données</string>
+    <string name="licenses_kicker">Crédits</string>
+    <string name="licenses_intro">Saola repose sur des données ouvertes. Voici d'où vient chaque chose que vous voyez, et sous quelle licence.</string>
+    <string name="licenses_open">Ouvrir la licence</string>
+    <string name="licenses_osm_title">OpenStreetMap</string>
+    <string name="licenses_osm_body">Les limites des 34 provinces sur la carte du passeport, et tous les lieux de la carte Autour de vous. © OpenStreetMap contributors, sous Open Database License (ODbL) 1.0.</string>
+    <string name="licenses_natural_earth_title">Natural Earth</string>
+    <string name="licenses_natural_earth_body">Le trait de côte sur lequel les provinces littorales sont découpées. Domaine public.</string>
+    <string name="licenses_wikipedia_title">Wikipedia</string>
+    <string name="licenses_wikipedia_body">Les descriptions des lieux, et les consultations sur 60 jours qui servent au classement. Sous CC BY-SA 4.0.</string>
+    <string name="licenses_commons_title">Wikimedia Commons</string>
+    <string name="licenses_commons_body">Les photographies montrées pour un lieu. Chacune porte sa propre licence, indiquée sur sa page de fichier.</string>
+    <string name="licenses_footer">Vos photographies vous appartiennent. Elles restent sur cet appareil et n'en sortent que lorsqu'une d'elles part vers Gemini pour être reconnue.</string>
+    <string name="settings_licenses">Licences et sources des données</string>
+    <string name="settings_licenses_summary">OpenStreetMap · Wikipedia · Natural Earth</string>
     <!-- Collection : mode guide -->
     <string name="collection_show_guide">Voir comment les reconnaître</string>
     <string name="collection_show_board">Voir la grille</string>

@@ -21,6 +21,16 @@ object Routes {
     const val EXPLORE = "explore"
     const val SETTINGS = "settings"
 
+    /**
+     * Where the data credits are stated in full.
+     *
+     * Reached from Settings only. Deliberately not in [TOP_LEVEL] and deliberately not a
+     * pane of anything: it is a licence obligation the traveller reads once, not a place
+     * they come back to — and both shells open the same document, which is why it is one
+     * of the two routes registered identically rather than mapped per branch.
+     */
+    const val LICENSES = "licenses"
+
     private const val DISCOVERY_BASE = "discovery"
     private const val CHAT_BASE = "chat"
     private const val TRANSLATION_BASE = "translation"

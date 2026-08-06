@@ -359,6 +359,23 @@
     <string name="settings_sovereignty">Biển Đông についての私たちの立場</string>
     <string name="settings_sovereignty_summary">Hoàng Sa &amp; Trường Sa · Việt Nam</string>
 
+    <!-- データ出典とライセンス -->
+    <string name="map_source_osm">© OpenStreetMap contributors</string>
+    <string name="licenses_title">ライセンスとデータ出典</string>
+    <string name="licenses_kicker">クレジット</string>
+    <string name="licenses_intro">Saola はオープンデータの上に成り立っています。画面に見えるものの出典と、そのライセンスです。</string>
+    <string name="licenses_open">ライセンスを開く</string>
+    <string name="licenses_osm_title">OpenStreetMap</string>
+    <string name="licenses_osm_body">パスポート地図の34省・市の境界と、「あなたの周り」の地図にあるすべての場所。© OpenStreetMap contributors、Open Database License (ODbL) 1.0 に基づきます。</string>
+    <string name="licenses_natural_earth_title">Natural Earth</string>
+    <string name="licenses_natural_earth_body">沿岸の省の境界を切り出すために使う海岸線。パブリックドメインです。</string>
+    <string name="licenses_wikipedia_title">Wikipedia</string>
+    <string name="licenses_wikipedia_body">場所の説明と、順位づけに使う直近60日の閲覧数。CC BY-SA 4.0 に基づきます。</string>
+    <string name="licenses_commons_title">Wikimedia Commons</string>
+    <string name="licenses_commons_body">場所に表示される写真。各写真はファイルページに記載された独自のライセンスに従います。</string>
+    <string name="licenses_footer">あなたが撮った写真はあなたのものです。この端末に留まり、認識のために Gemini へ送るときだけ端末を離れます。</string>
+    <string name="settings_licenses">ライセンスとデータ出典</string>
+    <string name="settings_licenses_summary">OpenStreetMap · Wikipedia · Natural Earth</string>
     <!-- コレクション: ガイド表示 -->
     <string name="collection_show_guide">見分け方を表示</string>
     <string name="collection_show_board">一覧を表示</string>

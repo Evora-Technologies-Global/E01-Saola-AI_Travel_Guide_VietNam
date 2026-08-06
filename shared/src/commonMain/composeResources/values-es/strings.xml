@@ -364,6 +364,23 @@
     <string name="settings_sovereignty">Nuestra posición sobre el Biển Đông</string>
     <string name="settings_sovereignty_summary">Hoàng Sa &amp; Trường Sa · Việt Nam</string>
 
+    <!-- Fuentes de datos y licencias -->
+    <string name="map_source_osm">© OpenStreetMap contributors</string>
+    <string name="licenses_title">Licencias y fuentes de datos</string>
+    <string name="licenses_kicker">Créditos</string>
+    <string name="licenses_intro">Saola se apoya en datos abiertos. Aquí está de dónde viene cada cosa que ves, y con qué licencia.</string>
+    <string name="licenses_open">Abrir la licencia</string>
+    <string name="licenses_osm_title">OpenStreetMap</string>
+    <string name="licenses_osm_body">Los límites de las 34 provincias del mapa del pasaporte, y todos los lugares del mapa A tu alrededor. © OpenStreetMap contributors, bajo Open Database License (ODbL) 1.0.</string>
+    <string name="licenses_natural_earth_title">Natural Earth</string>
+    <string name="licenses_natural_earth_body">La línea de costa con la que se recortan las provincias costeras. Dominio público.</string>
+    <string name="licenses_wikipedia_title">Wikipedia</string>
+    <string name="licenses_wikipedia_body">Las descripciones de los lugares, y las lecturas de 60 días con las que se ordenan. Bajo CC BY-SA 4.0.</string>
+    <string name="licenses_commons_title">Wikimedia Commons</string>
+    <string name="licenses_commons_body">Las fotografías que se muestran de un lugar. Cada una lleva su propia licencia, indicada en su página de archivo.</string>
+    <string name="licenses_footer">Tus fotografías son tuyas. Se quedan en este dispositivo y solo salen cuando una se envía a Gemini para reconocerla.</string>
+    <string name="settings_licenses">Licencias y fuentes de datos</string>
+    <string name="settings_licenses_summary">OpenStreetMap · Wikipedia · Natural Earth</string>
     <!-- Colección: modo guía -->
     <string name="collection_show_guide">Ver cómo reconocerlos</string>
     <string name="collection_show_board">Ver la cuadrícula</string>

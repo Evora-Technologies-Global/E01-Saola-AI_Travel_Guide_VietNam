@@ -360,6 +360,23 @@
     <string name="settings_sovereignty">我们对 Biển Đông 的立场</string>
     <string name="settings_sovereignty_summary">Hoàng Sa &amp; Trường Sa · Việt Nam</string>
 
+    <!-- 数据来源与许可 -->
+    <string name="map_source_osm">© OpenStreetMap contributors</string>
+    <string name="licenses_title">许可与数据来源</string>
+    <string name="licenses_kicker">署名</string>
+    <string name="licenses_intro">Saola 建立在开放数据之上。以下是你所看到的每一项的来源，以及它所附的许可。</string>
+    <string name="licenses_open">打开许可协议</string>
+    <string name="licenses_osm_title">OpenStreetMap</string>
+    <string name="licenses_osm_body">护照地图上34个省市的边界，以及“你的周围”地图上的所有地点。© OpenStreetMap contributors，依据 Open Database License (ODbL) 1.0。</string>
+    <string name="licenses_natural_earth_title">Natural Earth</string>
+    <string name="licenses_natural_earth_body">用来裁切沿海省份边界的海岸线。属于公有领域。</string>
+    <string name="licenses_wikipedia_title">Wikipedia</string>
+    <string name="licenses_wikipedia_body">地点的介绍，以及用于排序的近60天阅读量。依据 CC BY-SA 4.0。</string>
+    <string name="licenses_commons_title">Wikimedia Commons</string>
+    <string name="licenses_commons_body">地点所配的照片。每张照片依据其文件页上写明的各自许可。</string>
+    <string name="licenses_footer">你拍的照片是你的。它们留在这台设备上，只有送去 Gemini 识别时才会离开。</string>
+    <string name="settings_licenses">许可与数据来源</string>
+    <string name="settings_licenses_summary">OpenStreetMap · Wikipedia · Natural Earth</string>
     <!-- 收藏：指南模式 -->
     <string name="collection_show_guide">看怎么认出来</string>
     <string name="collection_show_board">看格子图</string>
