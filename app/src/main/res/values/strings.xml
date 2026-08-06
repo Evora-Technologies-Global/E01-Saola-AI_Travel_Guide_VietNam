@@ -6,5 +6,5 @@
       Everything the UI renders now lives in `shared/src/commonMain/composeResources`,
       which both platforms read. The manifest cannot reach those, so this one stays.
     -->
-    <string name="app_name">VietLens AI</string>
+    <string name="app_name">Saola</string>
 </resources>

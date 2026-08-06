@@ -124,11 +124,11 @@ androidComponents {
  * Through the provider API, so an override on the command line invalidates the configuration
  * cache the way editing the file does.
  */
-val vietlensVersionName: String = providers.gradleProperty("vietlens.versionName").get()
-val vietlensVersionCode: Int = providers.gradleProperty("vietlens.versionCode").get().toInt()
+val saolaVersionName: String = providers.gradleProperty("saola.versionName").get()
+val saolaVersionCode: Int = providers.gradleProperty("saola.versionCode").get().toInt()
 
 android {
-    namespace = "com.duylt.trave.vietlensai"
+    namespace = "com.evora.technologies.saola"
     compileSdk {
         version = release(37)
     }
@@ -152,16 +152,16 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.duylt.trave.vietlensai"
+        applicationId = "com.evora.technologies.saola"
         minSdk = 26
         targetSdk = 36
         // Read from gradle.properties rather than written here, because the same two values
         // are also compiled into `:shared` (the Settings screen shows the version) and that
         // module cannot see this block. Hard-coding both had already let them drift: the APK
         // said 1.0 while the footer said 1.0.0. Overridable per invocation with
-        // `-Pvietlens.versionName=…`, which is what a CI job that stamps builds would use.
-        versionCode = vietlensVersionCode
-        versionName = vietlensVersionName
+        // `-Psaola.versionName=…`, which is what a CI job that stamps builds would use.
+        versionCode = saolaVersionCode
+        versionName = saolaVersionName
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -180,7 +180,7 @@ android {
         // computed once and frozen into the cache entry, so it only rolls over
         // when something else invalidates configuration.
         val buildDate = SimpleDateFormat("dd.MM.yyyy", Locale.US).format(Date())
-        base.archivesName.set("VietLensAI_v${versionName}_build${versionCode}_$buildDate")
+        base.archivesName.set("Saola_v${versionName}_build${versionCode}_$buildDate")
     }
 
     buildTypes {
@@ -247,7 +247,7 @@ android {
             // AGP rejects resource shrinking without code shrinking.
             isShrinkResources = false
             // Distinguishes it in Android's app info. Not in the Settings footer:
-            // that reads `vietlens.versionName` from :shared, which has no build type.
+            // that reads `saola.versionName` from :shared, which has no build type.
             versionNameSuffix = "-fast"
         }
     }

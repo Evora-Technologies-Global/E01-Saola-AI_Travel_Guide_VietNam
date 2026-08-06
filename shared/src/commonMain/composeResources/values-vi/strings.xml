@@ -11,12 +11,12 @@
 
     <!-- Camera -->
     <string name="camera_permission_title">Cần quyền truy cập camera</string>
-    <string name="camera_permission_body">VietLens dùng camera để nhận diện di tích, món ăn và biển báo quanh bạn. Ảnh chỉ được lưu trên máy của bạn.</string>
+    <string name="camera_permission_body">Saola dùng camera để nhận diện di tích, món ăn và biển báo quanh bạn. Ảnh chỉ được lưu trên máy của bạn.</string>
     <string name="camera_permission_grant">Cho phép camera</string>
-    <string name="camera_permission_blocked_body">Quyền camera đang tắt cho VietLens và Android sẽ không hỏi lại nữa. Bạn hãy bật lại trong cài đặt ứng dụng để tiếp tục.</string>
+    <string name="camera_permission_blocked_body">Quyền camera đang tắt cho Saola và Android sẽ không hỏi lại nữa. Bạn hãy bật lại trong cài đặt ứng dụng để tiếp tục.</string>
     <string name="location_permission_title">Đóng dấu hộ chiếu</string>
     <string name="location_permission_body">Có vị trí, mỗi tấm ảnh sẽ biết mình được chụp ở tỉnh nào, và tỉnh đó hiện lên trên bản đồ hộ chiếu của bạn.</string>
-    <string name="location_permission_blocked_body">Quyền vị trí đang tắt cho VietLens và Android sẽ không hỏi lại nữa. Bạn hãy bật lại trong cài đặt ứng dụng để ảnh có thể đóng dấu lên bản đồ hộ chiếu.</string>
+    <string name="location_permission_blocked_body">Quyền vị trí đang tắt cho Saola và Android sẽ không hỏi lại nữa. Bạn hãy bật lại trong cài đặt ứng dụng để ảnh có thể đóng dấu lên bản đồ hộ chiếu.</string>
     <string name="location_permission_grant">Cho phép</string>
     <string name="location_permission_later">Để sau</string>
     <string name="permission_open_settings">Mở cài đặt</string>
@@ -95,7 +95,7 @@
     <string name="discovery_listen_meta">%1$d phút · tường thuật bằng %2$s</string>
     <string name="discovery_favorite_saved">Đã lưu</string>
     <string name="discovery_share">Chia sẻ</string>
-    <string name="discovery_share_body">%1$s\n\n%2$s\n\nChia sẻ từ VietLens AI</string>
+    <string name="discovery_share_body">%1$s\n\n%2$s\n\nChia sẻ từ Saola</string>
     <plurals name="discovery_notice_count">
         <item quantity="other">%1$d điều đáng chú ý</item>
     </plurals>
@@ -120,11 +120,31 @@
     <string name="discovery_note_camera_flip">Đổi camera</string>
     <!-- Asked in the app's own words before the system dialog, which never says why. -->
     <string name="discovery_note_camera_permission_title">Chụp một tấm cho ghi chú này?</string>
-    <string name="discovery_note_camera_permission_body">VietLens cần quyền camera để chụp tấm ảnh bạn giữ cùng ghi chú. Ảnh chỉ lưu trên máy của bạn và không được tải lên đâu cả.</string>
-    <string name="discovery_note_camera_permission_blocked_body">Quyền camera đang tắt cho VietLens và Android sẽ không hỏi lại nữa. Bạn hãy bật lại trong cài đặt ứng dụng để chụp ảnh — trong lúc đó vẫn có thể chọn ảnh từ thư viện.</string>
+    <string name="discovery_note_camera_permission_body">Saola cần quyền camera để chụp tấm ảnh bạn giữ cùng ghi chú. Ảnh chỉ lưu trên máy của bạn và không được tải lên đâu cả.</string>
+    <string name="discovery_note_camera_permission_blocked_body">Quyền camera đang tắt cho Saola và Android sẽ không hỏi lại nữa. Bạn hãy bật lại trong cài đặt ứng dụng để chụp ảnh — trong lúc đó vẫn có thể chọn ảnh từ thư viện.</string>
     <string name="discovery_note_camera_permission_allow">Đồng ý</string>
     <string name="discovery_note_camera_permission_deny">Từ chối</string>
     <string name="discovery_note_in_diary">Hướng dẫn viên sẽ dùng ghi chú này khi viết nhật ký ngày cho bạn.</string>
+
+    <!-- Report -->
+    <string name="report_again">Báo cáo lại kết quả này</string>
+    <string name="report_title">Báo cáo kết quả này</string>
+    <string name="report_body">Cho chúng tôi biết chỗ nào chưa đúng. Không có gì được gửi đi cho tới khi bạn chọn nơi gửi.</string>
+    <string name="report_reason_wrong_name">Sai tên hoặc sai địa danh</string>
+    <string name="report_reason_wrong_facts">Có chi tiết sai trong bài</string>
+    <string name="report_reason_inappropriate">Nội dung không phù hợp</string>
+    <string name="report_reason_other">Lý do khác</string>
+    <string name="report_note_placeholder">Sai ở chỗ nào? (không bắt buộc)</string>
+    <string name="report_note_count">%1$d / %2$d</string>
+    <string name="report_attachment_photo">Ảnh của bạn và thông tin của kết quả này sẽ được gửi kèm.</string>
+    <string name="report_attachment_none">Thông tin của kết quả này sẽ được gửi kèm.</string>
+    <string name="report_send">Gửi báo cáo</string>
+    <string name="report_cancel">Để sau</string>
+    <string name="report_mail_subject">Saola báo cáo — %1$s</string>
+    <string name="report_mail_intro">Một người dùng đã báo cáo một kết quả trong Saola.</string>
+    <string name="report_mail_reason">Lý do: %1$s</string>
+    <string name="report_mail_note">Người dùng nói: %1$s</string>
+    <string name="report_mail_to">Vui lòng gửi tới %1$s</string>
 
     <!-- Chat -->
     <string name="chat_title">Hỏi hướng dẫn viên</string>
@@ -192,7 +212,7 @@
     <string name="explore_empty_body">Khu này có ít địa điểm trên OpenStreetMap. Thử lại khi bạn đã đi xa hơn, hoặc kéo bản đồ để xem xung quanh.</string>
     <string name="explore_permission_title">Khám phá cần vị trí của bạn</string>
     <string name="explore_permission_body">Bản đồ lấy chỗ bạn đang đứng làm tâm và tìm những địa điểm đáng ghé trong bán kính 5 km. Vị trí chỉ được gửi đi với vai trò tâm của vòng tìm kiếm đó.</string>
-    <string name="explore_permission_blocked_body">Quyền vị trí đang tắt cho VietLens và hệ thống sẽ không hỏi lại nữa. Bật lại trong cài đặt ứng dụng để xem quanh bạn có gì.</string>
+    <string name="explore_permission_blocked_body">Quyền vị trí đang tắt cho Saola và hệ thống sẽ không hỏi lại nữa. Bật lại trong cài đặt ứng dụng để xem quanh bạn có gì.</string>
     <string name="explore_source_note">Địa điểm từ OpenStreetMap · mô tả và ảnh từ Wikipedia và Wikimedia Commons</string>
     <string name="explore_read_more">Đọc bài đầy đủ</string>
     <string name="explore_readers">%1$s lượt đọc</string>
@@ -215,23 +235,6 @@
     <!-- Settings -->
     <string name="settings_title">Cài đặt</string>
     <string name="settings_kicker">Tùy chọn</string>
-    <string name="settings_section_ai">Trí tuệ</string>
-    <string name="settings_api_key">Khóa API</string>
-    <string name="settings_api_key_set">Đang dùng khóa của bạn</string>
-    <string name="settings_api_key_default">Đang dùng khóa tích hợp sẵn trong ứng dụng</string>
-    <string name="settings_api_key_none">Chưa có khóa nào</string>
-    <string name="settings_api_key_active">Đang hoạt động</string>
-    <string name="settings_api_key_inactive">Chưa có khóa</string>
-    <string name="settings_api_key_hint">dán khóa của riêng bạn…</string>
-    <string name="settings_api_key_save">Lưu khóa</string>
-    <string name="settings_api_key_clear">Xóa</string>
-    <string name="settings_api_key_saved">Đã lưu khóa API</string>
-    <string name="settings_model_balanced">Cân bằng</string>
-    <string name="settings_model_balanced_summary">Đủ sâu, đủ nhanh để đọc một tờ thực đơn.</string>
-    <string name="settings_model_quick">Nhanh</string>
-    <string name="settings_model_quick_summary">Biển hiệu, nhãn, giá tiền. Rẻ nhất.</string>
-    <string name="settings_model_scholar">Chuyên sâu</string>
-    <string name="settings_model_scholar_summary">Lịch sử và văn hóa sâu nhất. Chậm hơn.</string>
     <string name="settings_section_experience">Trải nghiệm</string>
     <string name="settings_speak">Đọc to câu trả lời</string>
     <string name="settings_speak_summary">Đọc phần mô tả và câu trả lời trong khung chat</string>
@@ -246,7 +249,7 @@
     <string name="settings_clear_confirm_title">Xóa tất cả?</string>
     <string name="settings_clear_confirm_body">Thao tác này xóa vĩnh viễn mọi khám phá, ảnh, cuộc trò chuyện và nhật ký trên thiết bị.</string>
     <string name="settings_cleared">Đã xóa toàn bộ khám phá</string>
-    <string name="settings_footer">Làm tại Việt Nam · v%1$s</string>
+    <string name="settings_footer">Evora Technologies Global · v%1$s</string>
 
     <!-- Categories -->
     <string name="category_landmark">Di tích</string>
@@ -273,7 +276,7 @@
     <string name="action_close">Đóng</string>
 
     <!-- Errors -->
-    <string name="error_missing_api_key">Chưa có khóa API Gemini. Thêm khóa trong Cài đặt để bắt đầu nhận diện.</string>
+    <string name="error_missing_api_key">Bản dựng này chưa có khóa Gemini nên chưa thể nhận diện.</string>
     <string name="error_invalid_api_key">Khóa API bị từ chối. Kiểm tra lại trong Cài đặt.</string>
     <string name="error_no_connection">Không có kết nối mạng. Việc nhận diện cần kết nối tới Gemini.</string>
     <string name="error_timeout">Quá thời gian chờ. Thử lại nhé.</string>
@@ -336,4 +339,35 @@
     <string name="settings_section_about">Về ứng dụng</string>
     <string name="settings_sovereignty">Lập trường của chúng tôi về Biển Đông</string>
     <string name="settings_sovereignty_summary">Hoàng Sa &amp; Trường Sa · Việt Nam</string>
+
+    <!-- Nguồn dữ liệu và giấy phép -->
+    <string name="map_source_osm">© OpenStreetMap contributors</string>
+    <string name="licenses_title">Giấy phép và nguồn dữ liệu</string>
+    <string name="licenses_kicker">Ghi nhận</string>
+    <string name="licenses_intro">Saola dựng trên dữ liệu mở. Đây là nguồn của từng thứ bạn nhìn thấy, và giấy phép đi kèm.</string>
+    <string name="licenses_open">Mở giấy phép</string>
+    <string name="licenses_osm_title">OpenStreetMap</string>
+    <string name="licenses_osm_body">Ranh giới 34 tỉnh thành trên bản đồ hộ chiếu, và mọi địa điểm trên bản đồ Quanh bạn. © OpenStreetMap contributors, theo Open Database License (ODbL) 1.0.</string>
+    <string name="licenses_natural_earth_title">Natural Earth</string>
+    <string name="licenses_natural_earth_body">Đường bờ biển dùng để cắt ranh giới các tỉnh ven biển. Thuộc phạm vi công cộng.</string>
+    <string name="licenses_wikipedia_title">Wikipedia</string>
+    <string name="licenses_wikipedia_body">Mô tả địa điểm, và lượt đọc 60 ngày gần nhất dùng để xếp hạng. Theo CC BY-SA 4.0.</string>
+    <string name="licenses_commons_title">Wikimedia Commons</string>
+    <string name="licenses_commons_body">Ảnh minh hoạ cho một địa điểm. Mỗi tấm theo giấy phép riêng ghi trên trang mô tả của nó.</string>
+    <string name="licenses_footer">Ảnh bạn chụp là của bạn. Chúng nằm trên máy này, và chỉ rời đi khi được gửi tới Gemini để nhận diện.</string>
+    <string name="settings_licenses">Giấy phép và nguồn dữ liệu</string>
+    <string name="settings_licenses_summary">OpenStreetMap · Wikipedia · Natural Earth</string>
+    <string name="settings_privacy_policy">Chính sách bảo mật</string>
+    <string name="settings_terms_of_service">Điều khoản dịch vụ</string>
+    <string name="settings_legal_summary">Mở trong trình duyệt</string>
+    <!-- Bộ sưu tập: chế độ hướng dẫn -->
+    <string name="collection_show_guide">Xem cách nhận biết</string>
+    <string name="collection_show_board">Xem dạng lưới</string>
+    <string name="discovery_collected_kicker">Trong bộ sưu tập</string>
+    <string name="discovery_collected_open">Mở bộ sưu tập</string>
+    <!-- Bản đồ, đọc bằng trình đọc màn hình -->
+    <string name="passport_map_a11y">Bản đồ Việt Nam, đã đến %1$d trên %2$d tỉnh thành</string>
+    <string name="passport_province_a11y">%1$s, %2$s</string>
+    <string name="passport_province_a11y_open">Xem chi tiết tỉnh này</string>
+    <string name="explore_map_a11y">Bản đồ các địa điểm quanh bạn</string>
 </resources>

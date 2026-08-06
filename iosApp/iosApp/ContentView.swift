@@ -1,6 +1,6 @@
 import SwiftUI
 import UIKit
-import VietLensShared
+import SaolaShared
 
 /**
  Hands the shared Compose UI a `UIViewController` to live in.
@@ -17,7 +17,7 @@ struct ContentView: View {
 private struct ComposeView: UIViewControllerRepresentable {
 
     func makeUIViewController(context: Context) -> UIViewController {
-        MainViewControllerKt.VietLensViewController()
+        MainViewControllerKt.SaolaViewController()
     }
 
     func updateUIViewController(_ uiViewController: UIViewController, context: Context) {

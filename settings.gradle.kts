@@ -25,7 +25,7 @@ dependencyResolutionManagement {
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 // No spaces: type-safe project accessors require a name matching [a-zA-Z]([A-Za-z0-9\-_])*
-rootProject.name = "VietLensAI"
+rootProject.name = "Saola"
 
 // Clean Architecture layering, now multiplatform end to end:
 //
@@ -34,7 +34,7 @@ rootProject.name = "VietLensAI"
 //   :data    common + androidMain + iosMain (Room, Ktor, DataStore, device capabilities)
 //     ^
 //   :shared  the whole presentation layer in Compose Multiplatform; also produces the
-//            `VietLensShared` framework that Xcode links
+//            `SaolaShared` framework that Xcode links
 //     ^
 //   :app     a thin Android application host
 //

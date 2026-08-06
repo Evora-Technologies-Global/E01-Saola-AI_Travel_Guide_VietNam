@@ -1,4 +1,4 @@
-# VietLens AI 🇻🇳
+# Saola 🇻🇳
 
 > Point the camera at a temple roof, a bowl of noodles or a street sign — the app recognises
 > it, tells the story behind it, and keeps it in your journey.
@@ -9,7 +9,7 @@
 
 ## 1. What this app is
 
-VietLens AI is a travel app that uses **Google Gemini** to turn the phone camera into a local
+Saola is a travel app that uses **Google Gemini** to turn the phone camera into a local
 guide.
 
 Instead of searching Google, reading Wikipedia and opening a separate translation app, the
@@ -49,13 +49,18 @@ map draws them.
 **🎴 Culture collection.** 61 things worth finding in Vietnam — phở, bánh chưng, the upturned
 eaves of a communal house, a basket boat, a stele on a stone tortoise, a gong. Each tile is a
 hatched square until you photograph the thing, and then it fills with **your own picture**. The
-board is full from the first launch, and it counts photographs you took weeks ago.
+board is full from the first launch, and it counts photographs you took weeks ago. A switch in
+the page header turns it between **Board** — the record of what you have photographed — and
+**Guide**: the same 61 entries with their recognition hints spelled out, *"a thin turmeric-yellow
+crêpe folded into a half-moon"* rather than only a name you already knew.
 
 **🧭 Explore.** A live map of what is worth walking to within **5 km**. The data comes from
 **OpenStreetMap + Wikipedia + Wikimedia Commons** — no API key, no billing. Ranked by
 Wikipedia readership over the last 60 days and by how carefully somebody mapped the place.
 **There are no star ratings**, because no open source carries them — better to be missing a
-number than to invent one.
+number than to invent one. Place names follow the device's language wherever OSM holds a
+translation, with the Vietnamese name under the title on the detail sheet — because the sign
+on the street still says the Vietnamese one.
 
 **📖 Travel journal.** Grouped by day, with an AI-written summary of each day and ideas for
 tomorrow.
@@ -72,10 +77,13 @@ right.
 
 ## 3. Screenshots
 
-Taken on Pixel 7 Pro, Pixel Tablet, iPhone 17 and iPad Pro 11" simulators, with the 24-place
-demo dataset from Sa Pa to Cần Thơ (see
+Retaken on 07.08.2026 on Pixel 7 Pro, Pixel Tablet, iPhone 17 and iPad Pro 11" simulators, with
+the 24-place demo dataset from Sa Pa to Cần Thơ (see
 [TechStack §10](TechStack-temp.md#10-demoing-it-and-the-seeded-data)); the pictures inside the
-app are real photographs from Wikimedia Commons.
+app are real photographs from Wikimedia Commons. The one exception is the tablet Explore shot,
+taken on a **Pixel 7 Pro forced to the Pixel Tablet's own metrics** (`wm size 2560x1600`,
+`wm density 320`) because the tablet AVD would not accept a mock location during the session —
+same window measurements, so the arrangement is the real one.
 
 ### Android — phone
 
@@ -105,30 +113,32 @@ The wide layout: a vertical navigation rail on the left and two content panes si
 
 ### iOS — iPhone
 
-| Journal | Passport | Collection | Discovery detail |
+| Lens | Journal | Passport | Collection |
 |---|---|---|---|
-| <img src="screenshots/ios-phone/01-journal.png" width="180" alt="Journal"> | <img src="screenshots/ios-phone/02-passport.png" width="180" alt="Passport"> | <img src="screenshots/ios-phone/03-collection.png" width="180" alt="Collection"> | <img src="screenshots/ios-phone/04-discovery.png" width="180" alt="Discovery"> |
+| <img src="screenshots/ios-phone/01-lens.png" width="180" alt="Lens"> | <img src="screenshots/ios-phone/02-journal.png" width="180" alt="Journal"> | <img src="screenshots/ios-phone/03-passport.png" width="180" alt="Passport"> | <img src="screenshots/ios-phone/04-collection.png" width="180" alt="Collection"> |
 
-| Chat | Explore (MapKit) | Settings |
-|---|---|---|
-| <img src="screenshots/ios-phone/05-chat.png" width="180" alt="Chat"> | <img src="screenshots/ios-phone/06-explore.png" width="180" alt="Explore"> | <img src="screenshots/ios-phone/07-settings.png" width="180" alt="Settings"> |
+| Discovery detail | Chat | Explore (MapKit) | Settings |
+|---|---|---|---|
+| <img src="screenshots/ios-phone/05-discovery.png" width="180" alt="Discovery"> | <img src="screenshots/ios-phone/06-chat.png" width="180" alt="Chat"> | <img src="screenshots/ios-phone/07-explore.png" width="180" alt="Explore"> | <img src="screenshots/ios-phone/08-settings.png" width="180" alt="Settings"> |
 
-> The Lens screen is absent from the iOS set because the iOS Simulator has no camera — the
-> viewfinder would be blank.
+> The viewfinder is blank in the Lens shots because the iOS Simulator has no camera. Everything
+> else on the screen — the modes, the shutter, the recent-capture pile — is real.
 
 ### iOS — iPad
 
-| Journal + passport | Collection | Article + ask the guide |
+| Lens | Journal + passport | Collection |
 |---|---|---|
-| <img src="screenshots/ios-ipad/01-journal.png" width="250" alt="Journal"> | <img src="screenshots/ios-ipad/02-collection.png" width="250" alt="Collection"> | <img src="screenshots/ios-ipad/03-discovery.png" width="250" alt="Discovery"> |
+| <img src="screenshots/ios-ipad/01-lens.png" width="250" alt="Lens"> | <img src="screenshots/ios-ipad/02-journal.png" width="250" alt="Journal"> | <img src="screenshots/ios-ipad/03-collection.png" width="250" alt="Collection"> |
 
-| Explore | Settings |
-|---|---|
-| <img src="screenshots/ios-ipad/04-explore.png" width="250" alt="Explore"> | <img src="screenshots/ios-ipad/05-settings.png" width="250" alt="Settings"> |
+| Article + ask the guide | Explore | Settings |
+|---|---|---|
+| <img src="screenshots/ios-ipad/04-discovery.png" width="250" alt="Discovery"> | <img src="screenshots/ios-ipad/05-explore.png" width="250" alt="Explore"> | <img src="screenshots/ios-ipad/06-settings.png" width="250" alt="Settings"> |
 
-> The iPad Explore shot shows twelve restaurants and no landmarks: Overpass (the OpenStreetMap
-> query server) rate-limits per IP, and after a day of repeated searches the sights half of the
-> query was refused. That is the app's real behaviour under throttling, not a layout fault.
+> **Three of the four Explore shots show restaurants and no landmarks.** Overpass (the
+> OpenStreetMap query server) rate-limits per IP, and the sights half of the query is the
+> heavier one, so it is refused first. That is the app's real behaviour under throttling, not a
+> layout fault — the iPhone shot was taken in a window where the limit had recovered and carries
+> the full **40 places** with landmarks, for comparison.
 
 ---
 
@@ -194,7 +204,7 @@ The full detail — 34-province map geometry, the Overpass query, R8/AGP, APK si
 |---|---|---|
 | Discoveries, conversations, notes, translations, day summaries | **Room (SQLite)** — five tables | The single source of truth; screens read it through `Flow`, so it works offline |
 | Photographs | **JPEG files** in the app's own directory | EXIF-corrected upright, downscaled to a 1024 px long edge |
-| Preferences (API key, model, theme, narration, location) | **DataStore Preferences** | |
+| Preferences (theme, narration, location) | **DataStore Preferences** | The API key and the model are **no longer here** as of 06.08.2026 — both are build decisions |
 | The 34 provinces and 61 catalogue entries | **Assets bundled in the app** | Read-only, no network needed |
 | Nearby-place data | **In memory** — 15 minutes / 300 m | Deliberately not on disk: this is data about where you *are*, and reopening the app onto last week's city would be wrong |
 
@@ -205,8 +215,12 @@ that no longer exists. That bug once deleted **every photograph** a user had.
 **What leaves the device:** the photo being recognised (to Gemini), the current coordinates (to
 OpenStreetMap / Wikipedia), and map tiles. Nothing else.
 
-**The Gemini API key** is read from `local.properties` at build time (never committed), or the
-user pastes their own under **Settings → API key**, which takes precedence.
+**The Gemini API key** is read from `local.properties` at build time (never committed), and from
+nowhere else. The paste-your-own field went with the whole *Intelligence* section on 06.08.2026:
+asking a traveller for an API key is asking them to hold a developer's credential, and two key
+sources mean the app's behaviour depends on which one happens to be in play. **The model** took
+the same route — `GeminiModel.CONFIGURED` in `domain/model/AppSettings.kt` is one line, edited
+and rebuilt.
 
 ---
 
@@ -242,38 +256,83 @@ travellers — the two groups whose main tool is a phone and who have no guide b
 | Offline-first reads (Room as the single source of truth) | ✅ |
 | Tablet / wide-window layout | ✅ |
 | iOS (Compose Multiplatform + MapKit) | ✅ |
+| Guide mode — all 61 recognition hints on the board | ✅ |
+| "In your collection" card on the recognition result | ✅ |
+| Both maps usable with a screen reader | ✅ |
+| Licences screen + ODbL credit on the maps | ✅ |
+| Explore place names in the device's language (`name:en` from OSM) | ✅ |
 | Voice dictation | ❌ removed — the code was finished but no button ever reached it |
 | AI-generated destination suggestions | ❌ removed — addresses and prices were invented; replaced by **Explore** |
 
-**Three limitations to know before a demo:**
+**Two limitations to know before a demo:**
 
-1. **Accessibility is not done.** The passport map is a bare `Canvas`, so screen readers skip
-   it entirely.
-2. **Overpass is donated infrastructure with per-IP limits.** A burst of traffic gets refused
+1. **Overpass is donated infrastructure with per-IP limits.** A burst of traffic gets refused
    until it recovers.
-3. **Most places have no photograph.** OSM holds no images; only well-known places carry a
+2. **Most places have no photograph.** OSM holds no images; only well-known places carry a
    Wikipedia article or a Commons photo.
+
+The third — *"accessibility is not done"* — was closed on 06.08.2026. The passport map now
+carries a hidden node over each province, so a screen reader reads the name and the state of
+all 34 plus both archipelagos, and a double-tap opens the province panel. Verified with
+`uiautomator dump` on a Galaxy A16: 36 nodes, where there had been none.
 
 ---
 
 ## 8. Roadmap
 
-**Near term — finish what exists**
+**Near term — done on 06.08.2026**
 
-- An unlock moment when a collection tile flips (today it happens silently)
-- Turn the collection from a *record* into a *guide*: bring the 61 recognition hints out into
-  the open instead of hiding them behind a tap
-- Accessibility for the passport map and the explore map — required before any store listing
-- A licences screen, to credit OpenStreetMap as ODbL requires
-- Tests for the passport UI layer and both map actuals
+Every one of the seven was "bring out what is already there"; none needed new data:
+
+- ✅ **The unlock moment is no longer silent.** The recognition result carries a card — *In your
+  collection · Phở · 29/61* — that opens the board. State rather than a snackbar, so it survives
+  a rotation and is still there on a later visit, and it doubles as the link between a
+  photograph and its tile.
+- ✅ **The collection is a guide.** A switch in the header turns the board into rows with all 61
+  recognition hints beside the names. The Vietnamese hints run 63–103 characters, which is why
+  they cannot simply be printed under a tile three across.
+- ✅ **Accessibility for both maps.** Passport: 34 province nodes plus 2 archipelagos, each named
+  with its state and openable. Explore: the map carries a description on Android and iOS, every
+  marker its place's name, and the ranked list beside it is the path that needs no map at all.
+- ✅ **A licences screen.** Settings → About → *Licences and data sources*: OpenStreetMap (ODbL
+  1.0), Natural Earth, Wikipedia (CC BY-SA 4.0), Wikimedia Commons, each with a way through to
+  the licence itself — plus the credit **on** both maps, which is what ODbL §4.3 asks for.
+- ✅ **Tests for the UI layer.** Six of them, on a real device: the passport map's projection and
+  hit test, its semantics tree, and the board/guide switch. `:shared` went from 118/107 to
+  **123/112**, the project total from 455 to **465**, and the device suite from 12 to **18**.
+- ✅ **Place names in the device's language.** Explore reads `name:<language>` and then `name:en`
+  from OSM, so an English phone opens on *Vietnam Military History Museum* rather than *Bảo tàng
+  Lịch sử Quân sự Việt Nam*. That data was **already in the Overpass response** and was being
+  discarded, so it costs no extra request. The Vietnamese name is not lost — it sits under the
+  title on the detail sheet, because the sign in front of the traveller still carries it. A
+  Vietnamese phone deliberately does **not** take the English fallback: for exactly one language
+  it is a downgrade. Measured on a Galaxy A16 by pinning the app to `en-US` and back to `vi-VN`
+  against the same 40 results. `:data` went from 120/86 to **126/92**, the project total to
+  **477**.
+- ✅ **Settings pared back to what a traveller actually chooses.** The *Intelligence* section —
+  the API-key field and the three model cards — is gone: both are build decisions
+  (`local.properties` and `GeminiModel.CONFIGURED`) rather than questions to put to a traveller,
+  and "Gemini 3.5 Flash or 3 Pro" is answerable only by somebody who already knows Google's
+  catalogue. In its place, *About* gained **Privacy policy** and **Terms of service**, opening in
+  the browser and sharing a card with *Licences*; the two cards in that section now have real
+  space between them instead of meeting edge to edge. The footer reads *Evora Technologies
+  Global · v1.0.0*. A defect of the same family was fixed along the way: clearing all discoveries
+  announced "cleared" whether or not the delete **worked** — the confirmation now waits on the
+  delete actually landing. Project total 477 → **475** (two `GeminiModel.fromId` cases lost, one
+  gained for `CONFIGURED`).
+
+**Near term — what is left**
+
+- Marker clustering on the explore map, where 40 places overlap. Android stacks the pins, so the
+  covered one cannot be tapped; iOS **hides** the loser by `displayPriority`, so the place leaves
+  the map entirely. The ranked list beside it still carries all 40, which makes this a loss at
+  the drawing layer rather than a loss of data.
 
 **Medium term — extend the capability**
 
 - **Gemini Live API** — real-time voice conversation
 - **Offline mode** — download one province's data and work without a network
 - **Voice dictation** (restore what was removed, this time with a button)
-- Read `name:en` from OSM for the ~47% of places that already have an English name
-- Marker clustering on the explore map
 
 **Long term — product**
 
@@ -309,8 +368,10 @@ packaged into the `debug` variant only, so a shipping APK has nothing to seed fr
 release build to see the real empty state.
 
 You need a Gemini key from [Google AI Studio](https://aistudio.google.com/apikey) in
-`local.properties`. Full instructions, including the Android Maps SDK key and how to produce a
-release build, are in [TechStack-temp.md §9–§11](TechStack-temp.md#9-getting-started).
+`local.properties` — there is no in-app way to supply one, so a build without it says so on the
+lens screen and recognises nothing. Full instructions, including the Android Maps SDK key and
+how to produce a release build, are in
+[TechStack-temp.md §9–§11](TechStack-temp.md#9-getting-started).
 
 ---
 

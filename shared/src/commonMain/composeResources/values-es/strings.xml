@@ -6,7 +6,7 @@
   Multiplatform does not unescape them. See values/strings.xml for the rest.
 -->
 <resources>
-    <string name="app_name">VietLens AI</string>
+    <string name="app_name">Saola</string>
 
     <string name="resource_language">es</string>
 
@@ -18,12 +18,12 @@
 
     <!-- Camera -->
     <string name="camera_permission_title">Se necesita acceso a la cámara</string>
-    <string name="camera_permission_body">VietLens usa la cámara para reconocer monumentos, platos y carteles a tu alrededor. Las fotos se quedan en tu dispositivo.</string>
+    <string name="camera_permission_body">Saola usa la cámara para reconocer monumentos, platos y carteles a tu alrededor. Las fotos se quedan en tu dispositivo.</string>
     <string name="camera_permission_grant">Permitir la cámara</string>
-    <string name="camera_permission_blocked_body">El acceso a la cámara está desactivado para VietLens y Android no volverá a preguntar. Actívalo en los ajustes de la aplicación para continuar.</string>
+    <string name="camera_permission_blocked_body">El acceso a la cámara está desactivado para Saola y Android no volverá a preguntar. Actívalo en los ajustes de la aplicación para continuar.</string>
     <string name="location_permission_title">Sella tu pasaporte</string>
     <string name="location_permission_body">Con la ubicación activada, cada foto sabe en qué provincia se tomó, y esa provincia se rellena en el mapa de tu pasaporte.</string>
-    <string name="location_permission_blocked_body">La ubicación está desactivada para VietLens y Android no volverá a preguntar. Actívala en los ajustes para que tus fotos sellen el mapa de tu pasaporte.</string>
+    <string name="location_permission_blocked_body">La ubicación está desactivada para Saola y Android no volverá a preguntar. Actívala en los ajustes para que tus fotos sellen el mapa de tu pasaporte.</string>
     <string name="location_permission_grant">Permitir</string>
     <string name="location_permission_later">Ahora no</string>
     <string name="permission_open_settings">Abrir ajustes</string>
@@ -102,7 +102,7 @@
     <string name="discovery_listen_meta">%1$d min · narrada en %2$s</string>
     <string name="discovery_favorite_saved">Guardado</string>
     <string name="discovery_share">Compartir</string>
-    <string name="discovery_share_body">%1$s\n\n%2$s\n\nCompartido desde VietLens AI</string>
+    <string name="discovery_share_body">%1$s\n\n%2$s\n\nCompartido desde Saola</string>
     <plurals name="discovery_notice_count">
         <item quantity="one">Un detalle en el que fijarse</item>
         <item quantity="other">%1$d detalles en los que fijarse</item>
@@ -126,11 +126,31 @@
     <string name="discovery_note_take_photo">Hacer una foto</string>
     <string name="discovery_note_camera_flip">Cambiar de cámara</string>
     <string name="discovery_note_camera_permission_title">¿Hacer una foto para esta nota?</string>
-    <string name="discovery_note_camera_permission_body">VietLens necesita la cámara para la foto que guardas con esta nota. Se guarda solo en este dispositivo y nunca se envía.</string>
-    <string name="discovery_note_camera_permission_blocked_body">La cámara está desactivada para VietLens y Android no volverá a preguntar. Vuelve a activarla en los ajustes para hacer fotos — mientras tanto, puedes añadir una desde tu galería.</string>
+    <string name="discovery_note_camera_permission_body">Saola necesita la cámara para la foto que guardas con esta nota. Se guarda solo en este dispositivo y nunca se envía.</string>
+    <string name="discovery_note_camera_permission_blocked_body">La cámara está desactivada para Saola y Android no volverá a preguntar. Vuelve a activarla en los ajustes para hacer fotos — mientras tanto, puedes añadir una desde tu galería.</string>
     <string name="discovery_note_camera_permission_allow">Permitir</string>
     <string name="discovery_note_camera_permission_deny">Ahora no</string>
     <string name="discovery_note_in_diary">Tu guía la usará cuando escriba tu diario del día.</string>
+
+    <!-- Report -->
+    <string name="report_again">Volver a informar sobre este resultado</string>
+    <string name="report_title">Informar sobre este resultado</string>
+    <string name="report_body">Cuéntanos qué está mal. No se envía nada hasta que elijas a dónde enviarlo.</string>
+    <string name="report_reason_wrong_name">Nombre o lugar equivocado</string>
+    <string name="report_reason_wrong_facts">Hay un error en el relato</string>
+    <string name="report_reason_inappropriate">Contenido inapropiado</string>
+    <string name="report_reason_other">Otra cosa</string>
+    <string name="report_note_placeholder">¿Qué estaba mal? (opcional)</string>
+    <string name="report_note_count">%1$d / %2$d</string>
+    <string name="report_attachment_photo">Tu foto y los detalles de este resultado se envían con el informe.</string>
+    <string name="report_attachment_none">Los detalles de este resultado se envían con el informe.</string>
+    <string name="report_send">Enviar informe</string>
+    <string name="report_cancel">Ahora no</string>
+    <string name="report_mail_subject">Informe de Saola — %1$s</string>
+    <string name="report_mail_intro">Un viajero informó sobre un resultado en Saola.</string>
+    <string name="report_mail_reason">Motivo: %1$s</string>
+    <string name="report_mail_note">Lo que escribió: %1$s</string>
+    <string name="report_mail_to">Envía esto a %1$s</string>
 
     <!-- Chat -->
     <string name="chat_title">Pregunta a tu guía</string>
@@ -199,7 +219,7 @@
     <string name="explore_empty_body">Este rincón tiene pocos lugares en OpenStreetMap. Inténtalo de nuevo cuando te hayas movido, o arrastra el mapa para ver qué hay cerca.</string>
     <string name="explore_permission_title">Explorar necesita tu ubicación</string>
     <string name="explore_permission_body">El mapa se centra donde estás y busca los lugares que merecen una caminata en 5 km. Tu posición solo se envía como centro de esa búsqueda.</string>
-    <string name="explore_permission_blocked_body">La ubicación está desactivada para VietLens y el sistema no volverá a preguntar. Actívala en los ajustes para ver qué hay a tu alrededor.</string>
+    <string name="explore_permission_blocked_body">La ubicación está desactivada para Saola y el sistema no volverá a preguntar. Actívala en los ajustes para ver qué hay a tu alrededor.</string>
     <string name="explore_source_note">Lugares de OpenStreetMap · descripciones y fotografías de Wikipedia y Wikimedia Commons</string>
     <string name="explore_read_more">Leer el artículo completo</string>
     <string name="explore_readers">%1$s lectores</string>
@@ -222,23 +242,6 @@
     <!-- Settings -->
     <string name="settings_title">Ajustes</string>
     <string name="settings_kicker">Preferencias</string>
-    <string name="settings_section_ai">Inteligencia</string>
-    <string name="settings_api_key">Clave API</string>
-    <string name="settings_api_key_set">Se está usando tu propia clave</string>
-    <string name="settings_api_key_default">Usando la clave integrada en la aplicación</string>
-    <string name="settings_api_key_none">No hay ninguna clave configurada</string>
-    <string name="settings_api_key_active">Activa</string>
-    <string name="settings_api_key_inactive">Sin clave</string>
-    <string name="settings_api_key_hint">pega tu propia clave…</string>
-    <string name="settings_api_key_save">Guardar la clave</string>
-    <string name="settings_api_key_clear">Borrar</string>
-    <string name="settings_api_key_saved">Clave API guardada</string>
-    <string name="settings_model_balanced">Equilibrado</string>
-    <string name="settings_model_balanced_summary">Buena profundidad y rápido para leer un menú.</string>
-    <string name="settings_model_quick">Rápido</string>
-    <string name="settings_model_quick_summary">Carteles, etiquetas, precios. El más barato.</string>
-    <string name="settings_model_scholar">Erudito</string>
-    <string name="settings_model_scholar_summary">El mayor detalle histórico y cultural. Más lento.</string>
     <string name="settings_section_experience">Experiencia</string>
     <string name="settings_speak">Leer las respuestas en voz alta</string>
     <string name="settings_speak_summary">Narrar las descripciones y las respuestas del guía</string>
@@ -253,7 +256,7 @@
     <string name="settings_clear_confirm_title">¿Borrarlo todo?</string>
     <string name="settings_clear_confirm_body">Esto elimina de forma permanente cada hallazgo, foto, conversación y entrada del diario de este dispositivo.</string>
     <string name="settings_cleared">Se han borrado todos los hallazgos</string>
-    <string name="settings_footer">Made in Việt Nam · v%1$s</string>
+    <string name="settings_footer">Evora Technologies Global · v%1$s</string>
 
     <!-- Categories -->
     <string name="category_landmark">Monumento</string>
@@ -280,7 +283,7 @@
     <string name="action_close">Cerrar</string>
 
     <!-- Errors -->
-    <string name="error_missing_api_key">Todavía no hay clave API de Gemini. Añade una en los ajustes para empezar a reconocer.</string>
+    <string name="error_missing_api_key">Esta versión no incluye una clave de Gemini, así que el reconocimiento no puede funcionar.</string>
     <string name="error_invalid_api_key">Esa clave API fue rechazada. Compruébala en los ajustes.</string>
     <string name="error_no_connection">Sin conexión a internet. El reconocimiento necesita llegar a Gemini.</string>
     <string name="error_timeout">Ha tardado demasiado. Inténtalo de nuevo.</string>
@@ -343,4 +346,35 @@
     <string name="settings_section_about">Acerca de</string>
     <string name="settings_sovereignty">Nuestra posición sobre el Biển Đông</string>
     <string name="settings_sovereignty_summary">Hoàng Sa &amp; Trường Sa · Việt Nam</string>
+
+    <!-- Fuentes de datos y licencias -->
+    <string name="map_source_osm">© OpenStreetMap contributors</string>
+    <string name="licenses_title">Licencias y fuentes de datos</string>
+    <string name="licenses_kicker">Créditos</string>
+    <string name="licenses_intro">Saola se apoya en datos abiertos. Aquí está de dónde viene cada cosa que ves, y con qué licencia.</string>
+    <string name="licenses_open">Abrir la licencia</string>
+    <string name="licenses_osm_title">OpenStreetMap</string>
+    <string name="licenses_osm_body">Los límites de las 34 provincias del mapa del pasaporte, y todos los lugares del mapa A tu alrededor. © OpenStreetMap contributors, bajo Open Database License (ODbL) 1.0.</string>
+    <string name="licenses_natural_earth_title">Natural Earth</string>
+    <string name="licenses_natural_earth_body">La línea de costa con la que se recortan las provincias costeras. Dominio público.</string>
+    <string name="licenses_wikipedia_title">Wikipedia</string>
+    <string name="licenses_wikipedia_body">Las descripciones de los lugares, y las lecturas de 60 días con las que se ordenan. Bajo CC BY-SA 4.0.</string>
+    <string name="licenses_commons_title">Wikimedia Commons</string>
+    <string name="licenses_commons_body">Las fotografías que se muestran de un lugar. Cada una lleva su propia licencia, indicada en su página de archivo.</string>
+    <string name="licenses_footer">Tus fotografías son tuyas. Se quedan en este dispositivo y solo salen cuando una se envía a Gemini para reconocerla.</string>
+    <string name="settings_licenses">Licencias y fuentes de datos</string>
+    <string name="settings_licenses_summary">OpenStreetMap · Wikipedia · Natural Earth</string>
+    <string name="settings_privacy_policy">Política de privacidad</string>
+    <string name="settings_terms_of_service">Términos del servicio</string>
+    <string name="settings_legal_summary">Se abre en el navegador</string>
+    <!-- Colección: modo guía -->
+    <string name="collection_show_guide">Ver cómo reconocerlos</string>
+    <string name="collection_show_board">Ver la cuadrícula</string>
+    <string name="discovery_collected_kicker">En tu colección</string>
+    <string name="discovery_collected_open">Abrir la colección</string>
+    <!-- Mapas, leídos por un lector de pantalla -->
+    <string name="passport_map_a11y">Mapa de Vietnam, %1$d de %2$d provincias visitadas</string>
+    <string name="passport_province_a11y">%1$s, %2$s</string>
+    <string name="passport_province_a11y_open">Abrir esta provincia</string>
+    <string name="explore_map_a11y">Mapa de los lugares a tu alrededor</string>
 </resources>

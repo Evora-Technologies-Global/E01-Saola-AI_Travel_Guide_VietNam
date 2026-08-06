@@ -6,7 +6,7 @@
   date the app shows is CE, and mixing the two would read as a bug. See DateNames.kt.
 -->
 <resources>
-    <string name="app_name">VietLens AI</string>
+    <string name="app_name">Saola</string>
 
     <string name="resource_language">th</string>
 
@@ -18,12 +18,12 @@
 
     <!-- Camera -->
     <string name="camera_permission_title">ต้องขอใช้กล้อง</string>
-    <string name="camera_permission_body">VietLens ใช้กล้องเพื่อรู้จักสถานที่สำคัญ อาหาร และป้ายต่าง ๆ รอบตัวคุณ รูปภาพจะอยู่ในเครื่องของคุณเท่านั้น</string>
+    <string name="camera_permission_body">Saola ใช้กล้องเพื่อรู้จักสถานที่สำคัญ อาหาร และป้ายต่าง ๆ รอบตัวคุณ รูปภาพจะอยู่ในเครื่องของคุณเท่านั้น</string>
     <string name="camera_permission_grant">อนุญาตให้ใช้กล้อง</string>
-    <string name="camera_permission_blocked_body">สิทธิ์กล้องของ VietLens ถูกปิดไว้ และ Android จะไม่ถามอีก เปิดในการตั้งค่าแอปเพื่อใช้งานต่อ</string>
+    <string name="camera_permission_blocked_body">สิทธิ์กล้องของ Saola ถูกปิดไว้ และ Android จะไม่ถามอีก เปิดในการตั้งค่าแอปเพื่อใช้งานต่อ</string>
     <string name="location_permission_title">ประทับตราหนังสือเดินทางของคุณ</string>
     <string name="location_permission_body">เมื่อเปิดตำแหน่ง ทุกรูปจะรู้ว่าถ่ายในจังหวัดใด และจังหวัดนั้นจะถูกเติมสีบนแผนที่หนังสือเดินทางของคุณ</string>
-    <string name="location_permission_blocked_body">สิทธิ์ตำแหน่งของ VietLens ถูกปิดไว้ และ Android จะไม่ถามอีก เปิดในการตั้งค่าแอปเพื่อให้รูปของคุณประทับตราลงแผนที่</string>
+    <string name="location_permission_blocked_body">สิทธิ์ตำแหน่งของ Saola ถูกปิดไว้ และ Android จะไม่ถามอีก เปิดในการตั้งค่าแอปเพื่อให้รูปของคุณประทับตราลงแผนที่</string>
     <string name="location_permission_grant">อนุญาต</string>
     <string name="location_permission_later">ไว้ก่อน</string>
     <string name="permission_open_settings">เปิดการตั้งค่า</string>
@@ -102,7 +102,7 @@
     <string name="discovery_listen_meta">%1$d นาที · เล่าเป็นภาษา%2$s</string>
     <string name="discovery_favorite_saved">บันทึกแล้ว</string>
     <string name="discovery_share">แชร์</string>
-    <string name="discovery_share_body">%1$s\n\n%2$s\n\nแชร์จาก VietLens AI</string>
+    <string name="discovery_share_body">%1$s\n\n%2$s\n\nแชร์จาก Saola</string>
     <plurals name="discovery_notice_count">
         <item quantity="other">%1$d จุดที่น่าสังเกต</item>
     </plurals>
@@ -125,11 +125,31 @@
     <string name="discovery_note_take_photo">ถ่ายรูป</string>
     <string name="discovery_note_camera_flip">สลับกล้อง</string>
     <string name="discovery_note_camera_permission_title">ถ่ายรูปสำหรับโน้ตนี้ไหม</string>
-    <string name="discovery_note_camera_permission_body">VietLens ต้องใช้กล้องเพื่อถ่ายรูปที่คุณจะเก็บไว้กับโน้ตนี้ รูปจะถูกบันทึกไว้ในเครื่องนี้เท่านั้น และไม่ถูกอัปโหลด</string>
-    <string name="discovery_note_camera_permission_blocked_body">กล้องของ VietLens ถูกปิดไว้ และ Android จะไม่ถามอีก เปิดใหม่ในการตั้งค่าแอปเพื่อถ่ายรูป — ระหว่างนี้ยังเพิ่มรูปจากคลังภาพได้</string>
+    <string name="discovery_note_camera_permission_body">Saola ต้องใช้กล้องเพื่อถ่ายรูปที่คุณจะเก็บไว้กับโน้ตนี้ รูปจะถูกบันทึกไว้ในเครื่องนี้เท่านั้น และไม่ถูกอัปโหลด</string>
+    <string name="discovery_note_camera_permission_blocked_body">กล้องของ Saola ถูกปิดไว้ และ Android จะไม่ถามอีก เปิดใหม่ในการตั้งค่าแอปเพื่อถ่ายรูป — ระหว่างนี้ยังเพิ่มรูปจากคลังภาพได้</string>
     <string name="discovery_note_camera_permission_allow">อนุญาต</string>
     <string name="discovery_note_camera_permission_deny">ไว้ก่อน</string>
     <string name="discovery_note_in_diary">ไกด์จะใช้โน้ตนี้ตอนเขียนบันทึกประจำวันให้คุณ</string>
+
+    <!-- Report -->
+    <string name="report_again">รายงานผลลัพธ์นี้อีกครั้ง</string>
+    <string name="report_title">รายงานผลลัพธ์นี้</string>
+    <string name="report_body">บอกเราว่าอะไรไม่ถูกต้อง จะยังไม่มีการส่งอะไรจนกว่าคุณจะเลือกปลายทาง</string>
+    <string name="report_reason_wrong_name">ชื่อหรือสถานที่ผิด</string>
+    <string name="report_reason_wrong_facts">มีข้อมูลผิดในเนื้อหา</string>
+    <string name="report_reason_inappropriate">เนื้อหาไม่เหมาะสม</string>
+    <string name="report_reason_other">อย่างอื่น</string>
+    <string name="report_note_placeholder">อะไรไม่ถูกต้อง (ไม่บังคับ)</string>
+    <string name="report_note_count">%1$d / %2$d</string>
+    <string name="report_attachment_photo">รูปของคุณและรายละเอียดของผลลัพธ์นี้จะถูกส่งไปด้วย</string>
+    <string name="report_attachment_none">รายละเอียดของผลลัพธ์นี้จะถูกส่งไปด้วย</string>
+    <string name="report_send">ส่งรายงาน</string>
+    <string name="report_cancel">ไว้ก่อน</string>
+    <string name="report_mail_subject">รายงาน Saola — %1$s</string>
+    <string name="report_mail_intro">มีนักเดินทางรายงานผลลัพธ์หนึ่งใน Saola</string>
+    <string name="report_mail_reason">เหตุผล: %1$s</string>
+    <string name="report_mail_note">สิ่งที่เขียนไว้: %1$s</string>
+    <string name="report_mail_to">กรุณาส่งไปที่ %1$s</string>
 
     <!-- Chat -->
     <string name="chat_title">ถามไกด์ของคุณ</string>
@@ -196,7 +216,7 @@
     <string name="explore_empty_body">มุมนี้มีสถานที่บน OpenStreetMap น้อยมาก ลองอีกครั้งเมื่อย้ายที่แล้ว หรือลากแผนที่เพื่อดูรอบ ๆ</string>
     <string name="explore_permission_title">การดูรอบตัวต้องใช้ตำแหน่งของคุณ</string>
     <string name="explore_permission_body">แผนที่จะยึดตำแหน่งที่คุณยืนอยู่เป็นจุดกลาง แล้วหาที่ที่ควรเดินไปในรัศมี 5 กม. ตำแหน่งของคุณถูกส่งไปในฐานะจุดกลางของการค้นหานั้นเท่านั้น</string>
-    <string name="explore_permission_blocked_body">ตำแหน่งของ VietLens ถูกปิดไว้ และระบบจะไม่ถามอีก เปิดในการตั้งค่าแอปเพื่อดูว่ามีอะไรอยู่รอบตัวคุณ</string>
+    <string name="explore_permission_blocked_body">ตำแหน่งของ Saola ถูกปิดไว้ และระบบจะไม่ถามอีก เปิดในการตั้งค่าแอปเพื่อดูว่ามีอะไรอยู่รอบตัวคุณ</string>
     <string name="explore_source_note">สถานที่จาก OpenStreetMap · คำอธิบายและภาพจาก Wikipedia และ Wikimedia Commons</string>
     <string name="explore_read_more">อ่านบทความเต็ม</string>
     <string name="explore_readers">ผู้อ่าน %1$s คน</string>
@@ -219,23 +239,6 @@
     <!-- Settings -->
     <string name="settings_title">ตั้งค่า</string>
     <string name="settings_kicker">การตั้งค่า</string>
-    <string name="settings_section_ai">ปัญญาประดิษฐ์</string>
-    <string name="settings_api_key">คีย์ API</string>
-    <string name="settings_api_key_set">กำลังใช้คีย์ของคุณเอง</string>
-    <string name="settings_api_key_default">กำลังใช้คีย์ที่ติดมากับแอป</string>
-    <string name="settings_api_key_none">ยังไม่ได้ตั้งคีย์</string>
-    <string name="settings_api_key_active">ใช้งานอยู่</string>
-    <string name="settings_api_key_inactive">ไม่มีคีย์</string>
-    <string name="settings_api_key_hint">วางคีย์ของคุณ…</string>
-    <string name="settings_api_key_save">บันทึกคีย์</string>
-    <string name="settings_api_key_clear">ล้าง</string>
-    <string name="settings_api_key_saved">บันทึกคีย์ API แล้ว</string>
-    <string name="settings_model_balanced">สมดุล</string>
-    <string name="settings_model_balanced_summary">ลึกพอ และเร็วพอจะอ่านเมนู</string>
-    <string name="settings_model_quick">เร็ว</string>
-    <string name="settings_model_quick_summary">ป้าย ฉลาก ราคา ประหยัดที่สุด</string>
-    <string name="settings_model_scholar">นักวิชาการ</string>
-    <string name="settings_model_scholar_summary">ลงลึกด้านประวัติศาสตร์และวัฒนธรรมที่สุด แต่ช้ากว่า</string>
     <string name="settings_section_experience">ประสบการณ์</string>
     <string name="settings_speak">อ่านคำตอบออกเสียง</string>
     <string name="settings_speak_summary">อ่านคำอธิบายและคำตอบในแชท</string>
@@ -250,7 +253,7 @@
     <string name="settings_clear_confirm_title">ล้างทั้งหมดไหม</string>
     <string name="settings_clear_confirm_body">การกระทำนี้จะลบทุกสิ่งที่ค้นพบ รูปภาพ บทสนทนา และบันทึกในเครื่องนี้อย่างถาวร</string>
     <string name="settings_cleared">ล้างสิ่งที่ค้นพบทั้งหมดแล้ว</string>
-    <string name="settings_footer">Made in Việt Nam · v%1$s</string>
+    <string name="settings_footer">Evora Technologies Global · v%1$s</string>
 
     <!-- Categories -->
     <string name="category_landmark">สถานที่สำคัญ</string>
@@ -277,7 +280,7 @@
     <string name="action_close">ปิด</string>
 
     <!-- Errors -->
-    <string name="error_missing_api_key">ยังไม่มีคีย์ API ของ Gemini เพิ่มในการตั้งค่าเพื่อเริ่มการรู้จำ</string>
+    <string name="error_missing_api_key">บิลด์นี้ไม่มีคีย์ Gemini จึงยังใช้การรู้จำไม่ได้</string>
     <string name="error_invalid_api_key">คีย์ API นั้นถูกปฏิเสธ ตรวจสอบอีกครั้งในการตั้งค่า</string>
     <string name="error_no_connection">ไม่มีการเชื่อมต่ออินเทอร์เน็ต การรู้จำต้องติดต่อกับ Gemini</string>
     <string name="error_timeout">ใช้เวลานานเกินไป ลองอีกครั้ง</string>
@@ -339,4 +342,35 @@
     <string name="settings_section_about">เกี่ยวกับ</string>
     <string name="settings_sovereignty">จุดยืนของเราเรื่อง Biển Đông</string>
     <string name="settings_sovereignty_summary">Hoàng Sa &amp; Trường Sa · Việt Nam</string>
+
+    <!-- แหล่งข้อมูลและสัญญาอนุญาต -->
+    <string name="map_source_osm">© OpenStreetMap contributors</string>
+    <string name="licenses_title">สัญญาอนุญาตและแหล่งข้อมูล</string>
+    <string name="licenses_kicker">เครดิต</string>
+    <string name="licenses_intro">Saola สร้างขึ้นบนข้อมูลเปิด นี่คือที่มาของแต่ละสิ่งที่คุณเห็น และสัญญาอนุญาตที่กำกับอยู่</string>
+    <string name="licenses_open">เปิดสัญญาอนุญาต</string>
+    <string name="licenses_osm_title">OpenStreetMap</string>
+    <string name="licenses_osm_body">เส้นแบ่งเขต 34 จังหวัดบนแผนที่หนังสือเดินทาง และทุกสถานที่บนแผนที่รอบตัวคุณ © OpenStreetMap contributors ภายใต้ Open Database License (ODbL) 1.0</string>
+    <string name="licenses_natural_earth_title">Natural Earth</string>
+    <string name="licenses_natural_earth_body">แนวชายฝั่งที่ใช้ตัดขอบจังหวัดริมทะเล อยู่ในสาธารณสมบัติ</string>
+    <string name="licenses_wikipedia_title">Wikipedia</string>
+    <string name="licenses_wikipedia_body">คำอธิบายสถานที่ และยอดผู้อ่าน 60 วันที่ใช้จัดอันดับ ภายใต้ CC BY-SA 4.0</string>
+    <string name="licenses_commons_title">Wikimedia Commons</string>
+    <string name="licenses_commons_body">ภาพถ่ายที่แสดงประกอบสถานที่ แต่ละภาพมีสัญญาอนุญาตของตัวเองระบุไว้ในหน้าไฟล์</string>
+    <string name="licenses_footer">ภาพที่คุณถ่ายเป็นของคุณ ภาพจะอยู่ในเครื่องนี้ และออกจากเครื่องเฉพาะตอนส่งไปให้ Gemini ช่วยจดจำเท่านั้น</string>
+    <string name="settings_licenses">สัญญาอนุญาตและแหล่งข้อมูล</string>
+    <string name="settings_licenses_summary">OpenStreetMap · Wikipedia · Natural Earth</string>
+    <string name="settings_privacy_policy">นโยบายความเป็นส่วนตัว</string>
+    <string name="settings_terms_of_service">ข้อกำหนดการให้บริการ</string>
+    <string name="settings_legal_summary">เปิดในเบราว์เซอร์</string>
+    <!-- คอลเลกชัน: โหมดคู่มือ -->
+    <string name="collection_show_guide">ดูวิธีสังเกต</string>
+    <string name="collection_show_board">ดูแบบตาราง</string>
+    <string name="discovery_collected_kicker">อยู่ในคอลเลกชัน</string>
+    <string name="discovery_collected_open">เปิดคอลเลกชัน</string>
+    <!-- แผนที่ อ่านด้วยโปรแกรมอ่านหน้าจอ -->
+    <string name="passport_map_a11y">แผนที่เวียดนาม ไปมาแล้ว %1$d จาก %2$d จังหวัด</string>
+    <string name="passport_province_a11y">%1$s, %2$s</string>
+    <string name="passport_province_a11y_open">เปิดจังหวัดนี้</string>
+    <string name="explore_map_a11y">แผนที่สถานที่รอบตัวคุณ</string>
 </resources>

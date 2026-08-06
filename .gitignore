@@ -1,12 +1,12 @@
 *.iml
 .gradle
 /local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
+# The whole IDE directory, not a list of its noisier files. What was tracked here
+# was machine-local state — the last deployment target, the device manager's cache,
+# an artifacts entry per module — none of which another clone wants, and all of
+# which the IDE rewrites on its own. Anything the build genuinely needs lives in
+# Gradle, not in .idea.
+/.idea/
 .DS_Store
 # Every module's build output, not just the root one. A leading slash would match
 # `/build` alone and quietly track app/build, data/build and domain/build — 393 MB
@@ -36,9 +36,9 @@ tools/provinces/*.png
 # Wikimedia Commons are tracked, so seeding is reproducible without a network round trip and
 # so the exact images in the screenshots can be reviewed in a diff. Only the working copy of
 # the device database is transient.
-tools/seed/.work/vietlens.db
-tools/seed/.work/vietlens.db-wal
-tools/seed/.work/vietlens.db-shm
+tools/seed/.work/saola.db
+tools/seed/.work/saola.db-wal
+tools/seed/.work/saola.db-shm
 
 # Room's exported schemas. Generated on every build from the `@Database` declaration, so
 # they are output, not source. Their one real use is auto-migrations and migration tests,

@@ -1,4 +1,4 @@
-# VietLens AI 🇻🇳
+# Saola 🇻🇳
 
 > Hướng máy ảnh vào một mái đình, một tô bún hay một tấm biển — ứng dụng nhận ra nó, kể
 > câu chuyện đằng sau, và ghi lại vào hành trình của bạn.
@@ -9,7 +9,7 @@
 
 ## 1. Ứng dụng này là gì
 
-VietLens AI là ứng dụng du lịch dùng **Google Gemini** để biến chiếc máy ảnh trên điện thoại
+Saola là ứng dụng du lịch dùng **Google Gemini** để biến chiếc máy ảnh trên điện thoại
 thành một hướng dẫn viên bản địa.
 
 Thay vì phải tra Google, đọc Wikipedia rồi mở thêm app dịch, người dùng chỉ cần giơ máy lên.
@@ -48,12 +48,16 @@ check-in** — ảnh đã mang sẵn toạ độ, nên chụp một ngôi chùa 
 **🎴 Bộ sưu tập văn hoá.** 61 thứ đáng tìm ở Việt Nam — phở, bánh chưng, đầu đao mái đình,
 thuyền thúng, bia đá đội rùa, cồng chiêng. Mỗi ô là một ô gạch trống cho tới khi bạn chụp
 được thứ đó, rồi nó hiện lên bằng **ảnh của chính bạn**. Bảng này đầy đủ ngay từ lần mở đầu
-tiên, và tính ngược lại cả những ảnh đã chụp từ trước.
+tiên, và tính ngược lại cả những ảnh đã chụp từ trước. Một nút ở đầu trang đổi giữa **Lưới**
+(bản ghi những gì đã chụp) và **Hướng dẫn** — cùng 61 mục đó, kèm gợi ý nhận biết: *"bánh
+tráng mỏng vàng nghệ gập đôi hình bán nguyệt"* thay vì chỉ một cái tên bạn đã biết.
 
 **🧭 Khám phá.** Bản đồ trực tiếp quanh vị trí hiện tại với những nơi đáng đi bộ tới trong
 **5 km**. Dữ liệu lấy từ **OpenStreetMap + Wikipedia + Wikimedia Commons** — không cần API
 key, không tính phí. Xếp hạng theo lượt đọc Wikipedia 60 ngày gần nhất và mức độ chi tiết của
 dữ liệu bản đồ. **Không có sao đánh giá**, vì không nguồn mở nào có — thà thiếu còn hơn bịa.
+Tên địa điểm hiện theo ngôn ngữ của máy ở những nơi OSM đã có bản dịch, và tên tiếng Việt nằm
+ngay dưới tiêu đề trong thẻ chi tiết — vì tấm biển ngoài đường vẫn ghi bằng tiếng Việt.
 
 **📖 Nhật ký hành trình.** Gom theo ngày, mỗi ngày có một đoạn tổng kết do AI viết cùng gợi ý
 cho hôm sau.
@@ -69,9 +73,12 @@ nhận được màn hình, câu trả lời và giọng đọc tiếng Nhật.
 
 ## 3. Ảnh chụp màn hình
 
-Chụp trên máy ảo Pixel 7 Pro, Pixel Tablet, iPhone 17 và iPad Pro 11". Dữ liệu là bộ demo 24
-điểm từ Sa Pa tới Cần Thơ (xem [§10 TechStack](TechStack-temp.md#10-demoing-it-and-the-seeded-data));
-ảnh trong các màn hình là ảnh thật lấy từ Wikimedia Commons.
+Chụp lại ngày 07.08.2026 trên máy ảo Pixel 7 Pro, Pixel Tablet, iPhone 17 và iPad Pro 11".
+Dữ liệu là bộ demo 24 điểm từ Sa Pa tới Cần Thơ (xem
+[§10 TechStack](TechStack-temp.md#10-demoing-it-and-the-seeded-data)); ảnh trong các màn hình là
+ảnh thật lấy từ Wikimedia Commons. Riêng ảnh Khám phá khổ tablet chụp trên **Pixel 7 Pro ép về
+đúng khổ Pixel Tablet** (`wm size 2560x1600`, `wm density 320`), vì máy ảo tablet không nhận
+được vị trí giả trong phiên chụp — cùng số đo cửa sổ, nên bố cục là thật.
 
 ### Android — điện thoại
 
@@ -101,29 +108,31 @@ Bố cục rộng: thanh điều hướng dọc bên trái, hai khung nội dung
 
 ### iOS — iPhone
 
-| Nhật ký | Hộ chiếu | Bộ sưu tập | Chi tiết khám phá |
+| Ống kính | Nhật ký | Hộ chiếu | Bộ sưu tập |
 |---|---|---|---|
-| <img src="screenshots/ios-phone/01-journal.png" width="180" alt="Nhật ký"> | <img src="screenshots/ios-phone/02-passport.png" width="180" alt="Hộ chiếu"> | <img src="screenshots/ios-phone/03-collection.png" width="180" alt="Bộ sưu tập"> | <img src="screenshots/ios-phone/04-discovery.png" width="180" alt="Chi tiết"> |
+| <img src="screenshots/ios-phone/01-lens.png" width="180" alt="Ống kính"> | <img src="screenshots/ios-phone/02-journal.png" width="180" alt="Nhật ký"> | <img src="screenshots/ios-phone/03-passport.png" width="180" alt="Hộ chiếu"> | <img src="screenshots/ios-phone/04-collection.png" width="180" alt="Bộ sưu tập"> |
 
-| Trò chuyện | Khám phá (MapKit) | Cài đặt |
-|---|---|---|
-| <img src="screenshots/ios-phone/05-chat.png" width="180" alt="Trò chuyện"> | <img src="screenshots/ios-phone/06-explore.png" width="180" alt="Khám phá"> | <img src="screenshots/ios-phone/07-settings.png" width="180" alt="Cài đặt"> |
+| Chi tiết khám phá | Trò chuyện | Khám phá (MapKit) | Cài đặt |
+|---|---|---|---|
+| <img src="screenshots/ios-phone/05-discovery.png" width="180" alt="Chi tiết"> | <img src="screenshots/ios-phone/06-chat.png" width="180" alt="Trò chuyện"> | <img src="screenshots/ios-phone/07-explore.png" width="180" alt="Khám phá"> | <img src="screenshots/ios-phone/08-settings.png" width="180" alt="Cài đặt"> |
 
-> Màn Ống kính không có trong bộ iOS vì máy ảo iOS không có camera — khung ngắm sẽ trắng.
+> Khung ngắm trong ảnh Ống kính trắng vì máy ảo iOS không có camera. Phần còn lại của màn hình
+> — chế độ, nút chụp, chồng ảnh vừa chụp — là thật.
 
 ### iOS — iPad
 
-| Nhật ký + Hộ chiếu | Bộ sưu tập | Bài viết + Hỏi hướng dẫn viên |
+| Ống kính | Nhật ký + Hộ chiếu | Bộ sưu tập |
 |---|---|---|
-| <img src="screenshots/ios-ipad/01-journal.png" width="250" alt="Nhật ký"> | <img src="screenshots/ios-ipad/02-collection.png" width="250" alt="Bộ sưu tập"> | <img src="screenshots/ios-ipad/03-discovery.png" width="250" alt="Chi tiết"> |
+| <img src="screenshots/ios-ipad/01-lens.png" width="250" alt="Ống kính"> | <img src="screenshots/ios-ipad/02-journal.png" width="250" alt="Nhật ký"> | <img src="screenshots/ios-ipad/03-collection.png" width="250" alt="Bộ sưu tập"> |
 
-| Khám phá | Cài đặt |
-|---|---|
-| <img src="screenshots/ios-ipad/04-explore.png" width="250" alt="Khám phá"> | <img src="screenshots/ios-ipad/05-settings.png" width="250" alt="Cài đặt"> |
+| Bài viết + Hỏi hướng dẫn viên | Khám phá | Cài đặt |
+|---|---|---|
+| <img src="screenshots/ios-ipad/04-discovery.png" width="250" alt="Chi tiết"> | <img src="screenshots/ios-ipad/05-explore.png" width="250" alt="Khám phá"> | <img src="screenshots/ios-ipad/06-settings.png" width="250" alt="Cài đặt"> |
 
-> Ảnh Khám phá trên iPad chỉ có 12 quán ăn và không có di tích: Overpass (máy chủ OpenStreetMap)
-> giới hạn số truy vấn theo IP, và sau một ngày chụp ảnh liên tục thì nhánh truy vấn di tích bị
-> từ chối. Đây là hành vi thật của ứng dụng khi bị giới hạn, không phải lỗi bố cục.
+> **Ảnh Khám phá chỉ có quán ăn, không có di tích ở ba trong bốn bộ.** Overpass (máy chủ
+> OpenStreetMap) giới hạn truy vấn theo IP, và nhánh truy vấn di tích nặng hơn nên bị từ chối
+> trước. Đây là hành vi thật của ứng dụng khi bị giới hạn, không phải lỗi bố cục — ảnh iPhone
+> chụp đúng lúc hạn mức hồi lại nên có đủ **40 địa điểm** kèm di tích, để so sánh.
 
 ---
 
@@ -189,7 +198,7 @@ Chi tiết đầy đủ (hình học bản đồ 34 tỉnh, truy vấn Overpass,
 |---|---|---|
 | Khám phá, hội thoại, ghi chú, bản dịch, tổng kết ngày | **Room (SQLite)** — 5 bảng | Nguồn sự thật duy nhất; màn hình đọc qua `Flow`, nên hoạt động cả khi offline |
 | Ảnh chụp | **Tệp JPEG** trong thư mục riêng của app | Đã xoay đúng chiều theo EXIF, thu về cạnh dài 1024 px |
-| Tuỳ chọn (khoá API, model, giao diện, đọc to, định vị) | **DataStore Preferences** | |
+| Tuỳ chọn (giao diện, đọc to, định vị) | **DataStore Preferences** | Khoá API và model **không** nằm ở đây nữa từ 06.08.2026 — cả hai là quyết định lúc build |
 | Dữ liệu 34 tỉnh + 61 mục văn hoá | **Tệp đóng gói sẵn trong app** | Chỉ đọc, không cần mạng |
 | Dữ liệu địa điểm quanh đây | **Bộ nhớ tạm (RAM)** — 15 phút / 300 m | Cố tình không lưu xuống đĩa: đây là dữ liệu về nơi bạn *đang* đứng, mở lại app mà thấy thành phố tuần trước là sai |
 
@@ -200,8 +209,11 @@ vào một thư mục không còn tồn tại. Lỗi này từng làm mất **to
 **Những gì rời khỏi máy:** ảnh cần nhận diện (gửi tới Gemini), toạ độ hiện tại (gửi tới
 OpenStreetMap / Wikipedia), và ảnh bản đồ. Không có gì khác.
 
-**Khoá API Gemini** đọc từ `local.properties` khi build (không vào git), hoặc người dùng tự
-dán khoá của mình trong **Cài đặt → Khoá API** — khoá của người dùng được ưu tiên.
+**Khoá API Gemini** đọc từ `local.properties` khi build (không vào git), và chỉ từ đó. Ô dán
+khoá trong Cài đặt đã gỡ ngày 06.08.2026 cùng cả mục *Trí tuệ*: xin người dùng một khoá API là
+xin họ giữ hộ thông tin xác thực của người phát triển, và hai nguồn khoá nghĩa là hành vi của
+app phụ thuộc vào việc khoá nào đang được dùng. **Model** đi cùng đường: `GeminiModel.CONFIGURED`
+trong `domain/model/AppSettings.kt` là một dòng, sửa rồi build lại.
 
 ---
 
@@ -237,38 +249,80 @@ dùng điện thoại làm công cụ chính và không có hướng dẫn viên
 | Đọc offline (Room là nguồn sự thật) | ✅ |
 | Bố cục máy tính bảng / cửa sổ rộng | ✅ |
 | iOS (Compose Multiplatform + MapKit) | ✅ |
+| Chế độ Hướng dẫn — 61 gợi ý nhận biết ngay trên bảng | ✅ |
+| Thẻ "đã vào bộ sưu tập" trên trang kết quả nhận diện | ✅ |
+| Trình đọc màn hình dùng được hai bản đồ | ✅ |
+| Màn hình giấy phép + ghi nhận ODbL trên bản đồ | ✅ |
+| Tên địa điểm khám phá theo ngôn ngữ của máy (`name:en` từ OSM) | ✅ |
 | Nhập liệu bằng giọng nói | ❌ đã gỡ — code hoàn chỉnh nhưng chưa có nút gọi tới |
 | Gợi ý điểm đến do AI tự sinh | ❌ đã gỡ — địa chỉ và giá đều bịa; thay bằng **Khám phá** |
 
-**Ba giới hạn cần biết trước khi demo:**
+**Hai giới hạn cần biết trước khi demo:**
 
-1. **Khả năng tiếp cận (accessibility) chưa làm.** Bản đồ hộ chiếu vẽ bằng `Canvas` trần nên
-   trình đọc màn hình bỏ qua hoàn toàn.
-2. **Overpass là hạ tầng cộng đồng và có giới hạn theo IP.** Dùng dồn dập sẽ bị từ chối tới
+1. **Overpass là hạ tầng cộng đồng và có giới hạn theo IP.** Dùng dồn dập sẽ bị từ chối tới
    khi hồi lại.
-3. **Phần lớn địa điểm không có ảnh.** OSM không lưu ảnh; chỉ những nơi nổi tiếng mới có bài
+2. **Phần lớn địa điểm không có ảnh.** OSM không lưu ảnh; chỉ những nơi nổi tiếng mới có bài
    Wikipedia hoặc ảnh trên Commons.
+
+Giới hạn thứ ba — *"khả năng tiếp cận chưa làm"* — đã được gỡ ngày 06.08.2026. Bản đồ hộ chiếu
+giờ phủ một node ẩn lên từng tỉnh, nên trình đọc màn hình đọc được tên và trạng thái của cả 34
+tỉnh cùng hai quần đảo, và chạm hai lần là mở được bảng tỉnh. Kiểm chứng bằng `uiautomator dump`
+trên Galaxy A16: 36 node, trước đó là 0.
 
 ---
 
 ## 8. Hướng phát triển
 
-**Ngắn hạn — hoàn thiện thứ đang có**
+**Ngắn hạn — xong ngày 06.08.2026**
 
-- Khoảnh khắc "mở khoá" khi một ô trong bộ sưu tập được lật (hiện đang diễn ra âm thầm)
-- Biến bộ sưu tập từ *bản ghi* thành *hướng dẫn*: đưa 61 gợi ý nhận biết ra ngoài thay vì giấu
-  sau một cú chạm
-- Accessibility cho bản đồ hộ chiếu và bản đồ khám phá — bắt buộc trước khi lên store
-- Màn hình giấy phép, để ghi nhận OpenStreetMap đúng yêu cầu ODbL
-- Kiểm thử cho lớp giao diện của hộ chiếu và hai bản đồ
+Cả bảy mục đều là "đưa thứ đang có ra ngoài", không mục nào cần thêm dữ liệu mới:
+
+- ✅ **Khoảnh khắc "mở khoá" không còn âm thầm.** Trang kết quả nhận diện hiện thẻ *Trong bộ sưu
+  tập · Phở · 29/61*, chạm vào là mở bảng. Là state chứ không phải snackbar, nên nó sống qua
+  xoay máy và vẫn còn khi quay lại — và nó cũng chính là đường nối giữa tấm ảnh và ô của nó.
+- ✅ **Bộ sưu tập thành hướng dẫn.** Nút ở đầu trang đổi giữa *Lưới* và *Hướng dẫn*; ở chế độ
+  hướng dẫn cả 61 gợi ý nhận biết nằm ngay cạnh tên, không phải chạm từng ô. Gợi ý tiếng Việt
+  dài 63–103 ký tự nên không thể nhét vào ô vuông 3 cột — đó là lý do có hai chế độ.
+- ✅ **Accessibility cho hai bản đồ.** Hộ chiếu: 34 node tỉnh + 2 quần đảo, đọc được tên và
+  trạng thái, chạm được. Khám phá: bản đồ có mô tả trên cả Android và iOS, ghim mang tên địa
+  điểm, và danh sách xếp hạng bên cạnh là đường đi không cần bản đồ.
+- ✅ **Màn hình giấy phép.** Cài đặt → Về ứng dụng → *Giấy phép và nguồn dữ liệu*: OpenStreetMap
+  (ODbL 1.0), Natural Earth, Wikipedia (CC BY-SA 4.0), Wikimedia Commons — mỗi mục có đường dẫn
+  tới giấy phép gốc. Kèm dòng ghi nhận **ngay trên** hai bản đồ, đúng yêu cầu ODbL §4.3.
+- ✅ **Kiểm thử lớp giao diện.** 6 test chạy trên máy thật: phép chiếu và hit-test của bản đồ
+  hộ chiếu, cây semantics của nó, và công tắc Lưới ⇄ Hướng dẫn. `:shared` đi từ 118/107 lên
+  **123/112**, tổng dự án 455 → **465**, và bộ device test 12 → **18**.
+- ✅ **Tên địa điểm theo ngôn ngữ của máy.** Bản đồ khám phá đọc `name:<ngôn ngữ>` rồi
+  `name:en` từ OSM, nên máy tiếng Anh mở ra *Vietnam Military History Museum* thay vì *Bảo
+  tàng Lịch sử Quân sự Việt Nam*. Dữ liệu này **đã nằm sẵn** trong phản hồi Overpass và đang
+  bị vứt đi, nên không tốn thêm một request nào. Tên tiếng Việt không mất — nó nằm ngay dưới
+  tiêu đề trong thẻ chi tiết, vì tấm biển trước mặt vẫn ghi bằng tiếng Việt. Máy tiếng Việt
+  cố ý **không** nhận bước dự phòng tiếng Anh: với đúng một ngôn ngữ, nó là bước lùi. Đo trên
+  Galaxy A16 bằng cách ghim app sang `en-US` rồi về `vi-VN` trên cùng 40 kết quả. `:data` đi
+  từ 120/86 lên **126/92**, tổng dự án 465 → **477**.
+- ✅ **Trang Cài đặt gọn lại còn những gì người đi đường thật sự chọn.** Mục *Trí tuệ* — ô dán
+  khoá API và ba thẻ chọn model — đã gỡ: cả hai là quyết định lúc build (`local.properties` và
+  `GeminiModel.CONFIGURED`), không phải câu hỏi dành cho người dùng, và "Gemini 3.5 Flash hay
+  3 Pro" chỉ người đã biết bảng danh mục của Google mới trả lời đúng được. Thay vào đó, mục
+  *Về ứng dụng* nhận thêm **Chính sách bảo mật** và **Điều khoản dịch vụ**, mở bằng trình duyệt
+  và nằm chung thẻ với *Giấy phép*; hai thẻ trong mục này giờ có khoảng cách thật giữa chúng
+  thay vì dính liền. Chân trang đọc *Evora Technologies Global · v1.0.0*. Kèm theo là một lỗi
+  cùng họ được vá: xoá toàn bộ khám phá **thất bại** vẫn báo "đã xoá" — giờ lời xác nhận chỉ
+  hiện khi lệnh xoá thực sự thành công. Tổng dự án 477 → **475** (mất hai case của
+  `GeminiModel.fromId`, thêm một case cho `CONFIGURED`).
+
+**Ngắn hạn — còn lại**
+
+- Gom nhóm ghim (marker clustering) trên bản đồ khám phá khi có 40 địa điểm chồng nhau.
+  Android xếp chồng nên ghim dưới không chạm được; iOS thì **ẩn hẳn** ghim thua theo
+  `displayPriority`, tức là địa điểm biến mất khỏi bản đồ. Danh sách xếp hạng bên cạnh vẫn
+  giữ đủ cả 40, nên đây là mất mát ở tầng vẽ chứ không phải mất dữ liệu.
 
 **Trung hạn — mở rộng năng lực**
 
 - **Gemini Live API** — hội thoại bằng giọng nói theo thời gian thực
 - **Chế độ offline** — gói dữ liệu cho một tỉnh, dùng được khi không có mạng
 - **Nhập liệu bằng giọng nói** (khôi phục phần đã gỡ, lần này có nút)
-- Đọc `name:en` từ OSM cho ~47% địa điểm đã có sẵn tên tiếng Anh
-- Gom nhóm ghim (marker clustering) trên bản đồ khám phá
 
 **Dài hạn — sản phẩm**
 
@@ -303,8 +357,10 @@ khám phá** chính là nút đưa bản demo về trạng thái đẹp.
 thái trống thật thì chạy bản release.
 
 Cần một khoá Gemini từ [Google AI Studio](https://aistudio.google.com/apikey) đặt trong
-`local.properties`. Hướng dẫn đầy đủ, kèm khoá Maps SDK cho Android và cách tạo bản release,
-xem [TechStack-temp.md §9–§11](TechStack-temp.md#9-getting-started).
+`local.properties` — không còn cách nào nhập khoá từ trong app, nên bản build thiếu khoá sẽ báo
+ngay trên màn Ống kính và không nhận diện được gì. Hướng dẫn đầy đủ, kèm khoá Maps SDK cho
+Android và cách tạo bản release, xem
+[TechStack-temp.md §9–§11](TechStack-temp.md#9-getting-started).
 
 ---
 

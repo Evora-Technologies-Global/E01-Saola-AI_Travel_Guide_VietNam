@@ -1,0 +1,46 @@
+package com.evora.technologies.saola.data.di
+
+import androidx.room.RoomDatabase
+import androidx.sqlite.driver.bundled.BundledSQLiteDriver
+import com.evora.technologies.saola.data.local.db.SaolaDatabase
+import kotlinx.coroutines.CoroutineDispatcher
+import org.koin.core.module.Module
+
+/**
+ * The one seam where the two platforms differ.
+ *
+ * Everything that needs an Android `Context`, an `NSBundle` or a documents directory is
+ * bound here; the rest of the graph is declared once in common code and cannot tell the
+ * platforms apart. This is deliberately a *module* rather than a set of `expect` classes:
+ * the implementations genuinely need different constructor arguments, and pretending
+ * otherwise would mean inventing a wrapper type whose only job is to carry a `Context`
+ * through code that has no use for one.
+ *
+ * The bindings each actual must provide:
+ *  - [com.evora.technologies.saola.data.local.file.ImageStorage]
+ *  - [com.evora.technologies.saola.data.local.asset.BundledAssets]
+ *  - [com.evora.technologies.saola.domain.repository.TextRecognizer]
+ *  - [com.evora.technologies.saola.domain.repository.LocationRepository]
+ *  - [SaolaDatabase]
+ *  - `DataStore<Preferences>`
+ */
+internal expect val platformDataModule: Module
+
+/**
+ * The persistence policy both platforms share.
+ *
+ * Only the file path is platform business; the fallback and the driver are decided here
+ * so the two platforms cannot drift into different storage behaviour.
+ */
+internal fun RoomDatabase.Builder<SaolaDatabase>.applySharedConfiguration(
+    ioDispatcher: CoroutineDispatcher,
+): RoomDatabase.Builder<SaolaDatabase> = this
+    // Pre-1.0, and no migrations are declared: any schema change should reset local
+    // history rather than block the build on a migration no shipped install will ever
+    // need. Nothing is published, so the only file this can ever drop is a developer's.
+    .fallbackToDestructiveMigration(dropAllTables = true)
+    // The bundled driver, not the platform one: it ships the same SQLite build to both
+    // platforms, so a query cannot behave differently because the OS happens to link an
+    // older library. It is also the only driver available on Kotlin/Native.
+    .setDriver(BundledSQLiteDriver())
+    .setQueryCoroutineContext(ioDispatcher)

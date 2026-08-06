@@ -6,7 +6,7 @@
   archipelagos are named as Việt Nam names them, and the sea as Biển Đông.
 -->
 <resources>
-    <string name="app_name">VietLens AI</string>
+    <string name="app_name">Saola</string>
 
     <string name="resource_language">zh</string>
 
@@ -18,12 +18,12 @@
 
     <!-- Camera -->
     <string name="camera_permission_title">需要使用相机</string>
-    <string name="camera_permission_body">VietLens 用相机识别你身边的地标、菜肴和标识。照片只留在你的设备上。</string>
+    <string name="camera_permission_body">Saola 用相机识别你身边的地标、菜肴和标识。照片只留在你的设备上。</string>
     <string name="camera_permission_grant">允许使用相机</string>
-    <string name="camera_permission_blocked_body">VietLens 的相机权限已关闭，Android 不会再次询问。请在应用设置中开启后继续。</string>
+    <string name="camera_permission_blocked_body">Saola 的相机权限已关闭，Android 不会再次询问。请在应用设置中开启后继续。</string>
     <string name="location_permission_title">给护照盖章</string>
     <string name="location_permission_body">开启定位后，每张照片都会记住拍摄于哪个省，那个省就会在护照地图上填色。</string>
-    <string name="location_permission_blocked_body">VietLens 的定位权限已关闭，Android 不会再次询问。请在应用设置中开启，照片才能为护照地图盖章。</string>
+    <string name="location_permission_blocked_body">Saola 的定位权限已关闭，Android 不会再次询问。请在应用设置中开启，照片才能为护照地图盖章。</string>
     <string name="location_permission_grant">允许</string>
     <string name="location_permission_later">暂不</string>
     <string name="permission_open_settings">打开设置</string>
@@ -102,7 +102,7 @@
     <string name="discovery_listen_meta">%1$d 分钟 · 用%2$s朗读</string>
     <string name="discovery_favorite_saved">已保存</string>
     <string name="discovery_share">分享</string>
-    <string name="discovery_share_body">%1$s\n\n%2$s\n\n来自 VietLens AI</string>
+    <string name="discovery_share_body">%1$s\n\n%2$s\n\n来自 Saola</string>
     <plurals name="discovery_notice_count">
         <item quantity="other">%1$d 处值得留意</item>
     </plurals>
@@ -125,11 +125,31 @@
     <string name="discovery_note_take_photo">拍照</string>
     <string name="discovery_note_camera_flip">切换摄像头</string>
     <string name="discovery_note_camera_permission_title">为这条笔记拍张照片？</string>
-    <string name="discovery_note_camera_permission_body">VietLens 需要相机来拍下与笔记一同保存的照片。它只存在本机，绝不会上传。</string>
-    <string name="discovery_note_camera_permission_blocked_body">VietLens 的相机已关闭，Android 不会再次询问。请在应用设置中重新开启以拍照 — 在此之前你仍可以从相册添加。</string>
+    <string name="discovery_note_camera_permission_body">Saola 需要相机来拍下与笔记一同保存的照片。它只存在本机，绝不会上传。</string>
+    <string name="discovery_note_camera_permission_blocked_body">Saola 的相机已关闭，Android 不会再次询问。请在应用设置中重新开启以拍照 — 在此之前你仍可以从相册添加。</string>
     <string name="discovery_note_camera_permission_allow">允许</string>
     <string name="discovery_note_camera_permission_deny">暂不</string>
     <string name="discovery_note_in_diary">向导写当天日记时会用上这条笔记。</string>
+
+    <!-- Report -->
+    <string name="report_again">再次报告这个结果</string>
+    <string name="report_title">报告这个结果</string>
+    <string name="report_body">告诉我们哪里不对。在你选择发送方式之前，不会发送任何内容。</string>
+    <string name="report_reason_wrong_name">名称或地点有误</string>
+    <string name="report_reason_wrong_facts">介绍中有事实错误</string>
+    <string name="report_reason_inappropriate">内容不当</string>
+    <string name="report_reason_other">其他</string>
+    <string name="report_note_placeholder">哪里不对？（可选）</string>
+    <string name="report_note_count">%1$d / %2$d</string>
+    <string name="report_attachment_photo">你的照片和这个结果的详细信息会一起发送。</string>
+    <string name="report_attachment_none">这个结果的详细信息会一起发送。</string>
+    <string name="report_send">发送报告</string>
+    <string name="report_cancel">以后再说</string>
+    <string name="report_mail_subject">Saola 报告 — %1$s</string>
+    <string name="report_mail_intro">有用户报告了 Saola 中的一个结果。</string>
+    <string name="report_mail_reason">原因：%1$s</string>
+    <string name="report_mail_note">用户说：%1$s</string>
+    <string name="report_mail_to">请发送至 %1$s</string>
 
     <!-- Chat -->
     <string name="chat_title">问问你的向导</string>
@@ -196,7 +216,7 @@
     <string name="explore_empty_body">这个角落在 OpenStreetMap 上收录很少。换个地方再试，或者拖动地图看看周围。</string>
     <string name="explore_permission_title">周边功能需要你的位置</string>
     <string name="explore_permission_body">地图会以你所在的位置为中心，找出 5 公里内值得步行前往的地方。你的位置只作为这次搜索的中心点发送。</string>
-    <string name="explore_permission_blocked_body">VietLens 的定位已关闭，系统不会再次询问。请在应用设置中开启以查看周围。</string>
+    <string name="explore_permission_blocked_body">Saola 的定位已关闭，系统不会再次询问。请在应用设置中开启以查看周围。</string>
     <string name="explore_source_note">地点来自 OpenStreetMap · 描述与图片来自 Wikipedia 和 Wikimedia Commons</string>
     <string name="explore_read_more">阅读完整条目</string>
     <string name="explore_readers">%1$s 次阅读</string>
@@ -219,23 +239,6 @@
     <!-- Settings -->
     <string name="settings_title">设置</string>
     <string name="settings_kicker">偏好</string>
-    <string name="settings_section_ai">智能</string>
-    <string name="settings_api_key">API 密钥</string>
-    <string name="settings_api_key_set">正在使用你自己的密钥</string>
-    <string name="settings_api_key_default">正在使用应用内置的密钥</string>
-    <string name="settings_api_key_none">尚未配置密钥</string>
-    <string name="settings_api_key_active">生效中</string>
-    <string name="settings_api_key_inactive">无密钥</string>
-    <string name="settings_api_key_hint">粘贴你自己的密钥…</string>
-    <string name="settings_api_key_save">保存密钥</string>
-    <string name="settings_api_key_clear">清除</string>
-    <string name="settings_api_key_saved">已保存 API 密钥</string>
-    <string name="settings_model_balanced">均衡</string>
-    <string name="settings_model_balanced_summary">足够深入，也快得能读完一份菜单。</string>
-    <string name="settings_model_quick">快速</string>
-    <string name="settings_model_quick_summary">标识、标签、价格。最省钱。</string>
-    <string name="settings_model_scholar">学者</string>
-    <string name="settings_model_scholar_summary">历史与文化最深入，但更慢。</string>
     <string name="settings_section_experience">体验</string>
     <string name="settings_speak">朗读回答</string>
     <string name="settings_speak_summary">用语音念出描述和对话回复</string>
@@ -250,7 +253,7 @@
     <string name="settings_clear_confirm_title">全部清除吗？</string>
     <string name="settings_clear_confirm_body">本机上的每一条发现、照片、对话和日志都会被永久删除。</string>
     <string name="settings_cleared">已清除所有发现</string>
-    <string name="settings_footer">Made in Việt Nam · v%1$s</string>
+    <string name="settings_footer">Evora Technologies Global · v%1$s</string>
 
     <!-- Categories -->
     <string name="category_landmark">地标</string>
@@ -277,7 +280,7 @@
     <string name="action_close">关闭</string>
 
     <!-- Errors -->
-    <string name="error_missing_api_key">还没有 Gemini API 密钥。在设置里添加一个就能开始识别。</string>
+    <string name="error_missing_api_key">此版本没有 Gemini 密钥，无法进行识别。</string>
     <string name="error_invalid_api_key">这个 API 密钥被拒绝了。请在设置里检查。</string>
     <string name="error_no_connection">没有网络连接。识别需要连上 Gemini。</string>
     <string name="error_timeout">等太久了。请再试一次。</string>
@@ -339,4 +342,35 @@
     <string name="settings_section_about">关于</string>
     <string name="settings_sovereignty">我们对 Biển Đông 的立场</string>
     <string name="settings_sovereignty_summary">Hoàng Sa &amp; Trường Sa · Việt Nam</string>
+
+    <!-- 数据来源与许可 -->
+    <string name="map_source_osm">© OpenStreetMap contributors</string>
+    <string name="licenses_title">许可与数据来源</string>
+    <string name="licenses_kicker">署名</string>
+    <string name="licenses_intro">Saola 建立在开放数据之上。以下是你所看到的每一项的来源，以及它所附的许可。</string>
+    <string name="licenses_open">打开许可协议</string>
+    <string name="licenses_osm_title">OpenStreetMap</string>
+    <string name="licenses_osm_body">护照地图上34个省市的边界，以及“你的周围”地图上的所有地点。© OpenStreetMap contributors，依据 Open Database License (ODbL) 1.0。</string>
+    <string name="licenses_natural_earth_title">Natural Earth</string>
+    <string name="licenses_natural_earth_body">用来裁切沿海省份边界的海岸线。属于公有领域。</string>
+    <string name="licenses_wikipedia_title">Wikipedia</string>
+    <string name="licenses_wikipedia_body">地点的介绍，以及用于排序的近60天阅读量。依据 CC BY-SA 4.0。</string>
+    <string name="licenses_commons_title">Wikimedia Commons</string>
+    <string name="licenses_commons_body">地点所配的照片。每张照片依据其文件页上写明的各自许可。</string>
+    <string name="licenses_footer">你拍的照片是你的。它们留在这台设备上，只有送去 Gemini 识别时才会离开。</string>
+    <string name="settings_licenses">许可与数据来源</string>
+    <string name="settings_licenses_summary">OpenStreetMap · Wikipedia · Natural Earth</string>
+    <string name="settings_privacy_policy">隐私政策</string>
+    <string name="settings_terms_of_service">服务条款</string>
+    <string name="settings_legal_summary">在浏览器中打开</string>
+    <!-- 收藏：指南模式 -->
+    <string name="collection_show_guide">看怎么认出来</string>
+    <string name="collection_show_board">看格子图</string>
+    <string name="discovery_collected_kicker">已收进收藏</string>
+    <string name="discovery_collected_open">打开收藏</string>
+    <!-- 地图的读屏朗读 -->
+    <string name="passport_map_a11y">越南地图，%2$d 个省市中已去过 %1$d 个</string>
+    <string name="passport_province_a11y">%1$s，%2$s</string>
+    <string name="passport_province_a11y_open">打开这个省市</string>
+    <string name="explore_map_a11y">你周围地点的地图</string>
 </resources>

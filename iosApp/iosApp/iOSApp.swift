@@ -1,5 +1,5 @@
 import SwiftUI
-import VietLensShared
+import SaolaShared
 
 /**
  The whole iOS app.
@@ -12,11 +12,11 @@ import VietLensShared
 struct iOSApp: App {
 
     init() {
-        // Once, before the first controller. Mirrors `VietLensApplication.onCreate` on Android.
+        // Once, before the first controller. Mirrors `SaolaApplication.onCreate` on Android.
         #if DEBUG
-        MainViewControllerKt.startVietLens(debug: true)
+        MainViewControllerKt.startSaola(debug: true)
         #else
-        MainViewControllerKt.startVietLens(debug: false)
+        MainViewControllerKt.startSaola(debug: false)
         #endif
     }
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-OSM boundary relations -> provinces.json for VietLens AI.
+OSM boundary relations -> provinces.json for Saola.
 
 Two decisions carry this file.
 

@@ -8,7 +8,7 @@
 > from becoming a second app, read
 > [`docs/large-screen-layout.md`](docs/large-screen-layout.md).
 
-**Reference implementation:** `VietLensAI` — Kotlin Multiplatform + Compose Multiplatform,
+**Reference implementation:** `Saola` — Kotlin Multiplatform + Compose Multiplatform,
 Android + iOS from one presentation layer. The structure below is the standard for this
 project and for any mobile app project this `.claude/` config is copied into.
 
@@ -37,7 +37,7 @@ project and for any mobile app project this `.claude/` config is copied into.
             TWO ARRANGEMENT LAYERS OVER ONE VIEWMODEL LAYER: `mobile/` and
             `tablet/` each hold screens and a shell; everything that decides
             what the app knows or does sits below both. See §3.
-            Produces `VietLensShared.framework` (static) for iOS.
+            Produces `SaolaShared.framework` (static) for iOS.
               ↓
 :domain     Models, use cases, repository *interfaces*, AppResult/AppError.
             Pure Kotlin. NO Compose, NO Android, NO Ktor, NO Room.
@@ -69,11 +69,11 @@ also why `shared/compose-stability.conf` exists — see §8.
 
 ## 3. Package layout inside `:shared`
 
-Root package: `com.duylt.trave.vietlensai`
+Root package: `com.evora.technologies.saola`
 
 ```
 src/
-├── commonMain/kotlin/com/duylt/trave/vietlensai/
+├── commonMain/kotlin/com/evora/technologies/saola/
 │   ├── MainViewModel.kt              App-level state: theme, splash gate, and the two
 │   │                                 startup jobs — demo seed, then the orphan sweep.
 │   │                                 The ONE plain ViewModel — see the exemption below
@@ -82,7 +82,7 @@ src/
 │   │   ├── mvi/CollectEffects.kt     The one effect collector every XRoute uses
 │   │   ├── designsystem/
 │   │   │   ├── theme/                Color (+ GuidePalette), Type (+ StampType,
-│   │   │   │                         VietLensShapes), Dimens (Spacing, PageSpacing,
+│   │   │   │                         SaolaShapes), Dimens (Spacing, PageSpacing,
 │   │   │   │                         PaneWidth), Motion, Insets, Theme
 │   │   │   └── component/            One composable per file, as under `feature/*/component/`:
 │   │   │                             PageHeader, OverlayHeader, AppSnackbar, AppAsyncImage,
@@ -96,18 +96,20 @@ src/
 │   │                                 ErrorMessages, VolumeShutterBus, DetectTimeout
 │   ├── feature/<name>/               ONE PACKAGE PER SCREEN, shared half — see §5
 │   │   └── component/                the composables both branches draw (camera 17,
-│   │                                 discovery 20, passport 11, journal 9, settings 8,
-│   │                                 explore 6, chat 6, sovereignty 5, collection 4)
+│   │                                 discovery 23, passport 12, journal 9, settings 6,
+│   │                                 collection 7, explore 6, chat 6, sovereignty 5)
 │   ├── mobile/                       PRESENTATION BRANCH — what a phone draws
 │   │   ├── navigation/
 │   │   │   ├── BottomDestinations.kt TopLevelDestination enum — the four tabs
-│   │   │   └── VietLensApp.kt        NavHost, scaffold, bottom bar
-│   │   └── feature/<name>/XScreen.kt Route + Screen + private children
+│   │   │   └── SaolaApp.kt        NavHost, scaffold, bottom bar
+│   │   └── feature/<name>/XScreen.kt Route + Screen + private children. `licenses/` is
+│   │                                 here and has no `feature/licenses/` half at all: it is
+│   │                                 the one screen with no ViewModel — see §5
 │   ├── tablet/                       PRESENTATION BRANCH — what a large window draws
 │   │   ├── navigation/
 │   │   │   ├── RailDestinations.kt   RailDestination enum + railDestination(), which is
 │   │   │   │                         also what decides whether a rail is drawn at all
-│   │   │   ├── VietLensTabletApp.kt  the shell: Row { NavigationRail · NavHost }
+│   │   │   ├── SaolaTabletApp.kt  the shell: Row { NavigationRail · NavHost }
 │   │   │   ├── TabletNavGraph.kt     the NavHost — one composable() per route
 │   │   │   └── TwoPaneScaffold.kt    Row { fixed pane · flexible pane }, the only
 │   │   │                             reader of PaneWidth's three content widths
@@ -117,7 +119,7 @@ src/
 │   ├── navigation/
 │   │   ├── Routes.kt                 Routes object + TOP_LEVEL + urlEncoded(). Both branches
 │   │   ├── TopLevelNavigation.kt     isTopLevel / navigateToTopLevel / restartAtLens
-│   │   └── VietLensRoot.kt           THE FORK — the one composable both entry points call
+│   │   └── SaolaRoot.kt           THE FORK — the one composable both entry points call
 │   ├── di/SharedModules.kt           useCaseModule + presentationModule + appModules()
 │   ├── platform/                     expect: Platform, PlatformActions
 │   └── voice/                        expect: SpeechRecognizer, TextToSpeech
@@ -220,7 +222,7 @@ feature/camera/
 
 `component/` is a directory rather than one `XComponents.kt` because the 200-line file rule
 bites first: the camera's seventeen shared pieces are 1 500 lines together, the discovery's
-twenty another 2 000. One composable per file, named after it, so a `Grep` for
+twenty-three another 2 200. One composable per file, named after it, so a `Grep` for
 `ShutterButton` lands on the file that draws it. Two small siblings share a file only when
 they are one decision seen twice — `NoteCards.kt` holds the blank and the written note because
 `NoteBlock` animates directly between them and they must keep the same corner and padding;
@@ -232,7 +234,10 @@ on 04.08.2026, when the passport's province panel turned out to hold a byte-iden
 copy of `DashedRule`: two features draw it, which is the line §10 draws around the design system.
 `SovereigntyPanel.kt` and `SettingsRow.kt` are the same judgement stretched to its limit —
 the statement's map panel and its note are one washed panel holding two different things, and
-the settings card's value, switch and destructive rows are one row with three different ends.
+the settings card's value, switch, nav, external and destructive rows are one row with five
+different ends. The About card is where that stops being an argument and becomes visible: it
+stacks a `NavRow` on two `ExternalRow`s, chevron over arrow-out, and a padding that disagreed
+between them would be read on one screenful.
 Both pass the test the rule is really made of: the siblings are drawn stacked on one screenful,
 so a change to one that misses the other is visible without scrolling.
 
@@ -250,6 +255,17 @@ mobile"*: if the shared piece sits inside `mobile/feature/x/XScreen.kt` as a `pr
 the tablet cannot call it and will copy it instead — and a copy diverges on the first fix
 that only one side gets. When a branch needs something a screen currently keeps private,
 lift it into `feature/<name>/` in the same change, do not duplicate it.
+
+**One screen has no ViewModel at all, and the exemption is written down here rather than
+left to be filed as an oversight.** `mobile/feature/licenses/LicensesScreen.kt` is five fixed
+paragraphs and four links: no state, nothing asynchronous, nothing that can fail. A
+`MviViewModel` for it would add a Koin binding, a suite under §9's one-per-ViewModel rule, and
+an effect channel with no sender, and its reducer would be the identity function. Read the rule
+as: **a screen gets a ViewModel when it has something to decide** — and the moment this one
+acquires a decision it acquires a ViewModel in the same change. It keeps the Route/Screen split
+regardless, because that is about who may touch what, and `LicensesRoute` does touch something
+the page must not: `rememberUrlOpener()`. It is also in `DesignTokenTest.HEADER_OWNERS`, since
+that rule is about what a page draws rather than about what holds its state.
 
 **`XContract.kt` is mandatory, even when the effect set is empty** — all ten features have
 one. Contract files are the first thing anyone reads to understand a screen; burying
@@ -305,17 +321,18 @@ parameters, and that is the honest count of what an arrangement of this screen n
 shorter list would mean a branch re-deriving one of them, which is the divergence the host
 exists to prevent.
 
-`feature/settings/SettingsHost.kt` is the third, and it is the smallest — three effect arms
-and a rule about how they are shown. Every one of them is launched into a `rememberCoroutine
-Scope` rather than awaited in the collector, because `showSnackbar` suspends for the length of
-the notice and a collector that waited would hold the next effect behind the current one:
-saving a key and clearing history land seconds apart, and queued they would tell the traveller
-about the first act while they are looking at the result of the second. That is a paragraph of
-reasoning attached to three lines of code, and the whole argument for a host is that a second
-copy of those three lines would not carry it. Its `content` lambda takes three: `state`,
-`onIntent`, and the `SnackbarHostState` the arrangement has to place — the phone hands it to a
+`feature/settings/SettingsHost.kt` is the third, and it is the smallest — two effect arms and
+a rule about how they are shown. Both are launched into a `rememberCoroutineScope` rather than
+awaited in the collector, because `showSnackbar` suspends for the length of the notice and a
+collector that waited would hold the next effect behind the current one: a clear that failed
+and the retry that worked land within a second of each other, and queued they would tell the
+traveller about the first act while they are looking at the result of the second. That is a
+paragraph of reasoning attached to two lines of code, and the whole argument for a host is that
+a second copy of those two lines would not carry it. Its `content` lambda takes four: `state`,
+`onIntent`, the `SnackbarHostState` the arrangement has to place — the phone hands it to a
 `Scaffold`, the large window aligns it to the bottom of a `Box`, and neither of those is the
-host's business.
+host's business — and `rememberUrlOpener()`, which the two legal rows need and which is
+platform behaviour rather than layout, so §3 keeps it out of both branches.
 
 **A pane is not a Route, and that is the rule that keeps `onIntent` honest on a large window.**
 Where the tablet shows one feature inside another — the guide beside the discovery, the
@@ -368,7 +385,7 @@ Rules:
   explicit one is not redundant: the discovery route happens to spell its argument the same
   way, so the fallback would answer correctly today and silently stop the day either route is
   renamed. Held to it by `ChatViewModelTest`.
-- Both entry points (`VietLensApplication` on Android, `startVietLens` on iOS) pass exactly
+- Both entry points (`SaolaApplication` on Android, `startSaola` on iOS) pass exactly
   `appModules(isDebug)`, so neither platform can get a graph the other does not have.
 - Adding a ViewModel means adding **one** `viewModel { }` block here. Adding a use case
   means **one** `factory { }` line.
@@ -383,11 +400,11 @@ Split across the branch line, and the split is the point:
 |---|---|---|
 | `navigation/Routes.kt` | every route string, every `ARG_*`, `TOP_LEVEL`, `urlEncoded()` | **shared.** One route table, or a deep link works on one form factor and not the other |
 | `navigation/TopLevelNavigation.kt` | `isTopLevel()`, `navigateToTopLevel(route)`, `restartAtLens()` | **shared.** "Never stack a duplicate tab" is the app's behaviour, not a bar's; copied into the second shell it becomes a second answer |
-| `navigation/VietLensRoot.kt` | the branch fork, and the `NavHostController` both shells share | **shared.** The one composable `MainActivity` and `MainViewController` call |
+| `navigation/SaolaRoot.kt` | the branch fork, and the `NavHostController` both shells share | **shared.** The one composable `MainActivity` and `MainViewController` call |
 | `mobile/navigation/BottomDestinations.kt` | `TopLevelDestination` — the four tabs, their icons and labels | a bottom bar is one branch's answer; the tablet puts the same four places on a rail |
-| `mobile/navigation/VietLensApp.kt` | the `NavHost`, the scaffold, the bar | the shell *is* the arrangement |
+| `mobile/navigation/SaolaApp.kt` | the `NavHost`, the scaffold, the bar | the shell *is* the arrangement |
 | `tablet/navigation/RailDestinations.kt` | `RailDestination` — the same four, plus `railDestination()`, which is also the rail's *visibility* test | the rail's own list, for the same reason the bar has one — and its own reading of which routes count as a place |
-| `tablet/navigation/VietLensTabletApp.kt` | the large-window shell: rail, and the sovereignty seal below it | same, for the other arrangement |
+| `tablet/navigation/SaolaTabletApp.kt` | the large-window shell: rail, and the sovereignty seal below it | same, for the other arrangement |
 | `tablet/navigation/TabletNavGraph.kt` | the tablet `NavHost`, and `NavBackStackEntry.discoveryId()` | its own file because phases 04–08 each rewrite one `composable` block in it, in parallel |
 | `tablet/navigation/TwoPaneScaffold.kt` | `Row { fixed pane · flexible pane }` | the shape three tablet screens share, and the only reader of `PaneWidth`'s content widths |
 
@@ -437,9 +454,15 @@ Split across the branch line, and the split is the point:
   arrangement's business.** The phone navigates; the tablet feeds the question into the guide
   already on screen. The ViewModel says *ask this* and neither branch decides anything about
   the discovery — which is the line §3 draws.
+- **Two routes are registered identically in both shells and open the *same* composable.**
+  `Routes.TRANSLATION` and `Routes.LICENSES` both point at a screen under `mobile/feature/`,
+  because each is the same picture at any window size — a full-bleed photograph with the
+  Vietnamese replaced in place, and a scrolling document. That is a statement about the
+  content, not a shortcut: a screen with no large-window arrangement still has to be in both
+  graphs, and §5's checklist asks for the reason in writing, which is in each screen's KDoc.
 - **A new route is registered in every branch shell that exists, identically.** Nothing
   enforces this — it is a `composable(Routes.X)` block per shell — so adding one to
-  `VietLensApp` and not to `TabletNavGraph` shows up as a blank screen on one device and
+  `SaolaApp` and not to `TabletNavGraph` shows up as a blank screen on one device and
   nowhere in a build log. The second failure is worse and quieter: `NavController.setGraph`
   compares the incoming graph with the one it holds **structurally**, and only two graphs it
   judges equal take the update-in-place path that swaps each destination's composable and
@@ -450,7 +473,7 @@ Split across the branch line, and the split is the point:
   three `Routes.TRANSLATION` defaults. Measured on a Pixel Tablet, 04.08.2026: passport open,
   1280 × 800 dp → 337 × 731 dp → back, still on the passport, and back once more returns to
   the journal.
-- **One `NavHostController`, created above the fork.** `VietLensRoot` remembers it and hands
+- **One `NavHostController`, created above the fork.** `SaolaRoot` remembers it and hands
   the same instance to whichever shell the window size selects, which is why resizing —
   rotating an iPad, unfolding a fold, leaving split-screen — changes the arrangement and
   nothing else: the traveller stays on the screen they were reading, with their back stack.
@@ -513,6 +536,8 @@ androidDeviceTest/
 │                                           the last one
 ├── performance/RecompositionTest.kt        skipping, counted on a device
 ├── feature/translate/…GestureTest.kt       pinch and drag, real multi-touch
+├── feature/passport/PassportMapTest.kt     the hit test and the semantics over one Canvas
+├── feature/collection/CollectionGuideTest.kt  the board/guide switch
 ├── tablet/TwoPaneScroll.kt                 the two two-pane tests' shared machinery
 └── tablet/feature/<name>/…Test.kt          one arrangement claim per file
 
@@ -550,9 +575,18 @@ green throughout — see §11 row #14. First, a JVM-only class: `SecurityExcepti
 not contain `,` `.` `;` `:` or brackets** — Kotlin/Native rejects the identifier outright with
 *"Name contains illegal characters"* while the JVM accepts all of them. Run
 `:shared:allTests`, not `:shared:testAndroidHostTest`, or half the platforms this presentation
-layer ships to are never compiled against. Currently **110 on the JVM, 99 on the iOS
+layer ships to are never compiled against. Currently **123 on the JVM, 112 on the iOS
 simulator** — the difference is the two source-reading gates below, which need `java.io.File`.
-Project total **413**, with `:data` at 110 / 76, `:domain` at 10 / 10 and `:app` at 4.
+Project total **475**, with `:data` at 126 / 92, `:domain` at 9 / 9 and `:app` at 4, plus
+**18 on a device**. `:domain` lost one on 06.08.2026: `GeminiModel.fromId` went with the model
+picker, and the two cases that drove it were replaced by one that pins `GeminiModel.CONFIGURED`.
+
+**These counts are read off `build/test-results`, not remembered.** The figures here before
+05.08.2026's report feature said 413 / 110 / 99 with `:data` at 110 / 76, and `:data` had not
+been touched in between — so they were already ten stale on each leg. A count nobody
+re-measures drifts into a number that looks authoritative and is not; the one-liner that
+produces the current values is `find <module>/build/test-results -name '*.xml'` summed over
+the `tests="…"` attribute, per source set.
 
 **The device leg runs on API 37 since 05.08.2026** — see §11 row #18. `ui-test-junit4` drags in
 `espresso-core:3.5.0` and `androidx.test:runner:1.5.0` even at Compose 1.12, and both are named
@@ -593,9 +627,14 @@ Two source-reading gates live in `androidHostTest`, because both need `java.io.F
   outright on an empty union, and `every presentation branch is actually scanned` fails if a
   root in `POPULATED_BRANCHES` contributes zero files and prints the per-branch count. All
   three roots are in `POPULATED_BRANCHES` since the tablet lens landed on 04.08.2026; adding
-  a fourth branch means updating both lists. It prints its own reach on every run — **135
-  files: `feature: 116`, `mobile/feature: 10`, `tablet/feature: 9`** as of the tablet settings
-  and sovereignty. Read the number; it should move only when files are genuinely added.
+  a fourth branch means updating both lists. It prints its own reach on every run — **144
+  files: `feature: 123`, `mobile/feature: 12`, `tablet/feature: 9`** since 06.08.2026, when the
+  short-term list in `README.md` §8 was worked through (five composables lifted under
+  `feature/` — `EntryFace`, `CollectionGuideRow`, `CollectionViewToggle`,
+  `ProvinceSemanticsOverlay`, `CollectionUnlockCard` — and the licences screen's two under
+  `mobile/feature/`) and the settings page lost its Intelligence section the same day:
+  `ApiKeyCard.kt` and `ModelPicker.kt` deleted, `LegalLinks.kt` added. Read the number; it
+  should move only when files are genuinely added or removed.
   `HEADER_OWNERS` counts a **pane** as a screen: `PassportPane.kt` and `CollectionPane.kt` are
   not destinations, but each opens with a title band over a page, and a hand-rolled header is
   more visible there than on a phone because the traveller sees it beside a compliant one.
@@ -605,7 +644,7 @@ Two source-reading gates live in `androidHostTest`, because both need `java.io.F
   `LensScreen.kt` is.
 
 Build gates: `tasks.withType<Test>` depends on `compileAndroidMain` so the Compose reports
-exist before the stability test reads them, and sets `vietlens.commonMainDir` so the token
+exist before the stability test reads them, and sets `saola.commonMainDir` so the token
 test can find the sources.
 
 ---
@@ -650,20 +689,24 @@ the file.
 
 ### Open — hygiene
 
-| # | Deviation | Location |
-|---|---|---|
-| 11 | One screen file far over the 200-line rule: `TranslationScreen` 683. **The branch split raises the cost of leaving this.** It keeps its reusable pieces as `private fun`s, and a `private fun` is invisible to `tablet/` — so a tablet branch either gets the piece lifted into `feature/<name>/component/` first, or copies it. The lift is the first step of any tablet screen, not a cleanup to be scheduled. **Five files have come off this list**: `LensScreen` and `DiscoveryScreen` on 04.08.2026 (rows 11a, 11b), then `PassportScreen` and `JournalScreen` the same day (row 11c), then `SettingsScreen` (row 11d). Translation is the one screen with no tablet arrangement — it is a photograph with the Vietnamese on it replaced in place, the same picture at any window size — so nothing has forced its lift yet. It is phase 10's, when the phone's screens are read in landscape. | `mobile/feature/translate/TranslationScreen.kt` |
+| # | Deviation                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      | Location |
+|---|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---|
+| 11 | One screen file far over the 200-line rule: `TranslationScreen` 683. **The branch split raises the cost of leaving this.** It keeps its reusable pieces as `private fun`s, and a `private fun` is invisible to `tablet/` — so a tablet branch either gets the piece lifted into `feature/<name>/component/` first, or copies it. The lift is the first step of any tablet screen, not a cleanup to be scheduled. **Five files have come off this list**: `LensScreen` and `DiscoveryScreen` on 04.08.2026 (rows 11a, 11b), then `PassportScreen` and `JournalScreen` the same day (row 11c), then `SettingsScreen` (row 11d). Translation is the one screen with no tablet arrangement — it is a photograph with the Vietnamese on it replaced in place, the same picture at any window size — so nothing has forced its lift yet. It is phase 10's, when the phone's screens are read in landscape.                                                                                                                                                                                                                                           | `mobile/feature/translate/TranslationScreen.kt` |
 | 16 | **The conversation with the guide still ignores dark mode**, and deliberately so for now. `plans/260803-1118-ui-standardisation/plan.md` phase 3.6 called for deleting `HeaderBackground` / `InkMuted` and taking the header's colours from the scheme. The header was only ever half the story: the page, the composer, the guide's bubbles and the thinking card are fixed to the lens palette too, and the phone pins the system bar icons to dark to match — protected by §12. Converting the header alone would put a scheme-dark bar on a cream page. **Half of the fix landed on 04.08.2026:** the seven tints are now `GuidePalette` in `Color.kt`, beside the lens and flag ones, because the tablet's guide column draws the same conversation and two branches cannot each own a copy of its colours. What is left is the decision itself — convert the whole conversation to the scheme, or state in `Color.kt` that it is fixed on purpose the way the lens palette does. Note that on a large window the cream column now sits beside a scheme-coloured story pane, which is the first place the two systems meet on one screen. | `core/designsystem/theme/Color.kt` (`GuidePalette`) |
-| 17 | `TranslationScreen` is allowlisted in `DesignTokenTest` for `.sp` alongside the two map canvases. Its use is legitimate — `autoSize` steps a translated block's type down to fit the Vietnamese line it covers — but the allowlist is per *file*, so a genuine hardcoded size added anywhere else in those 700 lines would pass. Narrow it to the composable if the file is ever split. | `mobile/feature/translate/TranslationScreen.kt:409-419` |
-| 19 | **`DesignTokenTest` scans `feature/` for four of its six rules** — gap, corner, weight and type size — while only the inset rule walks all of `commonMain`. A literal radius or a call-site `fontWeight` added under `core/designsystem/component/` is therefore invisible to the gate, which is the one place a bad value would spread furthest. The narrow scope was deliberate (a design-system component owns its own internal geometry, per `Dimens.kt`), but *internal padding* and *a sixth corner radius* are not the same exemption. Verified clean by hand on 03.08.2026 — zero corner literals, zero call-site weights, zero `.sp` outside `Type.kt` — so this is a latent hole, not a live one. Fix by scanning `designsystem/` for corner and weight while leaving the gap rule at `feature/`. | `androidHostTest/…/DesignTokenTest.kt:354` |
-| 22 | **Seven placeholder languages still say Vietnamese.** `AppSettings.DEFAULT.language` and the `language` default on the Journal, Chat, Translation, Discovery, Passport and Explore contracts are all `AppLanguage.VIETNAMESE` — the value a screen holds for the few milliseconds before the settings flow delivers the device's answer. That was coherent while Vietnamese was the app-wide default; since narration follows the phone, English is the fallback everywhere else (`languageForTag`, `uiLanguage()`, the `values/` string table), so a Japanese phone can draw one frame of `12 thg 3, 2026` before flipping. Not new in kind — anyone who had picked English in the old picker saw the same flicker — only the affected population changed. No clean fix available where it sits: `deviceLanguage()` is `internal` to `:data` and a contract has no composition to call `uiLanguage()` from, so this needs either a `:domain`-level device-language port or an initial value threaded from DI. | `domain/…/AppSettings.kt:33`, `feature/*/XContract.kt` |
-| 27 | **`SovereigntyViewModel` calls `Res.readBytes` directly**, which is a presentation-layer ViewModel reaching for a concrete resource API instead of depending on a port. It is the only ViewModel in the project with no injected collaborator, and therefore the only one whose subject cannot be faked: `SovereigntyViewModelTest` can assert that a map which fails to load still renders the statement, and nothing else — the success path has no test on any platform. Everything else in the app that reads an asset already goes through `:data` (`ProvinceAssetSource`, `CatalogAssetSource`). Fix by adding a `SovereigntyMapSource` port to `:domain` with the `Res.readBytes` implementation in `:data`, bound in `dataModule`. | `feature/sovereignty/SovereigntyViewModel.kt:31` |
-| 21 | `docs/bug-report-effect-collection.md` does not exist, but `plans/260802-2103-mvi-refactor/plan.md` refers to it four times as the home for the deferred UI work. Either write it or drop the references. **Renumbered from 15 on 03.08.2026:** a *different* deviation in the Fixed table below already held that number, and seven places cite `§11 row #15` meaning that one — including live comments in `JournalContract.kt`, `JournalViewModelTest.kt` and `SettingsViewModelTest.kt`. A number cited from source code is not free to reuse. | `plans/260802-2103-mvi-refactor/plan.md` |
+| 17 | `TranslationScreen` is allowlisted in `DesignTokenTest` for `.sp` alongside the two map canvases. Its use is legitimate — `autoSize` steps a translated block's type down to fit the Vietnamese line it covers — but the allowlist is per *file*, so a genuine hardcoded size added anywhere else in those 700 lines would pass. Narrow it to the composable if the file is ever split.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        | `mobile/feature/translate/TranslationScreen.kt:409-419` |
+| 19 | **`DesignTokenTest` scans `feature/` for four of its six rules** — gap, corner, weight and type size — while only the inset rule walks all of `commonMain`. A literal radius or a call-site `fontWeight` added under `core/designsystem/component/` is therefore invisible to the gate, which is the one place a bad value would spread furthest. The narrow scope was deliberate (a design-system component owns its own internal geometry, per `Dimens.kt`), but *internal padding* and *a sixth corner radius* are not the same exemption. Verified clean by hand on 03.08.2026 — zero corner literals, zero call-site weights, zero `.sp` outside `Type.kt` — so this is a latent hole, not a live one. Fix by scanning `designsystem/` for corner and weight while leaving the gap rule at `feature/`.                                                                                                                                                                                                                                                                                                                                    | `androidHostTest/…/DesignTokenTest.kt:354` |
+| 22 | **Seven placeholder languages still say Vietnamese.** `AppSettings.DEFAULT.language` and the `language` default on the Journal, Chat, Translation, Discovery, Passport and Explore contracts are all `AppLanguage.VIETNAMESE` — the value a screen holds for the few milliseconds before the settings flow delivers the device's answer. That was coherent while Vietnamese was the app-wide default; since narration follows the phone, English is the fallback everywhere else (`languageForTag`, `uiLanguage()`, the `values/` string table), so a Japanese phone can draw one frame of `12 thg 3, 2026` before flipping. Not new in kind — anyone who had picked English in the old picker saw the same flicker — only the affected population changed. No clean fix available where it sits: `deviceLanguage()` is `internal` to `:data` and a contract has no composition to call `uiLanguage()` from, so this needs either a `:domain`-level device-language port or an initial value threaded from DI.                                                                                                                                 | `domain/…/AppSettings.kt:33`, `feature/*/XContract.kt` |
+| 27 | **`SovereigntyViewModel` calls `Res.readBytes` directly**, which is a presentation-layer ViewModel reaching for a concrete resource API instead of depending on a port. It is the only ViewModel in the project with no injected collaborator, and therefore the only one whose subject cannot be faked: `SovereigntyViewModelTest` can assert that a map which fails to load still renders the statement, and nothing else — the success path has no test on any platform. Everything else in the app that reads an asset already goes through `:data` (`ProvinceAssetSource`, `CatalogAssetSource`). Fix by adding a `SovereigntyMapSource` port to `:domain` with the `Res.readBytes` implementation in `:data`, bound in `dataModule`.                                                                                                                                                                                                                                                                                                                                                                                                     | `feature/sovereignty/SovereigntyViewModel.kt:31` |
+| 30 | **The report feature ships a personal mailbox as its support address.** `REPORT_RECIPIENT` in `feature/discovery/ReportMail.kt` is `beedyto@gmail.com` — it started as `support@evora.technologies`, taken from the org package because no real address was supplied when the feature was built, and a mailbox that actually receives took its place. That answers the bounce but not the question: a personal Gmail is not the address a report should be sent to under the app's name. It is not a silent failure — Android prefills it into the To: field and iOS writes it into the body, so a traveller who sends a report addresses it to a mailbox that may not exist and gets a bounce, or nothing. Deliberately **one** `internal const val` and nowhere else, so the fix is one line; a second copy in the tablet branch is the thing that would have made this expensive. Replace before shipping.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | `feature/discovery/ReportMail.kt` |
+| 31 | **`TERMS_OF_SERVICE_URL` is still a placeholder.** `feature/settings/LegalLinks.kt` holds the two documents the About card links out to; the privacy policy points at a real page, and the terms still read `https://evora.technologies/saola/terms-of-service`, which nothing serves. Same shape as row #30 and deliberately the same containment: **one** `internal const val`, read by both branches, so the fix is one line rather than a search. It is not a silent failure — the row opens a browser on a page that does not answer, which is worse than a dead button because the traveller has left the app to find out. Replace before shipping. | `feature/settings/LegalLinks.kt` |
+| 21 | `docs/bug-report-effect-collection.md` does not exist, but `plans/260802-2103-mvi-refactor/plan.md` refers to it four times as the home for the deferred UI work. Either write it or drop the references. **Renumbered from 15 on 03.08.2026:** a *different* deviation in the Fixed table below already held that number, and seven places cite `§11 row #15` meaning that one — including live comments in `JournalContract.kt`, `JournalViewModelTest.kt` and `SettingsViewModelTest.kt`. A number cited from source code is not free to reuse.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | `plans/260802-2103-mvi-refactor/plan.md` |
 
 ### Fixed
 
 | # | Deviation | Fixed by |
 |---|---|---|
+| 32 | **Clearing the whole journal confirmed itself whether or not it worked.** `SettingsIntent.ConfirmClearHistory` called `clearHistory()` and discarded the `AppResult`, then sent `HistoryCleared` unconditionally — so a delete that failed showed a green "all discoveries cleared" over a database that still held every photograph, and the traveller only found out by walking back into the journal. Identical in kind to rows #26 and #15, and to the API-key defect the settings suite was written for; it survived because that suite pointed at the key card and nobody re-aimed it at the other write on the page. | **Fixed 06.08.2026**, while the Intelligence section was being removed. The arm now branches on the result — `ShowMessage(error)` or `HistoryCleared` — which is also what keeps `SettingsEffect.ShowMessage` alive now that saving a key is gone. `SettingsViewModelTest` moved onto it whole: the same four claims (it confirms, it does not confirm a failure, a throw does not escape, the toggles are free to ignore their result), driven through `FakeDiscoveryRepository.failOnDeleteAll` / `throwOnDeleteAll` / `deleteAllCalls`, which the fake gained for it. Verified on a Pixel Tablet AVD: confirm → *All discoveries cleared*, and the journal is empty behind it. |
+| 29 | **The passport opened with an empty province panel already peeking**, its drag handle standing 80 dp up the screen with the sovereignty banner hidden behind it, on a map where nothing had been selected. A hidden sheet is parked immediately below the *scaffold*, not below the window, and `PassportScreen`'s scaffold changes height once on its own: the screen is pushed from the journal, where the shell's tab bar is on screen, and `SaolaApp` hands its 80 dp back a frame or two later when the bar finishes sliding away. The sheet does not re-settle onto the `Hidden` anchor that moves with it — it stays where the bottom edge *used to* be. **Only visible with animations off**, which is why it survived months of being looked at on a phone: with them on, the bar's height comes back long after the sheet has settled and it lands correctly by luck of timing. Every AVD ships with all three animation scales at `0`, and so does a real device in battery saver or with the developer setting off — this was never emulator-only. | **Fixed 05.08.2026:** the hide is keyed on the scaffold's own height as well as on the selection, so every height the scaffold takes puts the sheet back on the real bottom edge. `PassportPane` is deliberately **not** given the same line: the large-window shell stands its navigation on a rail, so that scaffold is one height for the life of the screen — verified at 1067 × 667 dp with the scales at 0, banner fully visible and no handle. Measured rather than eyeballed both ways: with the scales at 0 the sheet's top edge sat at `y = 2840` of a 3120 px window (280 px = the tab bar's 80 dp) and `uiautomator dump` reported a `Nút kéo` node; after the fix there is no such node and the banner reports its full `[56,2812][1384,3064]`. Selecting a province still peeks at exactly `SheetPeekHeight`, tapping across the map keeps the dragged height, and back still dismisses — all re-checked with the scales at 0 *and* at 1. |
 | 18 | **`androidDeviceTest` could not run on API 37.** Every instrumented test failed in `Espresso.onIdle` with `NoSuchMethodException: android.hardware.input.InputManager.getInstance` — a reflection call Espresso makes that the platform removed — before any test body executed. The row was rescoped on 04.08.2026 after being wrong in the expensive direction: it had said "Android 15 or newer", so for two plans nobody ran the device leg at all, when in fact API 35 and 36 were green the whole time. | **Fixed 05.08.2026.** It was never a Compose problem and upgrading `ui-test-junit4` would not have helped — at Compose **1.12** that artifact still declares `espresso-core:3.5.0` and `androidx.test:runner:1.5.0`, both 2022 artifacts, and nothing else in the graph was high enough to win the conflict. Naming them explicitly in `libs.versions.toml` and adding them to `:shared`'s device suite and `:app`'s `androidTest` is what lets Gradle resolve **espresso 3.7.0 / runner 1.7.0**. Proved both ways on the same Pixel_7_Pro API 37 AVD in the same hour: with 3.5.0 the run dies with that exact `NoSuchMethodException`, with 3.7.0 it is **12 / 12 green**. Also still 12 / 12 on a Galaxy A16 at API 36, so nothing was traded away. |
 | 26 | **A note that fails to save said nothing at all** — and, on the path nobody had looked at, said nothing *and closed the composer*. `DiscoveryViewModel` discarded the `AppResult` of all four of its writes, so an ordinary handled failure fell straight through to the success branch: `saveNote` cleared `noteEditor` one statement later, which threw the traveller's own writing away in the one place it existed; `deleteDiscovery` sent `NavigateBack` regardless, dropping them into a journal that still listed the discovery; `deleteNote` and `toggleFavorite` were silent. The row as written named only the note and only the throw path, because the throw path was the only one the suite could reach. | **Fixed 05.08.2026:** `DiscoveryEffect.ShowMessage` exists and every write raises it through one private `report(AppError)` — eight call sites otherwise, which is how four silent failures accumulated on one screen in the first place. State keeps no `error` field, per row #15: the routes resolve the text off the effect's payload with `userMessage()`. The composer closes on `onSuccess` and nowhere else, and `NavigateBack` likewise. Both arrangements gained an `AppSnackbarHost` — the phone's against the bottom edge under `imePadding()` so a failed save lands over the composer it is about, the tablet's centred on the window at `PaneWidth.sheet` because a notice pinned inside one pane reads as being about that pane alone. Covered by six new cases in `DiscoveryViewModelTest`, each driving *both* failure paths — the fakes gained `failOn…` hooks beside their `throwOn…` ones, because no `throwOn…` can reach the branch that caused this. |
 | 1 | `ChatScreen` never collects `viewModel.effects` | Already fixed before the refactor: `ChatEffect` is now an empty sealed interface, `ScrollToBottom` / `ShowMessage` / `RequestMicPermission` were removed, and scrolling and the error banner are both driven from state. `ChatRoute` correctly has no collector. |
@@ -739,7 +782,7 @@ Do not "improve" these; they are deliberate and documented in the code:
   they cost. The status bar is transparent with no scrim of its own and every page runs *under*
   it, which is why a screen's background goes on before `screenInsetsPadding()` and never after:
   reversed, the page starts below the bar and leaves a band of window colour across the top.
-  The icons follow the theme through `DefaultSystemBarIcons`, called once by `VietLensTheme` —
+  The icons follow the theme through `DefaultSystemBarIcons`, called once by `SaolaTheme` —
   **not** by either host, because a host repeating the `ThemePreference` `when` is how iOS and
   Android come to disagree about what dark mode means. `PinSystemBarIcons` is the override for
   the two screens that paint their own background regardless of the theme, and it sits *over*
@@ -774,6 +817,41 @@ Do not "improve" these; they are deliberate and documented in the code:
   apply the **first** camera request without animating; composing early means the map opens
   on the Hanoi fallback, and animating that flies the traveller in from the capital every
   time they open the tab.
+- **`ProvinceSemanticsOverlay` — semantics without a pointer input, and three decisions in
+  it that all look like fussiness.** The passport map is a `Canvas`, so a screen reader saw one
+  unlabelled node and the whole feature did not exist for anyone using TalkBack or VoiceOver.
+  The overlay puts a labelled, actionable node over each province and keeps every gesture
+  intact, because a `Box` with no `clickable` consumes no touches while a screen reader's
+  double-tap invokes the `onClick` *semantics action* directly — two mechanisms over one map,
+  neither in the other's way. (a) The transform is read inside the measure policy, not during
+  composition: a pinch writes `zoom` sixty times a second and reading it in a composable would
+  re-run thirty-six compositions per frame to move boxes that draw nothing. (b) Handles are
+  placed **largest first**, because a node a later sibling fully covers is reported as not
+  visible — in asset order Hà Nội and Bắc Ninh sat inside their neighbours' boxes and were
+  absent from the tree entirely, 32 of 34 reachable. (c) Reading order is restored separately
+  with `traversalIndex` inside a traversal group, so area order stays a rendering constraint
+  and never something a traveller hears. All three verified by `uiautomator dump` on a Galaxy
+  A16 on 06.08.2026: 34 provinces plus both archipelagos in the tree.
+- **A capture's own square, said on the page rather than in a snackbar.** `DiscoveryState.collected`
+  is derived from the board and the discovery's id on every read — no "already announced" flag,
+  because there is nowhere honest to persist one and `CultureCollection` is derived at read time
+  anyway, so the only question it can answer truthfully is *is this the photograph standing for
+  that thing*. That answer stays true on a later visit, which is why the card doubles as the link
+  between a photograph and its tile. See `CollectionUnlockCard` for why the moment is carried by
+  the entrance animation instead.
+- **`NearbyPlace.mappedName` is the key for comparing places; `name` is only for showing
+  them.** Explore reads OSM's `name:<the traveller's language>` and falls back to `name:en`,
+  and only about half of what is around Hoàn Kiếm has been translated — so within a single
+  search some names come out English and the rest Vietnamese, and the same node is named
+  differently on two phones. Two comparisons must therefore keep reading the plain OSM
+  `name`: deduplication, which keyed on the displayed name stops collapsing two branches of
+  one café chain the moment a mapper translates one of them; and the junk filter in
+  `PlaceMappers`, whose rules are written against what a Vietnamese mapper types — "Vườn hoa
+  …", "Lư", "0 km" — so a planted roundabout given a `name:en` would walk straight past a
+  filter reading the translation. Vietnamese is excluded from the English fallback on
+  purpose: the `name` tag in Vietnam *is* the Vietnamese name, so for that one language the
+  fallback is a downgrade. `PlaceNamingTest` drives the whole search rather than the mapper,
+  because none of this is visible from `toDomain` alone.
 - `val onIntent = remember(viewModel) { viewModel::onIntent }` in `ExploreHost`, and only
   there. A ViewModel is `unstable`, so the bound reference cannot be memoised and is a new
   object every recomposition — which denies every child below it the skip its `skippable`

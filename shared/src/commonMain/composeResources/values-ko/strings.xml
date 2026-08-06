@@ -5,7 +5,7 @@
   are written only that way. See values/strings.xml for the rest of the conventions.
 -->
 <resources>
-    <string name="app_name">VietLens AI</string>
+    <string name="app_name">Saola</string>
 
     <string name="resource_language">ko</string>
 
@@ -17,12 +17,12 @@
 
     <!-- Camera -->
     <string name="camera_permission_title">카메라 권한이 필요합니다</string>
-    <string name="camera_permission_body">VietLens는 주변의 명소와 음식, 표지판을 알아보기 위해 카메라를 사용합니다. 사진은 기기 안에만 남습니다.</string>
+    <string name="camera_permission_body">Saola는 주변의 명소와 음식, 표지판을 알아보기 위해 카메라를 사용합니다. 사진은 기기 안에만 남습니다.</string>
     <string name="camera_permission_grant">카메라 허용</string>
-    <string name="camera_permission_blocked_body">VietLens의 카메라 권한이 꺼져 있고 Android는 다시 묻지 않습니다. 계속하려면 앱 설정에서 켜 주세요.</string>
+    <string name="camera_permission_blocked_body">Saola의 카메라 권한이 꺼져 있고 Android는 다시 묻지 않습니다. 계속하려면 앱 설정에서 켜 주세요.</string>
     <string name="location_permission_title">여권에 도장 찍기</string>
     <string name="location_permission_body">위치를 켜면 사진마다 어느 성에서 찍혔는지 기억하고, 그 성이 여권 지도에 채워집니다.</string>
-    <string name="location_permission_blocked_body">VietLens의 위치 권한이 꺼져 있고 Android는 다시 묻지 않습니다. 사진으로 여권 지도를 채우려면 앱 설정에서 켜 주세요.</string>
+    <string name="location_permission_blocked_body">Saola의 위치 권한이 꺼져 있고 Android는 다시 묻지 않습니다. 사진으로 여권 지도를 채우려면 앱 설정에서 켜 주세요.</string>
     <string name="location_permission_grant">허용</string>
     <string name="location_permission_later">나중에</string>
     <string name="permission_open_settings">설정 열기</string>
@@ -101,7 +101,7 @@
     <string name="discovery_listen_meta">%1$d분 · %2$s로 낭독</string>
     <string name="discovery_favorite_saved">저장됨</string>
     <string name="discovery_share">공유</string>
-    <string name="discovery_share_body">%1$s\n\n%2$s\n\nVietLens AI에서 공유</string>
+    <string name="discovery_share_body">%1$s\n\n%2$s\n\nSaola에서 공유</string>
     <plurals name="discovery_notice_count">
         <item quantity="other">눈여겨볼 것 %1$d가지</item>
     </plurals>
@@ -124,11 +124,31 @@
     <string name="discovery_note_take_photo">사진 찍기</string>
     <string name="discovery_note_camera_flip">카메라 전환</string>
     <string name="discovery_note_camera_permission_title">이 메모에 넣을 사진을 찍을까요?</string>
-    <string name="discovery_note_camera_permission_body">메모와 함께 남길 사진을 찍기 위해 VietLens에 카메라가 필요합니다. 사진은 이 기기에만 저장되며 업로드되지 않습니다.</string>
-    <string name="discovery_note_camera_permission_blocked_body">VietLens의 카메라가 꺼져 있고 Android는 다시 묻지 않습니다. 촬영하려면 앱 설정에서 다시 켜 주세요. 그전까지는 갤러리에서 추가할 수 있습니다.</string>
+    <string name="discovery_note_camera_permission_body">메모와 함께 남길 사진을 찍기 위해 Saola에 카메라가 필요합니다. 사진은 이 기기에만 저장되며 업로드되지 않습니다.</string>
+    <string name="discovery_note_camera_permission_blocked_body">Saola의 카메라가 꺼져 있고 Android는 다시 묻지 않습니다. 촬영하려면 앱 설정에서 다시 켜 주세요. 그전까지는 갤러리에서 추가할 수 있습니다.</string>
     <string name="discovery_note_camera_permission_allow">허용</string>
     <string name="discovery_note_camera_permission_deny">나중에</string>
     <string name="discovery_note_in_diary">가이드가 그날의 일기를 쓸 때 이 메모를 활용합니다.</string>
+
+    <!-- Report -->
+    <string name="report_again">이 결과 다시 신고하기</string>
+    <string name="report_title">이 결과 신고</string>
+    <string name="report_body">어떤 점이 잘못됐는지 알려 주세요. 보낼 곳을 고르기 전까지는 아무것도 전송되지 않습니다.</string>
+    <string name="report_reason_wrong_name">이름이나 장소가 잘못됨</string>
+    <string name="report_reason_wrong_facts">설명 내용에 사실 오류가 있음</string>
+    <string name="report_reason_inappropriate">부적절한 내용</string>
+    <string name="report_reason_other">기타</string>
+    <string name="report_note_placeholder">무엇이 잘못됐나요? (선택)</string>
+    <string name="report_note_count">%1$d / %2$d</string>
+    <string name="report_attachment_photo">사진과 이 결과의 상세 정보가 함께 전송됩니다.</string>
+    <string name="report_attachment_none">이 결과의 상세 정보가 함께 전송됩니다.</string>
+    <string name="report_send">신고 보내기</string>
+    <string name="report_cancel">나중에</string>
+    <string name="report_mail_subject">Saola 신고 — %1$s</string>
+    <string name="report_mail_intro">여행자가 Saola의 결과를 신고했습니다.</string>
+    <string name="report_mail_reason">사유: %1$s</string>
+    <string name="report_mail_note">남긴 말: %1$s</string>
+    <string name="report_mail_to">%1$s 주소로 보내 주세요</string>
 
     <!-- Chat -->
     <string name="chat_title">가이드에게 묻기</string>
@@ -195,7 +215,7 @@
     <string name="explore_empty_body">이 일대는 OpenStreetMap에 등록된 곳이 적습니다. 자리를 옮긴 뒤 다시 시도하거나 지도를 끌어 주변을 살펴보세요.</string>
     <string name="explore_permission_title">주변을 보려면 위치가 필요합니다</string>
     <string name="explore_permission_body">지도는 지금 서 있는 곳을 가운데 두고 5 km 안에서 걸어갈 만한 곳을 찾습니다. 위치는 그 검색의 중심으로만 전송됩니다.</string>
-    <string name="explore_permission_blocked_body">VietLens의 위치가 꺼져 있고 시스템은 다시 묻지 않습니다. 주변을 보려면 앱 설정에서 켜 주세요.</string>
+    <string name="explore_permission_blocked_body">Saola의 위치가 꺼져 있고 시스템은 다시 묻지 않습니다. 주변을 보려면 앱 설정에서 켜 주세요.</string>
     <string name="explore_source_note">장소는 OpenStreetMap · 설명과 사진은 Wikipedia와 Wikimedia Commons</string>
     <string name="explore_read_more">전체 글 읽기</string>
     <string name="explore_readers">조회 %1$s회</string>
@@ -218,23 +238,6 @@
     <!-- Settings -->
     <string name="settings_title">설정</string>
     <string name="settings_kicker">환경설정</string>
-    <string name="settings_section_ai">지능</string>
-    <string name="settings_api_key">API 키</string>
-    <string name="settings_api_key_set">내 키를 사용 중</string>
-    <string name="settings_api_key_default">앱에 내장된 키를 사용 중</string>
-    <string name="settings_api_key_none">설정된 키가 없습니다</string>
-    <string name="settings_api_key_active">사용 중</string>
-    <string name="settings_api_key_inactive">키 없음</string>
-    <string name="settings_api_key_hint">내 키를 붙여넣기…</string>
-    <string name="settings_api_key_save">키 저장</string>
-    <string name="settings_api_key_clear">지우기</string>
-    <string name="settings_api_key_saved">API 키를 저장했습니다</string>
-    <string name="settings_model_balanced">균형</string>
-    <string name="settings_model_balanced_summary">충분한 깊이에, 메뉴를 읽을 만큼 빠릅니다.</string>
-    <string name="settings_model_quick">빠름</string>
-    <string name="settings_model_quick_summary">표지판, 라벨, 가격. 가장 저렴합니다.</string>
-    <string name="settings_model_scholar">학자</string>
-    <string name="settings_model_scholar_summary">역사와 문화를 가장 깊게. 대신 느립니다.</string>
     <string name="settings_section_experience">경험</string>
     <string name="settings_speak">답변 소리내어 읽기</string>
     <string name="settings_speak_summary">설명과 채팅 답변을 음성으로</string>
@@ -249,7 +252,7 @@
     <string name="settings_clear_confirm_title">전부 지울까요?</string>
     <string name="settings_clear_confirm_body">이 기기의 모든 발견, 사진, 대화, 일지가 영구히 삭제됩니다.</string>
     <string name="settings_cleared">모든 발견을 지웠습니다</string>
-    <string name="settings_footer">Made in Việt Nam · v%1$s</string>
+    <string name="settings_footer">Evora Technologies Global · v%1$s</string>
 
     <!-- Categories -->
     <string name="category_landmark">명소</string>
@@ -276,7 +279,7 @@
     <string name="action_close">닫기</string>
 
     <!-- Errors -->
-    <string name="error_missing_api_key">아직 Gemini API 키가 없습니다. 설정에서 추가하면 인식을 시작할 수 있습니다.</string>
+    <string name="error_missing_api_key">이 빌드에는 Gemini 키가 없어 인식을 실행할 수 없습니다.</string>
     <string name="error_invalid_api_key">그 API 키는 거부되었습니다. 설정에서 확인해 주세요.</string>
     <string name="error_no_connection">인터넷에 연결되어 있지 않습니다. 인식하려면 Gemini에 연결해야 합니다.</string>
     <string name="error_timeout">시간이 너무 오래 걸렸습니다. 다시 시도해 주세요.</string>
@@ -338,4 +341,35 @@
     <string name="settings_section_about">정보</string>
     <string name="settings_sovereignty">Biển Đông에 대한 우리의 입장</string>
     <string name="settings_sovereignty_summary">Hoàng Sa &amp; Trường Sa · Việt Nam</string>
+
+    <!-- 데이터 출처와 라이선스 -->
+    <string name="map_source_osm">© OpenStreetMap contributors</string>
+    <string name="licenses_title">라이선스와 데이터 출처</string>
+    <string name="licenses_kicker">출처 표시</string>
+    <string name="licenses_intro">Saola는 열린 데이터 위에 세워졌습니다. 화면에 보이는 것들의 출처와 라이선스입니다.</string>
+    <string name="licenses_open">라이선스 열기</string>
+    <string name="licenses_osm_title">OpenStreetMap</string>
+    <string name="licenses_osm_body">여권 지도의 34개 성·시 경계와 '내 주변' 지도의 모든 장소. © OpenStreetMap contributors, Open Database License (ODbL) 1.0에 따릅니다.</string>
+    <string name="licenses_natural_earth_title">Natural Earth</string>
+    <string name="licenses_natural_earth_body">해안 지역의 경계를 잘라내는 데 쓰는 해안선. 퍼블릭 도메인입니다.</string>
+    <string name="licenses_wikipedia_title">Wikipedia</string>
+    <string name="licenses_wikipedia_body">장소 설명과 순위에 쓰는 최근 60일 조회수. CC BY-SA 4.0에 따릅니다.</string>
+    <string name="licenses_commons_title">Wikimedia Commons</string>
+    <string name="licenses_commons_body">장소에 표시되는 사진. 각 사진은 파일 페이지에 적힌 자체 라이선스를 따릅니다.</string>
+    <string name="licenses_footer">당신이 찍은 사진은 당신의 것입니다. 이 기기에 남아 있고, 인식을 위해 Gemini로 보낼 때만 기기를 떠납니다.</string>
+    <string name="settings_licenses">라이선스와 데이터 출처</string>
+    <string name="settings_licenses_summary">OpenStreetMap · Wikipedia · Natural Earth</string>
+    <string name="settings_privacy_policy">개인정보 처리방침</string>
+    <string name="settings_terms_of_service">서비스 이용약관</string>
+    <string name="settings_legal_summary">브라우저에서 열립니다</string>
+    <!-- 컬렉션: 가이드 보기 -->
+    <string name="collection_show_guide">알아보는 법 보기</string>
+    <string name="collection_show_board">격자로 보기</string>
+    <string name="discovery_collected_kicker">컬렉션에 수집됨</string>
+    <string name="discovery_collected_open">컬렉션 열기</string>
+    <!-- 지도, 스크린 리더 읽기 -->
+    <string name="passport_map_a11y">베트남 지도, %2$d개 성·시 가운데 %1$d곳 방문</string>
+    <string name="passport_province_a11y">%1$s, %2$s</string>
+    <string name="passport_province_a11y_open">이 지역 열기</string>
+    <string name="explore_map_a11y">내 주변 장소 지도</string>
 </resources>

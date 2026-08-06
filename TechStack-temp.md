@@ -1,4 +1,4 @@
-# VietLens AI — Technical appendix
+# Saola — Technical appendix
 
 Everything that used to live in `README.md` and is too detailed for it. Kept in English
 because it is the same register as [`LLM.md`](LLM.md) and quotes code identifiers verbatim;
@@ -21,7 +21,7 @@ Four Gradle modules, dependencies pointing inwards:
 :shared     THE WHOLE PRESENTATION LAYER — every screen, every ViewModel, the
             navigation graph, the design system. Compose Multiplatform.
             Two arrangement layers over one ViewModel layer: mobile/ and tablet/.
-            Produces VietLensShared.framework (static) for iOS.
+            Produces SaolaShared.framework (static) for iOS.
               ↓
 :domain     Models, use cases, repository *interfaces*, AppResult/AppError.
             Pure Kotlin. No Compose, no Android, no Ktor, no Room.
@@ -122,8 +122,11 @@ photograph once — not by failing to load them, but by deleting them: `listCapt
 reported the new directory, the database still held the old one, and the orphan sweep found
 no overlap and swept the lot.
 
-**Settings live in DataStore Preferences** (`settings.preferences_pb`), not Room: API key,
-model tier, theme, narration switch, location opt-in.
+**Settings live in DataStore Preferences** (`settings.preferences_pb`), not Room: theme,
+narration switch, location opt-in — three keys. The API key and the model tier were two more
+until 06.08.2026, when both became build decisions and their keys were dropped rather than left
+readable: a stored value that nothing writes can only override a build decision with whatever an
+older install happened to be left on.
 
 **Nothing leaves the device except the image being recognised.** There is no account, no
 backend and no analytics. The only outbound calls are Gemini (the photo and the prompt),
@@ -253,14 +256,20 @@ their province, so regenerating the asset cannot quietly drop one.
 
 ### Known gaps
 
-- **No accessibility.** The map is a bare `Canvas` with no semantics, so TalkBack skips the
-  feature entirely. Needs virtual semantics nodes or a parallel province list.
 - **Small provinces are hard to tap.** Hit testing is strict point-in-polygon with no
-  tolerance, while several provinces are ~22 dp wide at country zoom.
-- **OSM attribution is not user-visible.** It is in this file and in the source, but ODbL
-  wants it on the produced work — it belongs in a licences screen before any store listing.
-- **The app layer is untested.** `ProvinceGeometryTest` covers the geometry; there is no
-  test for `PassportViewModel`, `ProvinceRepositoryImpl`, or the screen.
+  tolerance, while several provinces are ~22 dp wide at country zoom. A screen reader is not
+  affected — `ProvinceSemanticsOverlay` gives each province a node the size of its bounding
+  box, so a double-tap reaches ones a fingertip cannot.
+- **`ProvinceRepositoryImpl` has no test.** `ProvinceGeometryTest` covers the geometry below
+  it and `PassportViewModelTest` the state above it; the repository between them is unproven.
+
+Two entries left this list on 06.08.2026, and both were about what a stranger to the code
+sees rather than about the geometry. **Accessibility**: the `Canvas` was a single unlabelled
+node and TalkBack skipped the feature entirely, so `ProvinceSemanticsOverlay` now lays a
+labelled, actionable node over each province — 34 of them plus both archipelagos, counted by
+`uiautomator dump` on a Galaxy A16 against 0 before. **Attribution**: ODbL §4.3 asks for the
+credit on the produced work rather than in a repository, so it is now a line on the map
+itself, with a `Settings → About → Licences` screen behind it.
 
 ---
 
@@ -489,6 +498,39 @@ search, crossing town re-runs it. The details cache is keyed on the place **and 
 language** — keyed on the id alone it served the Vietnamese article back after a switch to
 English, which is the one thing the switch was supposed to change.
 
+### Which name a place is shown under
+
+OSM holds translations in `name:<code>` tags, and the search reads the traveller's own code
+first, then `name:en`, then keeps the local `name`. On an English phone the list opens on
+"Vietnam Military History Museum" and "Hanoi Museum" where it used to open on "Bảo tàng Lịch
+sử Quân sự Việt Nam" and "Bảo tàng Hà Nội" — measured on a Galaxy A16 by pinning the app to
+`en-US` and back to `vi-VN` against the same 40 results.
+
+Three things about it are not obvious:
+
+- **English is the fallback for six of the eight languages, not a preference.** Around Hoàn
+  Kiếm, 47% of attractions carry `name:en` and effectively none carries `name:ja`, `name:ko`
+  or `name:th`. A Japanese traveller given "Hoa Lo Prison" can at least read it aloud.
+- **Vietnamese is excluded from that fallback.** The plain `name` tag in Vietnam *is* the
+  Vietnamese name, so falling through would take a Vietnamese traveller from "Nhà tù Hỏa Lò"
+  to "Hoa Lo Prison" — the one language where the fallback is a downgrade. The premise is not
+  universal: the same Mỹ Đình search returned two sculptures whose `name` is Korean, mapped
+  by whoever lives around them. Neither carries a `name:en`, so nothing changes for them
+  either way — but a Vietnamese traveller looking at a place named in a third language will
+  not be rescued into English by this rule, and that is accepted rather than unnoticed.
+- **Two comparisons must keep reading the local name, and both are easy to get wrong.** The
+  junk filter is written against what Vietnamese mappers type ("Vườn hoa …", "Lư", "0 km"),
+  so a roundabout given a `name:en` would walk past a filter reading the translated name.
+  And deduplication is by name, while the *displayed* name now differs per language — keyed
+  on that, two branches of one café chain stop collapsing the moment somebody translates one
+  of them. `NearbyPlace.mappedName` is the key for anything comparing places rather than
+  showing them, and `PlaceNamingTest` drives the whole search to hold both rules.
+
+The local name is not thrown away: `NearbyPlace.localName` carries it whenever it differs,
+and the place sheet prints it under the title — the same shape `DiscoveryTitleBlock` gives a
+recognition, and for the same reason. Somebody reading "Hoa Lo Prison" is standing in front
+of a sign that says something else.
+
 ### Known gaps
 
 - **Most places have no photograph.** OSM holds no images, and only the well-known few carry a
@@ -504,13 +546,18 @@ English, which is the one thing the switch was supposed to change.
   shape and the junk filter, but `PlaceMap.android.kt` and `PlaceMap.ios.kt` have never been
   exercised by a test.
 - **Markers are not clustered.** Forty pins at neighbourhood zoom in a dense quarter still
-  overlap; MapKit hides the losers by display priority and the Maps SDK stacks them.
-- **The map is not accessible.** Both SDKs expose their own annotations to the platform's
-  screen reader, but the place strip along the bottom is the only part of this screen with
-  real semantics.
-- **Names are Vietnamese-only for about half the data.** Only 47% of OSM attractions near
-  Hoàn Kiếm carry `name:en`, and the app does not read it even where it exists.
+  overlap, and the two platforms fail differently: the Maps SDK stacks them, so the loser is
+  covered and cannot be tapped, while MapKit *hides* the loser by display priority, so the
+  place leaves the map with nothing to show it was ever there. The ranked list beside the map
+  is the mitigation — it carries all forty however few pins are legible.
 - **No offline state.** The tiles, the photographs and the search all need a network.
+
+Two entries left this list on 06.08.2026. **Accessibility**: both map actuals now carry a
+`contentDescription` naming what they are, each marker carries its place's name as the title
+the platform speaks, and the ranked strip beside the map — which always holds every result —
+is the path that needs no map at all. **Names**: the search reads `name:<the traveller's
+language>` and falls back to `name:en`, so roughly half the attractions around Hoàn Kiếm now
+arrive already translated — see *Which name a place is shown under* above.
 
 ---
 
@@ -552,8 +599,15 @@ Put it in `local.properties`, which is git-ignored so the key never reaches vers
 GEMINI_API_KEY=your_key_here
 ```
 
-It is injected at build time. Users can also paste their own key at runtime under
-**Settings → Gemini API key**, which takes precedence over the build-time one.
+It is injected at build time, and that is the only way in: the runtime paste field under
+Settings was removed on 06.08.2026 along with the model picker. A build without this property
+starts, seeds and navigates normally — the lens screen says it has no key and recognition
+returns `AppError.MissingApiKey`.
+
+**Which model it calls is the same kind of decision**, and it is one line:
+`GeminiModel.CONFIGURED` in `domain/src/commonMain/kotlin/…/model/AppSettings.kt`, currently
+`FLASH_3_5`. The other entries stay reachable — `fallbackChain` walks them when the configured
+one is overloaded.
 
 ### 2. Add a Maps SDK key (Android only, and only for the Explore map)
 
@@ -565,7 +619,7 @@ MAPS_API_KEY=your_maps_sdk_key
 ```
 
 Enable **Maps SDK for Android** on it, and restrict it to this app: package
-`com.duylt.trave.vietlensai` (plus `.dev` for debug builds) and your signing SHA-1. It is
+`com.evora.technologies.saola` (plus `.dev` for debug builds) and your signing SHA-1. It is
 substituted into `com.google.android.geo.API_KEY` in the app manifest.
 
 Without it the Explore tab still works — the markers, the sheet and the directions button are
@@ -603,7 +657,7 @@ genuinely empty — 24 discoveries, 6 chat turns and 3 day summaries are written
 says so:
 
 ```
-I VietLens: Seeded 24 demo discoveries, 6 chat turns
+I Saola: Seeded 24 demo discoveries, 6 chat turns
 ```
 
 **Release and fastRelease never seed, and cannot.** There are two independent gates:
@@ -686,18 +740,18 @@ data that R8 cannot touch — the code R8 *can* touch shrinks by roughly 8×.
 `com.android.kotlin.multiplatform.library`, which produces a **single** Android variant — the
 debug APK and the release APK link the very same class files. So nothing inside them can ask
 which build type it ended up in, and a generated `DEBUG` constant there is a trap: it used to
-come from `-Pvietlens.debug`, default `true`, which meant a plain `:app:assembleRelease`
+come from `-Psaola.debug`, default `true`, which meant a plain `:app:assembleRelease`
 shipped with Ktor's `Logging` plugin installed.
 
 The flag is passed in at startup instead, by the one caller per platform that knows the
 answer:
 
 ```kotlin
-// VietLensApplication.kt (Android)
+// SaolaApplication.kt (Android)
 modules(appModules(BuildConfig.DEBUG))
 
 // iOSApp.swift -> MainViewController.kt
-MainViewControllerKt.startVietLens(debug: true)   // inside #if DEBUG
+MainViewControllerKt.startSaola(debug: true)   // inside #if DEBUG
 ```
 
 `appModules(isDebug)` threads it down to `networkModule(isDebug)`, the only consumer. In a
@@ -705,8 +759,8 @@ release build the `Logging` plugin is then never referenced, so R8 drops Ktor's 
 path out of the APK rather than leaving it dormant — verified in `mapping.txt`, which contains
 no `io.ktor.client.plugins.logging` class at all.
 
-The app version works the same way, for the same reason: `vietlens.versionName` and
-`vietlens.versionCode` live in the root `gradle.properties`, because `:app` stamps the APK
+The app version works the same way, for the same reason: `saola.versionName` and
+`saola.versionCode` live in the root `gradle.properties`, because `:app` stamps the APK
 with them and `:shared` compiles the version into the Settings footer. Written out separately
 they had already drifted — the APK said 1.0 while the footer said 1.0.0.
 
@@ -716,17 +770,17 @@ Signing material is read from the git-ignored `local.properties`; the keystore i
 git-ignored too:
 
 ```properties
-RELEASE_STORE_FILE=vietlens-release.jks
+RELEASE_STORE_FILE=saola-release.jks
 RELEASE_STORE_PASSWORD=…
-RELEASE_KEY_ALIAS=vietlens
+RELEASE_KEY_ALIAS=saola
 RELEASE_KEY_PASSWORD=…
 ```
 
 Create one with:
 
 ```bash
-keytool -genkeypair -v -keystore app/vietlens-release.jks \
-        -alias vietlens -keyalg RSA -keysize 2048 -validity 10000
+keytool -genkeypair -v -keystore app/saola-release.jks \
+        -alias saola -keyalg RSA -keysize 2048 -validity 10000
 ```
 
 If the keystore or its credentials are missing the build still succeeds and produces an
@@ -734,7 +788,7 @@ If the keystore or its credentials are missing the build still succeeds and prod
 a fresh clone.
 
 ```bash
-./gradlew :app:assembleRelease   # -> app/build/outputs/apk/release/VietLensAI_v1.0.0_build100_<date>.apk
+./gradlew :app:assembleRelease   # -> app/build/outputs/apk/release/Saola_v1.0.0_build100_<date>.apk
 ./gradlew :app:installRelease    # build, sign and install
 ```
 
