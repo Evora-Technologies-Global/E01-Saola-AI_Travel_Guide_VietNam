@@ -366,4 +366,6 @@
     <!-- Collection : mode guide -->
     <string name="collection_show_guide">Voir comment les reconnaître</string>
     <string name="collection_show_board">Voir la grille</string>
+    <string name="discovery_collected_kicker">Dans la collection</string>
+    <string name="discovery_collected_open">Ouvrir la collection</string>
 </resources>

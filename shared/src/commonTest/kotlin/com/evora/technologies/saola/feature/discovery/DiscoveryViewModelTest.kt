@@ -2,10 +2,16 @@ package com.evora.technologies.saola.feature.discovery
 
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
+import com.evora.technologies.saola.domain.model.CatalogItem
+import com.evora.technologies.saola.domain.model.CollectionEntry
+import com.evora.technologies.saola.domain.model.CollectionSection
+import com.evora.technologies.saola.domain.model.CultureCollection
+import com.evora.technologies.saola.domain.model.DiscoveryCategory
 import com.evora.technologies.saola.domain.model.DiscoveryNote
 import com.evora.technologies.saola.domain.model.ReportReason
 import com.evora.technologies.saola.domain.usecase.DeleteDiscoveryUseCase
 import com.evora.technologies.saola.domain.usecase.DeleteNoteUseCase
+import com.evora.technologies.saola.domain.usecase.ObserveCollectionUseCase
 import com.evora.technologies.saola.domain.usecase.ObserveDiscoveryUseCase
 import com.evora.technologies.saola.domain.usecase.ObserveNoteUseCase
 import com.evora.technologies.saola.domain.usecase.ObserveReportUseCase
@@ -16,6 +22,7 @@ import com.evora.technologies.saola.domain.usecase.ToggleFavoriteUseCase
 import com.evora.technologies.saola.domain.util.AppError
 import com.evora.technologies.saola.navigation.Routes
 import com.evora.technologies.saola.testing.FakeCaptureStore
+import com.evora.technologies.saola.testing.FakeCatalogRepository
 import com.evora.technologies.saola.testing.FakeDiscoveryRepository
 import com.evora.technologies.saola.testing.FakeNoteRepository
 import com.evora.technologies.saola.testing.FakeReportRepository
@@ -59,6 +66,7 @@ class DiscoveryViewModelTest {
     private val notes = FakeNoteRepository()
     private val reports = FakeReportRepository()
     private val settings = FakeSettingsRepository()
+    private val catalog = FakeCatalogRepository()
     private val captures = FakeCaptureStore()
     private val speech = FakeTextToSpeech()
 
@@ -95,6 +103,80 @@ class DiscoveryViewModelTest {
         }
         assertFalse(vm.state.value.showDeleteConfirm)
     }
+
+    @Test
+    fun `a photograph that fills a catalogue square is reported on the page`() = runTest {
+        discoveries.discoveries.value = listOf(discovery(id = "d1"))
+        catalog.collection.value = collectionWith(entryFor = "d1")
+
+        val vm = viewModel()
+        runCurrent()
+
+        // The unlock used to happen in silence: the tile filled and nothing anywhere said so.
+        assertEquals("pho", vm.state.value.collected?.id)
+        assertEquals(1, vm.state.value.collection.collectedCount)
+        assertEquals(2, vm.state.value.collection.total)
+    }
+
+    @Test
+    fun `a photograph on no square reports nothing rather than the first entry`() = runTest {
+        discoveries.discoveries.value = listOf(discovery(id = "d1"))
+        catalog.collection.value = collectionWith(entryFor = "d-other")
+
+        val vm = viewModel()
+        runCurrent()
+
+        assertNull(
+            vm.state.value.collected,
+            "the card is about *this* photograph; matching anything else would put a " +
+                "stranger's picture on the page",
+        )
+    }
+
+    @Test
+    fun `the collection card opens the board and stops the narration first`() = runTest {
+        val vm = viewModel()
+        runCurrent()
+
+        vm.effects.test {
+            vm.onIntent(DiscoveryIntent.OpenCollection)
+            runCurrent()
+            assertTrue(awaitItem() is DiscoveryEffect.OpenCollection)
+        }
+        assertEquals(
+            1,
+            speech.stopCalls,
+            "leaving the page while it is reading itself out loud leaves a voice behind",
+        )
+    }
+
+    /**
+     * A two-entry board where exactly one square is filled, by [entryFor].
+     *
+     * Spelled out here rather than added to `Fakes.kt`: the collection is derived from the
+     * catalogue and the journal by `buildCollection`, so a shared builder would be a second
+     * implementation of the matching rule — and the thing under test is what the *screen*
+     * does with a board, not how the board is assembled.
+     */
+    private fun collectionWith(entryFor: String) = CultureCollection(
+        sections = listOf(
+            CollectionSection(
+                category = DiscoveryCategory.FOOD,
+                entries = listOf(
+                    CollectionEntry(catalogItem("pho"), discovery(id = entryFor)),
+                    CollectionEntry(catalogItem("banh-mi"), discovery = null),
+                ),
+            ),
+        ),
+    )
+
+    private fun catalogItem(id: String) = CatalogItem(
+        id = id,
+        category = DiscoveryCategory.FOOD,
+        name = id,
+        hint = "how to spot a $id",
+        aliases = listOf(id),
+    )
 
     @Test
     fun `a suggested question opens the guide with it already typed`() = runTest {
@@ -549,6 +631,7 @@ class DiscoveryViewModelTest {
         observeSettings = ObserveSettingsUseCase(settings),
         observeNote = ObserveNoteUseCase(notes),
         observeReport = ObserveReportUseCase(reports),
+        observeCollection = ObserveCollectionUseCase(catalog),
         toggleFavorite = ToggleFavoriteUseCase(discoveries),
         deleteDiscovery = DeleteDiscoveryUseCase(discoveries),
         saveNote = SaveNoteUseCase(notes),

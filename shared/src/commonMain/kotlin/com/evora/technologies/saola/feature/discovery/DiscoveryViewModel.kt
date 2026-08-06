@@ -8,6 +8,7 @@ import com.evora.technologies.saola.domain.model.DiscoveryNote
 import com.evora.technologies.saola.domain.repository.CaptureStore
 import com.evora.technologies.saola.domain.usecase.DeleteDiscoveryUseCase
 import com.evora.technologies.saola.domain.usecase.DeleteNoteUseCase
+import com.evora.technologies.saola.domain.usecase.ObserveCollectionUseCase
 import com.evora.technologies.saola.domain.usecase.ObserveDiscoveryUseCase
 import com.evora.technologies.saola.domain.usecase.ObserveNoteUseCase
 import com.evora.technologies.saola.domain.usecase.ObserveReportUseCase
@@ -31,6 +32,7 @@ class DiscoveryViewModel(
     observeSettings: ObserveSettingsUseCase,
     observeNote: ObserveNoteUseCase,
     observeReport: ObserveReportUseCase,
+    observeCollection: ObserveCollectionUseCase,
     private val toggleFavorite: ToggleFavoriteUseCase,
     private val deleteDiscovery: DeleteDiscoveryUseCase,
     private val saveNote: SaveNoteUseCase,
@@ -64,6 +66,14 @@ class DiscoveryViewModel(
             .onEach { filed -> setState { copy(report = filed) } }
             .launchIn(viewModelScope)
 
+        // The board, so the page can tell the traveller their photograph filled a square on
+        // it. Observed rather than read once: a second photograph of the same thing taken
+        // while this page is open becomes the collection's picture of it, and the card here
+        // has to come down when that happens.
+        observeCollection()
+            .onEach { collection -> setState { copy(collection = collection) } }
+            .launchIn(viewModelScope)
+
         // The speaking flag is owned by the engine, not by this screen: another
         // screen can stop playback, and the button here has to reflect that.
         textToSpeech.isSpeaking
@@ -88,6 +98,11 @@ class DiscoveryViewModel(
                 } else {
                     textToSpeech.speak(discovery.toNarration(), currentState.language, discoveryId)
                 }
+            }
+
+            DiscoveryIntent.OpenCollection -> {
+                textToSpeech.stop()
+                sendEffect(DiscoveryEffect.OpenCollection)
             }
 
             DiscoveryIntent.RequestDelete -> setState { copy(showDeleteConfirm = true) }

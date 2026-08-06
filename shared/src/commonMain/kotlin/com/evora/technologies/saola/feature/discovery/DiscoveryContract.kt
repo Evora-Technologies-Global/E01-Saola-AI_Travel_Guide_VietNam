@@ -4,6 +4,8 @@ import com.evora.technologies.saola.core.mvi.UiEffect
 import com.evora.technologies.saola.core.mvi.UiIntent
 import com.evora.technologies.saola.core.mvi.UiState
 import com.evora.technologies.saola.domain.model.AppLanguage
+import com.evora.technologies.saola.domain.model.CatalogItem
+import com.evora.technologies.saola.domain.model.CultureCollection
 import com.evora.technologies.saola.domain.model.Discovery
 import com.evora.technologies.saola.domain.model.DiscoveryNote
 import com.evora.technologies.saola.domain.model.DiscoveryReport
@@ -25,10 +27,43 @@ data class DiscoveryState(
     /** Non-null only while the report sheet is open — the same shape as [noteEditor]. */
     val reportDraft: ReportDraft? = null,
     val isSubmittingReport: Boolean = false,
+    /**
+     * The whole board, so the page can say whether this photograph is on it.
+     *
+     * Held entire rather than as the one entry it might fill, for the reason `LLM.md` §12
+     * gives about ids: [collected] is derived from it and from [discovery] on every read, so a
+     * photograph taken a second ago that displaces this one as the collection's picture of
+     * phở takes the card down here on the next emission instead of leaving a stale claim on
+     * screen. It costs one `CultureCollection` per open discovery, which is the same object
+     * the collection screen already holds and is assembled from data the device has anyway.
+     */
+    val collection: CultureCollection = CultureCollection.EMPTY,
 ) : UiState {
     val isEditingNote: Boolean get() = noteEditor != null
 
     val isReporting: Boolean get() = reportDraft != null
+
+    /**
+     * The catalogue entry this photograph is the collection's picture of, if it is one.
+     *
+     * **This is the unlock the app used to perform in silence.** A recognised photograph that
+     * matches one of the sixty-one entries fills its tile — that is the whole feature — and
+     * until this existed nothing anywhere said so: the traveller found out by opening the
+     * board later and noticing a square had changed, or never.
+     *
+     * Matched on the *discovery's* id rather than on a "was collected" flag because there is
+     * no such flag to hold: `CultureCollection` is derived from the catalogue and the journal
+     * at read time, deliberately (see its KDoc), and the honest question a derived board can
+     * answer is "is this the photograph standing for that thing", not "was this the first". It
+     * is also the more useful one — it stays true on a later visit, so the card doubles as the
+     * link between a photograph and its square.
+     */
+    val collected: CatalogItem?
+        get() = discovery?.id?.let { id ->
+            collection.sections.firstNotNullOfOrNull { section ->
+                section.entries.firstOrNull { it.discovery?.id == id }
+            }?.item
+        }
 }
 
 /**
@@ -105,6 +140,9 @@ sealed interface DiscoveryIntent : UiIntent {
      * sheet it raises, so that a second way in — the low-confidence note, if it ever grows a
      * link — sends the same intent rather than a second one meaning the same thing.
      */
+    /** The traveller tapped the card saying this photograph is in their collection. */
+    data object OpenCollection : DiscoveryIntent
+
     data object StartReport : DiscoveryIntent
     data object CancelReport : DiscoveryIntent
     data class ReportReasonSelected(val reason: ReportReason) : DiscoveryIntent
@@ -114,6 +152,14 @@ sealed interface DiscoveryIntent : UiIntent {
 
 sealed interface DiscoveryEffect : UiEffect {
     data object NavigateBack : DiscoveryEffect
+
+    /**
+     * Take the traveller to the board this photograph is on.
+     *
+     * Navigation, so an effect — `LLM.md` §7. It carries nothing: the collection has no
+     * argument, and scrolling it to the entry would need one the board does not accept.
+     */
+    data object OpenCollection : DiscoveryEffect
     data class OpenChat(val discoveryId: String, val prefill: String?) : DiscoveryEffect
 
     /**

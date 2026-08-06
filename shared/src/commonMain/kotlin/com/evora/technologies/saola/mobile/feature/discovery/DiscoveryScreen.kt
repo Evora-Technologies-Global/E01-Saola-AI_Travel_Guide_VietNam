@@ -80,6 +80,7 @@ import com.evora.technologies.saola.feature.discovery.DiscoveryViewModel
 import com.evora.technologies.saola.feature.discovery.REPORT_RECIPIENT
 import com.evora.technologies.saola.feature.discovery.buildReportBody
 import com.evora.technologies.saola.feature.discovery.reportSubject
+import com.evora.technologies.saola.feature.discovery.component.CollectionUnlockCard
 import com.evora.technologies.saola.feature.discovery.component.ContextChips
 import com.evora.technologies.saola.feature.discovery.component.DeleteDiscoveryDialog
 import com.evora.technologies.saola.feature.discovery.component.DiscoveryFooter
@@ -118,6 +119,7 @@ import org.koin.compose.viewmodel.koinViewModel
 fun DiscoveryRoute(
     onBack: () -> Unit,
     onOpenChat: (String) -> Unit,
+    onOpenCollection: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: DiscoveryViewModel = koinViewModel(),
 ) {
@@ -133,6 +135,7 @@ fun DiscoveryRoute(
     CollectEffects(viewModel.effects) { effect ->
         when (effect) {
             DiscoveryEffect.NavigateBack -> onBack()
+            DiscoveryEffect.OpenCollection -> onOpenCollection()
             is DiscoveryEffect.OpenChat -> onOpenChat(effect.discoveryId)
             is DiscoveryEffect.ShowMessage -> scope.launch {
                 snackbarHostState.showError(effect.error.userMessage())
@@ -427,6 +430,21 @@ private fun StoryColumn(
         item { PhotoHeader(discovery = discovery) }
 
         item { DiscoveryTitleBlock(discovery = discovery, modifier = gutter) }
+
+        // Directly under the name, and above the voice: the traveller has just read what the
+        // thing is called, and "it is one of the sixty-one" is the next sentence about it —
+        // not a footnote after the story. It animates itself in, so nothing here is
+        // conditional; see `CollectionUnlockCard`.
+        item {
+            Box(modifier = gutter.padding(top = Spacing.md)) {
+                CollectionUnlockCard(
+                    item = state.collected,
+                    collected = state.collection.collectedCount,
+                    total = state.collection.total,
+                    onOpen = { onIntent(DiscoveryIntent.OpenCollection) },
+                )
+            }
+        }
 
         item {
             ListenCard(

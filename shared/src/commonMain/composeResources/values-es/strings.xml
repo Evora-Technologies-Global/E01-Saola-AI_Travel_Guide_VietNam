@@ -367,4 +367,6 @@
     <!-- Colección: modo guía -->
     <string name="collection_show_guide">Ver cómo reconocerlos</string>
     <string name="collection_show_board">Ver la cuadrícula</string>
+    <string name="discovery_collected_kicker">En tu colección</string>
+    <string name="discovery_collected_open">Abrir la colección</string>
 </resources>

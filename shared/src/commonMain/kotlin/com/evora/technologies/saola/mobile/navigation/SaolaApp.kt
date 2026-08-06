@@ -190,6 +190,7 @@ private fun SaolaNavHost(navController: NavHostController) {
             DiscoveryRoute(
                 onBack = navController::popBackStack,
                 onOpenChat = { id -> navController.navigate(Routes.chat(id)) },
+                onOpenCollection = { navController.navigate(Routes.COLLECTION) },
             )
         }
 

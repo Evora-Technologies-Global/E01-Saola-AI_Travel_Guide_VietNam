@@ -360,4 +360,6 @@
     <!-- Bộ sưu tập: chế độ hướng dẫn -->
     <string name="collection_show_guide">Xem cách nhận biết</string>
     <string name="collection_show_board">Xem dạng lưới</string>
+    <string name="discovery_collected_kicker">Trong bộ sưu tập</string>
+    <string name="discovery_collected_open">Mở bộ sưu tập</string>
 </resources>

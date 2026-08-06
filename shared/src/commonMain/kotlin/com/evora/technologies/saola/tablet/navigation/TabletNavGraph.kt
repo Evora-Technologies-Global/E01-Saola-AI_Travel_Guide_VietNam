@@ -122,6 +122,7 @@ internal fun SaolaTabletNavHost(navController: NavHostController) {
             DiscoveryTabletRoute(
                 discoveryId = entry.discoveryId(),
                 onBack = navController::popBackStack,
+                onOpenCollection = { navController.navigate(Routes.COLLECTION) },
             )
         }
 
@@ -139,6 +140,7 @@ internal fun SaolaTabletNavHost(navController: NavHostController) {
             DiscoveryTabletRoute(
                 discoveryId = entry.discoveryId(),
                 onBack = navController::popBackStack,
+                onOpenCollection = { navController.navigate(Routes.COLLECTION) },
             )
         }
 

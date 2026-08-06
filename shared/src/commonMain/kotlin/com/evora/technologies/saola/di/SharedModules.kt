@@ -161,6 +161,7 @@ val presentationModule: Module = module {
             observeSettings = get(),
             observeNote = get(),
             observeReport = get(),
+            observeCollection = get(),
             toggleFavorite = get(),
             deleteDiscovery = get(),
             saveNote = get(),

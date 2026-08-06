@@ -363,4 +363,6 @@
     <!-- คอลเลกชัน: โหมดคู่มือ -->
     <string name="collection_show_guide">ดูวิธีสังเกต</string>
     <string name="collection_show_board">ดูแบบตาราง</string>
+    <string name="discovery_collected_kicker">อยู่ในคอลเลกชัน</string>
+    <string name="discovery_collected_open">เปิดคอลเลกชัน</string>
 </resources>

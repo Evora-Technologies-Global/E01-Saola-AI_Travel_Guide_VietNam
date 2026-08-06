@@ -362,4 +362,6 @@
     <!-- 컬렉션: 가이드 보기 -->
     <string name="collection_show_guide">알아보는 법 보기</string>
     <string name="collection_show_board">격자로 보기</string>
+    <string name="discovery_collected_kicker">컬렉션에 수집됨</string>
+    <string name="discovery_collected_open">컬렉션 열기</string>
 </resources>

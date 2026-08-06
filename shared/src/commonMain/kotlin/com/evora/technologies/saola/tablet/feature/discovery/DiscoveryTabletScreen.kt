@@ -81,6 +81,7 @@ import com.evora.technologies.saola.feature.discovery.DiscoveryState
 import com.evora.technologies.saola.feature.discovery.DiscoveryViewModel
 import com.evora.technologies.saola.feature.discovery.REPORT_RECIPIENT
 import com.evora.technologies.saola.feature.discovery.buildReportBody
+import com.evora.technologies.saola.feature.discovery.component.CollectionUnlockCard
 import com.evora.technologies.saola.feature.discovery.component.ContextChips
 import com.evora.technologies.saola.feature.discovery.component.DeleteDiscoveryDialog
 import com.evora.technologies.saola.feature.discovery.component.DiscoveryFooter
@@ -143,6 +144,7 @@ import org.koin.core.parameter.parametersOf
 fun DiscoveryTabletRoute(
     discoveryId: String,
     onBack: () -> Unit,
+    onOpenCollection: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: DiscoveryViewModel = koinViewModel(),
     // Keyed by the discovery, so the guide's thread is tied to the place it is about rather
@@ -164,6 +166,7 @@ fun DiscoveryTabletRoute(
     CollectEffects(viewModel.effects) { effect ->
         when (effect) {
             DiscoveryEffect.NavigateBack -> onBack()
+            DiscoveryEffect.OpenCollection -> onOpenCollection()
 
             // On the phone this navigates to the chat screen. Here the guide is already on
             // screen, so the question is put to it instead — the effect is the ViewModel
@@ -459,6 +462,14 @@ private fun StoryPane(
                     verticalArrangement = Arrangement.spacedBy(Spacing.lg),
                 ) {
                     DiscoveryTitleBlock(discovery = discovery)
+                    // Under the name in the reading column, exactly as on the phone: the two
+                    // arrangements differ in where the column is, never in what it says.
+                    CollectionUnlockCard(
+                        item = state.collected,
+                        collected = state.collection.collectedCount,
+                        total = state.collection.total,
+                        onOpen = { onIntent(DiscoveryIntent.OpenCollection) },
+                    )
                     if (!discovery.isConfident) LowConfidenceNote()
                     StoryBody(discovery = discovery)
                     if (discovery.funFacts.isNotEmpty()) {

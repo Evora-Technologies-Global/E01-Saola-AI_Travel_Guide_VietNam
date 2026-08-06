@@ -362,4 +362,6 @@
     <!-- コレクション: ガイド表示 -->
     <string name="collection_show_guide">見分け方を表示</string>
     <string name="collection_show_board">一覧を表示</string>
+    <string name="discovery_collected_kicker">コレクション済み</string>
+    <string name="discovery_collected_open">コレクションを開く</string>
 </resources>

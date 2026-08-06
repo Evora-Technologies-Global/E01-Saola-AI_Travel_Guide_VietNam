@@ -398,4 +398,6 @@
     <!-- Collection: guide mode -->
     <string name="collection_show_guide">Show how to recognise these</string>
     <string name="collection_show_board">Show the board</string>
+    <string name="discovery_collected_kicker">In your collection</string>
+    <string name="discovery_collected_open">Open the collection</string>
 </resources>
