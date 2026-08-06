@@ -445,6 +445,7 @@ fun nearbyPlace(
 ): NearbyPlace = NearbyPlace(
     id = id,
     name = name,
+    localName = null,
     category = DiscoveryCategory.LANDMARK,
     typeLabel = null,
     location = location,

@@ -148,6 +148,21 @@ internal fun PlaceDetailBody(
             color = MaterialTheme.colorScheme.onSurface,
         )
 
+        // The name on the sign, under the one the traveller can read — the same shape
+        // `DiscoveryTitleBlock` gives a recognition, and for the same reason. It is null
+        // whenever the two would be the same string, so this is the only place in the app
+        // where "Nhà tù Hỏa Lò" reaches someone reading the screen in English: the card in
+        // the list has one line for a name, and the map's marker title is what a screen
+        // reader speaks, where a Vietnamese name in an English voice is noise.
+        place.localName?.let { local ->
+            Spacer(Modifier.height(Spacing.xxs))
+            Text(
+                text = local,
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+
         Spacer(Modifier.height(Spacing.sm))
         PlaceFacts(place = place, accent = accent)
 

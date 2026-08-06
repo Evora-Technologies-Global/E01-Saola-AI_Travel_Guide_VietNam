@@ -85,7 +85,7 @@ internal class PlaceRepositoryImpl(
                 }
 
                 val places = elements
-                    .mapNotNull { it.toDomain(origin = center) }
+                    .mapNotNull { it.toDomain(origin = center, language = language) }
                     .let(::deduplicate)
 
                 // Both enrichments run concurrently and neither can fail the search: a
@@ -239,12 +239,18 @@ internal class PlaceRepositoryImpl(
      * The cost is that two genuinely different places sharing a name collapse into one.
      * In this data that means the fifteen ward war memorials all called
      * "Đài tưởng niệm liệt sĩ" — which is a saving, not a loss.
+     *
+     * **Keyed on `mappedName`, never on `name`.** The displayed name follows the traveller's
+     * language and only about half of these places have been translated, so within one search
+     * some names are English and the rest Vietnamese — two branches of one chain would stop
+     * collapsing as soon as a mapper gave one of them a `name:en`. What is being deduplicated
+     * is the OSM data, not the screen.
      */
     private fun deduplicate(places: List<NearbyPlace>): List<NearbyPlace> = places
         // Best-mapped first, nearest to break the tie, so the copy that survives is the
         // one carrying the Wikipedia link and the opening hours.
         .sortedWith(compareByDescending<NearbyPlace> { it.mappingDetail }.thenBy { it.distanceMeters })
-        .distinctBy { it.name.lowercase().trim() }
+        .distinctBy { it.mappedName.lowercase().trim() }
 
     /** The closest Commons photograph, if one was taken near enough to be of this place. */
     private fun List<GeoPhoto>.nearestTo(place: NearbyPlace): String? =

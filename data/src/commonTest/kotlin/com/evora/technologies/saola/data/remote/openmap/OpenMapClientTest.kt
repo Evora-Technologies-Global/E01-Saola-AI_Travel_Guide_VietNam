@@ -209,7 +209,7 @@ class OpenMapClientTest {
         )
         assertEquals(4, elements.size)
 
-        val places = elements.mapNotNull { it.toDomain(origin) }
+        val places = elements.mapNotNull { it.toDomain(origin, AppLanguage.VIETNAMESE) }
         // The unnamed node is dropped: a place with no name cannot go on a list.
         assertEquals(3, places.size)
 
@@ -242,34 +242,47 @@ class OpenMapClientTest {
         assertNull(
             element("""{"type":"node","id":1,"lat":21.0,"lon":105.0,
                 "tags":{"name":"Khỉ vàng","tourism":"attraction","attraction":"animal"}}""")
-                .toDomain(origin),
+                .toDomain(origin, AppLanguage.VIETNAMESE),
         )
         // Forty-eight planted roundabouts share `leisure=park` with real parks; only
         // the ones somebody described survive.
         assertNull(
             element("""{"type":"node","id":2,"lat":21.0,"lon":105.0,
-                "tags":{"name":"Vườn hoa Hàng Trống","leisure":"park"}}""").toDomain(origin),
+                "tags":{"name":"Vườn hoa Hàng Trống","leisure":"park"}}""")
+                .toDomain(origin, AppLanguage.VIETNAMESE),
         )
         assertNotNull(
             element("""{"type":"node","id":3,"lat":21.0,"lon":105.0,
                 "tags":{"name":"Vườn hoa Diên Hồng","leisure":"park","wikipedia":"vi:X"}}""")
-                .toDomain(origin),
+                .toDomain(origin, AppLanguage.VIETNAMESE),
             "a park with an article is a park",
         )
         // Genuine entries in the data: a bell, and a distance marker.
         assertNull(
             element("""{"type":"node","id":4,"lat":21.0,"lon":105.0,
-                "tags":{"name":"Lư","historic":"memorial"}}""").toDomain(origin),
+                "tags":{"name":"Lư","historic":"memorial"}}""")
+                .toDomain(origin, AppLanguage.VIETNAMESE),
         )
         assertNull(
             element("""{"type":"node","id":5,"lat":21.0,"lon":105.0,
-                "tags":{"name":"0 km","tourism":"attraction"}}""").toDomain(origin),
+                "tags":{"name":"0 km","tourism":"attraction"}}""")
+                .toDomain(origin, AppLanguage.VIETNAMESE),
         )
         // ...but the rule must not take a numbered phở shop with it.
         assertNotNull(
             element("""{"type":"node","id":6,"lat":21.0,"lon":105.0,
-                "tags":{"name":"Phở 10","amenity":"restaurant"}}""").toDomain(origin),
+                "tags":{"name":"Phở 10","amenity":"restaurant"}}""")
+                .toDomain(origin, AppLanguage.VIETNAMESE),
             "a real restaurant whose name contains a number must survive",
+        )
+        // The filter reads the *local* name whatever language the screen is in. Every rule
+        // above is written against what a Vietnamese mapper types, so judging a translated
+        // name instead would let a roundabout through the moment somebody added `name:en`.
+        assertNull(
+            element("""{"type":"node","id":7,"lat":21.0,"lon":105.0,
+                "tags":{"name":"Vườn hoa Hàng Trống","name:en":"Hang Trong Flower Garden",
+                "leisure":"park"}}""").toDomain(origin, AppLanguage.ENGLISH),
+            "a flower bed with an English name is still a flower bed",
         )
     }
 
@@ -281,7 +294,9 @@ class OpenMapClientTest {
             """{"type":"way","id":178995262,"center":{"lat":21.0307,"lon":105.8523},
                 "tags":{"name":"Đền Ngọc Sơn","amenity":"place_of_worship","building":"temple"}}""",
         )
-        val place = assertNotNull(temple.toDomain(GeoPoint(21.0287, 105.8524)))
+        val place = assertNotNull(
+            temple.toDomain(GeoPoint(21.0287, 105.8524), AppLanguage.VIETNAMESE),
+        )
         assertEquals(DiscoveryCategory.ARCHITECTURE, place.category)
     }
 
@@ -294,7 +309,10 @@ class OpenMapClientTest {
             """{"type":"node","id":1,"lat":21.0,"lon":105.0,
                 "tags":{"name":"Café","amenity":"cafe","tourism":"museum","historic":"building"}}""",
         )
-        assertEquals(DiscoveryCategory.FOOD, assertNotNull(element.toDomain(GeoPoint(21.0, 105.0))).category)
+        assertEquals(
+            DiscoveryCategory.FOOD,
+            assertNotNull(element.toDomain(GeoPoint(21.0, 105.0), AppLanguage.VIETNAMESE)).category,
+        )
     }
 
     // ------------------------------------------------------------------ Wikipedia

@@ -1,6 +1,7 @@
 package com.evora.technologies.saola.data.mapper
 
 import com.evora.technologies.saola.data.remote.openmap.dto.OverpassElement
+import com.evora.technologies.saola.domain.model.AppLanguage
 import com.evora.technologies.saola.domain.model.DiscoveryCategory
 import com.evora.technologies.saola.domain.model.GeoPoint
 import com.evora.technologies.saola.domain.model.NearbyPlace
@@ -10,24 +11,33 @@ import kotlin.math.roundToInt
  * OpenStreetMap tags → the app's own place type.
  *
  * @param origin where the search was centred, for the distance.
+ * @param language which of the eight the traveller is reading, for [readableName].
  * @return null when the element has no name or no position. Both are optional on the
  *   wire and neither is optional to a map: a marker with no coordinates cannot be
  *   drawn, and OSM is full of unnamed benches and plaques that have no business on a
  *   list of places to go.
  */
-internal fun OverpassElement.toDomain(origin: GeoPoint): NearbyPlace? {
-    val name = tags["name"]?.takeIf { it.isNotBlank() } ?: return null
-    if (isNotADestination(name, tags)) return null
+internal fun OverpassElement.toDomain(origin: GeoPoint, language: AppLanguage): NearbyPlace? {
+    val mapped = tags["name"]?.takeIf { it.isNotBlank() } ?: return null
+    // Judged on the local name and never on the translated one. Every rule in
+    // `isNotADestination` was written against what a Vietnamese mapper types — "Vườn hoa …",
+    // "Lư", "0 km" — so a planted roundabout that has since been given an English name would
+    // walk straight past a filter reading that instead.
+    if (isNotADestination(mapped, tags)) return null
     // Nodes carry their own position; ways and relations carry a centroid, which is why
     // the query asks for `out center`. Larger sites — Hoàng thành Thăng Long, most
     // museums, every park — are mapped as areas, so ignoring `center` would drop them.
     val latitude = lat ?: center?.lat ?: return null
     val longitude = lon ?: center?.lon ?: return null
     val location = GeoPoint(latitude, longitude)
+    val readable = readableName(tags, language) ?: mapped
 
     return NearbyPlace(
         id = "$type/$id",
-        name = name,
+        name = readable,
+        // Null rather than a second copy of the same string, so every screen showing it can
+        // ask "is there another name for this" instead of comparing two fields itself.
+        localName = mapped.takeIf { it != readable },
         category = categoryOf(tags),
         typeLabel = null, // filled in by the presentation layer, which knows the language
         location = location,
@@ -42,6 +52,30 @@ internal fun OverpassElement.toDomain(origin: GeoPoint): NearbyPlace? {
         cuisine = tags["cuisine"]?.takeIf { it.isNotBlank() },
         wikipediaTitle = tags["wikipedia"]?.let(::wikipediaTitleOf),
     )
+}
+
+/**
+ * The name to put on screen, in the traveller's own language where OSM was given one.
+ *
+ * `name:<their language>` first, then `name:en`, then null — and null means the caller keeps
+ * the local name, which is the honest answer when no translation was ever mapped.
+ *
+ * **The English step is what carries this.** Measured against the attractions within 5 km of
+ * Hoàn Kiếm, 47% hold `name:en` and effectively none holds `name:ja`, `name:ko` or `name:th`,
+ * so for six of the app's eight languages English is not one option among several — it is the
+ * only translation that exists. A Japanese traveller reading "Hoa Lo Prison" can at least say
+ * it out loud to a taxi driver.
+ *
+ * **Vietnamese is deliberately excluded from that step.** The plain `name` tag in Vietnam *is*
+ * the Vietnamese name, so falling through would take a Vietnamese traveller from
+ * "Nhà tù Hỏa Lò" to "Hoa Lo Prison" — the one language for which the fallback is a downgrade
+ * rather than a rescue. English needs no special case: `name:en` is already what its own
+ * first lookup asks for.
+ */
+private fun readableName(tags: Map<String, String>, language: AppLanguage): String? {
+    tags["name:${language.code}"]?.takeIf { it.isNotBlank() }?.let { return it }
+    if (language == AppLanguage.VIETNAMESE) return null
+    return tags["name:en"]?.takeIf { it.isNotBlank() }
 }
 
 /**

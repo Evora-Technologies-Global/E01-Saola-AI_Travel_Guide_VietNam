@@ -19,6 +19,14 @@ import kotlin.math.log10
  * exactly the fault this feature exists to avoid.
  *
  * @param id stable across refreshes: the OSM element it came from, e.g. `node/445345255`.
+ * @param name the place as the traveller reads it — OSM's `name:<their language>` where a
+ *   mapper recorded one, `name:en` where nobody did, and the local name otherwise. It is
+ *   therefore **not** a fixed string for a given place: the same node is "Hoa Lo Prison" on
+ *   an English phone and "Nhà tù Hỏa Lò" on a Vietnamese one.
+ * @param localName the name on the ground — OSM's plain `name` tag — and null when that is
+ *   already what [name] says. What it is for is the sign above the door: a traveller reading
+ *   "Hoa Lo Prison" here is standing in front of one that says "Nhà tù Hỏa Lò", and only one
+ *   of those two can be pointed at or read aloud to a taxi driver.
  * @param monthlyReaders Wikipedia readers over the last 60 days, or null when the place
  *   has no article. Null and zero are different: one means "not written about", the
  *   other "written about and unread".
@@ -30,6 +38,7 @@ import kotlin.math.log10
 data class NearbyPlace(
     val id: String,
     val name: String,
+    val localName: String?,
     val category: DiscoveryCategory,
     val typeLabel: String?,
     val location: GeoPoint,
@@ -46,6 +55,18 @@ data class NearbyPlace(
 ) {
     /** Somewhere to eat rather than somewhere to look at, which the map colours apart. */
     val isFood: Boolean get() = category == DiscoveryCategory.FOOD
+
+    /**
+     * The name OpenStreetMap holds, whatever language the screen happens to be in.
+     *
+     * The key for anything *comparing* places rather than showing them, and deduplication is
+     * the one that matters: [name] moves with the traveller's language, so within a single
+     * search some places carry an English name and the rest a Vietnamese one. Keyed on that,
+     * two branches of one chain stop collapsing the moment a mapper gives one of them a
+     * `name:en` — and the screen this exists to keep clean is the one that would otherwise
+     * list six identical rows of Highlands Coffee.
+     */
+    val mappedName: String get() = localName ?: name
 
     /**
      * How strongly this place should be pushed up the list.
