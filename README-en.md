@@ -77,10 +77,13 @@ right.
 
 ## 3. Screenshots
 
-Taken on Pixel 7 Pro, Pixel Tablet, iPhone 17 and iPad Pro 11" simulators, with the 24-place
-demo dataset from Sa Pa to Cần Thơ (see
+Retaken on 07.08.2026 on Pixel 7 Pro, Pixel Tablet, iPhone 17 and iPad Pro 11" simulators, with
+the 24-place demo dataset from Sa Pa to Cần Thơ (see
 [TechStack §10](TechStack-temp.md#10-demoing-it-and-the-seeded-data)); the pictures inside the
-app are real photographs from Wikimedia Commons.
+app are real photographs from Wikimedia Commons. The one exception is the tablet Explore shot,
+taken on a **Pixel 7 Pro forced to the Pixel Tablet's own metrics** (`wm size 2560x1600`,
+`wm density 320`) because the tablet AVD would not accept a mock location during the session —
+same window measurements, so the arrangement is the real one.
 
 ### Android — phone
 
@@ -110,30 +113,32 @@ The wide layout: a vertical navigation rail on the left and two content panes si
 
 ### iOS — iPhone
 
-| Journal | Passport | Collection | Discovery detail |
+| Lens | Journal | Passport | Collection |
 |---|---|---|---|
-| <img src="screenshots/ios-phone/01-journal.png" width="180" alt="Journal"> | <img src="screenshots/ios-phone/02-passport.png" width="180" alt="Passport"> | <img src="screenshots/ios-phone/03-collection.png" width="180" alt="Collection"> | <img src="screenshots/ios-phone/04-discovery.png" width="180" alt="Discovery"> |
+| <img src="screenshots/ios-phone/01-lens.png" width="180" alt="Lens"> | <img src="screenshots/ios-phone/02-journal.png" width="180" alt="Journal"> | <img src="screenshots/ios-phone/03-passport.png" width="180" alt="Passport"> | <img src="screenshots/ios-phone/04-collection.png" width="180" alt="Collection"> |
 
-| Chat | Explore (MapKit) | Settings |
-|---|---|---|
-| <img src="screenshots/ios-phone/05-chat.png" width="180" alt="Chat"> | <img src="screenshots/ios-phone/06-explore.png" width="180" alt="Explore"> | <img src="screenshots/ios-phone/07-settings.png" width="180" alt="Settings"> |
+| Discovery detail | Chat | Explore (MapKit) | Settings |
+|---|---|---|---|
+| <img src="screenshots/ios-phone/05-discovery.png" width="180" alt="Discovery"> | <img src="screenshots/ios-phone/06-chat.png" width="180" alt="Chat"> | <img src="screenshots/ios-phone/07-explore.png" width="180" alt="Explore"> | <img src="screenshots/ios-phone/08-settings.png" width="180" alt="Settings"> |
 
-> The Lens screen is absent from the iOS set because the iOS Simulator has no camera — the
-> viewfinder would be blank.
+> The viewfinder is blank in the Lens shots because the iOS Simulator has no camera. Everything
+> else on the screen — the modes, the shutter, the recent-capture pile — is real.
 
 ### iOS — iPad
 
-| Journal + passport | Collection | Article + ask the guide |
+| Lens | Journal + passport | Collection |
 |---|---|---|
-| <img src="screenshots/ios-ipad/01-journal.png" width="250" alt="Journal"> | <img src="screenshots/ios-ipad/02-collection.png" width="250" alt="Collection"> | <img src="screenshots/ios-ipad/03-discovery.png" width="250" alt="Discovery"> |
+| <img src="screenshots/ios-ipad/01-lens.png" width="250" alt="Lens"> | <img src="screenshots/ios-ipad/02-journal.png" width="250" alt="Journal"> | <img src="screenshots/ios-ipad/03-collection.png" width="250" alt="Collection"> |
 
-| Explore | Settings |
-|---|---|
-| <img src="screenshots/ios-ipad/04-explore.png" width="250" alt="Explore"> | <img src="screenshots/ios-ipad/05-settings.png" width="250" alt="Settings"> |
+| Article + ask the guide | Explore | Settings |
+|---|---|---|
+| <img src="screenshots/ios-ipad/04-discovery.png" width="250" alt="Discovery"> | <img src="screenshots/ios-ipad/05-explore.png" width="250" alt="Explore"> | <img src="screenshots/ios-ipad/06-settings.png" width="250" alt="Settings"> |
 
-> The iPad Explore shot shows twelve restaurants and no landmarks: Overpass (the OpenStreetMap
-> query server) rate-limits per IP, and after a day of repeated searches the sights half of the
-> query was refused. That is the app's real behaviour under throttling, not a layout fault.
+> **Three of the four Explore shots show restaurants and no landmarks.** Overpass (the
+> OpenStreetMap query server) rate-limits per IP, and the sights half of the query is the
+> heavier one, so it is refused first. That is the app's real behaviour under throttling, not a
+> layout fault — the iPhone shot was taken in a window where the limit had recovered and carries
+> the full **40 places** with landmarks, for comparison.
 
 ---
 

@@ -73,9 +73,12 @@ nhận được màn hình, câu trả lời và giọng đọc tiếng Nhật.
 
 ## 3. Ảnh chụp màn hình
 
-Chụp trên máy ảo Pixel 7 Pro, Pixel Tablet, iPhone 17 và iPad Pro 11". Dữ liệu là bộ demo 24
-điểm từ Sa Pa tới Cần Thơ (xem [§10 TechStack](TechStack-temp.md#10-demoing-it-and-the-seeded-data));
-ảnh trong các màn hình là ảnh thật lấy từ Wikimedia Commons.
+Chụp lại ngày 07.08.2026 trên máy ảo Pixel 7 Pro, Pixel Tablet, iPhone 17 và iPad Pro 11".
+Dữ liệu là bộ demo 24 điểm từ Sa Pa tới Cần Thơ (xem
+[§10 TechStack](TechStack-temp.md#10-demoing-it-and-the-seeded-data)); ảnh trong các màn hình là
+ảnh thật lấy từ Wikimedia Commons. Riêng ảnh Khám phá khổ tablet chụp trên **Pixel 7 Pro ép về
+đúng khổ Pixel Tablet** (`wm size 2560x1600`, `wm density 320`), vì máy ảo tablet không nhận
+được vị trí giả trong phiên chụp — cùng số đo cửa sổ, nên bố cục là thật.
 
 ### Android — điện thoại
 
@@ -105,29 +108,31 @@ Bố cục rộng: thanh điều hướng dọc bên trái, hai khung nội dung
 
 ### iOS — iPhone
 
-| Nhật ký | Hộ chiếu | Bộ sưu tập | Chi tiết khám phá |
+| Ống kính | Nhật ký | Hộ chiếu | Bộ sưu tập |
 |---|---|---|---|
-| <img src="screenshots/ios-phone/01-journal.png" width="180" alt="Nhật ký"> | <img src="screenshots/ios-phone/02-passport.png" width="180" alt="Hộ chiếu"> | <img src="screenshots/ios-phone/03-collection.png" width="180" alt="Bộ sưu tập"> | <img src="screenshots/ios-phone/04-discovery.png" width="180" alt="Chi tiết"> |
+| <img src="screenshots/ios-phone/01-lens.png" width="180" alt="Ống kính"> | <img src="screenshots/ios-phone/02-journal.png" width="180" alt="Nhật ký"> | <img src="screenshots/ios-phone/03-passport.png" width="180" alt="Hộ chiếu"> | <img src="screenshots/ios-phone/04-collection.png" width="180" alt="Bộ sưu tập"> |
 
-| Trò chuyện | Khám phá (MapKit) | Cài đặt |
-|---|---|---|
-| <img src="screenshots/ios-phone/05-chat.png" width="180" alt="Trò chuyện"> | <img src="screenshots/ios-phone/06-explore.png" width="180" alt="Khám phá"> | <img src="screenshots/ios-phone/07-settings.png" width="180" alt="Cài đặt"> |
+| Chi tiết khám phá | Trò chuyện | Khám phá (MapKit) | Cài đặt |
+|---|---|---|---|
+| <img src="screenshots/ios-phone/05-discovery.png" width="180" alt="Chi tiết"> | <img src="screenshots/ios-phone/06-chat.png" width="180" alt="Trò chuyện"> | <img src="screenshots/ios-phone/07-explore.png" width="180" alt="Khám phá"> | <img src="screenshots/ios-phone/08-settings.png" width="180" alt="Cài đặt"> |
 
-> Màn Ống kính không có trong bộ iOS vì máy ảo iOS không có camera — khung ngắm sẽ trắng.
+> Khung ngắm trong ảnh Ống kính trắng vì máy ảo iOS không có camera. Phần còn lại của màn hình
+> — chế độ, nút chụp, chồng ảnh vừa chụp — là thật.
 
 ### iOS — iPad
 
-| Nhật ký + Hộ chiếu | Bộ sưu tập | Bài viết + Hỏi hướng dẫn viên |
+| Ống kính | Nhật ký + Hộ chiếu | Bộ sưu tập |
 |---|---|---|
-| <img src="screenshots/ios-ipad/01-journal.png" width="250" alt="Nhật ký"> | <img src="screenshots/ios-ipad/02-collection.png" width="250" alt="Bộ sưu tập"> | <img src="screenshots/ios-ipad/03-discovery.png" width="250" alt="Chi tiết"> |
+| <img src="screenshots/ios-ipad/01-lens.png" width="250" alt="Ống kính"> | <img src="screenshots/ios-ipad/02-journal.png" width="250" alt="Nhật ký"> | <img src="screenshots/ios-ipad/03-collection.png" width="250" alt="Bộ sưu tập"> |
 
-| Khám phá | Cài đặt |
-|---|---|
-| <img src="screenshots/ios-ipad/04-explore.png" width="250" alt="Khám phá"> | <img src="screenshots/ios-ipad/05-settings.png" width="250" alt="Cài đặt"> |
+| Bài viết + Hỏi hướng dẫn viên | Khám phá | Cài đặt |
+|---|---|---|
+| <img src="screenshots/ios-ipad/04-discovery.png" width="250" alt="Chi tiết"> | <img src="screenshots/ios-ipad/05-explore.png" width="250" alt="Khám phá"> | <img src="screenshots/ios-ipad/06-settings.png" width="250" alt="Cài đặt"> |
 
-> Ảnh Khám phá trên iPad chỉ có 12 quán ăn và không có di tích: Overpass (máy chủ OpenStreetMap)
-> giới hạn số truy vấn theo IP, và sau một ngày chụp ảnh liên tục thì nhánh truy vấn di tích bị
-> từ chối. Đây là hành vi thật của ứng dụng khi bị giới hạn, không phải lỗi bố cục.
+> **Ảnh Khám phá chỉ có quán ăn, không có di tích ở ba trong bốn bộ.** Overpass (máy chủ
+> OpenStreetMap) giới hạn truy vấn theo IP, và nhánh truy vấn di tích nặng hơn nên bị từ chối
+> trước. Đây là hành vi thật của ứng dụng khi bị giới hạn, không phải lỗi bố cục — ảnh iPhone
+> chụp đúng lúc hạn mức hồi lại nên có đủ **40 địa điểm** kèm di tích, để so sánh.
 
 ---
 
