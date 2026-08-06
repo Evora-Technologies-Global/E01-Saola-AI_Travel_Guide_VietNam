@@ -96,13 +96,15 @@ src/
 │   │                                 ErrorMessages, VolumeShutterBus, DetectTimeout
 │   ├── feature/<name>/               ONE PACKAGE PER SCREEN, shared half — see §5
 │   │   └── component/                the composables both branches draw (camera 17,
-│   │                                 discovery 23, passport 11, journal 9, settings 8,
-│   │                                 explore 6, chat 6, sovereignty 5, collection 4)
+│   │                                 discovery 23, passport 12, journal 9, settings 8,
+│   │                                 collection 7, explore 6, chat 6, sovereignty 5)
 │   ├── mobile/                       PRESENTATION BRANCH — what a phone draws
 │   │   ├── navigation/
 │   │   │   ├── BottomDestinations.kt TopLevelDestination enum — the four tabs
 │   │   │   └── SaolaApp.kt        NavHost, scaffold, bottom bar
-│   │   └── feature/<name>/XScreen.kt Route + Screen + private children
+│   │   └── feature/<name>/XScreen.kt Route + Screen + private children. `licenses/` is
+│   │                                 here and has no `feature/licenses/` half at all: it is
+│   │                                 the one screen with no ViewModel — see §5
 │   ├── tablet/                       PRESENTATION BRANCH — what a large window draws
 │   │   ├── navigation/
 │   │   │   ├── RailDestinations.kt   RailDestination enum + railDestination(), which is
@@ -250,6 +252,17 @@ mobile"*: if the shared piece sits inside `mobile/feature/x/XScreen.kt` as a `pr
 the tablet cannot call it and will copy it instead — and a copy diverges on the first fix
 that only one side gets. When a branch needs something a screen currently keeps private,
 lift it into `feature/<name>/` in the same change, do not duplicate it.
+
+**One screen has no ViewModel at all, and the exemption is written down here rather than
+left to be filed as an oversight.** `mobile/feature/licenses/LicensesScreen.kt` is five fixed
+paragraphs and four links: no state, nothing asynchronous, nothing that can fail. A
+`MviViewModel` for it would add a Koin binding, a suite under §9's one-per-ViewModel rule, and
+an effect channel with no sender, and its reducer would be the identity function. Read the rule
+as: **a screen gets a ViewModel when it has something to decide** — and the moment this one
+acquires a decision it acquires a ViewModel in the same change. It keeps the Route/Screen split
+regardless, because that is about who may touch what, and `LicensesRoute` does touch something
+the page must not: `rememberUrlOpener()`. It is also in `DesignTokenTest.HEADER_OWNERS`, since
+that rule is about what a page draws rather than about what holds its state.
 
 **`XContract.kt` is mandatory, even when the effect set is empty** — all ten features have
 one. Contract files are the first thing anyone reads to understand a screen; burying
@@ -437,6 +450,12 @@ Split across the branch line, and the split is the point:
   arrangement's business.** The phone navigates; the tablet feeds the question into the guide
   already on screen. The ViewModel says *ask this* and neither branch decides anything about
   the discovery — which is the line §3 draws.
+- **Two routes are registered identically in both shells and open the *same* composable.**
+  `Routes.TRANSLATION` and `Routes.LICENSES` both point at a screen under `mobile/feature/`,
+  because each is the same picture at any window size — a full-bleed photograph with the
+  Vietnamese replaced in place, and a scrolling document. That is a statement about the
+  content, not a shortcut: a screen with no large-window arrangement still has to be in both
+  graphs, and §5's checklist asks for the reason in writing, which is in each screen's KDoc.
 - **A new route is registered in every branch shell that exists, identically.** Nothing
   enforces this — it is a `composable(Routes.X)` block per shell — so adding one to
   `SaolaApp` and not to `TabletNavGraph` shows up as a blank screen on one device and
@@ -513,6 +532,8 @@ androidDeviceTest/
 │                                           the last one
 ├── performance/RecompositionTest.kt        skipping, counted on a device
 ├── feature/translate/…GestureTest.kt       pinch and drag, real multi-touch
+├── feature/passport/PassportMapTest.kt     the hit test and the semantics over one Canvas
+├── feature/collection/CollectionGuideTest.kt  the board/guide switch
 ├── tablet/TwoPaneScroll.kt                 the two two-pane tests' shared machinery
 └── tablet/feature/<name>/…Test.kt          one arrangement claim per file
 
@@ -550,9 +571,10 @@ green throughout — see §11 row #14. First, a JVM-only class: `SecurityExcepti
 not contain `,` `.` `;` `:` or brackets** — Kotlin/Native rejects the identifier outright with
 *"Name contains illegal characters"* while the JVM accepts all of them. Run
 `:shared:allTests`, not `:shared:testAndroidHostTest`, or half the platforms this presentation
-layer ships to are never compiled against. Currently **118 on the JVM, 107 on the iOS
+layer ships to are never compiled against. Currently **123 on the JVM, 112 on the iOS
 simulator** — the difference is the two source-reading gates below, which need `java.io.File`.
-Project total **455**, with `:data` at 120 / 86, `:domain` at 10 / 10 and `:app` at 4.
+Project total **465**, with `:data` at 120 / 86, `:domain` at 10 / 10 and `:app` at 4, plus
+**18 on a device**.
 
 **These counts are read off `build/test-results`, not remembered.** The figures here before
 05.08.2026's report feature said 413 / 110 / 99 with `:data` at 110 / 76, and `:data` had not
@@ -600,10 +622,12 @@ Two source-reading gates live in `androidHostTest`, because both need `java.io.F
   outright on an empty union, and `every presentation branch is actually scanned` fails if a
   root in `POPULATED_BRANCHES` contributes zero files and prints the per-branch count. All
   three roots are in `POPULATED_BRANCHES` since the tablet lens landed on 04.08.2026; adding
-  a fourth branch means updating both lists. It prints its own reach on every run — **138
-  files: `feature: 119`, `mobile/feature: 10`, `tablet/feature: 9`** since `ReportRow.kt` was
-  deleted on 06.08.2026 and the report became a square on `SaveRow`. Read the number; it
-  should move only when files are genuinely added or removed.
+  a fourth branch means updating both lists. It prints its own reach on every run — **145
+  files: `feature: 124`, `mobile/feature: 12`, `tablet/feature: 9`** since 06.08.2026, when the
+  short-term list in `README.md` §8 was worked through: five composables under `feature/`
+  (`EntryFace`, `CollectionGuideRow`, `CollectionViewToggle`, `ProvinceSemanticsOverlay`,
+  `CollectionUnlockCard`) and the licences screen's two under `mobile/feature/`. Read the
+  number; it should move only when files are genuinely added or removed.
   `HEADER_OWNERS` counts a **pane** as a screen: `PassportPane.kt` and `CollectionPane.kt` are
   not destinations, but each opens with a title band over a page, and a hand-rolled header is
   more visible there than on a phone because the traveller sees it beside a compliant one.
@@ -784,6 +808,28 @@ Do not "improve" these; they are deliberate and documented in the code:
   apply the **first** camera request without animating; composing early means the map opens
   on the Hanoi fallback, and animating that flies the traveller in from the capital every
   time they open the tab.
+- **`ProvinceSemanticsOverlay` — semantics without a pointer input, and three decisions in
+  it that all look like fussiness.** The passport map is a `Canvas`, so a screen reader saw one
+  unlabelled node and the whole feature did not exist for anyone using TalkBack or VoiceOver.
+  The overlay puts a labelled, actionable node over each province and keeps every gesture
+  intact, because a `Box` with no `clickable` consumes no touches while a screen reader's
+  double-tap invokes the `onClick` *semantics action* directly — two mechanisms over one map,
+  neither in the other's way. (a) The transform is read inside the measure policy, not during
+  composition: a pinch writes `zoom` sixty times a second and reading it in a composable would
+  re-run thirty-six compositions per frame to move boxes that draw nothing. (b) Handles are
+  placed **largest first**, because a node a later sibling fully covers is reported as not
+  visible — in asset order Hà Nội and Bắc Ninh sat inside their neighbours' boxes and were
+  absent from the tree entirely, 32 of 34 reachable. (c) Reading order is restored separately
+  with `traversalIndex` inside a traversal group, so area order stays a rendering constraint
+  and never something a traveller hears. All three verified by `uiautomator dump` on a Galaxy
+  A16 on 06.08.2026: 34 provinces plus both archipelagos in the tree.
+- **A capture's own square, said on the page rather than in a snackbar.** `DiscoveryState.collected`
+  is derived from the board and the discovery's id on every read — no "already announced" flag,
+  because there is nowhere honest to persist one and `CultureCollection` is derived at read time
+  anyway, so the only question it can answer truthfully is *is this the photograph standing for
+  that thing*. That answer stays true on a later visit, which is why the card doubles as the link
+  between a photograph and its tile. See `CollectionUnlockCard` for why the moment is carried by
+  the entrance animation instead.
 - `val onIntent = remember(viewModel) { viewModel::onIntent }` in `ExploreHost`, and only
   there. A ViewModel is `unstable`, so the bound reference cannot be memoised and is a new
   object every recomposition — which denies every child below it the skip its `skippable`

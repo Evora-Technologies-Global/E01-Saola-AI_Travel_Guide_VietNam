@@ -49,7 +49,10 @@ map draws them.
 **🎴 Culture collection.** 61 things worth finding in Vietnam — phở, bánh chưng, the upturned
 eaves of a communal house, a basket boat, a stele on a stone tortoise, a gong. Each tile is a
 hatched square until you photograph the thing, and then it fills with **your own picture**. The
-board is full from the first launch, and it counts photographs you took weeks ago.
+board is full from the first launch, and it counts photographs you took weeks ago. A switch in
+the page header turns it between **Board** — the record of what you have photographed — and
+**Guide**: the same 61 entries with their recognition hints spelled out, *"a thin turmeric-yellow
+crêpe folded into a half-moon"* rather than only a name you already knew.
 
 **🧭 Explore.** A live map of what is worth walking to within **5 km**. The data comes from
 **OpenStreetMap + Wikipedia + Wikimedia Commons** — no API key, no billing. Ranked by
@@ -242,38 +245,60 @@ travellers — the two groups whose main tool is a phone and who have no guide b
 | Offline-first reads (Room as the single source of truth) | ✅ |
 | Tablet / wide-window layout | ✅ |
 | iOS (Compose Multiplatform + MapKit) | ✅ |
+| Guide mode — all 61 recognition hints on the board | ✅ |
+| "In your collection" card on the recognition result | ✅ |
+| Both maps usable with a screen reader | ✅ |
+| Licences screen + ODbL credit on the maps | ✅ |
 | Voice dictation | ❌ removed — the code was finished but no button ever reached it |
 | AI-generated destination suggestions | ❌ removed — addresses and prices were invented; replaced by **Explore** |
 
-**Three limitations to know before a demo:**
+**Two limitations to know before a demo:**
 
-1. **Accessibility is not done.** The passport map is a bare `Canvas`, so screen readers skip
-   it entirely.
-2. **Overpass is donated infrastructure with per-IP limits.** A burst of traffic gets refused
+1. **Overpass is donated infrastructure with per-IP limits.** A burst of traffic gets refused
    until it recovers.
-3. **Most places have no photograph.** OSM holds no images; only well-known places carry a
+2. **Most places have no photograph.** OSM holds no images; only well-known places carry a
    Wikipedia article or a Commons photo.
+
+The third — *"accessibility is not done"* — was closed on 06.08.2026. The passport map now
+carries a hidden node over each province, so a screen reader reads the name and the state of
+all 34 plus both archipelagos, and a double-tap opens the province panel. Verified with
+`uiautomator dump` on a Galaxy A16: 36 nodes, where there had been none.
 
 ---
 
 ## 8. Roadmap
 
-**Near term — finish what exists**
+**Near term — done on 06.08.2026**
 
-- An unlock moment when a collection tile flips (today it happens silently)
-- Turn the collection from a *record* into a *guide*: bring the 61 recognition hints out into
-  the open instead of hiding them behind a tap
-- Accessibility for the passport map and the explore map — required before any store listing
-- A licences screen, to credit OpenStreetMap as ODbL requires
-- Tests for the passport UI layer and both map actuals
+Every one of the five was "bring out what is already there"; none needed new data:
+
+- ✅ **The unlock moment is no longer silent.** The recognition result carries a card — *In your
+  collection · Phở · 29/61* — that opens the board. State rather than a snackbar, so it survives
+  a rotation and is still there on a later visit, and it doubles as the link between a
+  photograph and its tile.
+- ✅ **The collection is a guide.** A switch in the header turns the board into rows with all 61
+  recognition hints beside the names. The Vietnamese hints run 63–103 characters, which is why
+  they cannot simply be printed under a tile three across.
+- ✅ **Accessibility for both maps.** Passport: 34 province nodes plus 2 archipelagos, each named
+  with its state and openable. Explore: the map carries a description on Android and iOS, every
+  marker its place's name, and the ranked list beside it is the path that needs no map at all.
+- ✅ **A licences screen.** Settings → About → *Licences and data sources*: OpenStreetMap (ODbL
+  1.0), Natural Earth, Wikipedia (CC BY-SA 4.0), Wikimedia Commons, each with a way through to
+  the licence itself — plus the credit **on** both maps, which is what ODbL §4.3 asks for.
+- ✅ **Tests for the UI layer.** Six of them, on a real device: the passport map's projection and
+  hit test, its semantics tree, and the board/guide switch. `:shared` went from 118/107 to
+  **123/112**, the project total from 455 to **465**, and the device suite from 12 to **18**.
+
+**Near term — what is left**
+
+- Marker clustering on the explore map, where 40 places overlap
+- Read `name:en` from OSM for the ~47% of places that already have an English name
 
 **Medium term — extend the capability**
 
 - **Gemini Live API** — real-time voice conversation
 - **Offline mode** — download one province's data and work without a network
 - **Voice dictation** (restore what was removed, this time with a button)
-- Read `name:en` from OSM for the ~47% of places that already have an English name
-- Marker clustering on the explore map
 
 **Long term — product**
 

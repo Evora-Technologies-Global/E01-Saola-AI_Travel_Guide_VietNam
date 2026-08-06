@@ -48,7 +48,9 @@ check-in** — ảnh đã mang sẵn toạ độ, nên chụp một ngôi chùa 
 **🎴 Bộ sưu tập văn hoá.** 61 thứ đáng tìm ở Việt Nam — phở, bánh chưng, đầu đao mái đình,
 thuyền thúng, bia đá đội rùa, cồng chiêng. Mỗi ô là một ô gạch trống cho tới khi bạn chụp
 được thứ đó, rồi nó hiện lên bằng **ảnh của chính bạn**. Bảng này đầy đủ ngay từ lần mở đầu
-tiên, và tính ngược lại cả những ảnh đã chụp từ trước.
+tiên, và tính ngược lại cả những ảnh đã chụp từ trước. Một nút ở đầu trang đổi giữa **Lưới**
+(bản ghi những gì đã chụp) và **Hướng dẫn** — cùng 61 mục đó, kèm gợi ý nhận biết: *"bánh
+tráng mỏng vàng nghệ gập đôi hình bán nguyệt"* thay vì chỉ một cái tên bạn đã biết.
 
 **🧭 Khám phá.** Bản đồ trực tiếp quanh vị trí hiện tại với những nơi đáng đi bộ tới trong
 **5 km**. Dữ liệu lấy từ **OpenStreetMap + Wikipedia + Wikimedia Commons** — không cần API
@@ -237,38 +239,59 @@ dùng điện thoại làm công cụ chính và không có hướng dẫn viên
 | Đọc offline (Room là nguồn sự thật) | ✅ |
 | Bố cục máy tính bảng / cửa sổ rộng | ✅ |
 | iOS (Compose Multiplatform + MapKit) | ✅ |
+| Chế độ Hướng dẫn — 61 gợi ý nhận biết ngay trên bảng | ✅ |
+| Thẻ "đã vào bộ sưu tập" trên trang kết quả nhận diện | ✅ |
+| Trình đọc màn hình dùng được hai bản đồ | ✅ |
+| Màn hình giấy phép + ghi nhận ODbL trên bản đồ | ✅ |
 | Nhập liệu bằng giọng nói | ❌ đã gỡ — code hoàn chỉnh nhưng chưa có nút gọi tới |
 | Gợi ý điểm đến do AI tự sinh | ❌ đã gỡ — địa chỉ và giá đều bịa; thay bằng **Khám phá** |
 
-**Ba giới hạn cần biết trước khi demo:**
+**Hai giới hạn cần biết trước khi demo:**
 
-1. **Khả năng tiếp cận (accessibility) chưa làm.** Bản đồ hộ chiếu vẽ bằng `Canvas` trần nên
-   trình đọc màn hình bỏ qua hoàn toàn.
-2. **Overpass là hạ tầng cộng đồng và có giới hạn theo IP.** Dùng dồn dập sẽ bị từ chối tới
+1. **Overpass là hạ tầng cộng đồng và có giới hạn theo IP.** Dùng dồn dập sẽ bị từ chối tới
    khi hồi lại.
-3. **Phần lớn địa điểm không có ảnh.** OSM không lưu ảnh; chỉ những nơi nổi tiếng mới có bài
+2. **Phần lớn địa điểm không có ảnh.** OSM không lưu ảnh; chỉ những nơi nổi tiếng mới có bài
    Wikipedia hoặc ảnh trên Commons.
+
+Giới hạn thứ ba — *"khả năng tiếp cận chưa làm"* — đã được gỡ ngày 06.08.2026. Bản đồ hộ chiếu
+giờ phủ một node ẩn lên từng tỉnh, nên trình đọc màn hình đọc được tên và trạng thái của cả 34
+tỉnh cùng hai quần đảo, và chạm hai lần là mở được bảng tỉnh. Kiểm chứng bằng `uiautomator dump`
+trên Galaxy A16: 36 node, trước đó là 0.
 
 ---
 
 ## 8. Hướng phát triển
 
-**Ngắn hạn — hoàn thiện thứ đang có**
+**Ngắn hạn — xong ngày 06.08.2026**
 
-- Khoảnh khắc "mở khoá" khi một ô trong bộ sưu tập được lật (hiện đang diễn ra âm thầm)
-- Biến bộ sưu tập từ *bản ghi* thành *hướng dẫn*: đưa 61 gợi ý nhận biết ra ngoài thay vì giấu
-  sau một cú chạm
-- Accessibility cho bản đồ hộ chiếu và bản đồ khám phá — bắt buộc trước khi lên store
-- Màn hình giấy phép, để ghi nhận OpenStreetMap đúng yêu cầu ODbL
-- Kiểm thử cho lớp giao diện của hộ chiếu và hai bản đồ
+Cả năm mục đều là "đưa thứ đang có ra ngoài", không mục nào cần thêm dữ liệu mới:
+
+- ✅ **Khoảnh khắc "mở khoá" không còn âm thầm.** Trang kết quả nhận diện hiện thẻ *Trong bộ sưu
+  tập · Phở · 29/61*, chạm vào là mở bảng. Là state chứ không phải snackbar, nên nó sống qua
+  xoay máy và vẫn còn khi quay lại — và nó cũng chính là đường nối giữa tấm ảnh và ô của nó.
+- ✅ **Bộ sưu tập thành hướng dẫn.** Nút ở đầu trang đổi giữa *Lưới* và *Hướng dẫn*; ở chế độ
+  hướng dẫn cả 61 gợi ý nhận biết nằm ngay cạnh tên, không phải chạm từng ô. Gợi ý tiếng Việt
+  dài 63–103 ký tự nên không thể nhét vào ô vuông 3 cột — đó là lý do có hai chế độ.
+- ✅ **Accessibility cho hai bản đồ.** Hộ chiếu: 34 node tỉnh + 2 quần đảo, đọc được tên và
+  trạng thái, chạm được. Khám phá: bản đồ có mô tả trên cả Android và iOS, ghim mang tên địa
+  điểm, và danh sách xếp hạng bên cạnh là đường đi không cần bản đồ.
+- ✅ **Màn hình giấy phép.** Cài đặt → Về ứng dụng → *Giấy phép và nguồn dữ liệu*: OpenStreetMap
+  (ODbL 1.0), Natural Earth, Wikipedia (CC BY-SA 4.0), Wikimedia Commons — mỗi mục có đường dẫn
+  tới giấy phép gốc. Kèm dòng ghi nhận **ngay trên** hai bản đồ, đúng yêu cầu ODbL §4.3.
+- ✅ **Kiểm thử lớp giao diện.** 6 test chạy trên máy thật: phép chiếu và hit-test của bản đồ
+  hộ chiếu, cây semantics của nó, và công tắc Lưới ⇄ Hướng dẫn. `:shared` đi từ 118/107 lên
+  **123/112**, tổng dự án 455 → **465**, và bộ device test 12 → **18**.
+
+**Ngắn hạn — còn lại**
+
+- Gom nhóm ghim (marker clustering) trên bản đồ khám phá khi có 40 địa điểm chồng nhau
+- Đọc `name:en` từ OSM cho ~47% địa điểm đã có sẵn tên tiếng Anh
 
 **Trung hạn — mở rộng năng lực**
 
 - **Gemini Live API** — hội thoại bằng giọng nói theo thời gian thực
 - **Chế độ offline** — gói dữ liệu cho một tỉnh, dùng được khi không có mạng
 - **Nhập liệu bằng giọng nói** (khôi phục phần đã gỡ, lần này có nút)
-- Đọc `name:en` từ OSM cho ~47% địa điểm đã có sẵn tên tiếng Anh
-- Gom nhóm ghim (marker clustering) trên bản đồ khám phá
 
 **Dài hạn — sản phẩm**
 

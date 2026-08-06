@@ -346,9 +346,25 @@ Android Activity and by `MainViewController` on iOS, before any screen exists. I
 route, nothing sends it an intent, and nothing would collect an effect, so it stays a plain
 `ViewModel` with two StateFlows.
 
-That is the whole exemption. It is written down here, in `LLM.md` §3, and in the class's own
-KDoc so that nobody files it as an oversight — and so nobody cites it for a screen. If it is
-reached by navigation, it extends `MviViewModel`.
+That is the whole exemption for a *plain* ViewModel. It is written down here, in `LLM.md` §3,
+and in the class's own KDoc so that nobody files it as an oversight — and so nobody cites it
+for a screen. If it is reached by navigation, it extends `MviViewModel`.
+
+**A second exemption goes the other way: a screen with no ViewModel at all.** The licences page
+is five fixed paragraphs and four outbound links — no state, nothing asynchronous, nothing that
+can fail. `MviViewModel` there would mean a Koin binding, a suite under §7's one-per-ViewModel
+rule, and an effect channel with no sender, and the reducer would be the identity function. The
+rule to read out of this is not "screens may skip the ViewModel"; it is:
+
+> **A screen gets a ViewModel when it has something to decide.** The moment one acquires a
+> decision — a setting to read, a request to make, a failure to report — it acquires a
+> ViewModel in the same change, not in a later tidy-up.
+
+Two things stay true even there. The **Route/Screen split does not bend**: that rule is about
+who may touch what, and `LicensesRoute` does touch something the page must not — the platform's
+URL opener. And the screen still renders `PageHeader`, still appears in
+`DesignTokenTest.HEADER_OWNERS`, and still obeys §11: chrome rules are about what a page draws,
+not about what holds its state.
 
 ### Hard rules
 
@@ -797,6 +813,31 @@ Fakes live in `commonTest/testing/Fakes.kt` with switchable failure modes
 (`throwOnRecognize`, `recognizeDelayMillis`) plus `clearAsFrameworkWould()` to invoke
 `onCleared()`. No mocking library — a fake you can read beats a mock you have to decode,
 and MockK does not work on Kotlin/Native anyway.
+
+### Where a ViewModel test cannot reach: the sixth category
+
+Everything above tests what a screen *knows*. Some screens have a claim that lives entirely in
+what they *draw*, and there a ViewModel suite is green while the feature is broken. Two shapes
+qualify, and both belong in `androidDeviceTest`:
+
+- **A `Canvas` that answers a gesture.** `VietnamMapCanvas` turns a tap into a longitude and a
+  latitude and back into a province; `PassportViewModelTest` proves the state around that is
+  right and cannot see any of it. A sign error in `latitudeAt` puts a finger on Nghệ An and
+  opens Thanh Hóa, and nothing but a person on a phone would notice.
+- **A claim about accessibility.** Semantics are not state — they are a tree the platform
+  builds out of a composition — so the only way to assert that a province is reachable, named
+  and actionable is to compose it and ask. `PassportMapTest` does, and it found something no
+  reading of the code would have: two provinces whose bounding boxes sat inside a
+  later-placed neighbour's were absent from the tree entirely.
+
+Two rules for writing them, both learned from that suite:
+
+1. **Resolve strings inside the composition** (`stringResource`, assigned to a `var` the test
+   reads back), never as English literals. These run on whatever locale the device is in.
+2. **Invoke a semantics action with `performSemanticsAction(SemanticsActions.OnClick)`, not
+   `performClick`.** `performClick` injects a real touch, which is exactly what a
+   semantics-only node has no handler for — so it passes through to whatever is underneath and
+   the test proves nothing about the node it named.
 
 ---
 
