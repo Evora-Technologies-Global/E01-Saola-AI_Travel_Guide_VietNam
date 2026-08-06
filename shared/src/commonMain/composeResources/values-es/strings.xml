@@ -132,6 +132,26 @@
     <string name="discovery_note_camera_permission_deny">Ahora no</string>
     <string name="discovery_note_in_diary">Tu guía la usará cuando escriba tu diario del día.</string>
 
+    <!-- Report -->
+    <string name="report_again">Volver a informar sobre este resultado</string>
+    <string name="report_title">Informar sobre este resultado</string>
+    <string name="report_body">Cuéntanos qué está mal. No se envía nada hasta que elijas a dónde enviarlo.</string>
+    <string name="report_reason_wrong_name">Nombre o lugar equivocado</string>
+    <string name="report_reason_wrong_facts">Hay un error en el relato</string>
+    <string name="report_reason_inappropriate">Contenido inapropiado</string>
+    <string name="report_reason_other">Otra cosa</string>
+    <string name="report_note_placeholder">¿Qué estaba mal? (opcional)</string>
+    <string name="report_note_count">%1$d / %2$d</string>
+    <string name="report_attachment_photo">Tu foto y los detalles de este resultado se envían con el informe.</string>
+    <string name="report_attachment_none">Los detalles de este resultado se envían con el informe.</string>
+    <string name="report_send">Enviar informe</string>
+    <string name="report_cancel">Ahora no</string>
+    <string name="report_mail_subject">Informe de Saola — %1$s</string>
+    <string name="report_mail_intro">Un viajero informó sobre un resultado en Saola.</string>
+    <string name="report_mail_reason">Motivo: %1$s</string>
+    <string name="report_mail_note">Lo que escribió: %1$s</string>
+    <string name="report_mail_to">Envía esto a %1$s</string>
+
     <!-- Chat -->
     <string name="chat_title">Pregunta a tu guía</string>
     <string name="chat_subtitle">Pregunta a un guía local</string>

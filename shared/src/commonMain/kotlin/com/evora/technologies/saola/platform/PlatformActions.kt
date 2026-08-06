@@ -40,6 +40,34 @@ expect fun rememberPhotoPicker(
 expect fun rememberTextSharer(): (title: String, body: String) -> Unit
 
 /**
+ * Shares text and, where there is one, a photograph — addressed, where the platform allows it.
+ *
+ * Distinct from [rememberTextSharer] rather than a widening of it, because the two are
+ * different acts. Sharing a discovery hands a paragraph to whoever the traveller chooses;
+ * this hands a complaint to a named address with the evidence attached, and the attachment
+ * is what makes it worth reading. Widening the existing one would have put four parameters
+ * on the call every screen makes to share a place.
+ *
+ * **The recipient is a best effort, and the difference is visible to the traveller.** Android
+ * fills the To: field of any mail app through `EXTRA_EMAIL`; iOS's share sheet has no
+ * recipient field at all, so there the address is written into the body instead — see the
+ * `IS_APPLE_PLATFORM` branch in `feature/discovery/ReportMail.kt`, which is exactly the kind
+ * of *content* difference that constant exists for. Either way the traveller sees the whole
+ * message before anything is sent, and can send it somewhere else entirely.
+ *
+ * @param attachmentPath an absolute path inside app storage, or null. On Android it is served
+ *   through the `FileProvider` declared in the app manifest; a path outside the directories
+ *   that provider declares throws, which is why this takes a capture path and not any file.
+ */
+@Composable
+expect fun rememberMailSharer(): (
+    recipient: String,
+    subject: String,
+    body: String,
+    attachmentPath: String?,
+) -> Unit
+
+/**
  * Opens a URL in whatever app claims it — a maps link, in practice.
  *
  * Silently does nothing for a URL no installed app handles, which is the same outcome the

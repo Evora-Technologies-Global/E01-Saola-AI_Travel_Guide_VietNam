@@ -126,6 +126,26 @@
     <string name="discovery_note_camera_permission_deny">Từ chối</string>
     <string name="discovery_note_in_diary">Hướng dẫn viên sẽ dùng ghi chú này khi viết nhật ký ngày cho bạn.</string>
 
+    <!-- Report -->
+    <string name="report_again">Báo cáo lại kết quả này</string>
+    <string name="report_title">Báo cáo kết quả này</string>
+    <string name="report_body">Cho chúng tôi biết chỗ nào chưa đúng. Không có gì được gửi đi cho tới khi bạn chọn nơi gửi.</string>
+    <string name="report_reason_wrong_name">Sai tên hoặc sai địa danh</string>
+    <string name="report_reason_wrong_facts">Có chi tiết sai trong bài</string>
+    <string name="report_reason_inappropriate">Nội dung không phù hợp</string>
+    <string name="report_reason_other">Lý do khác</string>
+    <string name="report_note_placeholder">Sai ở chỗ nào? (không bắt buộc)</string>
+    <string name="report_note_count">%1$d / %2$d</string>
+    <string name="report_attachment_photo">Ảnh của bạn và thông tin của kết quả này sẽ được gửi kèm.</string>
+    <string name="report_attachment_none">Thông tin của kết quả này sẽ được gửi kèm.</string>
+    <string name="report_send">Gửi báo cáo</string>
+    <string name="report_cancel">Để sau</string>
+    <string name="report_mail_subject">Saola báo cáo — %1$s</string>
+    <string name="report_mail_intro">Một người dùng đã báo cáo một kết quả trong Saola.</string>
+    <string name="report_mail_reason">Lý do: %1$s</string>
+    <string name="report_mail_note">Người dùng nói: %1$s</string>
+    <string name="report_mail_to">Vui lòng gửi tới %1$s</string>
+
     <!-- Chat -->
     <string name="chat_title">Hỏi hướng dẫn viên</string>
     <string name="chat_subtitle">Hỏi người bản địa</string>

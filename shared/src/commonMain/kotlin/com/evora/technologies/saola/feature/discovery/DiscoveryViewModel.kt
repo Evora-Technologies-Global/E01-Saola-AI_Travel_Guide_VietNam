@@ -10,8 +10,10 @@ import com.evora.technologies.saola.domain.usecase.DeleteDiscoveryUseCase
 import com.evora.technologies.saola.domain.usecase.DeleteNoteUseCase
 import com.evora.technologies.saola.domain.usecase.ObserveDiscoveryUseCase
 import com.evora.technologies.saola.domain.usecase.ObserveNoteUseCase
+import com.evora.technologies.saola.domain.usecase.ObserveReportUseCase
 import com.evora.technologies.saola.domain.usecase.ObserveSettingsUseCase
 import com.evora.technologies.saola.domain.usecase.SaveNoteUseCase
+import com.evora.technologies.saola.domain.usecase.SubmitReportUseCase
 import com.evora.technologies.saola.domain.usecase.ToggleFavoriteUseCase
 import com.evora.technologies.saola.domain.util.AppError
 import com.evora.technologies.saola.domain.util.onFailure
@@ -28,10 +30,12 @@ class DiscoveryViewModel(
     observeDiscovery: ObserveDiscoveryUseCase,
     observeSettings: ObserveSettingsUseCase,
     observeNote: ObserveNoteUseCase,
+    observeReport: ObserveReportUseCase,
     private val toggleFavorite: ToggleFavoriteUseCase,
     private val deleteDiscovery: DeleteDiscoveryUseCase,
     private val saveNote: SaveNoteUseCase,
     private val deleteNote: DeleteNoteUseCase,
+    private val submitReport: SubmitReportUseCase,
     private val captureStore: CaptureStore,
     private val applicationScope: CoroutineScope,
     private val textToSpeech: TextToSpeechManager,
@@ -54,6 +58,12 @@ class DiscoveryViewModel(
             .onEach { note -> setState { copy(note = note) } }
             .launchIn(viewModelScope)
 
+        // Observed rather than set from the write's own result, so the footer says the same
+        // thing after a process death as it does the second after the report was filed.
+        observeReport(discoveryId)
+            .onEach { filed -> setState { copy(report = filed) } }
+            .launchIn(viewModelScope)
+
         // The speaking flag is owned by the engine, not by this screen: another
         // screen can stop playback, and the button here has to reflect that.
         textToSpeech.isSpeaking
@@ -65,10 +75,10 @@ class DiscoveryViewModel(
         when (intent) {
             // The heart is drawn from the observed discovery rather than from a local flag,
             // so a refused write corrects itself on the next emission and the only thing
-            // missing was the reason. `report` covers the throw path and `onFailure` the
+            // missing was the reason. `showFailure` covers the throw path and `onFailure` the
             // handled one; both exist because a repository may do either.
-            DiscoveryIntent.ToggleFavorite -> launchSafely(onError = ::report) {
-                toggleFavorite(discoveryId).onFailure(::report)
+            DiscoveryIntent.ToggleFavorite -> launchSafely(onError = ::showFailure) {
+                toggleFavorite(discoveryId).onFailure(::showFailure)
             }
 
             DiscoveryIntent.ToggleSpeech -> {
@@ -87,12 +97,12 @@ class DiscoveryViewModel(
             // failed took the traveller to the journal with the discovery still in it —
             // which reads as a list that has not refreshed rather than as a failure, and is
             // the one wrong outcome here that nothing later corrects.
-            DiscoveryIntent.ConfirmDelete -> launchSafely(onError = ::report) {
+            DiscoveryIntent.ConfirmDelete -> launchSafely(onError = ::showFailure) {
                 setState { copy(showDeleteConfirm = false) }
                 textToSpeech.stop()
                 deleteDiscovery(discoveryId)
                     .onSuccess { sendEffect(DiscoveryEffect.NavigateBack) }
-                    .onFailure(::report)
+                    .onFailure(::showFailure)
             }
 
             is DiscoveryIntent.AskSuggested -> {
@@ -160,7 +170,7 @@ class DiscoveryViewModel(
                 launchSafely(
                     onError = { error ->
                         setState { copy(isSavingNote = false) }
-                        report(error)
+                        showFailure(error)
                     },
                 ) {
                     saveNote(discoveryId, editor.body, editor.photoPaths)
@@ -171,32 +181,107 @@ class DiscoveryViewModel(
                         .onSuccess { setState { copy(isSavingNote = false, noteEditor = null) } }
                         .onFailure { error ->
                             setState { copy(isSavingNote = false) }
-                            report(error)
+                            showFailure(error)
                         }
                 }
             }
 
             // Same shape one size down: the editor closes only if the row really went.
-            DiscoveryIntent.DeleteNote -> launchSafely(onError = ::report) {
+            DiscoveryIntent.DeleteNote -> launchSafely(onError = ::showFailure) {
                 deleteNote(discoveryId)
                     .onSuccess { setState { copy(noteEditor = null) } }
-                    .onFailure(::report)
+                    .onFailure(::showFailure)
             }
+
+            // Re-reporting opens on what was said last time rather than on a blank sheet: a
+            // second objection to the same result is almost always the first being corrected,
+            // and making them retype it is how the correction gets shortened to nothing.
+            DiscoveryIntent.StartReport -> setState {
+                val filed = report
+                copy(
+                    reportDraft = ReportDraft(
+                        reason = filed?.reason,
+                        note = filed?.note.orEmpty(),
+                    ),
+                )
+            }
+
+            // Nothing to clean up, unlike cancelling a note: a draft report holds no files.
+            DiscoveryIntent.CancelReport -> setState { copy(reportDraft = null) }
+
+            is DiscoveryIntent.ReportReasonSelected -> setState {
+                copy(reportDraft = reportDraft?.copy(reason = intent.reason))
+            }
+
+            is DiscoveryIntent.ReportNoteChanged -> setState {
+                copy(reportDraft = reportDraft?.copy(note = intent.note))
+            }
+
+            DiscoveryIntent.SubmitReport -> fileReport()
+        }
+    }
+
+    /**
+     * Files the objection, then hands it over to be sent.
+     *
+     * The same shape as `SaveNote`, including the part that is easiest to leave out: `onError`
+     * lowers [DiscoveryState.isSubmittingReport] as well as reporting the failure, because the
+     * guard four lines below reads that same flag. A write that raised it and died without
+     * lowering it would leave the sheet holding the traveller's complaint behind a send button
+     * that had permanently stopped working — `LLM.md` §11 row #25, which was this defect four
+     * times across four screens.
+     *
+     * The sheet closes on success and on no other path, for the reason the note composer does
+     * not close on failure: what they typed exists only there.
+     *
+     * A private method rather than a branch in the `when` because it is the only arm with a
+     * guard, two early returns and a captured value; inline it is the longest thing in a
+     * reducer whose other twenty arms are one line each.
+     */
+    private fun fileReport() {
+        val draft = currentState.reportDraft ?: return
+        val reason = draft.reason ?: return
+        if (currentState.isSubmittingReport) return
+        // Read before the suspension and carried on the effect, so the mail quotes the record
+        // as it stood when they pressed send. See [DiscoveryEffect.SendReport].
+        val discovery = currentState.discovery ?: return
+
+        setState { copy(isSubmittingReport = true) }
+        launchSafely(
+            onError = { error ->
+                setState { copy(isSubmittingReport = false) }
+                showFailure(error)
+            },
+        ) {
+            submitReport(discoveryId, reason, draft.note)
+                .onSuccess { filed ->
+                    setState { copy(isSubmittingReport = false, reportDraft = null) }
+                    sendEffect(DiscoveryEffect.SendReport(filed, discovery))
+                }
+                .onFailure { error ->
+                    setState { copy(isSubmittingReport = false) }
+                    showFailure(error)
+                }
         }
     }
 
     /**
      * Tells the traveller a write did not happen.
      *
-     * One private method rather than the effect spelled out at eight call sites — four
-     * writes, each with a handled-failure arm and an unwrapped-throw arm — because that is
-     * eight chances for one of them to be forgotten, which is precisely how this screen came
-     * to have four silent failures on it in the first place.
+     * One private method rather than the effect spelled out at ten call sites — five writes,
+     * each with a handled-failure arm and an unwrapped-throw arm — because that is ten chances
+     * for one of them to be forgotten, which is precisely how this screen came to have four
+     * silent failures on it in the first place.
      *
      * It raises an effect and writes nothing to state; see the note on
      * [DiscoveryEffect.ShowMessage] for why there is no `error` field to write to.
+     *
+     * Named `showFailure` rather than `report`, which is what it was called until this screen
+     * gained a *report* of the traveller's own. Two unrelated meanings of the word on one
+     * ViewModel — one being told to the traveller, the other being filed by them — is a
+     * confusion the next reader pays for.
      */
-    private fun report(error: AppError) = sendEffect(DiscoveryEffect.ShowMessage(error))
+    private fun showFailure(error: AppError) = sendEffect(DiscoveryEffect.ShowMessage(error))
 
     /**
      * Takes what fits into the composer and deletes the rest.

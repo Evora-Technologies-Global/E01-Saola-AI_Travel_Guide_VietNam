@@ -131,6 +131,26 @@
     <string name="discovery_note_camera_permission_deny">Pas maintenant</string>
     <string name="discovery_note_in_diary">Votre guide s'en servira pour écrire votre journal de la journée.</string>
 
+    <!-- Report -->
+    <string name="report_again">Signaler à nouveau ce résultat</string>
+    <string name="report_title">Signaler ce résultat</string>
+    <string name="report_body">Dites-nous ce qui ne va pas. Rien n'est envoyé tant que vous n'avez pas choisi où l'envoyer.</string>
+    <string name="report_reason_wrong_name">Nom ou lieu erroné</string>
+    <string name="report_reason_wrong_facts">Le récit contient une erreur</string>
+    <string name="report_reason_inappropriate">Contenu inapproprié</string>
+    <string name="report_reason_other">Autre chose</string>
+    <string name="report_note_placeholder">Qu'est-ce qui n'allait pas ? (facultatif)</string>
+    <string name="report_note_count">%1$d / %2$d</string>
+    <string name="report_attachment_photo">Votre photo et les détails de ce résultat accompagnent le signalement.</string>
+    <string name="report_attachment_none">Les détails de ce résultat accompagnent le signalement.</string>
+    <string name="report_send">Envoyer le signalement</string>
+    <string name="report_cancel">Pas maintenant</string>
+    <string name="report_mail_subject">Signalement Saola — %1$s</string>
+    <string name="report_mail_intro">Un voyageur a signalé un résultat dans Saola.</string>
+    <string name="report_mail_reason">Motif : %1$s</string>
+    <string name="report_mail_note">Ce qui a été écrit : %1$s</string>
+    <string name="report_mail_to">Merci d'envoyer ceci à %1$s</string>
+
     <!-- Chat -->
     <string name="chat_title">Demandez à votre guide</string>
     <string name="chat_subtitle">Demandez à un guide local</string>

@@ -79,6 +79,8 @@ import com.evora.technologies.saola.feature.discovery.DiscoveryEffect
 import com.evora.technologies.saola.feature.discovery.DiscoveryIntent
 import com.evora.technologies.saola.feature.discovery.DiscoveryState
 import com.evora.technologies.saola.feature.discovery.DiscoveryViewModel
+import com.evora.technologies.saola.feature.discovery.REPORT_RECIPIENT
+import com.evora.technologies.saola.feature.discovery.buildReportBody
 import com.evora.technologies.saola.feature.discovery.component.ContextChips
 import com.evora.technologies.saola.feature.discovery.component.DeleteDiscoveryDialog
 import com.evora.technologies.saola.feature.discovery.component.DiscoveryFooter
@@ -93,10 +95,13 @@ import com.evora.technologies.saola.feature.discovery.component.NoteCameraOverla
 import com.evora.technologies.saola.feature.discovery.component.NoteCameraPermissionSheet
 import com.evora.technologies.saola.feature.discovery.component.NotePhotoViewer
 import com.evora.technologies.saola.feature.discovery.component.PhotoAlbum
+import com.evora.technologies.saola.feature.discovery.component.ReportSheet
 import com.evora.technologies.saola.feature.discovery.component.SaveRow
 import com.evora.technologies.saola.feature.discovery.component.StoryBody
 import com.evora.technologies.saola.feature.discovery.component.ThingsToNotice
 import com.evora.technologies.saola.feature.discovery.component.rememberLastPresent
+import com.evora.technologies.saola.feature.discovery.reportSubject
+import com.evora.technologies.saola.platform.rememberMailSharer
 import com.evora.technologies.saola.platform.rememberTextSharer
 import com.evora.technologies.saola.resources.Res
 import com.evora.technologies.saola.resources.action_close
@@ -154,6 +159,7 @@ fun DiscoveryTabletRoute(
     val chatState by chatViewModel.state.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
+    val sendMail = rememberMailSharer()
 
     CollectEffects(viewModel.effects) { effect ->
         when (effect) {
@@ -171,6 +177,18 @@ fun DiscoveryTabletRoute(
             // notice sits is the only difference between them, which is the whole rule.
             is DiscoveryEffect.ShowMessage -> scope.launch {
                 snackbarHostState.showError(effect.error.userMessage())
+            }
+
+            // Byte for byte what the phone's route does, and that is the point: where the
+            // report row sits is this branch's business, what the report *says* is not.
+            // `ReportMail` holds the recipient, the subject and the body for both.
+            is DiscoveryEffect.SendReport -> scope.launch {
+                sendMail(
+                    REPORT_RECIPIENT,
+                    reportSubject(effect.discovery),
+                    buildReportBody(effect.report, effect.discovery, state.language),
+                    effect.discovery.imagePath,
+                )
             }
         }
     }
@@ -347,6 +365,19 @@ internal fun DiscoveryTabletScreen(
             onDismiss = { onIntent(DiscoveryIntent.CancelDelete) },
         )
     }
+
+    // The identical call the phone makes. A bottom sheet on a window this wide is not the
+    // obvious shape, but it is the right one here for the same reason it is there: the story
+    // being objected to has to stay visible behind the form, and a centred dialog would sit
+    // over the middle of the very paragraph the traveller is quoting.
+    state.reportDraft?.let { draft ->
+        ReportSheet(
+            draft = draft,
+            isSubmitting = state.isSubmittingReport,
+            hasPhoto = state.discovery?.imagePath != null,
+            onIntent = onIntent,
+        )
+    }
 }
 
 /**
@@ -382,6 +413,7 @@ private fun StoryPane(
     Column(modifier = Modifier.fillMaxSize()) {
         StoryToolbar(
             discovery = discovery,
+            hasReported = state.report != null,
             onBack = onBack,
             onShare = { shareText(discovery.title, shareBody) },
             onIntent = onIntent,
@@ -455,6 +487,12 @@ private fun StoryPane(
             // works — `DiscoveryEffect.OpenChat` is routed into the guide.
 
             DiscoveryFooter(discovery = discovery, language = state.language)
+
+            // Reporting is not down here any more. It travelled into the toolbar with the
+            // other two actions on 06.08.2026 — see `SaveRow` — which on this window is the
+            // arrangement that follows from the toolbar existing at all: the article does not
+            // end anywhere the traveller reliably reaches, so an action parked after it is an
+            // action behind a scroll.
         }
     }
 }
@@ -465,12 +503,17 @@ private fun StoryPane(
  * The wireframe puts favouriting and sharing at the top rather than at the foot of the scroll,
  * and on a window this size that is the right call for a reason the phone does not have: the
  * article no longer ends anywhere the traveller reliably reaches, so an action parked after it
- * is an action behind a scroll. It is the same [SaveRow] the phone draws, given a measure
- * instead of a page.
+ * is an action behind a scroll. Reporting joined them here on 06.08.2026, and that argument is
+ * the one it was missing while it stood at the bottom of the story column. It is the same
+ * [SaveRow] the phone draws, given a measure instead of a page.
+ *
+ * @param hasReported whether this discovery has already been objected to, which is the one
+ *   thing the toolbar needs out of the screen's state rather than off the record.
  */
 @Composable
 private fun StoryToolbar(
     discovery: Discovery,
+    hasReported: Boolean,
     onBack: () -> Unit,
     onShare: () -> Unit,
     onIntent: (DiscoveryIntent) -> Unit,
@@ -499,8 +542,10 @@ private fun StoryToolbar(
         trailing = {
             SaveRow(
                 isFavorite = discovery.isFavorite,
+                hasReported = hasReported,
                 onToggleFavorite = { onIntent(DiscoveryIntent.ToggleFavorite) },
                 onShare = onShare,
+                onReport = { onIntent(DiscoveryIntent.StartReport) },
                 modifier = Modifier.width(ACTIONS_WIDTH),
             )
             Row(modifier = Modifier.padding(start = Spacing.md)) {
@@ -598,13 +643,15 @@ private val PHOTO_COLUMN = 296.dp
 private val PHOTO_HEIGHT = 216.dp
 
 /**
- * How much of the toolbar the two actions take.
+ * How much of the toolbar the three actions take.
  *
- * Measured against [SaveRow]'s own parts rather than chosen: the share button is a 56 dp
- * square and the favourite needs room for "Saved to favourites" in Vietnamese and French
- * without wrapping. Wider and it starts competing with the badge on the other end of the row.
+ * Measured against [SaveRow]'s own parts rather than chosen: share and report are 56 dp squares
+ * with a 12 dp gap on each side of the second one, and the favourite needs room for "Saved to
+ * favourites" in Vietnamese and French without wrapping. When reporting moved up here it grew
+ * by exactly that square and that gap, 300 → 368, so the favourite keeps the width it was
+ * measured at. Wider and it starts competing with the badge on the other end of the row.
  */
-private val ACTIONS_WIDTH = 300.dp
+private val ACTIONS_WIDTH = 368.dp
 
 /** Slight, for the reason given on the transition above. */
 private const val OVERLAY_SCALE = 0.94f

@@ -152,6 +152,28 @@
     <string name="discovery_note_camera_permission_deny">Not now</string>
     <string name="discovery_note_in_diary">Your guide will use this when it writes your diary for the day.</string>
 
+    <!-- Report. Deliberately quiet wording: this is the reply to the footer's "answered by",
+         not an invitation. The mail_* strings are what leaves the device; the details block
+         under them is untranslated on purpose — see ReportMail.kt. -->
+    <string name="report_again">Report this result again</string>
+    <string name="report_title">Report this result</string>
+    <string name="report_body">Tell us what is off. Nothing is sent until you choose where to send it.</string>
+    <string name="report_reason_wrong_name">Wrong name or place</string>
+    <string name="report_reason_wrong_facts">Something in the story is untrue</string>
+    <string name="report_reason_inappropriate">Inappropriate content</string>
+    <string name="report_reason_other">Something else</string>
+    <string name="report_note_placeholder">What was wrong? (optional)</string>
+    <string name="report_note_count">%1$d / %2$d</string>
+    <string name="report_attachment_photo">Your photo and the details of this result go with the report.</string>
+    <string name="report_attachment_none">The details of this result go with the report.</string>
+    <string name="report_send">Send report</string>
+    <string name="report_cancel">Not now</string>
+    <string name="report_mail_subject">Saola report — %1$s</string>
+    <string name="report_mail_intro">A traveller reported a result in Saola.</string>
+    <string name="report_mail_reason">Reason: %1$s</string>
+    <string name="report_mail_note">What they said: %1$s</string>
+    <string name="report_mail_to">Please send this to %1$s</string>
+
     <!-- Chat -->
     <string name="chat_title">Ask your guide</string>
     <string name="chat_subtitle">Ask a local guide</string>

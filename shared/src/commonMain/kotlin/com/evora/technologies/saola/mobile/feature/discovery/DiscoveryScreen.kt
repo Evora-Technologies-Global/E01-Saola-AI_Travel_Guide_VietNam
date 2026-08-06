@@ -77,6 +77,9 @@ import com.evora.technologies.saola.feature.discovery.DiscoveryEffect
 import com.evora.technologies.saola.feature.discovery.DiscoveryIntent
 import com.evora.technologies.saola.feature.discovery.DiscoveryState
 import com.evora.technologies.saola.feature.discovery.DiscoveryViewModel
+import com.evora.technologies.saola.feature.discovery.REPORT_RECIPIENT
+import com.evora.technologies.saola.feature.discovery.buildReportBody
+import com.evora.technologies.saola.feature.discovery.reportSubject
 import com.evora.technologies.saola.feature.discovery.component.ContextChips
 import com.evora.technologies.saola.feature.discovery.component.DeleteDiscoveryDialog
 import com.evora.technologies.saola.feature.discovery.component.DiscoveryFooter
@@ -91,11 +94,13 @@ import com.evora.technologies.saola.feature.discovery.component.NoteCameraOverla
 import com.evora.technologies.saola.feature.discovery.component.NoteCameraPermissionSheet
 import com.evora.technologies.saola.feature.discovery.component.NotePhotoViewer
 import com.evora.technologies.saola.feature.discovery.component.PhotoAlbum
+import com.evora.technologies.saola.feature.discovery.component.ReportSheet
 import com.evora.technologies.saola.feature.discovery.component.SaveRow
 import com.evora.technologies.saola.feature.discovery.component.StoryBody
 import com.evora.technologies.saola.feature.discovery.component.SuggestedQuestions
 import com.evora.technologies.saola.feature.discovery.component.ThingsToNotice
 import com.evora.technologies.saola.feature.discovery.component.rememberLastPresent
+import com.evora.technologies.saola.platform.rememberMailSharer
 import com.evora.technologies.saola.platform.rememberTextSharer
 import com.evora.technologies.saola.resources.Res
 import com.evora.technologies.saola.resources.action_close
@@ -119,6 +124,7 @@ fun DiscoveryRoute(
     val state by viewModel.state.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
+    val sendMail = rememberMailSharer()
 
     // The message is resolved off the effect's own payload through `userMessage()`, never
     // read back out of state — the same rule the journal, settings and explore routes follow
@@ -130,6 +136,20 @@ fun DiscoveryRoute(
             is DiscoveryEffect.OpenChat -> onOpenChat(effect.discoveryId)
             is DiscoveryEffect.ShowMessage -> scope.launch {
                 snackbarHostState.showError(effect.error.userMessage())
+            }
+
+            // Composed on the effect's own payload for the same reason the message above is,
+            // and resolved in a `suspend` builder rather than during a frame — `getString`,
+            // never `stringResource`. `state.language` is read from the composition instead,
+            // and safely: it is a setting that arrives on its own flow rather than a value
+            // produced by the emission that raised this, which is the case row #15 is about.
+            is DiscoveryEffect.SendReport -> scope.launch {
+                sendMail(
+                    REPORT_RECIPIENT,
+                    reportSubject(effect.discovery),
+                    buildReportBody(effect.report, effect.discovery, state.language),
+                    effect.discovery.imagePath,
+                )
             }
         }
     }
@@ -363,6 +383,17 @@ private fun DiscoveryScreen(
             onDismiss = { onIntent(DiscoveryIntent.CancelDelete) },
         )
     }
+
+    // Over the page rather than in place of it, so the account being objected to is still
+    // there to be quoted from. The tablet renders the identical call for the same reason.
+    state.reportDraft?.let { draft ->
+        ReportSheet(
+            draft = draft,
+            isSubmitting = state.isSubmittingReport,
+            hasPhoto = discovery?.imagePath != null,
+            onIntent = onIntent,
+        )
+    }
 }
 
 /**
@@ -441,11 +472,17 @@ private fun StoryColumn(
             }
         }
 
+        // Keeping, passing on and objecting, in one row. Reporting used to be a quiet line of
+        // its own under the colophon; it is a square beside share now because that is where it
+        // was asked for, and the two do belong together — they are the only actions on this
+        // page that hand the record to something outside the app.
         item {
             SaveRow(
                 isFavorite = discovery.isFavorite,
+                hasReported = state.report != null,
                 onToggleFavorite = { onIntent(DiscoveryIntent.ToggleFavorite) },
                 onShare = onShare,
+                onReport = { onIntent(DiscoveryIntent.StartReport) },
                 modifier = Modifier.padding(horizontal = ScreenGutter, vertical = Spacing.xl),
             )
         }

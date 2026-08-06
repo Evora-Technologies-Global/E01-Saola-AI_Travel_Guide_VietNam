@@ -130,6 +130,26 @@
     <string name="discovery_note_camera_permission_deny">今はしない</string>
     <string name="discovery_note_in_diary">ガイドはその日の日記を書くときにこれを使います。</string>
 
+    <!-- Report -->
+    <string name="report_again">この結果をもう一度報告</string>
+    <string name="report_title">この結果を報告</string>
+    <string name="report_body">どこが違うか教えてください。送信先を選ぶまで、何も送られません。</string>
+    <string name="report_reason_wrong_name">名前や場所が違う</string>
+    <string name="report_reason_wrong_facts">説明の内容に誤りがある</string>
+    <string name="report_reason_inappropriate">不適切な内容</string>
+    <string name="report_reason_other">その他</string>
+    <string name="report_note_placeholder">どこが違いましたか？（任意）</string>
+    <string name="report_note_count">%1$d / %2$d</string>
+    <string name="report_attachment_photo">あなたの写真とこの結果の詳細が一緒に送られます。</string>
+    <string name="report_attachment_none">この結果の詳細が一緒に送られます。</string>
+    <string name="report_send">報告を送信</string>
+    <string name="report_cancel">あとで</string>
+    <string name="report_mail_subject">Saola レポート — %1$s</string>
+    <string name="report_mail_intro">Saola の結果について報告がありました。</string>
+    <string name="report_mail_reason">理由: %1$s</string>
+    <string name="report_mail_note">内容: %1$s</string>
+    <string name="report_mail_to">%1$s 宛に送信してください</string>
+
     <!-- Chat -->
     <string name="chat_title">ガイドに聞く</string>
     <string name="chat_subtitle">地元のガイドに聞く</string>

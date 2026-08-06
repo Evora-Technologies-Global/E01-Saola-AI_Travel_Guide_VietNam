@@ -16,6 +16,7 @@ import com.evora.technologies.saola.data.repository.JournalRepositoryImpl
 import com.evora.technologies.saola.data.repository.NoteRepositoryImpl
 import com.evora.technologies.saola.data.repository.PlaceRepositoryImpl
 import com.evora.technologies.saola.data.repository.ProvinceRepositoryImpl
+import com.evora.technologies.saola.data.repository.ReportRepositoryImpl
 import com.evora.technologies.saola.data.repository.SettingsRepositoryImpl
 import com.evora.technologies.saola.data.repository.TranslationRepositoryImpl
 import com.evora.technologies.saola.domain.repository.CaptureMaintenance
@@ -26,6 +27,7 @@ import com.evora.technologies.saola.domain.repository.JournalRepository
 import com.evora.technologies.saola.domain.repository.NoteRepository
 import com.evora.technologies.saola.domain.repository.PlaceRepository
 import com.evora.technologies.saola.domain.repository.ProvinceRepository
+import com.evora.technologies.saola.domain.repository.ReportRepository
 import com.evora.technologies.saola.domain.repository.SettingsRepository
 import com.evora.technologies.saola.domain.repository.TranslationRepository
 import kotlinx.coroutines.CoroutineDispatcher
@@ -98,6 +100,13 @@ val repositoryModule: Module = module {
         NoteRepositoryImpl(
             noteDao = get(),
             captureStore = get(),
+            ioDispatcher = get(IoDispatcher),
+        )
+    }
+
+    single<ReportRepository> {
+        ReportRepositoryImpl(
+            reportDao = get(),
             ioDispatcher = get(IoDispatcher),
         )
     }

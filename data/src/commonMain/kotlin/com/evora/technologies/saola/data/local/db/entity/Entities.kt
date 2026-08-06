@@ -107,6 +107,40 @@ data class DiscoveryNoteEntity(
     val updatedAt: Long,
 )
 
+/**
+ * The traveller's objection to what a discovery says, kept until they withdraw it by
+ * deleting the discovery itself.
+ *
+ * Keyed by `discoveryId` for the same reason [DiscoveryNoteEntity] is — at most one per
+ * discovery — but the two differ in what a second write means: an upsert here *replaces*
+ * the objection and moves `createdAt` with it, because a report is a claim about a result
+ * rather than a memory of a place. See `DiscoveryReport`'s KDoc for that argument in full.
+ *
+ * [reason] holds a `ReportReason` by `name`, so the enum constants are a stored format:
+ * renaming one reclassifies every row already written as `OTHER`, silently, because
+ * `ReportRepositoryImpl` decodes an unknown name to that rather than throwing at a screen.
+ */
+@Entity(
+    tableName = "discovery_reports",
+    foreignKeys = [
+        ForeignKey(
+            entity = DiscoveryEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["discoveryId"],
+            onDelete = ForeignKey.CASCADE,
+        ),
+    ],
+    indices = [Index("createdAt")],
+)
+data class DiscoveryReportEntity(
+    @PrimaryKey val discoveryId: String,
+    /** A `ReportReason` by `name`. Unknown values decode to `OTHER`. */
+    val reason: String,
+    val note: String,
+    /** When the *latest* objection was filed, not the first — see the class KDoc. */
+    val createdAt: Long,
+)
+
 @Entity(
     tableName = "translations",
     indices = [Index("createdAt")],

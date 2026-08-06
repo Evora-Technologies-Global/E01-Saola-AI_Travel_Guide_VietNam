@@ -57,6 +57,27 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="${MAPS_API_KEY}" />
+        <!--
+          Lets a report leave with the photograph it is about. The capture lives in
+          `filesDir/captures`, which no other app can read, and a `file://` URI pointing
+          into it has thrown FileUriExposedException since Android 7 — so the mail app is
+          handed a content:// URI plus a read grant that lasts only as long as the activity
+          it was started with.
+
+          The authority is derived from `applicationId` rather than typed, because
+          `rememberMailSharer` builds the same string from `context.packageName` at runtime
+          and the two failing to match is a crash at the moment of sending, not at build time.
+        -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
         <activity
             android:name=".MainActivity"
             android:exported="true"

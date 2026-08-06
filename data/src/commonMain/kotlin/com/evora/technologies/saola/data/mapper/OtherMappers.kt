@@ -3,6 +3,7 @@ package com.evora.technologies.saola.data.mapper
 import com.evora.technologies.saola.data.local.db.Converters
 import com.evora.technologies.saola.data.local.db.entity.ChatMessageEntity
 import com.evora.technologies.saola.data.local.db.entity.DiscoveryNoteEntity
+import com.evora.technologies.saola.data.local.db.entity.DiscoveryReportEntity
 import com.evora.technologies.saola.data.local.db.entity.TextBoxJson
 import com.evora.technologies.saola.data.local.db.entity.TranslationBlockJson
 import com.evora.technologies.saola.data.local.db.entity.TranslationEntity
@@ -12,7 +13,9 @@ import com.evora.technologies.saola.data.remote.gemini.dto.TripSummaryPayload
 import com.evora.technologies.saola.domain.model.ChatMessage
 import com.evora.technologies.saola.domain.model.ChatRole
 import com.evora.technologies.saola.domain.model.DiscoveryNote
+import com.evora.technologies.saola.domain.model.DiscoveryReport
 import com.evora.technologies.saola.domain.model.RecognizedLine
+import com.evora.technologies.saola.domain.model.ReportReason
 import com.evora.technologies.saola.domain.model.TextBox
 import com.evora.technologies.saola.domain.model.TranslateLanguage
 import com.evora.technologies.saola.domain.model.TranslationBlock
@@ -49,6 +52,25 @@ internal fun DiscoveryNoteEntity.toDomain(resolveCapture: (String) -> String): D
     photoPaths = Converters.decodeStrings(photoNamesJson).map(resolveCapture),
     createdAt = Instant.fromEpochMilliseconds(createdAt),
     updatedAt = Instant.fromEpochMilliseconds(updatedAt),
+)
+
+// --- Reports ---
+
+/**
+ * Decodes leniently, exactly as the note above it does, and for a sharper reason.
+ *
+ * The stored [DiscoveryReportEntity.reason] is a `ReportReason` by `name`, so a constant
+ * renamed in `:domain` leaves rows on disk naming a case that no longer exists. Throwing there
+ * would take down the result page of every discovery the traveller has ever objected to —
+ * on a `Flow`, which means permanently, since a collector that throws is not retried.
+ * [ReportReason.OTHER] is the honest answer instead: the note beside it still says what was
+ * wrong, which is the part that could not be reconstructed.
+ */
+internal fun DiscoveryReportEntity.toDomain(): DiscoveryReport = DiscoveryReport(
+    discoveryId = discoveryId,
+    reason = ReportReason.entries.firstOrNull { it.name == reason } ?: ReportReason.OTHER,
+    note = note,
+    createdAt = Instant.fromEpochMilliseconds(createdAt),
 )
 
 // --- Translation ---

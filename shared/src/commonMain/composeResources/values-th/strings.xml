@@ -131,6 +131,26 @@
     <string name="discovery_note_camera_permission_deny">ไว้ก่อน</string>
     <string name="discovery_note_in_diary">ไกด์จะใช้โน้ตนี้ตอนเขียนบันทึกประจำวันให้คุณ</string>
 
+    <!-- Report -->
+    <string name="report_again">รายงานผลลัพธ์นี้อีกครั้ง</string>
+    <string name="report_title">รายงานผลลัพธ์นี้</string>
+    <string name="report_body">บอกเราว่าอะไรไม่ถูกต้อง จะยังไม่มีการส่งอะไรจนกว่าคุณจะเลือกปลายทาง</string>
+    <string name="report_reason_wrong_name">ชื่อหรือสถานที่ผิด</string>
+    <string name="report_reason_wrong_facts">มีข้อมูลผิดในเนื้อหา</string>
+    <string name="report_reason_inappropriate">เนื้อหาไม่เหมาะสม</string>
+    <string name="report_reason_other">อย่างอื่น</string>
+    <string name="report_note_placeholder">อะไรไม่ถูกต้อง (ไม่บังคับ)</string>
+    <string name="report_note_count">%1$d / %2$d</string>
+    <string name="report_attachment_photo">รูปของคุณและรายละเอียดของผลลัพธ์นี้จะถูกส่งไปด้วย</string>
+    <string name="report_attachment_none">รายละเอียดของผลลัพธ์นี้จะถูกส่งไปด้วย</string>
+    <string name="report_send">ส่งรายงาน</string>
+    <string name="report_cancel">ไว้ก่อน</string>
+    <string name="report_mail_subject">รายงาน Saola — %1$s</string>
+    <string name="report_mail_intro">มีนักเดินทางรายงานผลลัพธ์หนึ่งใน Saola</string>
+    <string name="report_mail_reason">เหตุผล: %1$s</string>
+    <string name="report_mail_note">สิ่งที่เขียนไว้: %1$s</string>
+    <string name="report_mail_to">กรุณาส่งไปที่ %1$s</string>
+
     <!-- Chat -->
     <string name="chat_title">ถามไกด์ของคุณ</string>
     <string name="chat_subtitle">ถามไกด์ท้องถิ่น</string>

@@ -142,6 +142,41 @@ actual fun rememberTextSharer(): (title: String, body: String) -> Unit = remembe
 }
 
 @Composable
+actual fun rememberMailSharer(): (
+    recipient: String,
+    subject: String,
+    body: String,
+    attachmentPath: String?,
+) -> Unit = remember {
+    { _, subject, body, attachmentPath ->
+        // The recipient is dropped here, deliberately, and the caller already knows: a
+        // `UIActivityViewController` has no To: field to fill, so `ReportMail` writes the
+        // address into the body on this platform instead. Taking the parameter anyway keeps
+        // one `expect` signature rather than two shapes of the same call.
+        //
+        // The subject goes at the head of the text for the same reason `rememberTextSharer`
+        // puts a title there — Mail composes its subject from the first line.
+        val text = if (subject.isBlank()) body else "$subject\n\n$body"
+
+        // Only if it is really there. A missing file makes the controller present with an
+        // empty attachment slot rather than failing, which reads as the app having lost the
+        // photograph — worse than a report that plainly has none.
+        val attachment = attachmentPath
+            ?.takeIf { NSFileManager.defaultManager.fileExistsAtPath(it) }
+            ?.let { path -> NSURL.fileURLWithPath(path) }
+        if (attachmentPath != null && attachment == null) {
+            log.w { "Could not attach $attachmentPath to the report" }
+        }
+
+        val controller = UIActivityViewController(
+            activityItems = listOfNotNull(text, attachment),
+            applicationActivities = null,
+        )
+        topViewController()?.presentViewController(controller, animated = true, completion = null)
+    }
+}
+
+@Composable
 actual fun rememberUrlOpener(): (url: String) -> Unit = remember {
     { url ->
         val target = NSURL.URLWithString(url)

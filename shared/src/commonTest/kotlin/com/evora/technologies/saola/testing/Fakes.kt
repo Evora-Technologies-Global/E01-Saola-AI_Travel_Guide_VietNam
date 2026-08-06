@@ -15,6 +15,8 @@ import com.evora.technologies.saola.domain.model.PlaceDetails
 import com.evora.technologies.saola.domain.model.ThemePreference
 import com.evora.technologies.saola.domain.model.CultureCollection
 import com.evora.technologies.saola.domain.model.DiscoveryNote
+import com.evora.technologies.saola.domain.model.DiscoveryReport
+import com.evora.technologies.saola.domain.model.ReportReason
 import com.evora.technologies.saola.domain.model.JournalDay
 import com.evora.technologies.saola.domain.model.JournalStats
 import com.evora.technologies.saola.domain.model.Province
@@ -31,6 +33,7 @@ import com.evora.technologies.saola.domain.repository.JournalRepository
 import com.evora.technologies.saola.domain.repository.NoteRepository
 import com.evora.technologies.saola.domain.repository.PlaceRepository
 import com.evora.technologies.saola.domain.repository.ProvinceRepository
+import com.evora.technologies.saola.domain.repository.ReportRepository
 import com.evora.technologies.saola.domain.repository.CaptureStore
 import com.evora.technologies.saola.domain.repository.DiscoveryRepository
 import com.evora.technologies.saola.domain.repository.LocationRepository
@@ -547,6 +550,48 @@ class FakeNoteRepository : NoteRepository {
         failOnDelete?.let { return AppResult.Failure(it) }
         notes.value = notes.value - discoveryId
         return AppResult.Success(Unit)
+    }
+}
+
+/**
+ * What the traveller has objected to.
+ *
+ * Carries both a `throwOn` and a `failOn` hook for its one write, for the reason
+ * `LLM.md` §11 row #26 gives: no `throwOn…` can reach the branch a *handled* failure takes,
+ * and it was that branch — the ordinary one — that silently succeeded on four writes of this
+ * screen. `SubmitReport` raises a flag its own guard reads, so both paths have to be driven.
+ */
+class FakeReportRepository : ReportRepository {
+
+    val reports = MutableStateFlow<Map<String, DiscoveryReport>>(emptyMap())
+
+    var throwOnSubmit: Throwable? = null
+    var failOnSubmit: AppError? = null
+
+    /** Every call, in order, so a test can prove a retry really reached the repository. */
+    val submitted = mutableListOf<Pair<ReportReason, String>>()
+
+    override fun observeReport(discoveryId: String): Flow<DiscoveryReport?> =
+        reports.map { it[discoveryId] }
+
+    override suspend fun submit(
+        discoveryId: String,
+        reason: ReportReason,
+        note: String,
+    ): AppResult<DiscoveryReport> {
+        // Recorded before either hook fires: a test that counts retries has to see the
+        // attempt that failed as well as the one that worked.
+        submitted += reason to note
+        throwOnSubmit?.let { throw it }
+        failOnSubmit?.let { return AppResult.Failure(it) }
+        val filed = DiscoveryReport(
+            discoveryId = discoveryId,
+            reason = reason,
+            note = note,
+            createdAt = Instant.fromEpochSeconds(1_700_000_000),
+        )
+        reports.value = reports.value + (discoveryId to filed)
+        return AppResult.Success(filed)
     }
 }
 

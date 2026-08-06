@@ -23,12 +23,14 @@ import com.evora.technologies.saola.domain.usecase.ObserveDiscoveryUseCase
 import com.evora.technologies.saola.domain.usecase.ObserveJournalStatsUseCase
 import com.evora.technologies.saola.domain.usecase.ObserveJournalUseCase
 import com.evora.technologies.saola.domain.usecase.ObserveNoteUseCase
+import com.evora.technologies.saola.domain.usecase.ObserveReportUseCase
 import com.evora.technologies.saola.domain.usecase.ObserveProvinceDiscoveriesUseCase
 import com.evora.technologies.saola.domain.usecase.ObserveSettingsUseCase
 import com.evora.technologies.saola.domain.usecase.ObserveTravelPassportUseCase
 import com.evora.technologies.saola.domain.usecase.RecognizeImageUseCase
 import com.evora.technologies.saola.domain.usecase.SaveApiKeyUseCase
 import com.evora.technologies.saola.domain.usecase.SaveNoteUseCase
+import com.evora.technologies.saola.domain.usecase.SubmitReportUseCase
 import com.evora.technologies.saola.domain.usecase.SweepOrphanCapturesUseCase
 import com.evora.technologies.saola.domain.usecase.ToggleFavoriteUseCase
 import com.evora.technologies.saola.domain.usecase.TranslateImageUseCase
@@ -71,6 +73,9 @@ val useCaseModule: Module = module {
     factory { ObserveNoteUseCase(get()) }
     factory { SaveNoteUseCase(get()) }
     factory { DeleteNoteUseCase(get()) }
+
+    factory { ObserveReportUseCase(get()) }
+    factory { SubmitReportUseCase(get()) }
     factory { SweepOrphanCapturesUseCase(get()) }
 
     factory { ObserveJournalUseCase(get()) }
@@ -155,10 +160,12 @@ val presentationModule: Module = module {
             observeDiscovery = get(),
             observeSettings = get(),
             observeNote = get(),
+            observeReport = get(),
             toggleFavorite = get(),
             deleteDiscovery = get(),
             saveNote = get(),
             deleteNote = get(),
+            submitReport = get(),
             captureStore = get(),
             applicationScope = get(ApplicationScope),
             textToSpeech = get(),

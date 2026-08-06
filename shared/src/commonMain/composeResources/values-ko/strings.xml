@@ -130,6 +130,26 @@
     <string name="discovery_note_camera_permission_deny">나중에</string>
     <string name="discovery_note_in_diary">가이드가 그날의 일기를 쓸 때 이 메모를 활용합니다.</string>
 
+    <!-- Report -->
+    <string name="report_again">이 결과 다시 신고하기</string>
+    <string name="report_title">이 결과 신고</string>
+    <string name="report_body">어떤 점이 잘못됐는지 알려 주세요. 보낼 곳을 고르기 전까지는 아무것도 전송되지 않습니다.</string>
+    <string name="report_reason_wrong_name">이름이나 장소가 잘못됨</string>
+    <string name="report_reason_wrong_facts">설명 내용에 사실 오류가 있음</string>
+    <string name="report_reason_inappropriate">부적절한 내용</string>
+    <string name="report_reason_other">기타</string>
+    <string name="report_note_placeholder">무엇이 잘못됐나요? (선택)</string>
+    <string name="report_note_count">%1$d / %2$d</string>
+    <string name="report_attachment_photo">사진과 이 결과의 상세 정보가 함께 전송됩니다.</string>
+    <string name="report_attachment_none">이 결과의 상세 정보가 함께 전송됩니다.</string>
+    <string name="report_send">신고 보내기</string>
+    <string name="report_cancel">나중에</string>
+    <string name="report_mail_subject">Saola 신고 — %1$s</string>
+    <string name="report_mail_intro">여행자가 Saola의 결과를 신고했습니다.</string>
+    <string name="report_mail_reason">사유: %1$s</string>
+    <string name="report_mail_note">남긴 말: %1$s</string>
+    <string name="report_mail_to">%1$s 주소로 보내 주세요</string>
+
     <!-- Chat -->
     <string name="chat_title">가이드에게 묻기</string>
     <string name="chat_subtitle">현지 가이드에게 묻기</string>

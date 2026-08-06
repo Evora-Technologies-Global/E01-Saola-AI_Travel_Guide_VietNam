@@ -6,6 +6,8 @@ import com.evora.technologies.saola.core.mvi.UiState
 import com.evora.technologies.saola.domain.model.AppLanguage
 import com.evora.technologies.saola.domain.model.Discovery
 import com.evora.technologies.saola.domain.model.DiscoveryNote
+import com.evora.technologies.saola.domain.model.DiscoveryReport
+import com.evora.technologies.saola.domain.model.ReportReason
 import com.evora.technologies.saola.domain.util.AppError
 
 data class DiscoveryState(
@@ -18,8 +20,37 @@ data class DiscoveryState(
     /** Non-null only while the composer is open; the saved [note] is untouched until it closes. */
     val noteEditor: NoteEditor? = null,
     val isSavingNote: Boolean = false,
+    /** The objection already on file for this discovery, if the traveller has filed one. */
+    val report: DiscoveryReport? = null,
+    /** Non-null only while the report sheet is open — the same shape as [noteEditor]. */
+    val reportDraft: ReportDraft? = null,
+    val isSubmittingReport: Boolean = false,
 ) : UiState {
     val isEditingNote: Boolean get() = noteEditor != null
+
+    val isReporting: Boolean get() = reportDraft != null
+}
+
+/**
+ * The report sheet's unsaved contents.
+ *
+ * Held apart from [DiscoveryState.report] for the reason [NoteEditor] is held apart from the
+ * saved note: backing out of a re-report has to leave the objection already on file exactly as
+ * it was, and the footer reads that field while the sheet is open on top of it.
+ *
+ * [reason] is nullable because the sheet opens with nothing chosen. That is the whole of what
+ * [canSubmit] guards — the note is optional even for [ReportReason.OTHER], since "this is
+ * wrong and I can't say why" is a report worth having, and demanding a sentence for it is how
+ * a complaint gets abandoned halfway.
+ */
+data class ReportDraft(
+    val reason: ReportReason? = null,
+    val note: String = "",
+) {
+    val canSubmit: Boolean get() = reason != null
+
+    /** How much of the cap `SubmitReportUseCase` will apply is already used up. */
+    val noteLength: Int get() = note.length
 }
 
 /**
@@ -66,6 +97,19 @@ sealed interface DiscoveryIntent : UiIntent {
     data class NotePhotoRemoved(val path: String) : DiscoveryIntent
     data object SaveNote : DiscoveryIntent
     data object DeleteNote : DiscoveryIntent
+
+    /**
+     * The traveller says the result is wrong.
+     *
+     * Opens the sheet; it does not file anything. Named for what they did rather than for the
+     * sheet it raises, so that a second way in — the low-confidence note, if it ever grows a
+     * link — sends the same intent rather than a second one meaning the same thing.
+     */
+    data object StartReport : DiscoveryIntent
+    data object CancelReport : DiscoveryIntent
+    data class ReportReasonSelected(val reason: ReportReason) : DiscoveryIntent
+    data class ReportNoteChanged(val note: String) : DiscoveryIntent
+    data object SubmitReport : DiscoveryIntent
 }
 
 sealed interface DiscoveryEffect : UiEffect {
@@ -94,4 +138,24 @@ sealed interface DiscoveryEffect : UiEffect {
      * composer, which threw away the traveller's own writing in the one place it existed.
      */
     data class ShowMessage(val error: AppError) : DiscoveryEffect
+
+    /**
+     * The objection is on disk; hand it to the traveller to send.
+     *
+     * An effect rather than a state flag, and it is the clearest case of the rule: the share
+     * sheet must open exactly once per filed report. Held in state it would reopen on every
+     * rotation, and on the frame after the sheet was dismissed there would be no honest value
+     * to reset the flag to.
+     *
+     * It carries [discovery] whole rather than letting the screen read `state.discovery` when
+     * it handles this. That is the same trap as `§11 row #15`, one step removed: the effect is
+     * handled a main-queue turn after `sendEffect`, and a delete or a favourite landing in that
+     * gap would compose the mail against a record the traveller was no longer looking at when
+     * they pressed send. Everything the message quotes — the title, the model, the confidence,
+     * the capture and its photograph — comes from this one object.
+     */
+    data class SendReport(
+        val report: DiscoveryReport,
+        val discovery: Discovery,
+    ) : DiscoveryEffect
 }

@@ -16,6 +16,7 @@ val databaseModule: Module = module {
     single { get<SaolaDatabase>().discoveryDao() }
     single { get<SaolaDatabase>().chatDao() }
     single { get<SaolaDatabase>().noteDao() }
+    single { get<SaolaDatabase>().reportDao() }
     single { get<SaolaDatabase>().translationDao() }
     single { get<SaolaDatabase>().tripSummaryDao() }
 

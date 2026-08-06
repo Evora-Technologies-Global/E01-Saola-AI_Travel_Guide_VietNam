@@ -8,6 +8,7 @@ import androidx.room.Upsert
 import com.evora.technologies.saola.data.local.db.entity.ChatMessageEntity
 import com.evora.technologies.saola.data.local.db.entity.DiscoveryEntity
 import com.evora.technologies.saola.data.local.db.entity.DiscoveryNoteEntity
+import com.evora.technologies.saola.data.local.db.entity.DiscoveryReportEntity
 import com.evora.technologies.saola.data.local.db.entity.TranslationEntity
 import com.evora.technologies.saola.data.local.db.entity.TripSummaryEntity
 import kotlinx.coroutines.flow.Flow
@@ -171,6 +172,25 @@ interface NoteDao {
 
     @Query("SELECT COUNT(*) FROM discovery_notes")
     fun observeCount(): Flow<Int>
+}
+
+/**
+ * Two methods and no more, and the absence is the point.
+ *
+ * Nothing in the app reads reports across rows: the page asks about the one discovery it is
+ * showing, and the report leaves the device through the share sheet at the moment it is
+ * written. A `getAll()` here would be a query with no caller, and the first thing anyone
+ * would reach for when tempted to build a reports screen the app has no room for.
+ */
+@Dao
+interface ReportDao {
+
+    @Query("SELECT * FROM discovery_reports WHERE discoveryId = :discoveryId")
+    fun observeByDiscovery(discoveryId: String): Flow<DiscoveryReportEntity?>
+
+    /** Replaces any earlier objection to the same discovery, timestamp included. */
+    @Upsert
+    suspend fun upsert(entity: DiscoveryReportEntity)
 }
 
 @Dao

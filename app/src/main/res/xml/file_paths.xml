@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  What the FileProvider is allowed to hand out, and nothing more.
+
+  One directory: `filesDir/captures`, which is where `AndroidCaptureStore` writes every
+  photograph the app takes or imports (`ImagePolicy.DIRECTORY`). A report attaches the
+  capture belonging to the discovery it objects to, so that is the whole of what needs
+  granting — and `FileProvider.getUriForFile` throws for any path outside the paths declared
+  here, which is what keeps a widened caller from quietly exporting the database beside it.
+
+  Renaming `ImagePolicy.DIRECTORY` without changing `path` below breaks attachments only,
+  silently: the share still opens, without the photo, and the log line in `rememberMailSharer`
+  is the only trace.
+-->
+<paths>
+    <files-path
+        name="captures"
+        path="captures/" />
+</paths>

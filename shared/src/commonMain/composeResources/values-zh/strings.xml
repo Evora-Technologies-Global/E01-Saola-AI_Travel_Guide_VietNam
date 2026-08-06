@@ -131,6 +131,26 @@
     <string name="discovery_note_camera_permission_deny">暂不</string>
     <string name="discovery_note_in_diary">向导写当天日记时会用上这条笔记。</string>
 
+    <!-- Report -->
+    <string name="report_again">再次报告这个结果</string>
+    <string name="report_title">报告这个结果</string>
+    <string name="report_body">告诉我们哪里不对。在你选择发送方式之前，不会发送任何内容。</string>
+    <string name="report_reason_wrong_name">名称或地点有误</string>
+    <string name="report_reason_wrong_facts">介绍中有事实错误</string>
+    <string name="report_reason_inappropriate">内容不当</string>
+    <string name="report_reason_other">其他</string>
+    <string name="report_note_placeholder">哪里不对？（可选）</string>
+    <string name="report_note_count">%1$d / %2$d</string>
+    <string name="report_attachment_photo">你的照片和这个结果的详细信息会一起发送。</string>
+    <string name="report_attachment_none">这个结果的详细信息会一起发送。</string>
+    <string name="report_send">发送报告</string>
+    <string name="report_cancel">以后再说</string>
+    <string name="report_mail_subject">Saola 报告 — %1$s</string>
+    <string name="report_mail_intro">有用户报告了 Saola 中的一个结果。</string>
+    <string name="report_mail_reason">原因：%1$s</string>
+    <string name="report_mail_note">用户说：%1$s</string>
+    <string name="report_mail_to">请发送至 %1$s</string>
+
     <!-- Chat -->
     <string name="chat_title">问问你的向导</string>
     <string name="chat_subtitle">向本地向导提问</string>
