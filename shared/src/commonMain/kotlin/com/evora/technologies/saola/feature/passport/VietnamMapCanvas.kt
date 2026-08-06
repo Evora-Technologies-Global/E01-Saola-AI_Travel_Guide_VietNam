@@ -3,6 +3,7 @@ package com.evora.technologies.saola.feature.passport
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.detectTransformGestures
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -27,6 +28,8 @@ import androidx.compose.ui.graphics.drawscope.clipRect
 import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextMeasurer
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.drawText
@@ -41,6 +44,16 @@ import com.evora.technologies.saola.domain.model.Archipelago
 import com.evora.technologies.saola.domain.model.GeoBounds
 import com.evora.technologies.saola.domain.model.PassportStamp
 import com.evora.technologies.saola.domain.model.Province
+import com.evora.technologies.saola.feature.passport.component.MapPlacement
+import com.evora.technologies.saola.feature.passport.component.ProvinceHandle
+import com.evora.technologies.saola.feature.passport.component.ProvinceSemanticsOverlay
+import com.evora.technologies.saola.resources.Res
+import com.evora.technologies.saola.resources.passport_map_a11y
+import com.evora.technologies.saola.resources.passport_province_a11y
+import com.evora.technologies.saola.resources.passport_province_a11y_open
+import com.evora.technologies.saola.resources.passport_status_locked
+import com.evora.technologies.saola.resources.passport_status_unlocked
+import org.jetbrains.compose.resources.stringResource
 import kotlin.math.cos
 import kotlin.math.max
 import kotlin.math.min
@@ -85,7 +98,6 @@ fun VietnamMapCanvas(
     var offsetX by rememberSaveable { mutableFloatStateOf(0f) }
     var offsetY by rememberSaveable { mutableFloatStateOf(0f) }
     var canvasSize by remember { mutableStateOf(Size.Zero) }
-    val offset = Offset(offsetX, offsetY)
 
     val density = LocalDensity.current
     val textMeasurer = rememberTextMeasurer()
@@ -103,124 +115,236 @@ fun VietnamMapCanvas(
             ?: emptyMap()
     }
 
-    Canvas(
-        modifier = modifier
-            .fillMaxSize()
-            // A Canvas does not clip its own drawing. Zoomed in, the transformed
-            // country would paint straight over the progress header above it and the
-            // hint below.
-            .clipToBounds()
-            // Size is captured here rather than from the draw scope: assigning state
-            // during a draw pass schedules another one, and the map would redraw
-            // forever.
-            .onSizeChanged { canvasSize = it.toSize() }
-            // Keyed on the layout, not Unit: the first composition has no size yet,
-            // so a block launched once would capture a null layout for ever and
-            // silently disable panning.
-            .pointerInput(layout) {
-                val projection = layout?.projection
-                detectTransformGestures { centroid, pan, gestureZoom, _ ->
-                    val current = Offset(offsetX, offsetY)
-                    val newZoom = (zoom * gestureZoom).coerceIn(MIN_ZOOM, MAX_ZOOM)
-                    // Keep the point under the fingers pinned while the scale changes.
-                    val moved = centroid - (centroid - current) * (newZoom / zoom) + pan
-                    val settled = projection.clamp(moved, newZoom, layout?.mapSize ?: Size.Zero)
-                    zoom = newZoom
-                    offsetX = settled.x
-                    offsetY = settled.y
+    val mapSummary = stringResource(
+        Res.string.passport_map_a11y,
+        stamps.count { it.isUnlocked },
+        stamps.size,
+    )
+
+    // The two archipelago insets first, then the mainland, because that is the order the map
+    // is read in Vietnamese convention and the order a screen reader will announce them.
+    val geometry = remember(layout, stamps, shapes) { layout.handleGeometry(stamps, shapes) }
+    val visited = stringResource(Res.string.passport_status_unlocked)
+    val notVisited = stringResource(Res.string.passport_status_locked)
+    val openLabel = stringResource(Res.string.passport_province_a11y_open)
+    val handles = geometry.map { piece ->
+        ProvinceHandle(
+            id = piece.provinceId,
+            label = stringResource(
+                Res.string.passport_province_a11y,
+                piece.name,
+                if (piece.isUnlocked) visited else notVisited,
+            ),
+            bounds = piece.bounds,
+            isFixed = piece.isFixed,
+        )
+    }
+
+    Box(modifier = modifier) {
+        Canvas(
+            modifier = Modifier
+                .fillMaxSize()
+                // A Canvas does not clip its own drawing. Zoomed in, the transformed
+                // country would paint straight over the progress header above it and the
+                // hint below.
+                .clipToBounds()
+                // The whole picture in one sentence, focused before the provinces under it. The
+                // progress bar above the map says the same numbers to a sighted traveller; a
+                // screen reader arriving at a map with no label at all learns nothing from
+                // thirty-four province names it has not been told are a map of Vietnam.
+                .semantics {
+                    contentDescription = mapSummary
+                }
+                // Size is captured here rather than from the draw scope: assigning state
+                // during a draw pass schedules another one, and the map would redraw
+                // forever.
+                .onSizeChanged { canvasSize = it.toSize() }
+                // Keyed on the layout, not Unit: the first composition has no size yet,
+                // so a block launched once would capture a null layout for ever and
+                // silently disable panning.
+                .pointerInput(layout) {
+                    val projection = layout?.projection
+                    detectTransformGestures { centroid, pan, gestureZoom, _ ->
+                        val current = Offset(offsetX, offsetY)
+                        val newZoom = (zoom * gestureZoom).coerceIn(MIN_ZOOM, MAX_ZOOM)
+                        // Keep the point under the fingers pinned while the scale changes.
+                        val moved = centroid - (centroid - current) * (newZoom / zoom) + pan
+                        val settled = projection.clamp(moved, newZoom, layout?.mapSize ?: Size.Zero)
+                        zoom = newZoom
+                        offsetX = settled.x
+                        offsetY = settled.y
+                    }
+                }
+                .pointerInput(layout, stamps) {
+                    detectTapGestures { tap ->
+                        val l = layout ?: return@detectTapGestures
+
+                        // Insets are checked first and hit as whole boxes. They sit in a
+                        // fixed frame, and the islands inside them are a few pixels
+                        // across — asking for a fingertip on one would make the
+                        // archipelagos decorative rather than selectable.
+                        val inset = l.insets.firstOrNull { it.hitRect.contains(tap) }
+                        if (inset != null) {
+                            onSelect(inset.ownerProvinceId)
+                            return@detectTapGestures
+                        }
+
+                        val settled = l.projection.clamp(Offset(offsetX, offsetY), zoom, l.mapSize)
+                        val world = (tap - settled) / zoom
+                        val lon = l.projection.longitudeAt(world.x)
+                        val lat = l.projection.latitudeAt(world.y)
+                        onSelect(stamps.firstOrNull { it.province.contains(lon, lat) }?.province?.id)
+                    }
+                },
+        ) {
+            val l = layout ?: return@Canvas
+
+            // Re-clamped here rather than trusting the stored offset: the canvas resizes
+            // when the empty hint appears on first unlock, and on rotation, either of
+            // which can leave a previously legal offset pointing off the map.
+            //
+            // The pan is read *here*, in the draw scope, rather than into a `val` above the
+            // `Canvas`. Read during composition it made every frame of a drag recompose the whole
+            // map — which cost nothing visible while this drew and nothing else, and would now
+            // re-resolve thirty-six accessibility labels per frame.
+            val settled = l.projection.clamp(Offset(offsetX, offsetY), zoom, l.mapSize)
+
+            withTransform({
+                translate(settled.x, settled.y)
+                scale(zoom, zoom, pivot = Offset.Zero)
+            }) {
+                // Borders keep a constant on-screen width no matter how far in the
+                // traveller has zoomed; scaling them would turn a tight cluster of delta
+                // provinces into a solid block of outline.
+                val hairline = BORDER_DP.dp.toPx() / zoom
+                val selectedWidth = SELECTED_BORDER_DP.dp.toPx() / zoom
+
+                stamps.forEach { stamp ->
+                    val shape = shapes[stamp.province.id] ?: return@forEach
+                    val cover = covers[stamp.province.id]?.image
+
+                    if (cover != null) {
+                        // Each ring is filled from the photo independently rather than
+                        // stretching one copy across the whole province, so a province
+                        // with coastal islands shows the same picture in each piece
+                        // instead of an unrelated band from the photo's far edge.
+                        shape.parts.forEach { part ->
+                            clipPath(part.path) { drawCover(cover, part.bounds) }
+                        }
+                    } else {
+                        drawPath(shape.outline, lockedFill)
+                    }
+                }
+
+                // Every outline goes on top of every fill, so a border is never half
+                // hidden under the neighbouring province's photo.
+                stamps.forEach { stamp ->
+                    val shape = shapes[stamp.province.id] ?: return@forEach
+                    val isSelected = stamp.province.id == selectedProvinceId
+                    drawPath(
+                        path = shape.outline,
+                        color = when {
+                            isSelected -> selectedStroke
+                            stamp.isUnlocked -> unlockedStroke
+                            else -> lockedStroke
+                        },
+                        style = Stroke(width = if (isSelected) selectedWidth else hairline),
+                    )
                 }
             }
-            .pointerInput(layout, stamps) {
-                detectTapGestures { tap ->
-                    val l = layout ?: return@detectTapGestures
 
-                    // Insets are checked first and hit as whole boxes. They sit in a
-                    // fixed frame, and the islands inside them are a few pixels
-                    // across — asking for a fingertip on one would make the
-                    // archipelagos decorative rather than selectable.
-                    val inset = l.insets.firstOrNull { it.hitRect.contains(tap) }
-                    if (inset != null) {
-                        onSelect(inset.ownerProvinceId)
-                        return@detectTapGestures
-                    }
-
-                    val settled = l.projection.clamp(Offset(offsetX, offsetY), zoom, l.mapSize)
-                    val world = (tap - settled) / zoom
-                    val lon = l.projection.longitudeAt(world.x)
-                    val lat = l.projection.latitudeAt(world.y)
-                    onSelect(stamps.firstOrNull { it.province.contains(lon, lat) }?.province?.id)
-                }
-            },
-    ) {
-        val l = layout ?: return@Canvas
-
-        // Re-clamped here rather than trusting the stored offset: the canvas resizes
-        // when the empty hint appears on first unlock, and on rotation, either of
-        // which can leave a previously legal offset pointing off the map.
-        val settled = l.projection.clamp(offset, zoom, l.mapSize)
-
-        withTransform({
-            translate(settled.x, settled.y)
-            scale(zoom, zoom, pivot = Offset.Zero)
-        }) {
-            // Borders keep a constant on-screen width no matter how far in the
-            // traveller has zoomed; scaling them would turn a tight cluster of delta
-            // provinces into a solid block of outline.
-            val hairline = BORDER_DP.dp.toPx() / zoom
-            val selectedWidth = SELECTED_BORDER_DP.dp.toPx() / zoom
-
-            stamps.forEach { stamp ->
-                val shape = shapes[stamp.province.id] ?: return@forEach
-                val cover = covers[stamp.province.id]?.image
-
-                if (cover != null) {
-                    // Each ring is filled from the photo independently rather than
-                    // stretching one copy across the whole province, so a province
-                    // with coastal islands shows the same picture in each piece
-                    // instead of an unrelated band from the photo's far edge.
-                    shape.parts.forEach { part ->
-                        clipPath(part.path) { drawCover(cover, part.bounds) }
-                    }
-                } else {
-                    drawPath(shape.outline, lockedFill)
-                }
-            }
-
-            // Every outline goes on top of every fill, so a border is never half
-            // hidden under the neighbouring province's photo.
-            stamps.forEach { stamp ->
-                val shape = shapes[stamp.province.id] ?: return@forEach
-                val isSelected = stamp.province.id == selectedProvinceId
-                drawPath(
-                    path = shape.outline,
-                    color = when {
-                        isSelected -> selectedStroke
-                        stamp.isUnlocked -> unlockedStroke
-                        else -> lockedStroke
-                    },
-                    style = Stroke(width = if (isSelected) selectedWidth else hairline),
+            // Outside the transform: the insets keep their place and scale while the
+            // mainland moves under the finger.
+            l.insets.forEach { inset ->
+                drawInset(
+                    inset = inset,
+                    cover = inset.ownerProvinceId?.let { covers[it]?.image },
+                    isSelected = inset.ownerProvinceId != null &&
+                        inset.ownerProvinceId == selectedProvinceId,
+                    textMeasurer = textMeasurer,
+                    lockedFill = lockedFill,
+                    lockedStroke = lockedStroke,
+                    unlockedStroke = unlockedStroke,
+                    selectedStroke = selectedStroke,
+                    labelColor = insetLabel,
                 )
             }
         }
 
-        // Outside the transform: the insets keep their place and scale while the
-        // mainland moves under the finger.
-        l.insets.forEach { inset ->
-            drawInset(
-                inset = inset,
-                cover = inset.ownerProvinceId?.let { covers[it]?.image },
-                isSelected = inset.ownerProvinceId != null &&
-                    inset.ownerProvinceId == selectedProvinceId,
-                textMeasurer = textMeasurer,
-                lockedFill = lockedFill,
-                lockedStroke = lockedStroke,
-                unlockedStroke = unlockedStroke,
-                selectedStroke = selectedStroke,
-                labelColor = insetLabel,
-            )
-        }
+        // Over the canvas and drawing nothing. See `ProvinceSemanticsOverlay` for why these
+        // are semantics without a pointer input, and why that leaves every existing gesture
+        // exactly as it was.
+        ProvinceSemanticsOverlay(
+            handles = handles,
+            placement = {
+                val l = layout
+                MapPlacement(
+                    zoom = zoom,
+                    offset = l?.projection.clamp(Offset(offsetX, offsetY), zoom, l?.mapSize ?: Size.Zero),
+                )
+            },
+            openLabel = openLabel,
+            onSelect = onSelect,
+            modifier = Modifier.matchParentSize(),
+        )
     }
 }
+
+/**
+ * Every province and inset as a labelled rectangle, in the canvas's unmagnified space.
+ *
+ * A province is drawn as one or more rings — Quảng Ninh has islands, Cà Mau has a delta — and
+ * what a screen reader can be given is one rectangle, so the rings are unioned. Rings are what
+ * the photo is fitted to and rings are what the outline strokes; neither of those wants a
+ * bounding box, which is why this is computed here rather than kept on [ProvinceShape].
+ *
+ * An inset with no owner is dropped rather than labelled: nothing selects it, so a node there
+ * would be a control that does nothing.
+ */
+private fun MapLayout?.handleGeometry(
+    stamps: List<PassportStamp>,
+    shapes: Map<String, ProvinceShape>,
+): List<ProvinceGeometry> {
+    val layout = this ?: return emptyList()
+
+    val insets = layout.insets.mapNotNull { inset ->
+        val owner = inset.ownerProvinceId ?: return@mapNotNull null
+        ProvinceGeometry(
+            provinceId = owner,
+            name = inset.archipelago.vietnameseName,
+            isUnlocked = inset.isUnlocked,
+            bounds = inset.hitRect,
+            isFixed = true,
+        )
+    }
+
+    val mainland = stamps.mapNotNull { stamp ->
+        val parts = shapes[stamp.province.id]?.parts.orEmpty()
+        if (parts.isEmpty()) return@mapNotNull null
+        ProvinceGeometry(
+            provinceId = stamp.province.id,
+            name = stamp.province.displayName,
+            isUnlocked = stamp.isUnlocked,
+            bounds = Rect(
+                left = parts.minOf { it.bounds.left },
+                top = parts.minOf { it.bounds.top },
+                right = parts.maxOf { it.bounds.right },
+                bottom = parts.maxOf { it.bounds.bottom },
+            ),
+        )
+    }
+
+    return insets + mainland
+}
+
+/** One labelled rectangle before its text has been resolved. */
+private class ProvinceGeometry(
+    val provinceId: String,
+    val name: String,
+    val isUnlocked: Boolean,
+    val bounds: Rect,
+    val isFixed: Boolean = false,
+)
 
 /**
  * Everything the map's geometry depends on: where the mainland is drawn, and where

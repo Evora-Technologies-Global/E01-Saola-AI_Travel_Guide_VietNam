@@ -364,4 +364,9 @@
     <string name="collection_show_board">一覧を表示</string>
     <string name="discovery_collected_kicker">コレクション済み</string>
     <string name="discovery_collected_open">コレクションを開く</string>
+    <!-- 地図のスクリーンリーダー読み上げ -->
+    <string name="passport_map_a11y">ベトナムの地図、%2$d 省・市のうち %1$d か所を訪問済み</string>
+    <string name="passport_province_a11y">%1$s、%2$s</string>
+    <string name="passport_province_a11y_open">この省を開く</string>
+    <string name="explore_map_a11y">あなたの周りの場所の地図</string>
 </resources>

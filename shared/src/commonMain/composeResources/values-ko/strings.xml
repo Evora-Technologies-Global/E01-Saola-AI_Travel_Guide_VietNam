@@ -364,4 +364,9 @@
     <string name="collection_show_board">격자로 보기</string>
     <string name="discovery_collected_kicker">컬렉션에 수집됨</string>
     <string name="discovery_collected_open">컬렉션 열기</string>
+    <!-- 지도, 스크린 리더 읽기 -->
+    <string name="passport_map_a11y">베트남 지도, %2$d개 성·시 가운데 %1$d곳 방문</string>
+    <string name="passport_province_a11y">%1$s, %2$s</string>
+    <string name="passport_province_a11y_open">이 지역 열기</string>
+    <string name="explore_map_a11y">내 주변 장소 지도</string>
 </resources>

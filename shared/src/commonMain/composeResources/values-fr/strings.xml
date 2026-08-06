@@ -368,4 +368,9 @@
     <string name="collection_show_board">Voir la grille</string>
     <string name="discovery_collected_kicker">Dans la collection</string>
     <string name="discovery_collected_open">Ouvrir la collection</string>
+    <!-- Cartes, lues par un lecteur d'écran -->
+    <string name="passport_map_a11y">Carte du Vietnam, %1$d provinces visitées sur %2$d</string>
+    <string name="passport_province_a11y">%1$s, %2$s</string>
+    <string name="passport_province_a11y_open">Ouvrir cette province</string>
+    <string name="explore_map_a11y">Carte des lieux autour de vous</string>
 </resources>

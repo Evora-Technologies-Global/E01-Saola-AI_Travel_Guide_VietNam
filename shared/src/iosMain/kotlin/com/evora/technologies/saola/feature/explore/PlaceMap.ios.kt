@@ -6,6 +6,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.viewinterop.UIKitView
+import com.evora.technologies.saola.resources.Res
+import com.evora.technologies.saola.resources.explore_map_a11y
+import org.jetbrains.compose.resources.stringResource
 import com.evora.technologies.saola.domain.model.GeoPoint
 import com.evora.technologies.saola.domain.model.NearbyPlace
 import kotlinx.cinterop.CValue
@@ -23,6 +26,7 @@ import platform.MapKit.MKMapViewDelegateProtocol
 import platform.MapKit.MKMarkerAnnotationView
 import platform.MapKit.MKPointAnnotation
 import platform.UIKit.UIColor
+import platform.UIKit.setAccessibilityLabel
 import platform.UIKit.UIUserInterfaceStyle
 import platform.darwin.NSObject
 
@@ -67,6 +71,10 @@ actual fun PlaceMap(
     // arrived, and it is also where the annotations currently on the map are tracked.
     val controller = remember { PlaceMapController() }
 
+    // Resolved out here: `factory` runs outside the composition, where `stringResource`
+    // cannot be called.
+    val mapLabel = stringResource(Res.string.explore_map_a11y)
+
     // Re-read rather than captured: the delegate outlives any one composition, and a
     // callback captured at construction would keep calling the first composition's
     // view model long after the screen had been recreated.
@@ -87,6 +95,14 @@ actual fun PlaceMap(
             controller.isAwaitingFirstFix = camera == null && userLocation == null
             MKMapView().apply {
                 delegate = controller
+                // The same sentence Android puts on its map. VoiceOver reaches the
+                // annotations through their titles, which `syncAnnotations` already sets;
+                // what it had no way to learn was what the view itself is.
+                //
+                // The setter rather than the property: `accessibilityLabel` reaches Kotlin
+                // as an extension on `NSObject` from UIKit's informal `UIAccessibility`
+                // category, not as a member of `UIView`.
+                setAccessibilityLabel(mapLabel)
                 showsCompass = true
                 showsScale = false
                 // Off until a fix exists, matching Android; `syncChrome` turns it on.

@@ -4,7 +4,11 @@ import com.evora.technologies.saola.domain.model.CatalogItem
 import com.evora.technologies.saola.domain.model.CollectionEntry
 import com.evora.technologies.saola.domain.model.Discovery
 import com.evora.technologies.saola.domain.model.DiscoveryCategory
+import com.evora.technologies.saola.domain.model.GeoBounds
 import com.evora.technologies.saola.domain.model.GeoPoint
+import com.evora.technologies.saola.domain.model.PassportStamp
+import com.evora.technologies.saola.domain.model.Province
+import com.evora.technologies.saola.domain.model.ProvinceType
 import kotlin.time.Instant
 
 /**
@@ -51,6 +55,59 @@ internal fun discovery(
     isFavorite = isFavorite,
     modelUsed = null,
     createdAt = Instant.fromEpochSeconds(0),
+)
+
+/**
+ * A rectangular province, which is all a map test needs one to be.
+ *
+ * Real outlines are thousands of vertices of coastline; a square is enough to exercise every
+ * question this suite asks — where the projection puts a province, which one a tap resolves
+ * to, and what a screen reader is told about it. Using the shipped asset instead would make
+ * the test depend on 34 real polygons and on whichever of them happen to be adjacent, which is
+ * data the assertions would then have to be re-derived from every time it is corrected.
+ *
+ * The ring is not closed: `Province` documents that consumers close it themselves.
+ */
+internal fun province(
+    id: String,
+    name: String = id,
+    minLongitude: Double,
+    minLatitude: Double,
+    maxLongitude: Double,
+    maxLatitude: Double,
+): Province {
+    val bounds = GeoBounds(minLongitude, minLatitude, maxLongitude, maxLatitude)
+    return Province(
+        id = id,
+        name = name,
+        nameEn = name,
+        type = ProvinceType.PROVINCE,
+        mergedFrom = emptyList(),
+        center = GeoPoint(
+            latitude = (minLatitude + maxLatitude) / 2,
+            longitude = (minLongitude + maxLongitude) / 2,
+        ),
+        bounds = bounds,
+        mainlandBounds = bounds,
+        mainlandRings = listOf(
+            doubleArrayOf(
+                minLongitude, minLatitude,
+                maxLongitude, minLatitude,
+                maxLongitude, maxLatitude,
+                minLongitude, maxLatitude,
+            ),
+        ),
+        offshoreRings = emptyList(),
+    )
+}
+
+/** A stamp on [province]; [discoveryCount] above zero is what "visited" means. */
+internal fun stamp(province: Province, discoveryCount: Int = 0) = PassportStamp(
+    province = province,
+    discoveryCount = discoveryCount,
+    coverImagePath = null,
+    firstVisitAt = null,
+    lastVisitAt = null,
 )
 
 /** One catalogue entry, collected when [discovery] is non-null. */

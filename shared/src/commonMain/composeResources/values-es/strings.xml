@@ -369,4 +369,9 @@
     <string name="collection_show_board">Ver la cuadrícula</string>
     <string name="discovery_collected_kicker">En tu colección</string>
     <string name="discovery_collected_open">Abrir la colección</string>
+    <!-- Mapas, leídos por un lector de pantalla -->
+    <string name="passport_map_a11y">Mapa de Vietnam, %1$d de %2$d provincias visitadas</string>
+    <string name="passport_province_a11y">%1$s, %2$s</string>
+    <string name="passport_province_a11y_open">Abrir esta provincia</string>
+    <string name="explore_map_a11y">Mapa de los lugares a tu alrededor</string>
 </resources>

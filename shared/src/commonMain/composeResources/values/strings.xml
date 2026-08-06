@@ -400,4 +400,9 @@
     <string name="collection_show_board">Show the board</string>
     <string name="discovery_collected_kicker">In your collection</string>
     <string name="discovery_collected_open">Open the collection</string>
+    <!-- Maps, read aloud by a screen reader -->
+    <string name="passport_map_a11y">Map of Vietnam, %1$d of %2$d provinces visited</string>
+    <string name="passport_province_a11y">%1$s, %2$s</string>
+    <string name="passport_province_a11y_open">Open this province</string>
+    <string name="explore_map_a11y">Map of the places around you</string>
 </resources>

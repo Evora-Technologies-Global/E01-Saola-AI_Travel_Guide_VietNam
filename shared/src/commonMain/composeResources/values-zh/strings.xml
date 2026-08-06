@@ -365,4 +365,9 @@
     <string name="collection_show_board">看格子图</string>
     <string name="discovery_collected_kicker">已收进收藏</string>
     <string name="discovery_collected_open">打开收藏</string>
+    <!-- 地图的读屏朗读 -->
+    <string name="passport_map_a11y">越南地图，%2$d 个省市中已去过 %1$d 个</string>
+    <string name="passport_province_a11y">%1$s，%2$s</string>
+    <string name="passport_province_a11y_open">打开这个省市</string>
+    <string name="explore_map_a11y">你周围地点的地图</string>
 </resources>

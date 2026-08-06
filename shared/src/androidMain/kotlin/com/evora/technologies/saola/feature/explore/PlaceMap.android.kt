@@ -26,6 +26,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.ComposeMapColorScheme
+import com.evora.technologies.saola.resources.Res
+import com.evora.technologies.saola.resources.explore_map_a11y
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapType
@@ -33,6 +35,7 @@ import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberUpdatedMarkerState
+import org.jetbrains.compose.resources.stringResource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -94,6 +97,8 @@ actual fun PlaceMap(
         )
     }
 
+    val mapLabel = stringResource(Res.string.explore_map_a11y)
+
     // Whether this map opened on the Hanoi fallback because neither a request nor a fix
     // existed to open it on — see the branch below. The condition is read once, at first
     // composition, which is the only moment it describes.
@@ -132,6 +137,12 @@ actual fun PlaceMap(
 
     GoogleMap(
         modifier = modifier,
+        // The map is one node to a screen reader whatever is drawn on it, so it says what it
+        // is. Without this it is an unlabelled `AndroidView` filling the screen — announced,
+        // if at all, as the class name. Each marker carries its place's name through `title`,
+        // which is what the Maps SDK exposes to TalkBack, and the ranked list of the same
+        // places is on screen beside it as the path that does not require a map at all.
+        contentDescription = mapLabel,
         cameraPositionState = cameraPositionState,
         properties = remember(userLocation != null) {
             MapProperties(

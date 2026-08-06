@@ -365,4 +365,9 @@
     <string name="collection_show_board">ดูแบบตาราง</string>
     <string name="discovery_collected_kicker">อยู่ในคอลเลกชัน</string>
     <string name="discovery_collected_open">เปิดคอลเลกชัน</string>
+    <!-- แผนที่ อ่านด้วยโปรแกรมอ่านหน้าจอ -->
+    <string name="passport_map_a11y">แผนที่เวียดนาม ไปมาแล้ว %1$d จาก %2$d จังหวัด</string>
+    <string name="passport_province_a11y">%1$s, %2$s</string>
+    <string name="passport_province_a11y_open">เปิดจังหวัดนี้</string>
+    <string name="explore_map_a11y">แผนที่สถานที่รอบตัวคุณ</string>
 </resources>

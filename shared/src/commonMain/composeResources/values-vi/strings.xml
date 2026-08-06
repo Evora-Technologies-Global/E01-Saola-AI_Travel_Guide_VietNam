@@ -362,4 +362,9 @@
     <string name="collection_show_board">Xem dạng lưới</string>
     <string name="discovery_collected_kicker">Trong bộ sưu tập</string>
     <string name="discovery_collected_open">Mở bộ sưu tập</string>
+    <!-- Bản đồ, đọc bằng trình đọc màn hình -->
+    <string name="passport_map_a11y">Bản đồ Việt Nam, đã đến %1$d trên %2$d tỉnh thành</string>
+    <string name="passport_province_a11y">%1$s, %2$s</string>
+    <string name="passport_province_a11y_open">Xem chi tiết tỉnh này</string>
+    <string name="explore_map_a11y">Bản đồ các địa điểm quanh bạn</string>
 </resources>
