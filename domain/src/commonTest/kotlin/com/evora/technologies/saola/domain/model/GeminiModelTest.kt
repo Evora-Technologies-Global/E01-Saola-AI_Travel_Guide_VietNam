@@ -17,17 +17,19 @@ class GeminiModelTest {
         assertTrue(chain.containsAll(GeminiModel.entries.map { it.id }))
     }
 
+    /**
+     * The build's model is one of the ones the app is allowed to call.
+     *
+     * It reads like a tautology and is not: `CONFIGURED` is the one line anyone changes to
+     * point this app at a different model, and nothing else checks it — there is no stored
+     * value to validate against any more, and no `fromId` to reject an id the catalogue does
+     * not have. The fallback assertion is the one with teeth: a chain that did not start with
+     * the configured model would quietly send every first attempt somewhere else.
+     */
     @Test
-    fun `an unknown stored model id falls back to the default`() {
-        assertEquals(GeminiModel.DEFAULT, GeminiModel.fromId("gemini-2.5-flash"))
-        assertEquals(GeminiModel.DEFAULT, GeminiModel.fromId(null))
-    }
-
-    @Test
-    fun `every id round-trips`() {
-        GeminiModel.entries.forEach { model ->
-            assertEquals(model, GeminiModel.fromId(model.id))
-        }
+    fun `the configured model is a real entry and heads its own fallback chain`() {
+        assertTrue(GeminiModel.CONFIGURED in GeminiModel.entries)
+        assertEquals(GeminiModel.CONFIGURED.id, GeminiModel.CONFIGURED.fallbackChain.first())
     }
 
     /**

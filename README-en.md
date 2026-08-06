@@ -199,7 +199,7 @@ The full detail — 34-province map geometry, the Overpass query, R8/AGP, APK si
 |---|---|---|
 | Discoveries, conversations, notes, translations, day summaries | **Room (SQLite)** — five tables | The single source of truth; screens read it through `Flow`, so it works offline |
 | Photographs | **JPEG files** in the app's own directory | EXIF-corrected upright, downscaled to a 1024 px long edge |
-| Preferences (API key, model, theme, narration, location) | **DataStore Preferences** | |
+| Preferences (theme, narration, location) | **DataStore Preferences** | The API key and the model are **no longer here** as of 06.08.2026 — both are build decisions |
 | The 34 provinces and 61 catalogue entries | **Assets bundled in the app** | Read-only, no network needed |
 | Nearby-place data | **In memory** — 15 minutes / 300 m | Deliberately not on disk: this is data about where you *are*, and reopening the app onto last week's city would be wrong |
 
@@ -210,8 +210,12 @@ that no longer exists. That bug once deleted **every photograph** a user had.
 **What leaves the device:** the photo being recognised (to Gemini), the current coordinates (to
 OpenStreetMap / Wikipedia), and map tiles. Nothing else.
 
-**The Gemini API key** is read from `local.properties` at build time (never committed), or the
-user pastes their own under **Settings → API key**, which takes precedence.
+**The Gemini API key** is read from `local.properties` at build time (never committed), and from
+nowhere else. The paste-your-own field went with the whole *Intelligence* section on 06.08.2026:
+asking a traveller for an API key is asking them to hold a developer's credential, and two key
+sources mean the app's behaviour depends on which one happens to be in play. **The model** took
+the same route — `GeminiModel.CONFIGURED` in `domain/model/AppSettings.kt` is one line, edited
+and rebuilt.
 
 ---
 
@@ -273,7 +277,7 @@ all 34 plus both archipelagos, and a double-tap opens the province panel. Verifi
 
 **Near term — done on 06.08.2026**
 
-Every one of the six was "bring out what is already there"; none needed new data:
+Every one of the seven was "bring out what is already there"; none needed new data:
 
 - ✅ **The unlock moment is no longer silent.** The recognition result carries a card — *In your
   collection · Phở · 29/61* — that opens the board. State rather than a snackbar, so it survives
@@ -300,6 +304,17 @@ Every one of the six was "bring out what is already there"; none needed new data
   it is a downgrade. Measured on a Galaxy A16 by pinning the app to `en-US` and back to `vi-VN`
   against the same 40 results. `:data` went from 120/86 to **126/92**, the project total to
   **477**.
+- ✅ **Settings pared back to what a traveller actually chooses.** The *Intelligence* section —
+  the API-key field and the three model cards — is gone: both are build decisions
+  (`local.properties` and `GeminiModel.CONFIGURED`) rather than questions to put to a traveller,
+  and "Gemini 3.5 Flash or 3 Pro" is answerable only by somebody who already knows Google's
+  catalogue. In its place, *About* gained **Privacy policy** and **Terms of service**, opening in
+  the browser and sharing a card with *Licences*; the two cards in that section now have real
+  space between them instead of meeting edge to edge. The footer reads *Evora Technologies
+  Global · v1.0.0*. A defect of the same family was fixed along the way: clearing all discoveries
+  announced "cleared" whether or not the delete **worked** — the confirmation now waits on the
+  delete actually landing. Project total 477 → **475** (two `GeminiModel.fromId` cases lost, one
+  gained for `CONFIGURED`).
 
 **Near term — what is left**
 
@@ -348,8 +363,10 @@ packaged into the `debug` variant only, so a shipping APK has nothing to seed fr
 release build to see the real empty state.
 
 You need a Gemini key from [Google AI Studio](https://aistudio.google.com/apikey) in
-`local.properties`. Full instructions, including the Android Maps SDK key and how to produce a
-release build, are in [TechStack-temp.md §9–§11](TechStack-temp.md#9-getting-started).
+`local.properties` — there is no in-app way to supply one, so a build without it says so on the
+lens screen and recognises nothing. Full instructions, including the Android Maps SDK key and
+how to produce a release build, are in
+[TechStack-temp.md §9–§11](TechStack-temp.md#9-getting-started).
 
 ---
 

@@ -235,23 +235,6 @@
     <!-- Settings -->
     <string name="settings_title">Cài đặt</string>
     <string name="settings_kicker">Tùy chọn</string>
-    <string name="settings_section_ai">Trí tuệ</string>
-    <string name="settings_api_key">Khóa API</string>
-    <string name="settings_api_key_set">Đang dùng khóa của bạn</string>
-    <string name="settings_api_key_default">Đang dùng khóa tích hợp sẵn trong ứng dụng</string>
-    <string name="settings_api_key_none">Chưa có khóa nào</string>
-    <string name="settings_api_key_active">Đang hoạt động</string>
-    <string name="settings_api_key_inactive">Chưa có khóa</string>
-    <string name="settings_api_key_hint">dán khóa của riêng bạn…</string>
-    <string name="settings_api_key_save">Lưu khóa</string>
-    <string name="settings_api_key_clear">Xóa</string>
-    <string name="settings_api_key_saved">Đã lưu khóa API</string>
-    <string name="settings_model_balanced">Cân bằng</string>
-    <string name="settings_model_balanced_summary">Đủ sâu, đủ nhanh để đọc một tờ thực đơn.</string>
-    <string name="settings_model_quick">Nhanh</string>
-    <string name="settings_model_quick_summary">Biển hiệu, nhãn, giá tiền. Rẻ nhất.</string>
-    <string name="settings_model_scholar">Chuyên sâu</string>
-    <string name="settings_model_scholar_summary">Lịch sử và văn hóa sâu nhất. Chậm hơn.</string>
     <string name="settings_section_experience">Trải nghiệm</string>
     <string name="settings_speak">Đọc to câu trả lời</string>
     <string name="settings_speak_summary">Đọc phần mô tả và câu trả lời trong khung chat</string>
@@ -266,7 +249,7 @@
     <string name="settings_clear_confirm_title">Xóa tất cả?</string>
     <string name="settings_clear_confirm_body">Thao tác này xóa vĩnh viễn mọi khám phá, ảnh, cuộc trò chuyện và nhật ký trên thiết bị.</string>
     <string name="settings_cleared">Đã xóa toàn bộ khám phá</string>
-    <string name="settings_footer">Làm tại Việt Nam · v%1$s</string>
+    <string name="settings_footer">Evora Technologies Global · v%1$s</string>
 
     <!-- Categories -->
     <string name="category_landmark">Di tích</string>
@@ -293,7 +276,7 @@
     <string name="action_close">Đóng</string>
 
     <!-- Errors -->
-    <string name="error_missing_api_key">Chưa có khóa API Gemini. Thêm khóa trong Cài đặt để bắt đầu nhận diện.</string>
+    <string name="error_missing_api_key">Bản dựng này chưa có khóa Gemini nên chưa thể nhận diện.</string>
     <string name="error_invalid_api_key">Khóa API bị từ chối. Kiểm tra lại trong Cài đặt.</string>
     <string name="error_no_connection">Không có kết nối mạng. Việc nhận diện cần kết nối tới Gemini.</string>
     <string name="error_timeout">Quá thời gian chờ. Thử lại nhé.</string>
@@ -374,6 +357,9 @@
     <string name="licenses_footer">Ảnh bạn chụp là của bạn. Chúng nằm trên máy này, và chỉ rời đi khi được gửi tới Gemini để nhận diện.</string>
     <string name="settings_licenses">Giấy phép và nguồn dữ liệu</string>
     <string name="settings_licenses_summary">OpenStreetMap · Wikipedia · Natural Earth</string>
+    <string name="settings_privacy_policy">Chính sách bảo mật</string>
+    <string name="settings_terms_of_service">Điều khoản dịch vụ</string>
+    <string name="settings_legal_summary">Mở trong trình duyệt</string>
     <!-- Bộ sưu tập: chế độ hướng dẫn -->
     <string name="collection_show_guide">Xem cách nhận biết</string>
     <string name="collection_show_board">Xem dạng lưới</string>

@@ -1,7 +1,6 @@
 package com.evora.technologies.saola.feature.camera.component
 
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import com.evora.technologies.saola.core.designsystem.component.showError
@@ -9,7 +8,6 @@ import com.evora.technologies.saola.core.util.toUserMessage
 import com.evora.technologies.saola.domain.util.AppError
 import com.evora.technologies.saola.resources.Res
 import com.evora.technologies.saola.resources.error_missing_api_key
-import com.evora.technologies.saola.resources.settings_title
 import org.jetbrains.compose.resources.stringResource
 
 /**
@@ -18,15 +16,20 @@ import org.jetbrains.compose.resources.stringResource
  * `showError` dismisses whatever is on screen before this one goes up. The warning
  * also comes down the moment a key arrives: it is a standing condition rather than
  * an event, so leaving it up would be reporting a problem the traveller just fixed.
+ *
+ * **No action on it since 06.08.2026, and that is the honest shape now.** It used to carry a
+ * "Settings" button, because Settings was where a key could be pasted; the key is the build's
+ * from that date, so the button led to a page that could not fix what the notice was about.
+ * A snackbar action that resolves nothing is worse than no action — it is the app pointing at
+ * itself. What is left says what is wrong, and whoever builds the app is the one who can act
+ * on it.
  */
 @Composable
 internal fun MissingKeySnackbar(
     hasApiKey: Boolean,
     hostState: SnackbarHostState,
-    onOpenSettings: () -> Unit,
 ) {
     val message = stringResource(Res.string.error_missing_api_key)
-    val action = stringResource(Res.string.settings_title)
 
     LaunchedEffect(hasApiKey) {
         if (hasApiKey) {
@@ -34,12 +37,7 @@ internal fun MissingKeySnackbar(
             return@LaunchedEffect
         }
 
-        val result = hostState.showError(
-            message = message,
-            actionLabel = action,
-            withDismissAction = true,
-        )
-        if (result == SnackbarResult.ActionPerformed) onOpenSettings()
+        hostState.showError(message = message, withDismissAction = true)
     }
 }
 

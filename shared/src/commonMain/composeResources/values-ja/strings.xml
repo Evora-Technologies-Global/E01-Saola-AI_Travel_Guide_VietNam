@@ -238,23 +238,6 @@
     <!-- Settings -->
     <string name="settings_title">設定</string>
     <string name="settings_kicker">環境設定</string>
-    <string name="settings_section_ai">知能</string>
-    <string name="settings_api_key">API キー</string>
-    <string name="settings_api_key_set">あなたのキーを使用中</string>
-    <string name="settings_api_key_default">アプリ内蔵のキーを使用中</string>
-    <string name="settings_api_key_none">キーが未設定です</string>
-    <string name="settings_api_key_active">有効</string>
-    <string name="settings_api_key_inactive">キーなし</string>
-    <string name="settings_api_key_hint">自分のキーを貼り付け…</string>
-    <string name="settings_api_key_save">キーを保存</string>
-    <string name="settings_api_key_clear">消去</string>
-    <string name="settings_api_key_saved">API キーを保存しました</string>
-    <string name="settings_model_balanced">バランス</string>
-    <string name="settings_model_balanced_summary">十分な深さと、メニューを読める速さ。</string>
-    <string name="settings_model_quick">高速</string>
-    <string name="settings_model_quick_summary">看板、ラベル、値段。いちばん安価。</string>
-    <string name="settings_model_scholar">研究者</string>
-    <string name="settings_model_scholar_summary">歴史と文化をもっとも深く。そのぶん遅い。</string>
     <string name="settings_section_experience">体験</string>
     <string name="settings_speak">回答を読み上げる</string>
     <string name="settings_speak_summary">解説とチャットの返答を音声で</string>
@@ -269,7 +252,7 @@
     <string name="settings_clear_confirm_title">すべて削除しますか？</string>
     <string name="settings_clear_confirm_body">この端末にあるすべての発見、写真、会話、日誌が完全に削除されます。</string>
     <string name="settings_cleared">すべての発見を削除しました</string>
-    <string name="settings_footer">Made in Việt Nam · v%1$s</string>
+    <string name="settings_footer">Evora Technologies Global · v%1$s</string>
 
     <!-- Categories -->
     <string name="category_landmark">名所</string>
@@ -296,7 +279,7 @@
     <string name="action_close">閉じる</string>
 
     <!-- Errors -->
-    <string name="error_missing_api_key">Gemini の API キーがまだありません。設定で追加すると認識を始められます。</string>
+    <string name="error_missing_api_key">このビルドには Gemini のキーがないため、認識を実行できません。</string>
     <string name="error_invalid_api_key">その API キーは拒否されました。設定で確認してください。</string>
     <string name="error_no_connection">インターネットに接続していません。認識には Gemini への接続が必要です。</string>
     <string name="error_timeout">時間がかかりすぎました。もう一度お試しください。</string>
@@ -376,6 +359,9 @@
     <string name="licenses_footer">あなたが撮った写真はあなたのものです。この端末に留まり、認識のために Gemini へ送るときだけ端末を離れます。</string>
     <string name="settings_licenses">ライセンスとデータ出典</string>
     <string name="settings_licenses_summary">OpenStreetMap · Wikipedia · Natural Earth</string>
+    <string name="settings_privacy_policy">プライバシーポリシー</string>
+    <string name="settings_terms_of_service">利用規約</string>
+    <string name="settings_legal_summary">ブラウザで開きます</string>
     <!-- コレクション: ガイド表示 -->
     <string name="collection_show_guide">見分け方を表示</string>
     <string name="collection_show_board">一覧を表示</string>

@@ -4,10 +4,10 @@ import com.evora.technologies.saola.data.local.db.dao.TranslationDao
 import com.evora.technologies.saola.data.mapper.toDomain
 import com.evora.technologies.saola.data.mapper.toEntity
 import com.evora.technologies.saola.data.remote.gemini.GeminiRemoteDataSource
+import com.evora.technologies.saola.domain.model.GeminiModel
 import com.evora.technologies.saola.domain.model.TranslateLanguage
 import com.evora.technologies.saola.domain.model.TranslationResult
 import com.evora.technologies.saola.domain.repository.CaptureStore
-import com.evora.technologies.saola.domain.repository.SettingsRepository
 import com.evora.technologies.saola.domain.repository.TextRecognizer
 import com.evora.technologies.saola.domain.repository.TranslationRepository
 import com.evora.technologies.saola.domain.util.AppError
@@ -26,7 +26,8 @@ internal class TranslationRepositoryImpl(
     private val remote: GeminiRemoteDataSource,
     private val textRecognizer: TextRecognizer,
     private val captureStore: CaptureStore,
-    private val settingsRepository: SettingsRepository,
+    // No `SettingsRepository`: translation reads its source and target from the screen and
+    // its model from `GeminiModel.CONFIGURED`, so there is nothing stored left for it to ask.
     private val ioDispatcher: CoroutineDispatcher,
 ) : TranslationRepository {
 
@@ -55,13 +56,12 @@ internal class TranslationRepositoryImpl(
             return@withContext AppResult.Failure(AppError.NotRecognized(null))
         }
 
-        val settings = settingsRepository.current()
         val response = when (
             val result = remote.translateLines(
                 lines = recognized.map { it.text },
                 source = sourceLanguage,
                 target = targetLanguage,
-                model = settings.preferredModel,
+                model = GeminiModel.CONFIGURED,
             )
         ) {
             is AppResult.Failure -> return@withContext result

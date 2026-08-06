@@ -129,7 +129,6 @@ private fun SaolaNavHost(navController: NavHostController) {
                 // The recent-capture pile hands over to the journal rather than
                 // opening one photo: it is a doorway to the history, not an index.
                 onOpenJournal = { navController.navigateToTopLevel(Routes.JOURNAL) },
-                onOpenSettings = { navController.navigateToTopLevel(Routes.SETTINGS) },
             )
         }
 

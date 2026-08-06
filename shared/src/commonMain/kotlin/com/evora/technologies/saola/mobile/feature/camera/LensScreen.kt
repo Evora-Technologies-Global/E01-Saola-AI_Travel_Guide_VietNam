@@ -98,7 +98,6 @@ fun LensRoute(
     /** Photo path, source language code (blank for detect), target language code. */
     onTranslationCaptured: (String, String, String) -> Unit,
     onOpenJournal: () -> Unit,
-    onOpenSettings: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: LensViewModel = koinViewModel(),
 ) {
@@ -112,7 +111,6 @@ fun LensRoute(
             controller = controller,
             onIntent = onIntent,
             onOpenJournal = onOpenJournal,
-            onOpenSettings = onOpenSettings,
             modifier = modifier,
         )
     }
@@ -124,7 +122,6 @@ private fun LensScreen(
     controller: CameraController,
     onIntent: (LensIntent) -> Unit,
     onOpenJournal: () -> Unit,
-    onOpenSettings: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     // Both grants, and what asking again would do, behind one platform-neutral state.
@@ -148,7 +145,6 @@ private fun LensScreen(
     MissingKeySnackbar(
         hasApiKey = state.hasApiKey,
         hostState = snackbarHostState,
-        onOpenSettings = onOpenSettings,
     )
     CaptureErrorSnackbar(
         error = state.error,

@@ -239,23 +239,6 @@
     <!-- Settings -->
     <string name="settings_title">ตั้งค่า</string>
     <string name="settings_kicker">การตั้งค่า</string>
-    <string name="settings_section_ai">ปัญญาประดิษฐ์</string>
-    <string name="settings_api_key">คีย์ API</string>
-    <string name="settings_api_key_set">กำลังใช้คีย์ของคุณเอง</string>
-    <string name="settings_api_key_default">กำลังใช้คีย์ที่ติดมากับแอป</string>
-    <string name="settings_api_key_none">ยังไม่ได้ตั้งคีย์</string>
-    <string name="settings_api_key_active">ใช้งานอยู่</string>
-    <string name="settings_api_key_inactive">ไม่มีคีย์</string>
-    <string name="settings_api_key_hint">วางคีย์ของคุณ…</string>
-    <string name="settings_api_key_save">บันทึกคีย์</string>
-    <string name="settings_api_key_clear">ล้าง</string>
-    <string name="settings_api_key_saved">บันทึกคีย์ API แล้ว</string>
-    <string name="settings_model_balanced">สมดุล</string>
-    <string name="settings_model_balanced_summary">ลึกพอ และเร็วพอจะอ่านเมนู</string>
-    <string name="settings_model_quick">เร็ว</string>
-    <string name="settings_model_quick_summary">ป้าย ฉลาก ราคา ประหยัดที่สุด</string>
-    <string name="settings_model_scholar">นักวิชาการ</string>
-    <string name="settings_model_scholar_summary">ลงลึกด้านประวัติศาสตร์และวัฒนธรรมที่สุด แต่ช้ากว่า</string>
     <string name="settings_section_experience">ประสบการณ์</string>
     <string name="settings_speak">อ่านคำตอบออกเสียง</string>
     <string name="settings_speak_summary">อ่านคำอธิบายและคำตอบในแชท</string>
@@ -270,7 +253,7 @@
     <string name="settings_clear_confirm_title">ล้างทั้งหมดไหม</string>
     <string name="settings_clear_confirm_body">การกระทำนี้จะลบทุกสิ่งที่ค้นพบ รูปภาพ บทสนทนา และบันทึกในเครื่องนี้อย่างถาวร</string>
     <string name="settings_cleared">ล้างสิ่งที่ค้นพบทั้งหมดแล้ว</string>
-    <string name="settings_footer">Made in Việt Nam · v%1$s</string>
+    <string name="settings_footer">Evora Technologies Global · v%1$s</string>
 
     <!-- Categories -->
     <string name="category_landmark">สถานที่สำคัญ</string>
@@ -297,7 +280,7 @@
     <string name="action_close">ปิด</string>
 
     <!-- Errors -->
-    <string name="error_missing_api_key">ยังไม่มีคีย์ API ของ Gemini เพิ่มในการตั้งค่าเพื่อเริ่มการรู้จำ</string>
+    <string name="error_missing_api_key">บิลด์นี้ไม่มีคีย์ Gemini จึงยังใช้การรู้จำไม่ได้</string>
     <string name="error_invalid_api_key">คีย์ API นั้นถูกปฏิเสธ ตรวจสอบอีกครั้งในการตั้งค่า</string>
     <string name="error_no_connection">ไม่มีการเชื่อมต่ออินเทอร์เน็ต การรู้จำต้องติดต่อกับ Gemini</string>
     <string name="error_timeout">ใช้เวลานานเกินไป ลองอีกครั้ง</string>
@@ -377,6 +360,9 @@
     <string name="licenses_footer">ภาพที่คุณถ่ายเป็นของคุณ ภาพจะอยู่ในเครื่องนี้ และออกจากเครื่องเฉพาะตอนส่งไปให้ Gemini ช่วยจดจำเท่านั้น</string>
     <string name="settings_licenses">สัญญาอนุญาตและแหล่งข้อมูล</string>
     <string name="settings_licenses_summary">OpenStreetMap · Wikipedia · Natural Earth</string>
+    <string name="settings_privacy_policy">นโยบายความเป็นส่วนตัว</string>
+    <string name="settings_terms_of_service">ข้อกำหนดการให้บริการ</string>
+    <string name="settings_legal_summary">เปิดในเบราว์เซอร์</string>
     <!-- คอลเลกชัน: โหมดคู่มือ -->
     <string name="collection_show_guide">ดูวิธีสังเกต</string>
     <string name="collection_show_board">ดูแบบตาราง</string>

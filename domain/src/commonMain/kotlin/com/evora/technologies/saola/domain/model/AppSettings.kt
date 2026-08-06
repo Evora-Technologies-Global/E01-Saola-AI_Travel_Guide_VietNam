@@ -3,13 +3,13 @@ package com.evora.technologies.saola.domain.model
 /**
  * Everything the traveller can tune, persisted in DataStore.
  *
- * [apiKey] is nullable rather than blank-by-default so "never configured" is
- * distinguishable from "deliberately cleared".
+ * Neither half of "intelligence" is here any more. The Gemini key is the one baked in at
+ * build time — see `DataBuildConfig.GEMINI_API_KEY` — and the model is [GeminiModel.CONFIGURED],
+ * a constant in this file. Both used to be stored preferences with a settings card each; they
+ * are build decisions now, so a value nothing can write is not carried around as if it could be.
  */
 data class AppSettings(
-    val apiKey: String?,
     val language: AppLanguage,
-    val preferredModel: GeminiModel,
     val speakAnswers: Boolean,
     /**
      * Whether the app has already put the location request in front of this
@@ -25,13 +25,9 @@ data class AppSettings(
     val hasAskedLocation: Boolean,
     val darkTheme: ThemePreference,
 ) {
-    val hasApiKey: Boolean get() = !apiKey.isNullOrBlank()
-
     companion object {
         val DEFAULT = AppSettings(
-            apiKey = null,
             language = AppLanguage.VIETNAMESE,
-            preferredModel = GeminiModel.DEFAULT,
             speakAnswers = true,
             hasAskedLocation = false,
             darkTheme = ThemePreference.SYSTEM,
@@ -109,6 +105,12 @@ enum class ThemePreference {
  * list is deliberately restricted to the 3.x family. Each entry knows its own
  * fallback chain: when the preferred model answers 503 (which Flash regularly does
  * under load) the data layer walks down [fallbackChain] instead of failing the shot.
+ *
+ * **Which one the app calls is [CONFIGURED], and that is a build decision, not a
+ * preference.** It was a picker on the settings page and a key in DataStore until
+ * 06.08.2026; three names for what is one sentence of technical trivia, and the only
+ * traveller who could answer it correctly was the one who already knew the catalogue.
+ * Change the model by editing that one line and rebuilding.
  */
 enum class GeminiModel(
     val id: String,
@@ -140,9 +142,14 @@ enum class GeminiModel(
         }
 
     companion object {
-        val DEFAULT = FLASH_3_5
-
-        fun fromId(id: String?): GeminiModel =
-            entries.firstOrNull { it.id.equals(id, ignoreCase = true) } ?: DEFAULT
+        /**
+         * The model this build calls. **The one line to edit to change it.**
+         *
+         * Every request in the app starts here: recognition, chat, translation and the day
+         * summary all read this constant rather than a stored setting, so the four of them
+         * cannot disagree and there is no state to migrate when it changes. The other entries
+         * are still reachable — [fallbackChain] walks them when this one is overloaded.
+         */
+        val CONFIGURED = FLASH_3_5
     }
 }

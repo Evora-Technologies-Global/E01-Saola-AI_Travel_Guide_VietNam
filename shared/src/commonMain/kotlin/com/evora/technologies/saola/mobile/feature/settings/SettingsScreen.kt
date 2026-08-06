@@ -1,8 +1,10 @@
 package com.evora.technologies.saola.mobile.feature.settings
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Scaffold
@@ -13,15 +15,17 @@ import com.evora.technologies.saola.core.designsystem.component.AppSnackbarHost
 import com.evora.technologies.saola.core.designsystem.component.PageHeader
 import com.evora.technologies.saola.core.designsystem.component.SectionHeader
 import com.evora.technologies.saola.core.designsystem.theme.PageSpacing
+import com.evora.technologies.saola.core.designsystem.theme.Spacing
 import com.evora.technologies.saola.core.designsystem.theme.screenInsetsPadding
+import com.evora.technologies.saola.feature.settings.PRIVACY_POLICY_URL
 import com.evora.technologies.saola.feature.settings.SettingsHost
 import com.evora.technologies.saola.feature.settings.SettingsIntent
 import com.evora.technologies.saola.feature.settings.SettingsState
 import com.evora.technologies.saola.feature.settings.SettingsViewModel
-import com.evora.technologies.saola.feature.settings.component.ApiKeyCard
+import com.evora.technologies.saola.feature.settings.TERMS_OF_SERVICE_URL
 import com.evora.technologies.saola.feature.settings.component.ClearHistoryDialog
 import com.evora.technologies.saola.feature.settings.component.DestructiveRow
-import com.evora.technologies.saola.feature.settings.component.ModelPicker
+import com.evora.technologies.saola.feature.settings.component.ExternalRow
 import com.evora.technologies.saola.feature.settings.component.NavRow
 import com.evora.technologies.saola.feature.settings.component.SettingsCard
 import com.evora.technologies.saola.feature.settings.component.SettingsFooter
@@ -32,15 +36,17 @@ import com.evora.technologies.saola.resources.Res
 import com.evora.technologies.saola.resources.settings_clear_history
 import com.evora.technologies.saola.resources.settings_clear_history_summary
 import com.evora.technologies.saola.resources.settings_kicker
+import com.evora.technologies.saola.resources.settings_legal_summary
 import com.evora.technologies.saola.resources.settings_licenses
 import com.evora.technologies.saola.resources.settings_licenses_summary
+import com.evora.technologies.saola.resources.settings_privacy_policy
 import com.evora.technologies.saola.resources.settings_section_about
-import com.evora.technologies.saola.resources.settings_section_ai
 import com.evora.technologies.saola.resources.settings_section_appearance
 import com.evora.technologies.saola.resources.settings_section_data
 import com.evora.technologies.saola.resources.settings_section_experience
 import com.evora.technologies.saola.resources.settings_speak
 import com.evora.technologies.saola.resources.settings_speak_summary
+import com.evora.technologies.saola.resources.settings_terms_of_service
 import com.evora.technologies.saola.resources.settings_title
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -52,9 +58,10 @@ import org.koin.compose.viewmodel.koinViewModel
  * grouped cards — rather than under a `TopAppBar`. The traveller moves between the four tabs
  * constantly, and a bar appearing on exactly one of them reads as a different app.
  *
- * The two things that change what the guide *says* — key and model — are given the most room,
- * in that order. Everything below them is furniture: how the app looks, what it may use, and
- * what it will forget on request. Language is not among them any more: it follows the phone.
+ * What is left after the "Intelligence" section came off on 06.08.2026 is furniture and
+ * paperwork: how the app looks, what it may use, what it will forget on request, and what it
+ * owes other people. Neither the Gemini key nor the model is a question to put to a traveller —
+ * both are build decisions now — and language never was one: it follows the phone.
  *
  * One column, top to bottom, and that is the phone's whole contribution. Every card in it is a
  * component in `feature/settings/component/`, shared with the large window's two-column
@@ -67,13 +74,14 @@ fun SettingsRoute(
     modifier: Modifier = Modifier,
     viewModel: SettingsViewModel = koinViewModel(),
 ) {
-    SettingsHost(viewModel) { state, onIntent, snackbarHostState ->
+    SettingsHost(viewModel) { state, onIntent, snackbarHostState, onOpenUrl ->
         SettingsScreen(
             state = state,
             onIntent = onIntent,
             snackbarHostState = snackbarHostState,
             onOpenSovereignty = onOpenSovereignty,
             onOpenLicenses = onOpenLicenses,
+            onOpenUrl = onOpenUrl,
             modifier = modifier,
         )
     }
@@ -86,6 +94,7 @@ private fun SettingsScreen(
     snackbarHostState: SnackbarHostState,
     onOpenSovereignty: () -> Unit,
     onOpenLicenses: () -> Unit,
+    onOpenUrl: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -111,12 +120,6 @@ private fun SettingsScreen(
                     title = stringResource(Res.string.settings_title),
                     kicker = stringResource(Res.string.settings_kicker),
                 )
-            }
-
-            item(key = "section-ai") { SectionHeader(stringResource(Res.string.settings_section_ai)) }
-            item(key = "api-key") { ApiKeyCard(state = state, onIntent = onIntent) }
-            item(key = "model") {
-                ModelPicker(selected = state.settings.preferredModel, onIntent = onIntent)
             }
 
             item(key = "section-experience") {
@@ -174,15 +177,36 @@ private fun SettingsScreen(
                 SovereigntyCard(onClick = onOpenSovereignty)
             }
 
-            item(key = "licenses") {
-                // Under "About" for the same reason, and it is the app's end of a bargain
-                // rather than a preference: ODbL, CC BY-SA and Commons' per-file terms all
-                // ask to be credited, and this row is where the credit is stated in full.
+            // The gap the sovereignty card needs under it. Every other card on this page is
+            // separated from the one above by a `SectionHeader`, which carries its own
+            // `PageSpacing.sectionGap`; these two are the only pair inside one section, and
+            // without this they meet edge to edge and read as one card with a seal on it.
+            item(key = "about-gap") { Spacer(Modifier.height(Spacing.md)) }
+
+            item(key = "paperwork") {
+                // Under "About" for the same reason as the statement, and all three are the
+                // app's end of a bargain rather than a preference: ODbL, CC BY-SA and
+                // Commons' per-file terms ask to be credited, and the two documents below
+                // them are what this app promises about the traveller's own photographs.
+                //
+                // One card, because they are one question — "what are the terms here?" — and
+                // the two shapes on it say where each answer lives: a chevron for the page
+                // this app draws, an arrow out for the two it publishes on the web.
                 SettingsCard {
                     NavRow(
                         title = stringResource(Res.string.settings_licenses),
                         summary = stringResource(Res.string.settings_licenses_summary),
                         onClick = onOpenLicenses,
+                    )
+                    ExternalRow(
+                        title = stringResource(Res.string.settings_privacy_policy),
+                        summary = stringResource(Res.string.settings_legal_summary),
+                        onClick = { onOpenUrl(PRIVACY_POLICY_URL) },
+                    )
+                    ExternalRow(
+                        title = stringResource(Res.string.settings_terms_of_service),
+                        summary = stringResource(Res.string.settings_legal_summary),
+                        onClick = { onOpenUrl(TERMS_OF_SERVICE_URL) },
                     )
                 }
             }

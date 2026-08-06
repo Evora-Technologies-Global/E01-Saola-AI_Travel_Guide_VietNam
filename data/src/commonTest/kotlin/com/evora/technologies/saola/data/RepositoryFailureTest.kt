@@ -268,7 +268,6 @@ class RepositoryFailureTest {
                 ): AppResult<List<RecognizedLine>> = AppResult.Failure(AppError.NotRecognized(null))
             },
             captureStore = FakeCaptureStore(),
-            settingsRepository = workingSettings(),
             ioDispatcher = Dispatchers.Unconfined,
         )
 
@@ -441,9 +440,10 @@ class RepositoryFailureTest {
 
         assertEquals(defaultsOnThisDevice, repository.settings.first())
         assertEquals(defaultsOnThisDevice, repository.current())
-        // Reads `current()` as well, and has to answer rather than throw. Either answer is
-        // correct — a build with a key baked into `local.properties` says true, one without
-        // says false — so only the returning is asserted.
+        // Answers off the build rather than off the unreadable file, and has to answer rather
+        // than throw. Either answer is correct — a build with a key baked into
+        // `local.properties` says true, one without says false — so only the returning is
+        // asserted.
         repository.hasUsableApiKey()
     }
 
@@ -453,7 +453,6 @@ class RepositoryFailureTest {
 
         // No assertion beyond returning: every one of these is called from a screen that
         // has already moved on, and none of them has an AppResult to report into.
-        store.setApiKey("AIza-nope")
         store.setSpeakAnswers(false)
         store.setLocationAsked()
         store.setThemePreference(ThemePreference.DARK)

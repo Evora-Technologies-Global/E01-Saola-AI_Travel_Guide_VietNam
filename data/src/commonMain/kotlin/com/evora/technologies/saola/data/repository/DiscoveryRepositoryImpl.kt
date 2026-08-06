@@ -8,6 +8,7 @@ import com.evora.technologies.saola.data.mapper.toEntity
 import com.evora.technologies.saola.data.remote.gemini.GeminiRemoteDataSource
 import com.evora.technologies.saola.data.util.log
 import com.evora.technologies.saola.domain.model.Discovery
+import com.evora.technologies.saola.domain.model.GeminiModel
 import com.evora.technologies.saola.domain.model.GeoPoint
 import com.evora.technologies.saola.domain.model.LensMode
 import com.evora.technologies.saola.domain.repository.CaptureStore
@@ -63,7 +64,7 @@ internal class DiscoveryRepositoryImpl(
                 mode = mode,
                 location = location,
                 language = settings.language,
-                model = settings.preferredModel,
+                model = GeminiModel.CONFIGURED,
             )
         ) {
             is AppResult.Failure -> return@withContext result

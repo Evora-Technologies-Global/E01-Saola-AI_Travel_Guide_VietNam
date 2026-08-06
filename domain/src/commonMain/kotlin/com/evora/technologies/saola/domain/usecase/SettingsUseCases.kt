@@ -1,7 +1,6 @@
 package com.evora.technologies.saola.domain.usecase
 
 import com.evora.technologies.saola.domain.model.AppSettings
-import com.evora.technologies.saola.domain.model.GeminiModel
 import com.evora.technologies.saola.domain.model.ThemePreference
 import com.evora.technologies.saola.domain.repository.DiscoveryRepository
 import com.evora.technologies.saola.domain.repository.SettingsRepository
@@ -18,33 +17,15 @@ class ObserveSettingsUseCase(
 /**
  * Whether recognition can run at all right now.
  *
- * Re-evaluated whenever settings change, so clearing a key in Settings
- * immediately puts the "add a key" prompt back on the camera screen.
+ * One answer for the life of the process now that the key is the build's — it is still a
+ * flow rather than a `suspend fun` because the lens reads it as one, and because the thing
+ * being asked ("can this build recognise anything") is the same question it always was.
  */
 class ObserveApiKeyAvailabilityUseCase(
     private val repository: SettingsRepository,
 ) {
     operator fun invoke(): Flow<Boolean> =
         repository.settings.map { repository.hasUsableApiKey() }
-}
-
-/**
- * Persists a pasted Gemini key.
- *
- * Blank input clears the key rather than storing an empty string, so the app can
- * fall back to the build-time key baked in from local.properties.
- */
-class SaveApiKeyUseCase(
-    private val repository: SettingsRepository,
-) {
-    suspend operator fun invoke(key: String) =
-        repository.setApiKey(key.trim().takeIf { it.isNotEmpty() })
-}
-
-class UpdateModelUseCase(
-    private val repository: SettingsRepository,
-) {
-    suspend operator fun invoke(model: GeminiModel) = repository.setModel(model)
 }
 
 class UpdateThemeUseCase(

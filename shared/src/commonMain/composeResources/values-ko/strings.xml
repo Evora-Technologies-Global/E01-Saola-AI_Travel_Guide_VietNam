@@ -238,23 +238,6 @@
     <!-- Settings -->
     <string name="settings_title">설정</string>
     <string name="settings_kicker">환경설정</string>
-    <string name="settings_section_ai">지능</string>
-    <string name="settings_api_key">API 키</string>
-    <string name="settings_api_key_set">내 키를 사용 중</string>
-    <string name="settings_api_key_default">앱에 내장된 키를 사용 중</string>
-    <string name="settings_api_key_none">설정된 키가 없습니다</string>
-    <string name="settings_api_key_active">사용 중</string>
-    <string name="settings_api_key_inactive">키 없음</string>
-    <string name="settings_api_key_hint">내 키를 붙여넣기…</string>
-    <string name="settings_api_key_save">키 저장</string>
-    <string name="settings_api_key_clear">지우기</string>
-    <string name="settings_api_key_saved">API 키를 저장했습니다</string>
-    <string name="settings_model_balanced">균형</string>
-    <string name="settings_model_balanced_summary">충분한 깊이에, 메뉴를 읽을 만큼 빠릅니다.</string>
-    <string name="settings_model_quick">빠름</string>
-    <string name="settings_model_quick_summary">표지판, 라벨, 가격. 가장 저렴합니다.</string>
-    <string name="settings_model_scholar">학자</string>
-    <string name="settings_model_scholar_summary">역사와 문화를 가장 깊게. 대신 느립니다.</string>
     <string name="settings_section_experience">경험</string>
     <string name="settings_speak">답변 소리내어 읽기</string>
     <string name="settings_speak_summary">설명과 채팅 답변을 음성으로</string>
@@ -269,7 +252,7 @@
     <string name="settings_clear_confirm_title">전부 지울까요?</string>
     <string name="settings_clear_confirm_body">이 기기의 모든 발견, 사진, 대화, 일지가 영구히 삭제됩니다.</string>
     <string name="settings_cleared">모든 발견을 지웠습니다</string>
-    <string name="settings_footer">Made in Việt Nam · v%1$s</string>
+    <string name="settings_footer">Evora Technologies Global · v%1$s</string>
 
     <!-- Categories -->
     <string name="category_landmark">명소</string>
@@ -296,7 +279,7 @@
     <string name="action_close">닫기</string>
 
     <!-- Errors -->
-    <string name="error_missing_api_key">아직 Gemini API 키가 없습니다. 설정에서 추가하면 인식을 시작할 수 있습니다.</string>
+    <string name="error_missing_api_key">이 빌드에는 Gemini 키가 없어 인식을 실행할 수 없습니다.</string>
     <string name="error_invalid_api_key">그 API 키는 거부되었습니다. 설정에서 확인해 주세요.</string>
     <string name="error_no_connection">인터넷에 연결되어 있지 않습니다. 인식하려면 Gemini에 연결해야 합니다.</string>
     <string name="error_timeout">시간이 너무 오래 걸렸습니다. 다시 시도해 주세요.</string>
@@ -376,6 +359,9 @@
     <string name="licenses_footer">당신이 찍은 사진은 당신의 것입니다. 이 기기에 남아 있고, 인식을 위해 Gemini로 보낼 때만 기기를 떠납니다.</string>
     <string name="settings_licenses">라이선스와 데이터 출처</string>
     <string name="settings_licenses_summary">OpenStreetMap · Wikipedia · Natural Earth</string>
+    <string name="settings_privacy_policy">개인정보 처리방침</string>
+    <string name="settings_terms_of_service">서비스 이용약관</string>
+    <string name="settings_legal_summary">브라우저에서 열립니다</string>
     <!-- 컬렉션: 가이드 보기 -->
     <string name="collection_show_guide">알아보는 법 보기</string>
     <string name="collection_show_board">격자로 보기</string>

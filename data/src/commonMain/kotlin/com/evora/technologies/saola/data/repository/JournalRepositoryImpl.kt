@@ -9,6 +9,7 @@ import com.evora.technologies.saola.data.mapper.toEntity
 import com.evora.technologies.saola.data.remote.gemini.GeminiRemoteDataSource
 import com.evora.technologies.saola.domain.model.longLabel
 import com.evora.technologies.saola.domain.model.Discovery
+import com.evora.technologies.saola.domain.model.GeminiModel
 import com.evora.technologies.saola.domain.model.JournalDay
 import com.evora.technologies.saola.domain.model.JournalStats
 import com.evora.technologies.saola.domain.model.TripSummary
@@ -151,7 +152,7 @@ internal class JournalRepositoryImpl(
                     entries = discoveries.map { it.toPromptLine() },
                     notes = discoveries.mapNotNull { it.toNotePromptLine(notesByDiscovery) },
                     language = settings.language,
-                    model = settings.preferredModel,
+                    model = GeminiModel.CONFIGURED,
                 )
             ) {
                 is AppResult.Failure -> return@withContext result

@@ -1,28 +1,30 @@
 package com.evora.technologies.saola.data.remote.gemini
 
 import com.evora.technologies.saola.data.DataBuildConfig
-import com.evora.technologies.saola.domain.repository.SettingsRepository
-import kotlinx.coroutines.flow.first
 
-/** Resolves which Gemini key to send with a request. */
+/**
+ * Resolves which Gemini key to send with a request.
+ *
+ * Still an interface with one implementation, because the tests need the other one:
+ * `GeminiClientTest` drives the blank-key path, and it is the only way to reach
+ * [com.evora.technologies.saola.domain.util.AppError.MissingApiKey] without editing a build
+ * file.
+ */
 internal interface ApiKeyProvider {
     suspend fun apiKey(): String?
 }
 
 /**
- * Prefers a key the user pasted into Settings, and falls back to the one baked in
- * from `local.properties` at build time.
+ * The key baked in from `local.properties` at build time, and nothing else.
  *
- * That ordering is what lets the app ship to a judge or teammate with a working
- * key while still letting anyone swap in their own quota without a rebuild.
+ * It used to prefer a key the traveller had pasted into Settings and fall back to this one.
+ * That card was removed on 06.08.2026 with the rest of the "Intelligence" section: asking a
+ * traveller for a Gemini API key is asking them to hold a developer's credential, and the
+ * fallback meant the app's behaviour depended on which of two keys happened to be in play.
+ * One key, supplied by whoever builds the app.
  */
-internal class DefaultApiKeyProvider(
-    private val settingsRepository: SettingsRepository,
-) : ApiKeyProvider {
+internal class DefaultApiKeyProvider : ApiKeyProvider {
 
-    override suspend fun apiKey(): String? {
-        val userKey = settingsRepository.settings.first().apiKey
-        return userKey?.takeIf { it.isNotBlank() }
-            ?: DataBuildConfig.GEMINI_API_KEY.takeIf { it.isNotBlank() }
-    }
+    override suspend fun apiKey(): String? =
+        DataBuildConfig.GEMINI_API_KEY.takeIf { it.isNotBlank() }
 }

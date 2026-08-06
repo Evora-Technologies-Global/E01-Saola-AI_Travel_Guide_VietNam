@@ -28,13 +28,11 @@ import com.evora.technologies.saola.domain.usecase.ObserveProvinceDiscoveriesUse
 import com.evora.technologies.saola.domain.usecase.ObserveSettingsUseCase
 import com.evora.technologies.saola.domain.usecase.ObserveTravelPassportUseCase
 import com.evora.technologies.saola.domain.usecase.RecognizeImageUseCase
-import com.evora.technologies.saola.domain.usecase.SaveApiKeyUseCase
 import com.evora.technologies.saola.domain.usecase.SaveNoteUseCase
 import com.evora.technologies.saola.domain.usecase.SubmitReportUseCase
 import com.evora.technologies.saola.domain.usecase.SweepOrphanCapturesUseCase
 import com.evora.technologies.saola.domain.usecase.ToggleFavoriteUseCase
 import com.evora.technologies.saola.domain.usecase.TranslateImageUseCase
-import com.evora.technologies.saola.domain.usecase.UpdateModelUseCase
 import com.evora.technologies.saola.domain.usecase.UpdateThemeUseCase
 import com.evora.technologies.saola.feature.camera.LensViewModel
 import com.evora.technologies.saola.feature.chat.ChatViewModel
@@ -95,8 +93,6 @@ val useCaseModule: Module = module {
 
     factory { ObserveSettingsUseCase(get()) }
     factory { ObserveApiKeyAvailabilityUseCase(get()) }
-    factory { SaveApiKeyUseCase(get()) }
-    factory { UpdateModelUseCase(get()) }
     factory { UpdateThemeUseCase(get()) }
     factory { MarkLocationAskedUseCase(get()) }
     factory { ClearHistoryUseCase(get()) }
@@ -221,10 +217,7 @@ val presentationModule: Module = module {
     viewModel {
         SettingsViewModel(
             observeSettings = get(),
-            observeApiKeyAvailability = get(),
             settingsRepository = get(),
-            saveApiKey = get(),
-            updateModel = get(),
             updateTheme = get(),
             clearHistory = get(),
         )

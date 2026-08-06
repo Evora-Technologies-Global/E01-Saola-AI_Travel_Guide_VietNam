@@ -4,7 +4,6 @@ import com.evora.technologies.saola.data.DataBuildConfig
 import com.evora.technologies.saola.data.local.datastore.SettingsDataStore
 import com.evora.technologies.saola.data.platform.deviceLanguage
 import com.evora.technologies.saola.domain.model.AppSettings
-import com.evora.technologies.saola.domain.model.GeminiModel
 import com.evora.technologies.saola.domain.model.ThemePreference
 import com.evora.technologies.saola.domain.repository.SettingsRepository
 import kotlinx.coroutines.flow.Flow
@@ -16,11 +15,11 @@ import kotlinx.coroutines.flow.first
  * [SettingsDataStore] already turns an unreadable preferences file into defaults. What is
  * caught here is everything it deliberately lets through — a mapping mistake, a value of a
  * type the file has never held before — because of who calls this: recognition, chat,
- * translation and the diary all read [current] to find the language and the model *before*
- * they reach their own guards, and [settings] and [current] have no `AppResult` to report a
- * failure in. Settings that cannot be read are settings the traveller never changed, which
- * is a working app in the phone's own language on the default model; an exception here is
- * a camera that will not take a photograph.
+ * translation and the diary all read [current] to find the language *before* they reach their
+ * own guards, and [settings] and [current] have no `AppResult` to report a failure in.
+ * Settings that cannot be read are settings the traveller never changed, which is a working
+ * app in the phone's own language; an exception here is a camera that will not take a
+ * photograph.
  *
  * The writes are the other direction and do carry an `AppResult` — they delegate straight to
  * [SettingsDataStore], which folds a failed write into [AppError.Storage] rather than
@@ -41,12 +40,11 @@ internal class SettingsRepositoryImpl(
 
     override suspend fun current(): AppSettings = settings.first()
 
+    // One source now that the key card is gone: what `local.properties` baked in. It reads
+    // nothing from storage, so it cannot fail — the `suspend` stays because the interface is
+    // what a repository can promise in general, not what this implementation happens to need.
     override suspend fun hasUsableApiKey(): Boolean =
-        current().hasApiKey || DataBuildConfig.GEMINI_API_KEY.isNotBlank()
-
-    override suspend fun setApiKey(key: String?) = dataStore.setApiKey(key)
-
-    override suspend fun setModel(model: GeminiModel) = dataStore.setModel(model)
+        DataBuildConfig.GEMINI_API_KEY.isNotBlank()
 
     override suspend fun setSpeakAnswers(enabled: Boolean) = dataStore.setSpeakAnswers(enabled)
 

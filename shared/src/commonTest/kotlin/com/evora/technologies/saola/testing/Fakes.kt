@@ -101,7 +101,7 @@ fun discovery(
     location = GeoPoint(21.0287, 105.8524),
     placeHint = null,
     isFavorite = false,
-    modelUsed = GeminiModel.DEFAULT.id,
+    modelUsed = GeminiModel.CONFIGURED.id,
     createdAt = createdAt,
 )
 
@@ -189,7 +189,20 @@ class FakeDiscoveryRepository : DiscoveryRepository {
         return AppResult.Success(Unit)
     }
 
-    override suspend fun deleteAll(): AppResult<Unit> = AppResult.Success(Unit)
+    // Both spellings again, for the one write on the settings page that reports in words.
+    // `deleteAllCalls` counts attempts rather than successes, so a test can assert that a
+    // failure was actually reached rather than that nothing happened.
+    var failOnDeleteAll: AppError? = null
+    var throwOnDeleteAll: Throwable? = null
+    var deleteAllCalls = 0
+
+    override suspend fun deleteAll(): AppResult<Unit> {
+        deleteAllCalls++
+        throwOnDeleteAll?.let { throw it }
+        failOnDeleteAll?.let { return AppResult.Failure(it) }
+        discoveries.value = emptyList()
+        return AppResult.Success(Unit)
+    }
 }
 
 class FakeLocationRepository : LocationRepository {
@@ -227,14 +240,6 @@ class FakeSettingsRepository : SettingsRepository {
     override suspend fun hasUsableApiKey(): Boolean {
         throwOnCurrent?.let { throw it }
         return usableApiKey
-    }
-
-    override suspend fun setApiKey(key: String?) = write {
-        state.value = state.value.copy(apiKey = key)
-    }
-
-    override suspend fun setModel(model: GeminiModel) = write {
-        state.value = state.value.copy(preferredModel = model)
     }
 
     override suspend fun setSpeakAnswers(enabled: Boolean) = write {

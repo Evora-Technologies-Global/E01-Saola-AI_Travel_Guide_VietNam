@@ -11,7 +11,6 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import com.evora.technologies.saola.data.platform.deviceLanguage
 import com.evora.technologies.saola.data.util.log
 import com.evora.technologies.saola.domain.model.AppSettings
-import com.evora.technologies.saola.domain.model.GeminiModel
 import com.evora.technologies.saola.domain.model.ThemePreference
 import com.evora.technologies.saola.domain.util.AppError
 import com.evora.technologies.saola.domain.util.AppResult
@@ -42,10 +41,8 @@ internal class SettingsDataStore(
         }
         .map { prefs ->
             AppSettings(
-                apiKey = prefs[Keys.API_KEY]?.takeIf { it.isNotBlank() },
                 // Read from the phone, not from storage. See [deviceLanguage].
                 language = deviceLanguage(),
-                preferredModel = GeminiModel.fromId(prefs[Keys.MODEL]),
                 speakAnswers = prefs[Keys.SPEAK_ANSWERS] ?: AppSettings.DEFAULT.speakAnswers,
                 hasAskedLocation = prefs[Keys.LOCATION_ASKED]
                     ?: AppSettings.DEFAULT.hasAskedLocation,
@@ -54,12 +51,6 @@ internal class SettingsDataStore(
                     ?: AppSettings.DEFAULT.darkTheme,
             )
         }
-
-    suspend fun setApiKey(key: String?) = edit { prefs ->
-        if (key.isNullOrBlank()) prefs.remove(Keys.API_KEY) else prefs[Keys.API_KEY] = key
-    }
-
-    suspend fun setModel(model: GeminiModel) = edit { it[Keys.MODEL] = model.id }
 
     suspend fun setSpeakAnswers(enabled: Boolean) = edit { it[Keys.SPEAK_ANSWERS] = enabled }
 
@@ -73,12 +64,14 @@ internal class SettingsDataStore(
      *
      * It used to be logged and dropped, on the reasoning that "nothing on screen is waiting
      * on it, and the value the traveller typed is still in the field they typed it into".
-     * That is true of the toggles and false of the one write that matters: on `SaveApiKey`
-     * the screen clears the field *and* shows a green "API key saved", so a failed write
+     * That was true of the toggles and false of the write that mattered: on `SaveApiKey` the
+     * screen cleared the field *and* showed a green "API key saved", so a failed write
      * produced a discarded key, a confirmation that it was stored, and a status pill one row
-     * below still reading "no key configured" — with nothing connecting the three. Returning
-     * the outcome lets the caller decide; the toggles are free to ignore it, because their
-     * own UI is driven off the settings flow and reverts by itself when no write lands.
+     * below still reading "no key configured" — with nothing connecting the three. That card
+     * is gone, and the rule it bought stays: returning the outcome lets the caller decide, and
+     * anything that confirms in words has to check. The toggles are still free to ignore it,
+     * because their own UI is driven off the settings flow and reverts by itself when no
+     * write lands.
      *
      * [CancellationException] is rethrown first. `runCatching` here would catch `Throwable`
      * and absorb the cancellation raised when the settings screen closes mid-write, reporting
@@ -98,11 +91,14 @@ internal class SettingsDataStore(
         }
 
     private object Keys {
-        val API_KEY = stringPreferencesKey("gemini_api_key")
         // No LANGUAGE key. The old "language" preference is left unread rather than
         // migrated: on an upgraded install it holds whatever the in-app picker was last
         // set to, which is exactly the value this change exists to stop honouring.
-        val MODEL = stringPreferencesKey("gemini_model")
+        //
+        // No API_KEY or MODEL key either, and for the same reason one step further on: both
+        // were removed with the "Intelligence" section on 06.08.2026. The key is the build's
+        // and the model is `GeminiModel.CONFIGURED`, so a stored value could only ever
+        // override a build decision with whatever an old install happened to be left on.
         val SPEAK_ANSWERS = booleanPreferencesKey("speak_answers")
         // A new key rather than a reuse of the old `use_location`: that one was
         // written as "the traveller wants location on", and on an upgraded install

@@ -241,23 +241,6 @@
     <!-- Settings -->
     <string name="settings_title">Réglages</string>
     <string name="settings_kicker">Préférences</string>
-    <string name="settings_section_ai">Intelligence</string>
-    <string name="settings_api_key">Clé API</string>
-    <string name="settings_api_key_set">Votre propre clé est utilisée</string>
-    <string name="settings_api_key_default">Utilisation de la clé intégrée à l'application</string>
-    <string name="settings_api_key_none">Aucune clé configurée</string>
-    <string name="settings_api_key_active">Active</string>
-    <string name="settings_api_key_inactive">Aucune clé</string>
-    <string name="settings_api_key_hint">collez votre propre clé…</string>
-    <string name="settings_api_key_save">Enregistrer la clé</string>
-    <string name="settings_api_key_clear">Effacer</string>
-    <string name="settings_api_key_saved">Clé API enregistrée</string>
-    <string name="settings_model_balanced">Équilibré</string>
-    <string name="settings_model_balanced_summary">Bonne profondeur, assez rapide pour lire un menu.</string>
-    <string name="settings_model_quick">Rapide</string>
-    <string name="settings_model_quick_summary">Panneaux, étiquettes, prix. Le plus économique.</string>
-    <string name="settings_model_scholar">Érudit</string>
-    <string name="settings_model_scholar_summary">Le plus de détails historiques et culturels. Plus lent.</string>
     <string name="settings_section_experience">Expérience</string>
     <string name="settings_speak">Lire les réponses à voix haute</string>
     <string name="settings_speak_summary">Énoncer les descriptions et les réponses du guide</string>
@@ -272,7 +255,7 @@
     <string name="settings_clear_confirm_title">Tout effacer ?</string>
     <string name="settings_clear_confirm_body">Cela supprime définitivement chaque découverte, photo, conversation et entrée de journal sur cet appareil.</string>
     <string name="settings_cleared">Toutes les découvertes ont été effacées</string>
-    <string name="settings_footer">Made in Việt Nam · v%1$s</string>
+    <string name="settings_footer">Evora Technologies Global · v%1$s</string>
 
     <!-- Categories -->
     <string name="category_landmark">Monument</string>
@@ -299,7 +282,7 @@
     <string name="action_close">Fermer</string>
 
     <!-- Errors -->
-    <string name="error_missing_api_key">Pas encore de clé API Gemini. Ajoutez-en une dans les réglages pour commencer à reconnaître.</string>
+    <string name="error_missing_api_key">Cette version ne contient pas de clé Gemini : la reconnaissance ne peut pas fonctionner.</string>
     <string name="error_invalid_api_key">Cette clé API a été refusée. Vérifiez-la dans les réglages.</string>
     <string name="error_no_connection">Aucune connexion internet. La reconnaissance a besoin de joindre Gemini.</string>
     <string name="error_timeout">Cela a pris trop de temps. Réessayez.</string>
@@ -380,6 +363,9 @@
     <string name="licenses_footer">Vos photographies vous appartiennent. Elles restent sur cet appareil et n'en sortent que lorsqu'une d'elles part vers Gemini pour être reconnue.</string>
     <string name="settings_licenses">Licences et sources des données</string>
     <string name="settings_licenses_summary">OpenStreetMap · Wikipedia · Natural Earth</string>
+    <string name="settings_privacy_policy">Politique de confidentialité</string>
+    <string name="settings_terms_of_service">Conditions d'utilisation</string>
+    <string name="settings_legal_summary">S'ouvre dans le navigateur</string>
     <!-- Collection : mode guide -->
     <string name="collection_show_guide">Voir comment les reconnaître</string>
     <string name="collection_show_board">Voir la grille</string>

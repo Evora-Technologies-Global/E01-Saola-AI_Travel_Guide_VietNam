@@ -96,7 +96,7 @@ src/
 │   │                                 ErrorMessages, VolumeShutterBus, DetectTimeout
 │   ├── feature/<name>/               ONE PACKAGE PER SCREEN, shared half — see §5
 │   │   └── component/                the composables both branches draw (camera 17,
-│   │                                 discovery 23, passport 12, journal 9, settings 8,
+│   │                                 discovery 23, passport 12, journal 9, settings 6,
 │   │                                 collection 7, explore 6, chat 6, sovereignty 5)
 │   ├── mobile/                       PRESENTATION BRANCH — what a phone draws
 │   │   ├── navigation/
@@ -234,7 +234,10 @@ on 04.08.2026, when the passport's province panel turned out to hold a byte-iden
 copy of `DashedRule`: two features draw it, which is the line §10 draws around the design system.
 `SovereigntyPanel.kt` and `SettingsRow.kt` are the same judgement stretched to its limit —
 the statement's map panel and its note are one washed panel holding two different things, and
-the settings card's value, switch and destructive rows are one row with three different ends.
+the settings card's value, switch, nav, external and destructive rows are one row with five
+different ends. The About card is where that stops being an argument and becomes visible: it
+stacks a `NavRow` on two `ExternalRow`s, chevron over arrow-out, and a padding that disagreed
+between them would be read on one screenful.
 Both pass the test the rule is really made of: the siblings are drawn stacked on one screenful,
 so a change to one that misses the other is visible without scrolling.
 
@@ -318,17 +321,18 @@ parameters, and that is the honest count of what an arrangement of this screen n
 shorter list would mean a branch re-deriving one of them, which is the divergence the host
 exists to prevent.
 
-`feature/settings/SettingsHost.kt` is the third, and it is the smallest — three effect arms
-and a rule about how they are shown. Every one of them is launched into a `rememberCoroutine
-Scope` rather than awaited in the collector, because `showSnackbar` suspends for the length of
-the notice and a collector that waited would hold the next effect behind the current one:
-saving a key and clearing history land seconds apart, and queued they would tell the traveller
-about the first act while they are looking at the result of the second. That is a paragraph of
-reasoning attached to three lines of code, and the whole argument for a host is that a second
-copy of those three lines would not carry it. Its `content` lambda takes three: `state`,
-`onIntent`, and the `SnackbarHostState` the arrangement has to place — the phone hands it to a
+`feature/settings/SettingsHost.kt` is the third, and it is the smallest — two effect arms and
+a rule about how they are shown. Both are launched into a `rememberCoroutineScope` rather than
+awaited in the collector, because `showSnackbar` suspends for the length of the notice and a
+collector that waited would hold the next effect behind the current one: a clear that failed
+and the retry that worked land within a second of each other, and queued they would tell the
+traveller about the first act while they are looking at the result of the second. That is a
+paragraph of reasoning attached to two lines of code, and the whole argument for a host is that
+a second copy of those two lines would not carry it. Its `content` lambda takes four: `state`,
+`onIntent`, the `SnackbarHostState` the arrangement has to place — the phone hands it to a
 `Scaffold`, the large window aligns it to the bottom of a `Box`, and neither of those is the
-host's business.
+host's business — and `rememberUrlOpener()`, which the two legal rows need and which is
+platform behaviour rather than layout, so §3 keeps it out of both branches.
 
 **A pane is not a Route, and that is the rule that keeps `onIntent` honest on a large window.**
 Where the tablet shows one feature inside another — the guide beside the discovery, the
@@ -573,8 +577,9 @@ not contain `,` `.` `;` `:` or brackets** — Kotlin/Native rejects the identifi
 `:shared:allTests`, not `:shared:testAndroidHostTest`, or half the platforms this presentation
 layer ships to are never compiled against. Currently **123 on the JVM, 112 on the iOS
 simulator** — the difference is the two source-reading gates below, which need `java.io.File`.
-Project total **477**, with `:data` at 126 / 92, `:domain` at 10 / 10 and `:app` at 4, plus
-**18 on a device**.
+Project total **475**, with `:data` at 126 / 92, `:domain` at 9 / 9 and `:app` at 4, plus
+**18 on a device**. `:domain` lost one on 06.08.2026: `GeminiModel.fromId` went with the model
+picker, and the two cases that drove it were replaced by one that pins `GeminiModel.CONFIGURED`.
 
 **These counts are read off `build/test-results`, not remembered.** The figures here before
 05.08.2026's report feature said 413 / 110 / 99 with `:data` at 110 / 76, and `:data` had not
@@ -622,12 +627,14 @@ Two source-reading gates live in `androidHostTest`, because both need `java.io.F
   outright on an empty union, and `every presentation branch is actually scanned` fails if a
   root in `POPULATED_BRANCHES` contributes zero files and prints the per-branch count. All
   three roots are in `POPULATED_BRANCHES` since the tablet lens landed on 04.08.2026; adding
-  a fourth branch means updating both lists. It prints its own reach on every run — **145
-  files: `feature: 124`, `mobile/feature: 12`, `tablet/feature: 9`** since 06.08.2026, when the
-  short-term list in `README.md` §8 was worked through: five composables under `feature/`
-  (`EntryFace`, `CollectionGuideRow`, `CollectionViewToggle`, `ProvinceSemanticsOverlay`,
-  `CollectionUnlockCard`) and the licences screen's two under `mobile/feature/`. Read the
-  number; it should move only when files are genuinely added or removed.
+  a fourth branch means updating both lists. It prints its own reach on every run — **144
+  files: `feature: 123`, `mobile/feature: 12`, `tablet/feature: 9`** since 06.08.2026, when the
+  short-term list in `README.md` §8 was worked through (five composables lifted under
+  `feature/` — `EntryFace`, `CollectionGuideRow`, `CollectionViewToggle`,
+  `ProvinceSemanticsOverlay`, `CollectionUnlockCard` — and the licences screen's two under
+  `mobile/feature/`) and the settings page lost its Intelligence section the same day:
+  `ApiKeyCard.kt` and `ModelPicker.kt` deleted, `LegalLinks.kt` added. Read the number; it
+  should move only when files are genuinely added or removed.
   `HEADER_OWNERS` counts a **pane** as a screen: `PassportPane.kt` and `CollectionPane.kt` are
   not destinations, but each opens with a title band over a page, and a hand-rolled header is
   more visible there than on a phone because the traveller sees it beside a compliant one.
@@ -691,12 +698,14 @@ the file.
 | 22 | **Seven placeholder languages still say Vietnamese.** `AppSettings.DEFAULT.language` and the `language` default on the Journal, Chat, Translation, Discovery, Passport and Explore contracts are all `AppLanguage.VIETNAMESE` — the value a screen holds for the few milliseconds before the settings flow delivers the device's answer. That was coherent while Vietnamese was the app-wide default; since narration follows the phone, English is the fallback everywhere else (`languageForTag`, `uiLanguage()`, the `values/` string table), so a Japanese phone can draw one frame of `12 thg 3, 2026` before flipping. Not new in kind — anyone who had picked English in the old picker saw the same flicker — only the affected population changed. No clean fix available where it sits: `deviceLanguage()` is `internal` to `:data` and a contract has no composition to call `uiLanguage()` from, so this needs either a `:domain`-level device-language port or an initial value threaded from DI.                                                                                                                                 | `domain/…/AppSettings.kt:33`, `feature/*/XContract.kt` |
 | 27 | **`SovereigntyViewModel` calls `Res.readBytes` directly**, which is a presentation-layer ViewModel reaching for a concrete resource API instead of depending on a port. It is the only ViewModel in the project with no injected collaborator, and therefore the only one whose subject cannot be faked: `SovereigntyViewModelTest` can assert that a map which fails to load still renders the statement, and nothing else — the success path has no test on any platform. Everything else in the app that reads an asset already goes through `:data` (`ProvinceAssetSource`, `CatalogAssetSource`). Fix by adding a `SovereigntyMapSource` port to `:domain` with the `Res.readBytes` implementation in `:data`, bound in `dataModule`.                                                                                                                                                                                                                                                                                                                                                                                                     | `feature/sovereignty/SovereigntyViewModel.kt:31` |
 | 30 | **The report feature ships a personal mailbox as its support address.** `REPORT_RECIPIENT` in `feature/discovery/ReportMail.kt` is `beedyto@gmail.com` — it started as `support@evora.technologies`, taken from the org package because no real address was supplied when the feature was built, and a mailbox that actually receives took its place. That answers the bounce but not the question: a personal Gmail is not the address a report should be sent to under the app's name. It is not a silent failure — Android prefills it into the To: field and iOS writes it into the body, so a traveller who sends a report addresses it to a mailbox that may not exist and gets a bounce, or nothing. Deliberately **one** `internal const val` and nowhere else, so the fix is one line; a second copy in the tablet branch is the thing that would have made this expensive. Replace before shipping.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  | `feature/discovery/ReportMail.kt` |
+| 31 | **`TERMS_OF_SERVICE_URL` is still a placeholder.** `feature/settings/LegalLinks.kt` holds the two documents the About card links out to; the privacy policy points at a real page, and the terms still read `https://evora.technologies/saola/terms-of-service`, which nothing serves. Same shape as row #30 and deliberately the same containment: **one** `internal const val`, read by both branches, so the fix is one line rather than a search. It is not a silent failure — the row opens a browser on a page that does not answer, which is worse than a dead button because the traveller has left the app to find out. Replace before shipping. | `feature/settings/LegalLinks.kt` |
 | 21 | `docs/bug-report-effect-collection.md` does not exist, but `plans/260802-2103-mvi-refactor/plan.md` refers to it four times as the home for the deferred UI work. Either write it or drop the references. **Renumbered from 15 on 03.08.2026:** a *different* deviation in the Fixed table below already held that number, and seven places cite `§11 row #15` meaning that one — including live comments in `JournalContract.kt`, `JournalViewModelTest.kt` and `SettingsViewModelTest.kt`. A number cited from source code is not free to reuse.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             | `plans/260802-2103-mvi-refactor/plan.md` |
 
 ### Fixed
 
 | # | Deviation | Fixed by |
 |---|---|---|
+| 32 | **Clearing the whole journal confirmed itself whether or not it worked.** `SettingsIntent.ConfirmClearHistory` called `clearHistory()` and discarded the `AppResult`, then sent `HistoryCleared` unconditionally — so a delete that failed showed a green "all discoveries cleared" over a database that still held every photograph, and the traveller only found out by walking back into the journal. Identical in kind to rows #26 and #15, and to the API-key defect the settings suite was written for; it survived because that suite pointed at the key card and nobody re-aimed it at the other write on the page. | **Fixed 06.08.2026**, while the Intelligence section was being removed. The arm now branches on the result — `ShowMessage(error)` or `HistoryCleared` — which is also what keeps `SettingsEffect.ShowMessage` alive now that saving a key is gone. `SettingsViewModelTest` moved onto it whole: the same four claims (it confirms, it does not confirm a failure, a throw does not escape, the toggles are free to ignore their result), driven through `FakeDiscoveryRepository.failOnDeleteAll` / `throwOnDeleteAll` / `deleteAllCalls`, which the fake gained for it. Verified on a Pixel Tablet AVD: confirm → *All discoveries cleared*, and the journal is empty behind it. |
 | 29 | **The passport opened with an empty province panel already peeking**, its drag handle standing 80 dp up the screen with the sovereignty banner hidden behind it, on a map where nothing had been selected. A hidden sheet is parked immediately below the *scaffold*, not below the window, and `PassportScreen`'s scaffold changes height once on its own: the screen is pushed from the journal, where the shell's tab bar is on screen, and `SaolaApp` hands its 80 dp back a frame or two later when the bar finishes sliding away. The sheet does not re-settle onto the `Hidden` anchor that moves with it — it stays where the bottom edge *used to* be. **Only visible with animations off**, which is why it survived months of being looked at on a phone: with them on, the bar's height comes back long after the sheet has settled and it lands correctly by luck of timing. Every AVD ships with all three animation scales at `0`, and so does a real device in battery saver or with the developer setting off — this was never emulator-only. | **Fixed 05.08.2026:** the hide is keyed on the scaffold's own height as well as on the selection, so every height the scaffold takes puts the sheet back on the real bottom edge. `PassportPane` is deliberately **not** given the same line: the large-window shell stands its navigation on a rail, so that scaffold is one height for the life of the screen — verified at 1067 × 667 dp with the scales at 0, banner fully visible and no handle. Measured rather than eyeballed both ways: with the scales at 0 the sheet's top edge sat at `y = 2840` of a 3120 px window (280 px = the tab bar's 80 dp) and `uiautomator dump` reported a `Nút kéo` node; after the fix there is no such node and the banner reports its full `[56,2812][1384,3064]`. Selecting a province still peeks at exactly `SheetPeekHeight`, tapping across the map keeps the dragged height, and back still dismisses — all re-checked with the scales at 0 *and* at 1. |
 | 18 | **`androidDeviceTest` could not run on API 37.** Every instrumented test failed in `Espresso.onIdle` with `NoSuchMethodException: android.hardware.input.InputManager.getInstance` — a reflection call Espresso makes that the platform removed — before any test body executed. The row was rescoped on 04.08.2026 after being wrong in the expensive direction: it had said "Android 15 or newer", so for two plans nobody ran the device leg at all, when in fact API 35 and 36 were green the whole time. | **Fixed 05.08.2026.** It was never a Compose problem and upgrading `ui-test-junit4` would not have helped — at Compose **1.12** that artifact still declares `espresso-core:3.5.0` and `androidx.test:runner:1.5.0`, both 2022 artifacts, and nothing else in the graph was high enough to win the conflict. Naming them explicitly in `libs.versions.toml` and adding them to `:shared`'s device suite and `:app`'s `androidTest` is what lets Gradle resolve **espresso 3.7.0 / runner 1.7.0**. Proved both ways on the same Pixel_7_Pro API 37 AVD in the same hour: with 3.5.0 the run dies with that exact `NoSuchMethodException`, with 3.7.0 it is **12 / 12 green**. Also still 12 / 12 on a Galaxy A16 at API 36, so nothing was traded away. |
 | 26 | **A note that fails to save said nothing at all** — and, on the path nobody had looked at, said nothing *and closed the composer*. `DiscoveryViewModel` discarded the `AppResult` of all four of its writes, so an ordinary handled failure fell straight through to the success branch: `saveNote` cleared `noteEditor` one statement later, which threw the traveller's own writing away in the one place it existed; `deleteDiscovery` sent `NavigateBack` regardless, dropping them into a journal that still listed the discovery; `deleteNote` and `toggleFavorite` were silent. The row as written named only the note and only the throw path, because the throw path was the only one the suite could reach. | **Fixed 05.08.2026:** `DiscoveryEffect.ShowMessage` exists and every write raises it through one private `report(AppError)` — eight call sites otherwise, which is how four silent failures accumulated on one screen in the first place. State keeps no `error` field, per row #15: the routes resolve the text off the effect's payload with `userMessage()`. The composer closes on `onSuccess` and nowhere else, and `NavigateBack` likewise. Both arrangements gained an `AppSnackbarHost` — the phone's against the bottom edge under `imePadding()` so a failed save lands over the composer it is about, the tablet's centred on the window at `PaneWidth.sheet` because a notice pinned inside one pane reads as being about that pane alone. Covered by six new cases in `DiscoveryViewModelTest`, each driving *both* failure paths — the fakes gained `failOn…` hooks beside their `throwOn…` ones, because no `throwOn…` can reach the branch that caused this. |

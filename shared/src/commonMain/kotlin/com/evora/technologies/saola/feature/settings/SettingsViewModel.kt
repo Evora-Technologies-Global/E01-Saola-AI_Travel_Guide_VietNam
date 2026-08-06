@@ -4,10 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.evora.technologies.saola.core.mvi.MviViewModel
 import com.evora.technologies.saola.domain.repository.SettingsRepository
 import com.evora.technologies.saola.domain.usecase.ClearHistoryUseCase
-import com.evora.technologies.saola.domain.usecase.ObserveApiKeyAvailabilityUseCase
 import com.evora.technologies.saola.domain.usecase.ObserveSettingsUseCase
-import com.evora.technologies.saola.domain.usecase.SaveApiKeyUseCase
-import com.evora.technologies.saola.domain.usecase.UpdateModelUseCase
 import com.evora.technologies.saola.domain.usecase.UpdateThemeUseCase
 import com.evora.technologies.saola.domain.util.AppResult
 import kotlinx.coroutines.flow.launchIn
@@ -15,10 +12,7 @@ import kotlinx.coroutines.flow.onEach
 
 class SettingsViewModel(
     observeSettings: ObserveSettingsUseCase,
-    observeApiKeyAvailability: ObserveApiKeyAvailabilityUseCase,
     private val settingsRepository: SettingsRepository,
-    private val saveApiKey: SaveApiKeyUseCase,
-    private val updateModel: UpdateModelUseCase,
     private val updateTheme: UpdateThemeUseCase,
     private val clearHistory: ClearHistoryUseCase,
 ) : MviViewModel<SettingsState, SettingsIntent, SettingsEffect>(SettingsState()) {
@@ -27,39 +21,10 @@ class SettingsViewModel(
         observeSettings()
             .onEach { settings -> setState { copy(settings = settings) } }
             .launchIn(viewModelScope)
-
-        observeApiKeyAvailability()
-            .onEach { usable -> setState { copy(hasUsableKey = usable) } }
-            .launchIn(viewModelScope)
     }
 
     override fun onIntent(intent: SettingsIntent) {
         when (intent) {
-            is SettingsIntent.ApiKeyDraftChanged -> setState { copy(apiKeyDraft = intent.value) }
-
-            // Both the cleared field and the confirmation are gated on the write actually
-            // landing. Unconditionally they were a lie with teeth: a failed write discarded
-            // the key the traveller had just pasted, told them it was saved, and left the
-            // status pill one row below still reading "no key configured".
-            SettingsIntent.SaveApiKey -> launchSafely {
-                when (val result = saveApiKey(currentState.apiKeyDraft)) {
-                    is AppResult.Failure -> sendEffect(SettingsEffect.ShowMessage(result.error))
-                    // Clearing the draft means the field never keeps a secret on screen
-                    // after it has been stored.
-                    is AppResult.Success -> {
-                        setState { copy(apiKeyDraft = "") }
-                        sendEffect(SettingsEffect.ApiKeySaved)
-                    }
-                }
-            }
-
-            SettingsIntent.ClearApiKey -> launchSafely {
-                settingsRepository.setApiKey(null)
-                setState { copy(apiKeyDraft = "") }
-            }
-
-            is SettingsIntent.SelectModel -> launchSafely { updateModel(intent.model) }
-
             is SettingsIntent.SelectTheme -> launchSafely { updateTheme(intent.preference) }
 
             is SettingsIntent.SetSpeakAnswers -> launchSafely {
@@ -69,10 +34,17 @@ class SettingsViewModel(
             SettingsIntent.RequestClearHistory -> setState { copy(showClearConfirm = true) }
             SettingsIntent.CancelClearHistory -> setState { copy(showClearConfirm = false) }
 
+            // The confirmation is gated on the delete actually landing, the way saving a key
+            // used to be — that card is gone, and this is now the one act on the page that
+            // reports in words. Announced unconditionally it was the same lie with teeth: a
+            // failed delete told the traveller their whole journal had been erased while
+            // every photograph was still on the device.
             SettingsIntent.ConfirmClearHistory -> launchSafely {
                 setState { copy(showClearConfirm = false) }
-                clearHistory()
-                sendEffect(SettingsEffect.HistoryCleared)
+                when (val result = clearHistory()) {
+                    is AppResult.Failure -> sendEffect(SettingsEffect.ShowMessage(result.error))
+                    is AppResult.Success -> sendEffect(SettingsEffect.HistoryCleared)
+                }
             }
         }
     }

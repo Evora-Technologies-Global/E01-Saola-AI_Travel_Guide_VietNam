@@ -2,11 +2,9 @@ package com.evora.technologies.saola.feature.settings
 
 import app.cash.turbine.test
 import com.evora.technologies.saola.domain.usecase.ClearHistoryUseCase
-import com.evora.technologies.saola.domain.usecase.ObserveApiKeyAvailabilityUseCase
 import com.evora.technologies.saola.domain.usecase.ObserveSettingsUseCase
-import com.evora.technologies.saola.domain.usecase.SaveApiKeyUseCase
-import com.evora.technologies.saola.domain.usecase.UpdateModelUseCase
 import com.evora.technologies.saola.domain.usecase.UpdateThemeUseCase
+import com.evora.technologies.saola.domain.model.ThemePreference
 import com.evora.technologies.saola.domain.util.AppError
 import com.evora.technologies.saola.testing.FakeDiscoveryRepository
 import com.evora.technologies.saola.testing.FakeSettingsRepository
@@ -21,22 +19,25 @@ import kotlin.test.AfterTest
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 import kotlin.time.Duration.Companion.seconds
 
 /**
- * The settings screen must not confirm a save that did not happen.
+ * The settings screen must not confirm a write that did not happen.
  *
- * This is the one screen where a swallowed write is worse than a crash. Saving a key does
- * three things at once — it clears the field, it shows a green confirmation, and it is the
- * only way to make recognition work — so a write that failed silently left the traveller
- * with their key discarded, a message saying it was stored, and a camera that went on
- * refusing to run, with nothing on screen connecting the three.
+ * The write that carries this rule is clearing the history, and it is the only one left on the
+ * page: it is irreversible, it is announced in words, and nothing on screen would contradict a
+ * confirmation that was wrong — the traveller is looking at Settings, not at their journal. So
+ * a delete that failed used to say "all discoveries cleared" over a journal that was still
+ * there, and they would only find out by walking back into it.
  *
- * `SettingsRepository`'s writes return [com.evora.technologies.saola.domain.util.AppResult]
- * for exactly this reason. These tests pin the behaviour that depends on it, because the
- * failure it prevents is invisible: nothing crashes, nothing logs at ERROR, and the screen
- * looks like it worked.
+ * It inherited the rule from the API-key card, which is where the defect was originally found
+ * and which was removed on 06.08.2026 with the rest of the Intelligence section. That is why
+ * `SettingsRepository`'s writes return
+ * [com.evora.technologies.saola.domain.util.AppResult] at all, and why the two toggles are
+ * allowed to ignore what the delete has to check: a switch redraws from the settings flow and
+ * puts itself back, a deleted journal has nothing to redraw from.
  */
 @OptIn(ExperimentalCoroutinesApi::class)
 class SettingsViewModelTest {
@@ -58,52 +59,53 @@ class SettingsViewModelTest {
 
     private fun viewModel() = SettingsViewModel(
         observeSettings = ObserveSettingsUseCase(settingsRepository),
-        observeApiKeyAvailability = ObserveApiKeyAvailabilityUseCase(settingsRepository),
         settingsRepository = settingsRepository,
-        saveApiKey = SaveApiKeyUseCase(settingsRepository),
-        updateModel = UpdateModelUseCase(settingsRepository),
         updateTheme = UpdateThemeUseCase(settingsRepository),
         clearHistory = ClearHistoryUseCase(discoveryRepository),
     )
 
     @Test
-    fun `a key that stored is confirmed and leaves the field empty`() = runTest(timeout = 30.seconds) {
-        val vm = viewModel()
-
-        vm.effects.test {
-            vm.onIntent(SettingsIntent.ApiKeyDraftChanged("AIza-good-key"))
-            vm.onIntent(SettingsIntent.SaveApiKey)
-            runCurrent()
-
-            assertEquals(SettingsEffect.ApiKeySaved, awaitItem())
-            cancelAndIgnoreRemainingEvents()
-        }
-
-        assertEquals("", vm.state.value.apiKeyDraft, "the field must not keep a secret on screen")
-        assertEquals("AIza-good-key", settingsRepository.state.value.apiKey)
-    }
-
-    /**
-     * The defect this whole change exists for.
-     *
-     * Before the writes returned a result, this test's assertions all failed: the effect was
-     * `ApiKeySaved`, the draft was cleared, and the key was gone.
-     */
-    @Test
-    fun `a key that failed to store is not confirmed and is left in the field`() =
+    fun `a history that cleared is confirmed and closes the dialog`() =
         runTest(timeout = 30.seconds) {
-            settingsRepository.failOnWrite = AppError.Storage("disk full")
             val vm = viewModel()
 
             vm.effects.test {
-                vm.onIntent(SettingsIntent.ApiKeyDraftChanged("AIza-unlucky"))
-                vm.onIntent(SettingsIntent.SaveApiKey)
+                vm.onIntent(SettingsIntent.RequestClearHistory)
+                assertTrue(vm.state.value.showClearConfirm, "guard: the dialog is up")
+
+                vm.onIntent(SettingsIntent.ConfirmClearHistory)
+                runCurrent()
+
+                assertEquals(SettingsEffect.HistoryCleared, awaitItem())
+                cancelAndIgnoreRemainingEvents()
+            }
+
+            assertFalse(vm.state.value.showClearConfirm)
+            assertTrue(discoveryRepository.deleteAllCalls > 0, "the delete has to have run")
+        }
+
+    /**
+     * The defect this suite exists for, one screen element on from where it was found.
+     *
+     * Announced unconditionally — which is how `ConfirmClearHistory` was written until
+     * 06.08.2026 — every assertion below fails: the effect is `HistoryCleared` and the
+     * traveller is told their whole journal is gone while every photograph is still on the
+     * device.
+     */
+    @Test
+    fun `a history that failed to clear is not confirmed and reports the failure`() =
+        runTest(timeout = 30.seconds) {
+            discoveryRepository.failOnDeleteAll = AppError.Storage("database is locked")
+            val vm = viewModel()
+
+            vm.effects.test {
+                vm.onIntent(SettingsIntent.ConfirmClearHistory)
                 runCurrent()
 
                 val effect = awaitItem()
                 assertTrue(
                     effect is SettingsEffect.ShowMessage,
-                    "a failed write must report the failure, not confirm a save — got $effect",
+                    "a failed delete must report the failure, not confirm it — got $effect",
                 )
                 // The error rides on the effect rather than being read back out of state.
                 // This assertion used to be `vm.state.value.error`, on the reasoning that
@@ -112,42 +114,36 @@ class SettingsViewModelTest {
                 // main-queue turn before the next frame, so the message was always the
                 // stale null. See `AppError.userMessage` and `LLM.md` §11 row #15.
                 assertEquals(
-                    AppError.Storage("disk full"),
-                    (effect as SettingsEffect.ShowMessage).error,
+                    AppError.Storage("database is locked"),
+                    effect.error,
                     "the message the screen shows comes from the effect, so the error has to be on it",
                 )
                 cancelAndIgnoreRemainingEvents()
             }
-
-            assertEquals(
-                "AIza-unlucky",
-                vm.state.value.apiKeyDraft,
-                "the key must survive in the field so the traveller can retry without retyping",
-            )
         }
 
     /**
      * A throw is the other half of the contract, and it must not reach the platform handler.
      *
      * `launchSafely` is the floor: `viewModelScope` carries no `CoroutineExceptionHandler`,
-     * so an escaping exception here would take the process down with the traveller's
-     * unsaved key in it.
+     * so an escaping exception here would take the process down.
      */
     @Test
-    fun `an exception while storing the key does not escape the ViewModel`() =
+    fun `an exception while clearing the history does not escape the ViewModel`() =
         runTest(timeout = 30.seconds) {
-            settingsRepository.throwOnWrite = IllegalStateException("preferences file locked")
+            discoveryRepository.throwOnDeleteAll = IllegalStateException("database file locked")
             val vm = viewModel()
 
-            vm.onIntent(SettingsIntent.ApiKeyDraftChanged("AIza-doomed"))
-            vm.onIntent(SettingsIntent.SaveApiKey)
+            vm.onIntent(SettingsIntent.RequestClearHistory)
+            vm.onIntent(SettingsIntent.ConfirmClearHistory)
             runCurrent()
 
-            // Reaching this line at all is the assertion: the test worker is still alive.
-            assertEquals(
-                "AIza-doomed",
-                vm.state.value.apiKeyDraft,
-                "a throw must not clear the field either",
+            // Reaching this line at all is the assertion: the test worker is still alive. The
+            // dialog is down either way — it is lowered before the delete is attempted, so a
+            // throw cannot strand a modal over the page.
+            assertFalse(
+                vm.state.value.showClearConfirm,
+                "a throw must not leave the confirmation dialog up",
             )
         }
 
@@ -161,14 +157,20 @@ class SettingsViewModelTest {
             assertTrue(vm.state.value.settings.speakAnswers, "guard: the default is on")
 
             vm.onIntent(SettingsIntent.SetSpeakAnswers(enabled = false))
+            vm.onIntent(SettingsIntent.SelectTheme(ThemePreference.DARK))
             runCurrent()
 
-            // No write landed, so the settings flow never emitted, so the switch is still on.
-            // That is the self-correcting behaviour the API-key path does not have, and why
-            // these toggles are allowed to discard the result the API-key path must check.
+            // No write landed, so the settings flow never emitted, so both controls are still
+            // where they were. That is the self-correcting behaviour the delete does not have,
+            // and why these toggles are allowed to discard the result the delete must check.
             assertTrue(
                 vm.state.value.settings.speakAnswers,
                 "a toggle whose write failed must snap back rather than show the new position",
+            )
+            assertEquals(
+                ThemePreference.SYSTEM,
+                vm.state.value.settings.darkTheme,
+                "the theme row is the same case as the switch",
             )
         }
 }

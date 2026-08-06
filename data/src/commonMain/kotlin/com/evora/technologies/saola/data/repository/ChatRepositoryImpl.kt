@@ -6,6 +6,7 @@ import com.evora.technologies.saola.data.mapper.toEntity
 import com.evora.technologies.saola.data.remote.gemini.GeminiRemoteDataSource
 import com.evora.technologies.saola.domain.model.ChatMessage
 import com.evora.technologies.saola.domain.model.ChatRole
+import com.evora.technologies.saola.domain.model.GeminiModel
 import com.evora.technologies.saola.domain.repository.ChatRepository
 import com.evora.technologies.saola.domain.repository.DiscoveryRepository
 import com.evora.technologies.saola.domain.repository.SettingsRepository
@@ -81,7 +82,7 @@ internal class ChatRepositoryImpl(
                     history = history,
                     question = question,
                     language = settings.language,
-                    model = settings.preferredModel,
+                    model = GeminiModel.CONFIGURED,
                 )
             ) {
                 is AppResult.Failure -> {

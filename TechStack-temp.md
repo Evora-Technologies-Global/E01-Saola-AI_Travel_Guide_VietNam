@@ -122,8 +122,11 @@ photograph once — not by failing to load them, but by deleting them: `listCapt
 reported the new directory, the database still held the old one, and the orphan sweep found
 no overlap and swept the lot.
 
-**Settings live in DataStore Preferences** (`settings.preferences_pb`), not Room: API key,
-model tier, theme, narration switch, location opt-in.
+**Settings live in DataStore Preferences** (`settings.preferences_pb`), not Room: theme,
+narration switch, location opt-in — three keys. The API key and the model tier were two more
+until 06.08.2026, when both became build decisions and their keys were dropped rather than left
+readable: a stored value that nothing writes can only override a build decision with whatever an
+older install happened to be left on.
 
 **Nothing leaves the device except the image being recognised.** There is no account, no
 backend and no analytics. The only outbound calls are Gemini (the photo and the prompt),
@@ -596,8 +599,15 @@ Put it in `local.properties`, which is git-ignored so the key never reaches vers
 GEMINI_API_KEY=your_key_here
 ```
 
-It is injected at build time. Users can also paste their own key at runtime under
-**Settings → Gemini API key**, which takes precedence over the build-time one.
+It is injected at build time, and that is the only way in: the runtime paste field under
+Settings was removed on 06.08.2026 along with the model picker. A build without this property
+starts, seeds and navigates normally — the lens screen says it has no key and recognition
+returns `AppError.MissingApiKey`.
+
+**Which model it calls is the same kind of decision**, and it is one line:
+`GeminiModel.CONFIGURED` in `domain/src/commonMain/kotlin/…/model/AppSettings.kt`, currently
+`FLASH_3_5`. The other entries stay reachable — `fallbackChain` walks them when the configured
+one is overloaded.
 
 ### 2. Add a Maps SDK key (Android only, and only for the Explore map)
 

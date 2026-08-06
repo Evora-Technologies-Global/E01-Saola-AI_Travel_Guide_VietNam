@@ -193,7 +193,7 @@ Chi tiết đầy đủ (hình học bản đồ 34 tỉnh, truy vấn Overpass,
 |---|---|---|
 | Khám phá, hội thoại, ghi chú, bản dịch, tổng kết ngày | **Room (SQLite)** — 5 bảng | Nguồn sự thật duy nhất; màn hình đọc qua `Flow`, nên hoạt động cả khi offline |
 | Ảnh chụp | **Tệp JPEG** trong thư mục riêng của app | Đã xoay đúng chiều theo EXIF, thu về cạnh dài 1024 px |
-| Tuỳ chọn (khoá API, model, giao diện, đọc to, định vị) | **DataStore Preferences** | |
+| Tuỳ chọn (giao diện, đọc to, định vị) | **DataStore Preferences** | Khoá API và model **không** nằm ở đây nữa từ 06.08.2026 — cả hai là quyết định lúc build |
 | Dữ liệu 34 tỉnh + 61 mục văn hoá | **Tệp đóng gói sẵn trong app** | Chỉ đọc, không cần mạng |
 | Dữ liệu địa điểm quanh đây | **Bộ nhớ tạm (RAM)** — 15 phút / 300 m | Cố tình không lưu xuống đĩa: đây là dữ liệu về nơi bạn *đang* đứng, mở lại app mà thấy thành phố tuần trước là sai |
 
@@ -204,8 +204,11 @@ vào một thư mục không còn tồn tại. Lỗi này từng làm mất **to
 **Những gì rời khỏi máy:** ảnh cần nhận diện (gửi tới Gemini), toạ độ hiện tại (gửi tới
 OpenStreetMap / Wikipedia), và ảnh bản đồ. Không có gì khác.
 
-**Khoá API Gemini** đọc từ `local.properties` khi build (không vào git), hoặc người dùng tự
-dán khoá của mình trong **Cài đặt → Khoá API** — khoá của người dùng được ưu tiên.
+**Khoá API Gemini** đọc từ `local.properties` khi build (không vào git), và chỉ từ đó. Ô dán
+khoá trong Cài đặt đã gỡ ngày 06.08.2026 cùng cả mục *Trí tuệ*: xin người dùng một khoá API là
+xin họ giữ hộ thông tin xác thực của người phát triển, và hai nguồn khoá nghĩa là hành vi của
+app phụ thuộc vào việc khoá nào đang được dùng. **Model** đi cùng đường: `GeminiModel.CONFIGURED`
+trong `domain/model/AppSettings.kt` là một dòng, sửa rồi build lại.
 
 ---
 
@@ -267,7 +270,7 @@ trên Galaxy A16: 36 node, trước đó là 0.
 
 **Ngắn hạn — xong ngày 06.08.2026**
 
-Cả sáu mục đều là "đưa thứ đang có ra ngoài", không mục nào cần thêm dữ liệu mới:
+Cả bảy mục đều là "đưa thứ đang có ra ngoài", không mục nào cần thêm dữ liệu mới:
 
 - ✅ **Khoảnh khắc "mở khoá" không còn âm thầm.** Trang kết quả nhận diện hiện thẻ *Trong bộ sưu
   tập · Phở · 29/61*, chạm vào là mở bảng. Là state chứ không phải snackbar, nên nó sống qua
@@ -292,6 +295,16 @@ Cả sáu mục đều là "đưa thứ đang có ra ngoài", không mục nào 
   cố ý **không** nhận bước dự phòng tiếng Anh: với đúng một ngôn ngữ, nó là bước lùi. Đo trên
   Galaxy A16 bằng cách ghim app sang `en-US` rồi về `vi-VN` trên cùng 40 kết quả. `:data` đi
   từ 120/86 lên **126/92**, tổng dự án 465 → **477**.
+- ✅ **Trang Cài đặt gọn lại còn những gì người đi đường thật sự chọn.** Mục *Trí tuệ* — ô dán
+  khoá API và ba thẻ chọn model — đã gỡ: cả hai là quyết định lúc build (`local.properties` và
+  `GeminiModel.CONFIGURED`), không phải câu hỏi dành cho người dùng, và "Gemini 3.5 Flash hay
+  3 Pro" chỉ người đã biết bảng danh mục của Google mới trả lời đúng được. Thay vào đó, mục
+  *Về ứng dụng* nhận thêm **Chính sách bảo mật** và **Điều khoản dịch vụ**, mở bằng trình duyệt
+  và nằm chung thẻ với *Giấy phép*; hai thẻ trong mục này giờ có khoảng cách thật giữa chúng
+  thay vì dính liền. Chân trang đọc *Evora Technologies Global · v1.0.0*. Kèm theo là một lỗi
+  cùng họ được vá: xoá toàn bộ khám phá **thất bại** vẫn báo "đã xoá" — giờ lời xác nhận chỉ
+  hiện khi lệnh xoá thực sự thành công. Tổng dự án 477 → **475** (mất hai case của
+  `GeminiModel.fromId`, thêm một case cho `CONFIGURED`).
 
 **Ngắn hạn — còn lại**
 
@@ -339,8 +352,10 @@ khám phá** chính là nút đưa bản demo về trạng thái đẹp.
 thái trống thật thì chạy bản release.
 
 Cần một khoá Gemini từ [Google AI Studio](https://aistudio.google.com/apikey) đặt trong
-`local.properties`. Hướng dẫn đầy đủ, kèm khoá Maps SDK cho Android và cách tạo bản release,
-xem [TechStack-temp.md §9–§11](TechStack-temp.md#9-getting-started).
+`local.properties` — không còn cách nào nhập khoá từ trong app, nên bản build thiếu khoá sẽ báo
+ngay trên màn Ống kính và không nhận diện được gì. Hướng dẫn đầy đủ, kèm khoá Maps SDK cho
+Android và cách tạo bản release, xem
+[TechStack-temp.md §9–§11](TechStack-temp.md#9-getting-started).
 
 ---
 

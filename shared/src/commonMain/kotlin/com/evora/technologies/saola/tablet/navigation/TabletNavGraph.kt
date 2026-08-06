@@ -62,7 +62,6 @@ internal fun SaolaTabletNavHost(navController: NavHostController) {
                     navController.navigate(Routes.translation(imagePath, from, to))
                 },
                 onOpenJournal = { navController.navigateToTopLevel(Routes.JOURNAL) },
-                onOpenSettings = { navController.navigateToTopLevel(Routes.SETTINGS) },
             )
         }
 

@@ -51,7 +51,7 @@ val repositoryModule: Module = module {
 
     single { CatalogAssetSource(get(), get<CoroutineDispatcher>(IoDispatcher)) }
 
-    single<ApiKeyProvider> { DefaultApiKeyProvider(settingsRepository = get()) }
+    single<ApiKeyProvider> { DefaultApiKeyProvider() }
 
     single { GeminiClient(httpClient = get(), apiKeyProvider = get(), json = get()) }
 
@@ -137,7 +137,6 @@ val repositoryModule: Module = module {
             remote = get(),
             textRecognizer = get(),
             captureStore = get(),
-            settingsRepository = get(),
             ioDispatcher = get(IoDispatcher),
         )
     }

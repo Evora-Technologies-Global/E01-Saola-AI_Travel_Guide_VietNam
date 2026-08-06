@@ -4,8 +4,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
@@ -19,15 +21,17 @@ import com.evora.technologies.saola.core.designsystem.component.AppSnackbarHost
 import com.evora.technologies.saola.core.designsystem.component.PageHeader
 import com.evora.technologies.saola.core.designsystem.component.SectionHeader
 import com.evora.technologies.saola.core.designsystem.theme.PageSpacing
+import com.evora.technologies.saola.core.designsystem.theme.Spacing
 import com.evora.technologies.saola.core.designsystem.theme.screenInsetsPadding
+import com.evora.technologies.saola.feature.settings.PRIVACY_POLICY_URL
 import com.evora.technologies.saola.feature.settings.SettingsHost
 import com.evora.technologies.saola.feature.settings.SettingsIntent
 import com.evora.technologies.saola.feature.settings.SettingsState
 import com.evora.technologies.saola.feature.settings.SettingsViewModel
-import com.evora.technologies.saola.feature.settings.component.ApiKeyCard
+import com.evora.technologies.saola.feature.settings.TERMS_OF_SERVICE_URL
 import com.evora.technologies.saola.feature.settings.component.ClearHistoryDialog
 import com.evora.technologies.saola.feature.settings.component.DestructiveRow
-import com.evora.technologies.saola.feature.settings.component.ModelPicker
+import com.evora.technologies.saola.feature.settings.component.ExternalRow
 import com.evora.technologies.saola.feature.settings.component.NavRow
 import com.evora.technologies.saola.feature.settings.component.SettingsCard
 import com.evora.technologies.saola.feature.settings.component.SettingsFooter
@@ -38,15 +42,17 @@ import com.evora.technologies.saola.resources.Res
 import com.evora.technologies.saola.resources.settings_clear_history
 import com.evora.technologies.saola.resources.settings_clear_history_summary
 import com.evora.technologies.saola.resources.settings_kicker
+import com.evora.technologies.saola.resources.settings_legal_summary
 import com.evora.technologies.saola.resources.settings_licenses
 import com.evora.technologies.saola.resources.settings_licenses_summary
+import com.evora.technologies.saola.resources.settings_privacy_policy
 import com.evora.technologies.saola.resources.settings_section_about
-import com.evora.technologies.saola.resources.settings_section_ai
 import com.evora.technologies.saola.resources.settings_section_appearance
 import com.evora.technologies.saola.resources.settings_section_data
 import com.evora.technologies.saola.resources.settings_section_experience
 import com.evora.technologies.saola.resources.settings_speak
 import com.evora.technologies.saola.resources.settings_speak_summary
+import com.evora.technologies.saola.resources.settings_terms_of_service
 import com.evora.technologies.saola.resources.settings_title
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -65,9 +71,10 @@ import org.koin.compose.viewmodel.koinViewModel
  * a group in half the first time a translation ran long — and the eight languages this app
  * ships in do not agree about how long a settings label is.
  *
- * What is in each column is the phone's own order, cut once: the two things that change what
- * the guide *says* on the left, everything that is furniture on the right. That is the same
- * priority the phone gives them top to bottom, turned ninety degrees.
+ * What is in each column is the phone's own order, cut once: what the traveller can change on
+ * the left, what the app has to say for itself on the right. The cut used to fall one group
+ * higher — "Intelligence" alone on the left — and moved on 06.08.2026 when that group was
+ * removed, because a page whose first column starts empty is not a two-column page.
  */
 @Composable
 fun SettingsTabletRoute(
@@ -76,13 +83,14 @@ fun SettingsTabletRoute(
     modifier: Modifier = Modifier,
     viewModel: SettingsViewModel = koinViewModel(),
 ) {
-    SettingsHost(viewModel) { state, onIntent, snackbarHostState ->
+    SettingsHost(viewModel) { state, onIntent, snackbarHostState, onOpenUrl ->
         SettingsTabletScreen(
             state = state,
             onIntent = onIntent,
             snackbarHostState = snackbarHostState,
             onOpenSovereignty = onOpenSovereignty,
             onOpenLicenses = onOpenLicenses,
+            onOpenUrl = onOpenUrl,
             modifier = modifier,
         )
     }
@@ -95,6 +103,7 @@ private fun SettingsTabletScreen(
     snackbarHostState: SnackbarHostState,
     onOpenSovereignty: () -> Unit,
     onOpenLicenses: () -> Unit,
+    onOpenUrl: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier.fillMaxSize()) {
@@ -120,15 +129,15 @@ private fun SettingsTabletScreen(
 
                 Row(modifier = Modifier.fillMaxWidth()) {
                     Column(modifier = Modifier.weight(1f)) {
-                        IntelligenceGroup(state = state, onIntent = onIntent)
-                    }
-                    Column(modifier = Modifier.weight(1f)) {
                         ExperienceGroup(state = state, onIntent = onIntent)
                         AppearanceGroup(state = state, onIntent = onIntent)
                         DataGroup(onIntent = onIntent)
+                    }
+                    Column(modifier = Modifier.weight(1f)) {
                         AboutGroup(
                             onOpenSovereignty = onOpenSovereignty,
                             onOpenLicenses = onOpenLicenses,
+                            onOpenUrl = onOpenUrl,
                         )
                     }
                 }
@@ -148,17 +157,6 @@ private fun SettingsTabletScreen(
     if (state.showClearConfirm) {
         ClearHistoryDialog(onIntent = onIntent)
     }
-}
-
-/** The key and the model — the two settings that change what the guide says. */
-@Composable
-private fun ColumnScope.IntelligenceGroup(
-    state: SettingsState,
-    onIntent: (SettingsIntent) -> Unit,
-) {
-    SectionHeader(stringResource(Res.string.settings_section_ai))
-    ApiKeyCard(state = state, onIntent = onIntent)
-    ModelPicker(selected = state.settings.preferredModel, onIntent = onIntent)
 }
 
 @Composable
@@ -200,19 +198,37 @@ private fun ColumnScope.DataGroup(onIntent: (SettingsIntent) -> Unit) {
     }
 }
 
-/** The statement, and the version — the foot of the page, in the column that has room for it. */
+/**
+ * The statement, the paperwork and the version — the whole of what the app says about itself.
+ *
+ * The gap under the sovereignty card is the same `Spacing.md` the phone puts there and for the
+ * same reason: these two cards are the only pair on the page inside one section, so nothing
+ * else separates them, and edge to edge they read as one card with a seal on it.
+ */
 @Composable
 private fun ColumnScope.AboutGroup(
     onOpenSovereignty: () -> Unit,
     onOpenLicenses: () -> Unit,
+    onOpenUrl: (String) -> Unit,
 ) {
     SectionHeader(stringResource(Res.string.settings_section_about))
     SovereigntyCard(onClick = onOpenSovereignty)
+    Spacer(Modifier.height(Spacing.md))
     SettingsCard {
         NavRow(
             title = stringResource(Res.string.settings_licenses),
             summary = stringResource(Res.string.settings_licenses_summary),
             onClick = onOpenLicenses,
+        )
+        ExternalRow(
+            title = stringResource(Res.string.settings_privacy_policy),
+            summary = stringResource(Res.string.settings_legal_summary),
+            onClick = { onOpenUrl(PRIVACY_POLICY_URL) },
+        )
+        ExternalRow(
+            title = stringResource(Res.string.settings_terms_of_service),
+            summary = stringResource(Res.string.settings_legal_summary),
+            onClick = { onOpenUrl(TERMS_OF_SERVICE_URL) },
         )
     }
     SettingsFooter()

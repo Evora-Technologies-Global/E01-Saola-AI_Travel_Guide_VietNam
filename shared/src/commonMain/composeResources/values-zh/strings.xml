@@ -239,23 +239,6 @@
     <!-- Settings -->
     <string name="settings_title">设置</string>
     <string name="settings_kicker">偏好</string>
-    <string name="settings_section_ai">智能</string>
-    <string name="settings_api_key">API 密钥</string>
-    <string name="settings_api_key_set">正在使用你自己的密钥</string>
-    <string name="settings_api_key_default">正在使用应用内置的密钥</string>
-    <string name="settings_api_key_none">尚未配置密钥</string>
-    <string name="settings_api_key_active">生效中</string>
-    <string name="settings_api_key_inactive">无密钥</string>
-    <string name="settings_api_key_hint">粘贴你自己的密钥…</string>
-    <string name="settings_api_key_save">保存密钥</string>
-    <string name="settings_api_key_clear">清除</string>
-    <string name="settings_api_key_saved">已保存 API 密钥</string>
-    <string name="settings_model_balanced">均衡</string>
-    <string name="settings_model_balanced_summary">足够深入，也快得能读完一份菜单。</string>
-    <string name="settings_model_quick">快速</string>
-    <string name="settings_model_quick_summary">标识、标签、价格。最省钱。</string>
-    <string name="settings_model_scholar">学者</string>
-    <string name="settings_model_scholar_summary">历史与文化最深入，但更慢。</string>
     <string name="settings_section_experience">体验</string>
     <string name="settings_speak">朗读回答</string>
     <string name="settings_speak_summary">用语音念出描述和对话回复</string>
@@ -270,7 +253,7 @@
     <string name="settings_clear_confirm_title">全部清除吗？</string>
     <string name="settings_clear_confirm_body">本机上的每一条发现、照片、对话和日志都会被永久删除。</string>
     <string name="settings_cleared">已清除所有发现</string>
-    <string name="settings_footer">Made in Việt Nam · v%1$s</string>
+    <string name="settings_footer">Evora Technologies Global · v%1$s</string>
 
     <!-- Categories -->
     <string name="category_landmark">地标</string>
@@ -297,7 +280,7 @@
     <string name="action_close">关闭</string>
 
     <!-- Errors -->
-    <string name="error_missing_api_key">还没有 Gemini API 密钥。在设置里添加一个就能开始识别。</string>
+    <string name="error_missing_api_key">此版本没有 Gemini 密钥，无法进行识别。</string>
     <string name="error_invalid_api_key">这个 API 密钥被拒绝了。请在设置里检查。</string>
     <string name="error_no_connection">没有网络连接。识别需要连上 Gemini。</string>
     <string name="error_timeout">等太久了。请再试一次。</string>
@@ -377,6 +360,9 @@
     <string name="licenses_footer">你拍的照片是你的。它们留在这台设备上，只有送去 Gemini 识别时才会离开。</string>
     <string name="settings_licenses">许可与数据来源</string>
     <string name="settings_licenses_summary">OpenStreetMap · Wikipedia · Natural Earth</string>
+    <string name="settings_privacy_policy">隐私政策</string>
+    <string name="settings_terms_of_service">服务条款</string>
+    <string name="settings_legal_summary">在浏览器中打开</string>
     <!-- 收藏：指南模式 -->
     <string name="collection_show_guide">看怎么认出来</string>
     <string name="collection_show_board">看格子图</string>

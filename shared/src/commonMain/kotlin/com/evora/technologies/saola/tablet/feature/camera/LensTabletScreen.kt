@@ -93,7 +93,6 @@ fun LensTabletRoute(
     /** Photo path, source language code (blank for detect), target language code. */
     onTranslationCaptured: (String, String, String) -> Unit,
     onOpenJournal: () -> Unit,
-    onOpenSettings: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: LensViewModel = koinViewModel(),
 ) {
@@ -107,7 +106,6 @@ fun LensTabletRoute(
             controller = controller,
             onIntent = onIntent,
             onOpenJournal = onOpenJournal,
-            onOpenSettings = onOpenSettings,
             modifier = modifier,
         )
     }
@@ -119,7 +117,6 @@ private fun LensTabletScreen(
     controller: CameraController,
     onIntent: (LensIntent) -> Unit,
     onOpenJournal: () -> Unit,
-    onOpenSettings: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val cameraPermission = rememberCameraPermissionState()
@@ -132,7 +129,6 @@ private fun LensTabletScreen(
     MissingKeySnackbar(
         hasApiKey = state.hasApiKey,
         hostState = snackbarHostState,
-        onOpenSettings = onOpenSettings,
     )
     CaptureErrorSnackbar(
         error = state.error,
