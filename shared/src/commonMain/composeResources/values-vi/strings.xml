@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Brand name: identical in every locale. -->
+    <string name="app_name">Saola</string>
+
     <!-- See the default locale's file for what this is and why it exists. -->
     <string name="resource_language">vi</string>
 

@@ -14,8 +14,9 @@ package com.evora.technologies.saola.feature.settings
  * `feature/discovery/ReportMail.kt` makes for its single address, and the same one
  * `mobile/feature/licenses/LicensesScreen.kt` makes for its four licence URLs.
  *
- * Replace both before shipping; until they are real pages, the rows lead somewhere that does
- * not answer.
+ * Both point at the published site as of `f594fed`. Re-check them when the site moves: a URL
+ * that has stopped answering is worse than a dead button, because the traveller has left the
+ * app to find out.
  */
 internal const val PRIVACY_POLICY_URL = "https://evora-technologies-global.github.io/Evora-Technologies-Global-Website/privacy"
 

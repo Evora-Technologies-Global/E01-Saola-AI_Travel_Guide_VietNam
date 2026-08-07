@@ -26,36 +26,35 @@ import com.evora.technologies.saola.data.local.db.entity.TripSummaryEntity
         TranslationEntity::class,
         TripSummaryEntity::class,
     ],
-    // 3, and there are still no migrations. It had been reset to 1 once already, for the
-    // reason below; the bump to 2 exists because `imagePath` became `imageName` and
-    // `photoPathsJson` became `photoNamesJson` — and those are not renames for tidiness.
-    // The columns used to hold absolute paths, which on iOS name a container directory
-    // that does not survive an install, an update or a restore. Every row written before
-    // this version points somewhere that no longer exists, so there is nothing in one
-    // worth carrying over even if a migration were written. Destroying them is the fix.
+    // **1, and it stays at 1 until the app is published.** Nothing is on a store, so there
+    // is no install anywhere whose rows have to survive — which makes a version number a
+    // record of nothing. It had reached 3 (2 for the `imagePath` → `imageName` rename,
+    // 3 for `discovery_reports`), and every one of those bumps was destructive anyway:
+    // each existed only to *trigger* the fallback below, never to carry data across.
+    // Counting up while destroying everything at each step describes a migration history
+    // that does not exist.
     //
-    // A bump is what makes that happen: renaming a column does not change the *version*,
-    // and destructive fallback only runs on a version change — same-version schema drift
-    // is an integrity failure Room throws on instead.
+    // So the rule while unpublished is: **change the schema freely, leave the number
+    // alone.** There is one thing that rule cannot do, and it is worth knowing before
+    // trusting it — Room hashes the schema into the file and compares it on open, so a
+    // *same-version* change is an integrity failure it throws on rather than a fallback
+    // it runs. A developer whose device holds an older `saola.db` therefore has to
+    // uninstall, or clear app data, rather than expecting the app to recover; on a debug
+    // build the demo trip re-seeds itself on the next launch and the state is back.
     //
-    // The bump to 3 adds `discovery_reports` and changes nothing else, so unlike the last
-    // one every existing row *would* survive a real migration untouched. It is still a
-    // destructive bump: writing this database's first migration to preserve rows the
-    // paragraph below calls disposable would be a migration with nothing worth testing it
-    // against. **Publishing is what ends that argument** — at that point the rows stop
-    // being disposable, and the next schema change after it is where migrations start and
-    // `fallbackToDestructiveMigration` comes out.
-    //
-    // What this does to a phone that already has the v3 file is worth being exact about,
-    // because it is not a crash: `applySharedConfiguration` calls
+    // The same applies to the reset itself: a device carrying the v2 or v3 file is being
+    // *downgraded*. That path does work — `applySharedConfiguration` calls
     // `fallbackToDestructiveMigration(dropAllTables = true)`, and that setter also sets
-    // `allowDestructiveMigrationOnDowngrade`. Room therefore treats any version it has no
-    // migration for — in either direction — as "no migration required", drops every table
-    // and recreates them empty. The database opens, the app starts, and the journal, notes,
-    // translations and passport stamps on that device are simply gone — silently, with
-    // nothing shown to the user. Acceptable only because nothing is published; a device
-    // carrying demo data has to be re-seeded.
-    version = 3,
+    // `allowDestructiveMigrationOnDowngrade`, so Room treats a version it has no migration
+    // for in either direction as "no migration required", drops every table and recreates
+    // them empty. The database opens, the app starts, and the journal, notes, translations
+    // and passport stamps on that device are simply gone — silently, with nothing shown to
+    // the user.
+    //
+    // **Publishing is what ends this.** At that point the rows stop being disposable: the
+    // number starts moving again, the first real `Migration` is written, and
+    // `fallbackToDestructiveMigration` comes out of `applySharedConfiguration`.
+    version = 1,
     exportSchema = true,
 )
 // Room generates the implementation per target rather than through reflection, so
