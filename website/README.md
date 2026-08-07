@@ -51,6 +51,13 @@ The page is `index.html`, so `/` serves it with no configuration at all; `vercel
 `/privacy` and `/terms` on top. All three answer **200**. Point `LegalLinks.kt` at whatever domain
 the project gets.
 
+**Framework Preset must be `Other`.** Picking a framework by hand makes Vercel run that
+framework's build — `react-scripts build` for Create React App — against a folder with no
+`package.json`, and it fails with `command not found` and exit 127. There is nothing to build
+here; Vercel only has to copy the files up. `vercel.json` now pins `"framework": null` and
+`"outputDirectory": "."`, and those override the dashboard, so the preset cannot break a
+deployment again.
+
 **If a fresh deployment 404s, it is almost always the Root Directory.** Deploying the repository
 without setting it to `website` gives Vercel an Android project: no `index.html` at the root, no
 `vercel.json`, and therefore a 404 on every path. Either set *Project Settings › Build & Development
