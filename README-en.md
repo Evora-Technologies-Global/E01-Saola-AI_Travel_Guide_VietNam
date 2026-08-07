@@ -89,15 +89,15 @@ same window measurements, so the arrangement is the real one.
 
 | Lens | Journal | Travel passport | Culture collection |
 |---|---|---|---|
-| <img src="screenshots/android-phone/01-lens.png" width="180" alt="Lens"> | <img src="screenshots/android-phone/02-journal.png" width="180" alt="Journal"> | <img src="screenshots/android-phone/03-passport.png" width="180" alt="Passport"> | <img src="screenshots/android-phone/04-collection.png" width="180" alt="Collection"> |
+| <img src="screenshots/android-phone/01-lens.webp" width="180" alt="Lens"> | <img src="screenshots/android-phone/02-journal.webp" width="180" alt="Journal"> | <img src="screenshots/android-phone/03-passport.webp" width="180" alt="Passport"> | <img src="screenshots/android-phone/04-collection.webp" width="180" alt="Collection"> |
 
 | Discovery detail | Chat | Explore nearby |
 |---|---|---|
-| <img src="screenshots/android-phone/05-discovery.png" width="180" alt="Discovery"> | <img src="screenshots/android-phone/06-chat.png" width="180" alt="Chat"> | <img src="screenshots/android-phone/07-explore.png" width="180" alt="Explore"> |
+| <img src="screenshots/android-phone/05-discovery.webp" width="180" alt="Discovery"> | <img src="screenshots/android-phone/06-chat.webp" width="180" alt="Chat"> | <img src="screenshots/android-phone/07-explore.webp" width="180" alt="Explore"> |
 
 | Place detail | Menu translation | Settings |
 |---|---|---|
-| <img src="screenshots/android-phone/08-explore-detail.png" width="180" alt="Place"> | <img src="screenshots/android-phone/09-translate.png" width="180" alt="Translate"> | <img src="screenshots/android-phone/10-settings.png" width="180" alt="Settings"> |
+| <img src="screenshots/android-phone/08-explore-detail.webp" width="180" alt="Place"> | <img src="screenshots/android-phone/09-translate.webp" width="180" alt="Translate"> | <img src="screenshots/android-phone/10-settings.webp" width="180" alt="Settings"> |
 
 ### Android — tablet
 
@@ -105,21 +105,21 @@ The wide layout: a vertical navigation rail on the left and two content panes si
 
 | Lens | Journal + passport | Collection |
 |---|---|---|
-| <img src="screenshots/android-tablet/01-lens.png" width="250" alt="Lens"> | <img src="screenshots/android-tablet/02-journal.png" width="250" alt="Journal"> | <img src="screenshots/android-tablet/03-collection.png" width="250" alt="Collection"> |
+| <img src="screenshots/android-tablet/01-lens.webp" width="250" alt="Lens"> | <img src="screenshots/android-tablet/02-journal.webp" width="250" alt="Journal"> | <img src="screenshots/android-tablet/03-collection.webp" width="250" alt="Collection"> |
 
 | Article + ask the guide | Explore | Settings |
 |---|---|---|
-| <img src="screenshots/android-tablet/04-discovery.png" width="250" alt="Discovery"> | <img src="screenshots/android-tablet/05-explore.png" width="250" alt="Explore"> | <img src="screenshots/android-tablet/06-settings.png" width="250" alt="Settings"> |
+| <img src="screenshots/android-tablet/04-discovery.webp" width="250" alt="Discovery"> | <img src="screenshots/android-tablet/05-explore.webp" width="250" alt="Explore"> | <img src="screenshots/android-tablet/06-settings.webp" width="250" alt="Settings"> |
 
 ### iOS — iPhone
 
 | Lens | Journal | Passport | Collection |
 |---|---|---|---|
-| <img src="screenshots/ios-phone/01-lens.png" width="180" alt="Lens"> | <img src="screenshots/ios-phone/02-journal.png" width="180" alt="Journal"> | <img src="screenshots/ios-phone/03-passport.png" width="180" alt="Passport"> | <img src="screenshots/ios-phone/04-collection.png" width="180" alt="Collection"> |
+| <img src="screenshots/ios-phone/01-lens.webp" width="180" alt="Lens"> | <img src="screenshots/ios-phone/02-journal.webp" width="180" alt="Journal"> | <img src="screenshots/ios-phone/03-passport.webp" width="180" alt="Passport"> | <img src="screenshots/ios-phone/04-collection.webp" width="180" alt="Collection"> |
 
 | Discovery detail | Chat | Explore (MapKit) | Settings |
 |---|---|---|---|
-| <img src="screenshots/ios-phone/05-discovery.png" width="180" alt="Discovery"> | <img src="screenshots/ios-phone/06-chat.png" width="180" alt="Chat"> | <img src="screenshots/ios-phone/07-explore.png" width="180" alt="Explore"> | <img src="screenshots/ios-phone/08-settings.png" width="180" alt="Settings"> |
+| <img src="screenshots/ios-phone/05-discovery.webp" width="180" alt="Discovery"> | <img src="screenshots/ios-phone/06-chat.webp" width="180" alt="Chat"> | <img src="screenshots/ios-phone/07-explore.webp" width="180" alt="Explore"> | <img src="screenshots/ios-phone/08-settings.webp" width="180" alt="Settings"> |
 
 > The viewfinder is blank in the Lens shots because the iOS Simulator has no camera. Everything
 > else on the screen — the modes, the shutter, the recent-capture pile — is real.
@@ -128,11 +128,11 @@ The wide layout: a vertical navigation rail on the left and two content panes si
 
 | Lens | Journal + passport | Collection |
 |---|---|---|
-| <img src="screenshots/ios-ipad/01-lens.png" width="250" alt="Lens"> | <img src="screenshots/ios-ipad/02-journal.png" width="250" alt="Journal"> | <img src="screenshots/ios-ipad/03-collection.png" width="250" alt="Collection"> |
+| <img src="screenshots/ios-ipad/01-lens.webp" width="250" alt="Lens"> | <img src="screenshots/ios-ipad/02-journal.webp" width="250" alt="Journal"> | <img src="screenshots/ios-ipad/03-collection.webp" width="250" alt="Collection"> |
 
 | Article + ask the guide | Explore | Settings |
 |---|---|---|
-| <img src="screenshots/ios-ipad/04-discovery.png" width="250" alt="Discovery"> | <img src="screenshots/ios-ipad/05-explore.png" width="250" alt="Explore"> | <img src="screenshots/ios-ipad/06-settings.png" width="250" alt="Settings"> |
+| <img src="screenshots/ios-ipad/04-discovery.webp" width="250" alt="Discovery"> | <img src="screenshots/ios-ipad/05-explore.webp" width="250" alt="Explore"> | <img src="screenshots/ios-ipad/06-settings.webp" width="250" alt="Settings"> |
 
 > **Three of the four Explore shots show restaurants and no landmarks.** Overpass (the
 > OpenStreetMap query server) rate-limits per IP, and the sights half of the query is the

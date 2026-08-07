@@ -84,15 +84,15 @@ Dữ liệu là bộ demo 24 điểm từ Sa Pa tới Cần Thơ (xem
 
 | Ống kính | Nhật ký | Hộ chiếu du lịch | Bộ sưu tập văn hoá |
 |---|---|---|---|
-| <img src="screenshots/android-phone/01-lens.png" width="180" alt="Ống kính"> | <img src="screenshots/android-phone/02-journal.png" width="180" alt="Nhật ký"> | <img src="screenshots/android-phone/03-passport.png" width="180" alt="Hộ chiếu"> | <img src="screenshots/android-phone/04-collection.png" width="180" alt="Bộ sưu tập"> |
+| <img src="screenshots/android-phone/01-lens.webp" width="180" alt="Ống kính"> | <img src="screenshots/android-phone/02-journal.webp" width="180" alt="Nhật ký"> | <img src="screenshots/android-phone/03-passport.webp" width="180" alt="Hộ chiếu"> | <img src="screenshots/android-phone/04-collection.webp" width="180" alt="Bộ sưu tập"> |
 
 | Chi tiết khám phá | Trò chuyện | Khám phá quanh đây |
 |---|---|---|
-| <img src="screenshots/android-phone/05-discovery.png" width="180" alt="Chi tiết"> | <img src="screenshots/android-phone/06-chat.png" width="180" alt="Trò chuyện"> | <img src="screenshots/android-phone/07-explore.png" width="180" alt="Khám phá"> |
+| <img src="screenshots/android-phone/05-discovery.webp" width="180" alt="Chi tiết"> | <img src="screenshots/android-phone/06-chat.webp" width="180" alt="Trò chuyện"> | <img src="screenshots/android-phone/07-explore.webp" width="180" alt="Khám phá"> |
 
 | Chi tiết địa điểm | Dịch thực đơn | Cài đặt |
 |---|---|---|
-| <img src="screenshots/android-phone/08-explore-detail.png" width="180" alt="Địa điểm"> | <img src="screenshots/android-phone/09-translate.png" width="180" alt="Dịch"> | <img src="screenshots/android-phone/10-settings.png" width="180" alt="Cài đặt"> |
+| <img src="screenshots/android-phone/08-explore-detail.webp" width="180" alt="Địa điểm"> | <img src="screenshots/android-phone/09-translate.webp" width="180" alt="Dịch"> | <img src="screenshots/android-phone/10-settings.webp" width="180" alt="Cài đặt"> |
 
 ### Android — máy tính bảng
 
@@ -100,21 +100,21 @@ Bố cục rộng: thanh điều hướng dọc bên trái, hai khung nội dung
 
 | Ống kính | Nhật ký + Hộ chiếu | Bộ sưu tập |
 |---|---|---|
-| <img src="screenshots/android-tablet/01-lens.png" width="250" alt="Ống kính"> | <img src="screenshots/android-tablet/02-journal.png" width="250" alt="Nhật ký"> | <img src="screenshots/android-tablet/03-collection.png" width="250" alt="Bộ sưu tập"> |
+| <img src="screenshots/android-tablet/01-lens.webp" width="250" alt="Ống kính"> | <img src="screenshots/android-tablet/02-journal.webp" width="250" alt="Nhật ký"> | <img src="screenshots/android-tablet/03-collection.webp" width="250" alt="Bộ sưu tập"> |
 
 | Bài viết + Hỏi hướng dẫn viên | Khám phá | Cài đặt |
 |---|---|---|
-| <img src="screenshots/android-tablet/04-discovery.png" width="250" alt="Chi tiết"> | <img src="screenshots/android-tablet/05-explore.png" width="250" alt="Khám phá"> | <img src="screenshots/android-tablet/06-settings.png" width="250" alt="Cài đặt"> |
+| <img src="screenshots/android-tablet/04-discovery.webp" width="250" alt="Chi tiết"> | <img src="screenshots/android-tablet/05-explore.webp" width="250" alt="Khám phá"> | <img src="screenshots/android-tablet/06-settings.webp" width="250" alt="Cài đặt"> |
 
 ### iOS — iPhone
 
 | Ống kính | Nhật ký | Hộ chiếu | Bộ sưu tập |
 |---|---|---|---|
-| <img src="screenshots/ios-phone/01-lens.png" width="180" alt="Ống kính"> | <img src="screenshots/ios-phone/02-journal.png" width="180" alt="Nhật ký"> | <img src="screenshots/ios-phone/03-passport.png" width="180" alt="Hộ chiếu"> | <img src="screenshots/ios-phone/04-collection.png" width="180" alt="Bộ sưu tập"> |
+| <img src="screenshots/ios-phone/01-lens.webp" width="180" alt="Ống kính"> | <img src="screenshots/ios-phone/02-journal.webp" width="180" alt="Nhật ký"> | <img src="screenshots/ios-phone/03-passport.webp" width="180" alt="Hộ chiếu"> | <img src="screenshots/ios-phone/04-collection.webp" width="180" alt="Bộ sưu tập"> |
 
 | Chi tiết khám phá | Trò chuyện | Khám phá (MapKit) | Cài đặt |
 |---|---|---|---|
-| <img src="screenshots/ios-phone/05-discovery.png" width="180" alt="Chi tiết"> | <img src="screenshots/ios-phone/06-chat.png" width="180" alt="Trò chuyện"> | <img src="screenshots/ios-phone/07-explore.png" width="180" alt="Khám phá"> | <img src="screenshots/ios-phone/08-settings.png" width="180" alt="Cài đặt"> |
+| <img src="screenshots/ios-phone/05-discovery.webp" width="180" alt="Chi tiết"> | <img src="screenshots/ios-phone/06-chat.webp" width="180" alt="Trò chuyện"> | <img src="screenshots/ios-phone/07-explore.webp" width="180" alt="Khám phá"> | <img src="screenshots/ios-phone/08-settings.webp" width="180" alt="Cài đặt"> |
 
 > Khung ngắm trong ảnh Ống kính trắng vì máy ảo iOS không có camera. Phần còn lại của màn hình
 > — chế độ, nút chụp, chồng ảnh vừa chụp — là thật.
@@ -123,11 +123,11 @@ Bố cục rộng: thanh điều hướng dọc bên trái, hai khung nội dung
 
 | Ống kính | Nhật ký + Hộ chiếu | Bộ sưu tập |
 |---|---|---|
-| <img src="screenshots/ios-ipad/01-lens.png" width="250" alt="Ống kính"> | <img src="screenshots/ios-ipad/02-journal.png" width="250" alt="Nhật ký"> | <img src="screenshots/ios-ipad/03-collection.png" width="250" alt="Bộ sưu tập"> |
+| <img src="screenshots/ios-ipad/01-lens.webp" width="250" alt="Ống kính"> | <img src="screenshots/ios-ipad/02-journal.webp" width="250" alt="Nhật ký"> | <img src="screenshots/ios-ipad/03-collection.webp" width="250" alt="Bộ sưu tập"> |
 
 | Bài viết + Hỏi hướng dẫn viên | Khám phá | Cài đặt |
 |---|---|---|
-| <img src="screenshots/ios-ipad/04-discovery.png" width="250" alt="Chi tiết"> | <img src="screenshots/ios-ipad/05-explore.png" width="250" alt="Khám phá"> | <img src="screenshots/ios-ipad/06-settings.png" width="250" alt="Cài đặt"> |
+| <img src="screenshots/ios-ipad/04-discovery.webp" width="250" alt="Chi tiết"> | <img src="screenshots/ios-ipad/05-explore.webp" width="250" alt="Khám phá"> | <img src="screenshots/ios-ipad/06-settings.webp" width="250" alt="Cài đặt"> |
 
 > **Ảnh Khám phá chỉ có quán ăn, không có di tích ở ba trong bốn bộ.** Overpass (máy chủ
 > OpenStreetMap) giới hạn truy vấn theo IP, và nhánh truy vấn di tích nặng hơn nên bị từ chối
