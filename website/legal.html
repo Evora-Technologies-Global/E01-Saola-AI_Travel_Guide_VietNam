@@ -1,0 +1,645 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Saola — Chính sách bảo mật & Điều khoản dịch vụ | Privacy Policy & Terms of Service</title>
+<meta name="description" content="Chính sách bảo mật và điều khoản dịch vụ của ứng dụng Saola — Evora Technologies Global. Privacy policy and terms of service for the Saola app.">
+<meta name="robots" content="index, follow">
+<link rel="icon" type="image/png" href="logo.png">
+<link rel="apple-touch-icon" href="logo.png">
+<meta name="theme-color" content="#FFFBF8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#15120F" media="(prefers-color-scheme: dark)">
+<meta property="og:title" content="Saola — Privacy Policy & Terms of Service">
+<meta property="og:description" content="Chính sách bảo mật và điều khoản dịch vụ của ứng dụng Saola. Privacy policy and terms of service for the Saola app.">
+<meta property="og:image" content="logo.png">
+<meta property="og:type" content="website">
+<style>
+  /* The app's palette, taken from
+     shared/.../core/designsystem/theme/Color.kt and Theme.kt:
+     lacquer red as primary, temple gold as secondary, warm sand neutrals. */
+  :root {
+    --bg: #FFFBF8;          /* SandLightest — surface */
+    --bg-soft: #F6EFE8;     /* SandLight — surfaceVariant */
+    --bg-card: #FFFFFF;
+    --fg: #15120F;          /* InkDarkest — onSurface */
+    --fg-soft: #52443C;     /* InkSoft — onSurfaceVariant */
+    --line: #E6DDD4;        /* SandMid — outlineVariant */
+    --accent: #B3261E;      /* LacquerRed — primary */
+    --accent-soft: #FFDAD6; /* LacquerContainer */
+    --on-accent: #FFFFFF;   /* onPrimary */
+    --gold: #B58A28;        /* TempleGold — secondary */
+    --radius: 14px;
+    --maxw: 780px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #15120F;          /* InkDarkest */
+      --bg-soft: #201B17;     /* InkDark — surfaceContainer */
+      --bg-card: #201B17;
+      --fg: #F6EFE8;          /* SandLight — onSurface */
+      --fg-soft: #D5C3B7;     /* onSurfaceVariant */
+      --line: #2C2622;        /* InkMid */
+      --accent: #FFB4AB;      /* dark primary */
+      --accent-soft: #73342D; /* LacquerContainerDark */
+      --on-accent: #690005;   /* dark onPrimary */
+      --gold: #E0B04A;        /* TempleGoldLight */
+    }
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: 88px; -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font: 16px/1.7 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+
+  /* language switching: one of the two is always hidden */
+  body[data-lang="vi"] [data-l="en"] { display: none; }
+  body[data-lang="en"] [data-l="vi"] { display: none; }
+
+  /* tab switching. With JS off, both documents stay visible — which is also what a
+     crawler that does not run scripts will read. */
+  body.js [data-doc] { display: none; }
+  body.js [data-doc].is-active { display: block; }
+
+  header.top {
+    position: sticky; top: 0; z-index: 10;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: saturate(180%) blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+  .bar {
+    max-width: var(--maxw); margin: 0 auto; padding: 12px 20px;
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  }
+  .brand { font-weight: 700; letter-spacing: -.01em; margin-right: auto; display: flex; align-items: center; gap: 10px; }
+  .brand img { width: 34px; height: 34px; border-radius: 50%; display: block; flex: none; }
+  .brand .name { display: flex; flex-direction: column; line-height: 1.25; }
+  .brand small { font-weight: 500; color: var(--fg-soft); font-size: 12.5px; }
+
+  .switch { display: flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; }
+  .switch button {
+    font: inherit; font-size: 13px; font-weight: 600;
+    padding: 6px 14px; border: 0; background: transparent; color: var(--fg-soft); cursor: pointer;
+  }
+  .switch button[aria-pressed="true"] { background: var(--accent); color: var(--on-accent); }
+
+  nav.tabs { max-width: var(--maxw); margin: 0 auto; padding: 0 20px 12px; display: flex; gap: 8px; }
+  nav.tabs button {
+    font: inherit; font-size: 14px; font-weight: 600; cursor: pointer;
+    padding: 8px 16px; border-radius: 999px; border: 1px solid var(--line);
+    background: transparent; color: var(--fg-soft);
+  }
+  nav.tabs button[aria-selected="true"] { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+
+  main { max-width: var(--maxw); margin: 0 auto; padding: 28px 20px 80px; }
+
+  h1 { font-size: clamp(26px, 5vw, 34px); line-height: 1.25; letter-spacing: -.02em; margin: 8px 0 6px; }
+  h2 {
+    font-size: clamp(19px, 3.4vw, 22px); letter-spacing: -.01em;
+    margin: 44px 0 12px; padding-top: 22px; border-top: 1px solid var(--line);
+  }
+  h3 { font-size: 16px; margin: 26px 0 8px; }
+  p, li { color: var(--fg); }
+  .lede { color: var(--fg-soft); font-size: 17px; }
+  .meta { color: var(--fg-soft); font-size: 14px; margin: 0 0 4px; }
+  a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+
+  ul, ol { padding-left: 20px; }
+  li { margin: 6px 0; }
+  strong { font-weight: 650; }
+
+  .cards { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); margin: 24px 0 8px; }
+  .card {
+    background: var(--bg-card); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 16px 16px 14px;
+  }
+  .card h3 { margin: 0 0 6px; font-size: 15px; }
+  .card p { margin: 0; font-size: 14.5px; color: var(--fg-soft); line-height: 1.6; }
+  .card .tick { color: var(--gold); font-weight: 700; margin-right: 6px; }
+
+  .note {
+    background: var(--bg-soft); border: 1px solid var(--line);
+    border-left: 3px solid var(--gold); border-radius: 10px;
+    padding: 14px 16px; margin: 18px 0; font-size: 15px;
+  }
+  .note p { margin: 0; }
+  .note p + p { margin-top: 8px; }
+
+  .table-wrap { overflow-x: auto; margin: 16px 0; -webkit-overflow-scrolling: touch; }
+  table { border-collapse: collapse; width: 100%; min-width: 460px; font-size: 14.5px; }
+  th, td { text-align: left; vertical-align: top; padding: 10px 12px; border-bottom: 1px solid var(--line); }
+  th { background: var(--bg-soft); font-weight: 650; white-space: nowrap; }
+  tr:last-child td { border-bottom: 0; }
+
+  footer {
+    border-top: 1px solid var(--line); background: var(--bg-soft);
+    padding: 28px 20px 44px; color: var(--fg-soft); font-size: 14px;
+  }
+  footer .inner { max-width: var(--maxw); margin: 0 auto; }
+  footer p { margin: 4px 0; }
+  footer .foot-mark { width: 48px; height: 48px; border-radius: 50%; display: block; margin-bottom: 14px; opacity: .9; }
+
+  @media (max-width: 480px) {
+    .bar { padding: 10px 16px; }
+    nav.tabs { padding: 0 16px 10px; }
+    main { padding: 22px 16px 64px; }
+    h2 { margin-top: 36px; }
+  }
+</style>
+</head>
+<body data-lang="vi">
+
+<header class="top">
+  <div class="bar">
+    <div class="brand">
+      <img src="logo.png" alt="Saola" width="34" height="34">
+      <span class="name">
+        Saola
+        <small data-l="vi">bởi Evora Technologies Global</small><small data-l="en">by Evora Technologies Global</small>
+      </span>
+    </div>
+    <div class="switch" role="group" aria-label="Language / Ngôn ngữ">
+      <button type="button" id="btn-vi" aria-pressed="true">Tiếng Việt</button>
+      <button type="button" id="btn-en" aria-pressed="false">English</button>
+    </div>
+  </div>
+  <nav class="tabs" role="tablist">
+    <button type="button" id="tab-privacy" role="tab" aria-selected="true" aria-controls="privacy">
+      <span data-l="vi">Chính sách bảo mật</span><span data-l="en">Privacy Policy</span>
+    </button>
+    <button type="button" id="tab-terms" role="tab" aria-selected="false" aria-controls="terms">
+      <span data-l="vi">Điều khoản dịch vụ</span><span data-l="en">Terms of Service</span>
+    </button>
+  </nav>
+</header>
+
+<main>
+
+<!-- ============================== PRIVACY ============================== -->
+<section id="privacy" data-doc class="is-active" role="tabpanel" aria-labelledby="tab-privacy">
+
+  <p class="meta">
+    <span data-l="vi">Có hiệu lực từ 07/08/2026 · Áp dụng cho Saola phiên bản 1.0.0 (Android &amp; iOS)</span>
+    <span data-l="en">Effective 7 August 2026 · Applies to Saola version 1.0.0 (Android &amp; iOS)</span>
+  </p>
+  <h1><span data-l="vi">Chính sách bảo mật</span><span data-l="en">Privacy Policy</span></h1>
+  <p class="lede">
+    <span data-l="vi">Saola không có tài khoản, không có đăng nhập, và chúng tôi không vận hành máy chủ nào để lưu dữ liệu của bạn. Ảnh, nhật ký hành trình, ghi chú và hội thoại của bạn nằm trên chính máy bạn.</span>
+    <span data-l="en">Saola has no account, no login, and we run no server that keeps anything about you. Your photographs, journal, notes and conversations live on your own device.</span>
+  </p>
+
+  <div class="cards">
+    <div class="card">
+      <h3><span class="tick">✓</span><span data-l="vi">Không bán dữ liệu</span><span data-l="en">We never sell your data</span></h3>
+      <p><span data-l="vi">Chúng tôi không bán, cho thuê hay trao đổi dữ liệu của bạn với bất kỳ ai. Ảnh, nhật ký, ghi chú và hội thoại của bạn không rời khỏi máy.</span><span data-l="en">We do not sell, rent or trade your data to anyone. Your photographs, journal, notes and conversations never leave your device.</span></p>
+    </div>
+    <div class="card">
+      <h3><span class="tick">✓</span><span data-l="vi">Không chạm vào ngân hàng</span><span data-l="en">We never see your card</span></h3>
+      <p><span data-l="vi">Ứng dụng không kết nối tới ngân hàng, ví điện tử hay cổng thanh toán nào, và không bao giờ hỏi số thẻ, mật khẩu ngân hàng, mã PIN hay OTP.</span><span data-l="en">The app connects to no bank, e-wallet or payment gateway, and never asks for a card number, a banking password, a PIN or an OTP.</span></p>
+    </div>
+    <div class="card">
+      <h3><span class="tick">✓</span><span data-l="vi">Tôn trọng lịch sử</span><span data-l="en">Respect for history</span></h3>
+      <p><span data-l="vi">Lịch sử Việt Nam được kể đúng và trân trọng. Chỗ nào không biết thì nói thẳng là không biết, không bịa niên đại hay triều đại.</span><span data-l="en">Vietnamese history is told accurately and respectfully. Where the app does not know, it says so instead of inventing a date or a dynasty.</span></p>
+    </div>
+    <div class="card">
+      <h3><span class="tick">✓</span><span data-l="vi">Không kích động chiến tranh</span><span data-l="en">No incitement to war</span></h3>
+      <p><span data-l="vi">Không tô hồng bạo lực, vũ khí hay chiến tranh, không khơi thù hằn giữa quốc gia, vùng miền, dân tộc hay tôn giáo. Các di tích chiến tranh được kể theo hướng tưởng niệm.</span><span data-l="en">Never glorifies violence, weapons or war, and never stirs hostility between countries, regions, ethnic groups or faiths. War sites are told as remembrance.</span></p>
+    </div>
+    <div class="card">
+      <h3><span class="tick">✓</span><span data-l="vi">Không lừa đảo</span><span data-l="en">No deception</span></h3>
+      <p><span data-l="vi">Chúng tôi không bao giờ nhắn tin đòi tiền hay xin thông tin đăng nhập. Bất kỳ màn hình nào tự nhận là Saola mà hỏi những thứ đó đều không phải chúng tôi.</span><span data-l="en">We never message you asking for money or credentials. Any screen claiming to be Saola that asks for them is not us.</span></p>
+    </div>
+    <div class="card">
+      <h3><span class="tick">✓</span><span data-l="vi">An toàn cho trẻ em</span><span data-l="en">Safe for children</span></h3>
+      <p><span data-l="vi">Không nội dung người lớn, không cờ bạc, không bạo lực mô phỏng. Không tài khoản, không tin nhắn, không bình luận — nên không ai lạ tiếp cận được ai.</span><span data-l="en">No adult content, no gambling, no simulated violence. No accounts, no messaging, no comments — so no stranger can reach anyone.</span></p>
+    </div>
+  </div>
+
+  <h2><span data-l="vi">1. Dữ liệu nằm ở đâu</span><span data-l="en">1. Where your data lives</span></h2>
+  <p>
+    <span data-l="vi">Toàn bộ những thứ sau nằm trong vùng lưu trữ riêng của ứng dụng trên máy bạn — nơi hệ điều hành ngăn các ứng dụng khác đọc vào — và biến mất khi bạn gỡ ứng dụng.</span>
+    <span data-l="en">All of the following lives in the app's private storage on your device — a directory the operating system isolates from other apps — and is gone when you uninstall the app.</span>
+  </p>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th><span data-l="vi">Dữ liệu</span><span data-l="en">Data</span></th>
+          <th><span data-l="vi">Lưu bằng</span><span data-l="en">Stored as</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span data-l="vi">Khám phá: tên, mô tả, phân loại, độ tin cậy, toạ độ nơi chụp, tỉnh thành</span><span data-l="en">Discoveries: name, description, category, confidence, the coordinates where you shot, the province</span></td>
+          <td><span data-l="vi">Cơ sở dữ liệu SQLite trên máy</span><span data-l="en">An on-device SQLite database</span></td>
+        </tr>
+        <tr>
+          <td><span data-l="vi">Hội thoại với hướng dẫn viên AI, ghi chú, bản dịch, tóm tắt ngày</span><span data-l="en">Conversations with the AI guide, notes, translations, day summaries</span></td>
+          <td><span data-l="vi">Cùng cơ sở dữ liệu đó</span><span data-l="en">The same database</span></td>
+        </tr>
+        <tr>
+          <td><span data-l="vi">Ảnh bạn chụp hoặc chọn từ thư viện</span><span data-l="en">Photographs you take or import</span></td>
+          <td><span data-l="vi">Tệp JPEG trong thư mục riêng của ứng dụng</span><span data-l="en">JPEG files in the app's own directory</span></td>
+        </tr>
+        <tr>
+          <td><span data-l="vi">Tuỳ chọn: giao diện, đọc thành tiếng, vị trí</span><span data-l="en">Preferences: theme, narration, location</span></td>
+          <td><span data-l="vi">Bộ nhớ tuỳ chọn của hệ điều hành</span><span data-l="en">The platform's preference store</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    <span data-l="vi"><strong>Chúng tôi không đọc được bất kỳ thứ nào trong số đó.</strong> Không có bản sao nào được tải lên máy chủ của chúng tôi, vì không tồn tại máy chủ nào như vậy.</span>
+    <span data-l="en"><strong>We cannot read any of it.</strong> No copy is uploaded to a server of ours, because there is no such server.</span>
+  </p>
+  <p>
+    <span data-l="vi">Hệ điều hành của bạn có thể đưa dữ liệu ứng dụng vào bản sao lưu mà <em>bạn</em> đã bật — Google One trên Android, iCloud trên iOS. Bản sao lưu đó thuộc về bạn và do Google hoặc Apple quản lý; chúng tôi không truy cập được, và bạn có thể tắt nó trong cài đặt máy.</span>
+    <span data-l="en">Your operating system may include the app's data in the backup <em>you</em> have enabled — Google One on Android, iCloud on iOS. That backup is yours and is governed by Google or Apple; we have no access to it, and you can exclude the app in your device settings.</span>
+  </p>
+
+  <h2><span data-l="vi">2. Những gì rời khỏi máy bạn</span><span data-l="en">2. What leaves your device</span></h2>
+  <p>
+    <span data-l="vi">Không có gì được gửi đi theo lịch hay chạy nền. Mỗi mục dưới đây chỉ xảy ra ngay khi bạn yêu cầu — trừ quảng cáo, được tải khi màn hình có chỗ hiển thị (mục 2.6).</span>
+    <span data-l="en">Nothing is sent on a schedule or in the background. Each of the following happens only when you ask for it — except advertising, which is fetched when a screen has a slot to fill (section 2.6).</span>
+  </p>
+
+  <h3><span data-l="vi">2.1 Ảnh cần nhận diện → Google (Gemini)</span><span data-l="en">2.1 The photo being recognised → Google (Gemini)</span></h3>
+  <p>
+    <span data-l="vi">Khi bạn bấm chụp hoặc chọn ảnh từ thư viện, ứng dụng gửi <strong>chính bức ảnh đó</strong>, chế độ ống kính, ngôn ngữ máy, và — nếu bạn đã cho phép vị trí — toạ độ đã làm tròn, để AI phân biệt được hai ngôi chùa trông giống nhau. Không gửi kèm tên, email, mã định danh thiết bị, danh bạ, hay bất kỳ ảnh nào khác. Chúng tôi không giữ lại gì: câu trả lời quay về, được ghi vào máy bạn, và phiên đó kết thúc.</span>
+    <span data-l="en">When you press the shutter or pick a picture, the app sends <strong>that one image</strong>, the lens mode, your device language, and — if you granted location — rounded coordinates, so the AI can tell two similar-looking temples apart. It does not send your name, email, device identifier, contacts, or any other photo. We retain nothing: the answer comes back, is written to your device, and the request is over.</span>
+  </p>
+
+  <h3><span data-l="vi">2.2 Vị trí gần đúng → OpenStreetMap</span><span data-l="en">2.2 Your approximate position → OpenStreetMap</span></h3>
+  <p>
+    <span data-l="vi">Khi bạn mở màn hình Khám phá quanh đây, ứng dụng gửi một khung toạ độ quanh vị trí của bạn tới dịch vụ tra cứu công cộng của OpenStreetMap để tìm những nơi đáng ghé trong bán kính 5 km. Không kèm ảnh, không kèm nhật ký, không kèm mã định danh.</span>
+    <span data-l="en">When you open Explore, the app sends a bounding box around your position to OpenStreetMap's public query service, to find what is worth walking to within 5 km. No photograph, no journal content, no identifier goes with it.</span>
+  </p>
+
+  <h3><span data-l="vi">2.3 Tên địa điểm → Wikipedia và Wikimedia Commons</span><span data-l="en">2.3 A place name → Wikipedia and Wikimedia Commons</span></h3>
+  <p>
+    <span data-l="vi">Để lấy đoạn giới thiệu và ảnh minh hoạ cho một địa điểm, ứng dụng gửi <em>tên địa điểm đó</em>. Không gửi kèm gì về bạn.</span>
+    <span data-l="en">To fetch a summary and a picture for a place, the app sends <em>that place's name</em>. Nothing about you goes with it.</span>
+  </p>
+
+  <h3><span data-l="vi">2.4 Bản đồ → Google Maps (Android) hoặc Apple Maps (iOS)</span><span data-l="en">2.4 Map tiles → Google Maps (Android) or Apple Maps (iOS)</span></h3>
+  <p>
+    <span data-l="vi">Khu vực bản đồ đang hiển thị được chính thành phần bản đồ của hệ điều hành tải về. Nếu bạn bấm Chỉ đường, ứng dụng chuyển toạ độ sang ứng dụng bản đồ của máy và dừng lại ở đó.</span>
+    <span data-l="en">The map area on screen is fetched by the platform's own map component. If you tap Directions, the app hands the coordinates to your device's maps app and stops there.</span>
+  </p>
+
+  <h3><span data-l="vi">2.5 Quảng cáo</span><span data-l="en">2.5 Advertising</span></h3>
+  <p>
+    <span data-l="vi">Ứng dụng có thể hiển thị quảng cáo do mạng quảng cáo của Google cung cấp. Khi tải một quảng cáo, mạng đó nhận <strong>mã quảng cáo do hệ điều hành của bạn cấp</strong>, thông tin cơ bản về thiết bị và kết nối, và có thể là vị trí ở mức thô. Đó là mã do máy bạn cấp phát và <strong>bạn đặt lại hoặc xoá được bất cứ lúc nào</strong>.</span>
+    <span data-l="en">The app may display advertising supplied by Google's ad network. When an ad is fetched, that network receives <strong>the advertising identifier your operating system issues</strong>, basic device and connection information, and possibly a coarse location. That identifier belongs to your device and <strong>you can reset or delete it at any time</strong>.</span>
+  </p>
+  <ul>
+    <li><span data-l="vi"><strong>Ảnh, nhật ký, ghi chú và hội thoại của bạn không bao giờ được gửi cho mạng quảng cáo</strong>, và không có gì trong ứng dụng gắn quảng cáo với những nội dung đó.</span><span data-l="en"><strong>Your photographs, journal, notes and conversations are never sent to the ad network</strong>, and nothing in the app ties an ad to that content.</span></li>
+    <li><span data-l="vi"><strong>Chúng tôi không bán dữ liệu của bạn.</strong> Hiển thị quảng cáo không phải là bán dữ liệu: chúng tôi không chuyển giao dữ liệu cá nhân nào của bạn để đổi lấy tiền.</span><span data-l="en"><strong>We do not sell your data.</strong> Showing an ad is not selling data: we hand over no personal data of yours in exchange for money.</span></li>
+    <li><span data-l="vi"><strong>Trên Android:</strong> <em>Cài đặt › Google › Quảng cáo</em> để đặt lại hoặc xoá mã quảng cáo, và tắt quảng cáo được cá nhân hoá.</span><span data-l="en"><strong>On Android:</strong> <em>Settings › Google › Ads</em> lets you reset or delete the advertising ID and turn off personalised ads.</span></li>
+    <li><span data-l="vi"><strong>Trên iOS:</strong> quảng cáo được cá nhân hoá chỉ diễn ra nếu bạn đồng ý ở hộp thoại theo dõi của hệ thống; từ chối thì bạn vẫn thấy quảng cáo, nhưng không dựa trên mã định danh đó. Đổi ý bất cứ lúc nào tại <em>Cài đặt › Quyền riêng tư &amp; Bảo mật › Theo dõi</em>.</span><span data-l="en"><strong>On iOS:</strong> personalised advertising happens only if you allow it in the system tracking prompt; decline and you still see ads, just not based on that identifier. Change your mind any time in <em>Settings › Privacy &amp; Security › Tracking</em>.</span></li>
+    <li><span data-l="vi">Quảng cáo phải tuân theo chính sách nội dung của mạng quảng cáo. Nếu bạn thấy một quảng cáo không phù hợp, hãy báo cho chúng tôi và chúng tôi sẽ chặn danh mục đó.</span><span data-l="en">Ads are subject to the ad network's content policies. If you see one that does not belong here, tell us and we will block that category.</span></li>
+  </ul>
+
+  <h3><span data-l="vi">2.6 Làm hoàn toàn trên máy, không cần mạng</span><span data-l="en">2.6 Done entirely on your device, with no network</span></h3>
+  <ul>
+    <li><span data-l="vi"><strong>Đọc chữ trên thực đơn và biển hiệu</strong> — chữ không rời khỏi máy ở bước này.</span><span data-l="en"><strong>Reading text on menus and signs</strong> — the text never leaves the phone for this step.</span></li>
+    <li><span data-l="vi"><strong>Đọc thành tiếng</strong> — dùng bộ đọc của hệ điều hành.</span><span data-l="en"><strong>Reading answers aloud</strong> — the platform's own speech engine.</span></li>
+    <li><span data-l="vi"><strong>Hộ chiếu du lịch, bộ sưu tập văn hoá, nhật ký</strong> — đọc từ dữ liệu trên máy, dùng được khi không có mạng.</span><span data-l="en"><strong>The passport, the collection and the journal</strong> — read from local data and work offline.</span></li>
+  </ul>
+
+  <h2><span data-l="vi">3. Những gì chúng tôi không làm</span><span data-l="en">3. What we never do</span></h2>
+  <ul>
+    <li><span data-l="vi"><strong>Không thu thập dữ liệu trái phép.</strong> Không quyền nào được dùng cho mục đích khác với điều đã nói khi xin.</span><span data-l="en"><strong>No unauthorised collection.</strong> No permission is used for a purpose other than the one stated when we asked for it.</span></li>
+    <li><span data-l="vi"><strong>Không bán, cho thuê, trao đổi hay chia sẻ dữ liệu</strong> với bất kỳ ai, với bất kỳ giá nào.</span><span data-l="en"><strong>No selling, renting, trading or sharing</strong> your data with anyone, for any price.</span></li>
+    <li><span data-l="vi"><strong>Không dùng nội dung của bạn để nhắm quảng cáo hay phân tích hành vi.</strong> Ảnh, nhật ký, ghi chú và hội thoại không được gửi tới mạng quảng cáo hay bất kỳ dịch vụ đo lường nào.</span><span data-l="en"><strong>No targeting or profiling from your content.</strong> Your photographs, journal, notes and conversations go to no ad network and no measurement service.</span></li>
+    <li><span data-l="vi"><strong>Không đọc danh bạ, lịch, tin nhắn, nhật ký cuộc gọi, micro, bộ nhớ tạm</strong>, và không đọc phần còn lại của thư viện ảnh — bộ chọn ảnh của hệ điều hành chỉ trả về đúng tấm bạn chọn.</span><span data-l="en"><strong>No contacts, calendar, SMS, call log, microphone or clipboard</strong>, and not the rest of your photo library — the system picker returns only the picture you select.</span></li>
+    <li><span data-l="vi"><strong>Bản thân chúng tôi không lưu mã định danh thiết bị nào</strong> và không lập hồ sơ nhận dạng máy bạn. Mã quảng cáo do hệ điều hành cấp chỉ được mạng quảng cáo dùng, theo mục 2.5, và bạn đặt lại được.</span><span data-l="en"><strong>We ourselves store no device identifier</strong> and do not fingerprint your device. The advertising identifier issued by your operating system is used by the ad network only, as described in section 2.5, and you can reset it.</span></li>
+    <li><span data-l="vi"><strong>Không kết nối tới ngân hàng, ví điện tử, cổng thanh toán hay tổ chức tài chính nào</strong>, và không bao giờ hỏi số thẻ, số tài khoản, mật khẩu ngân hàng, mã PIN, OTP, số CCCD hay dữ liệu sinh trắc học.</span><span data-l="en"><strong>No connection to any bank, e-wallet, payment gateway or financial institution</strong>, and never a request for a card number, bank account, banking password, PIN, OTP, national ID or biometric data.</span></li>
+  </ul>
+
+  <h2><span data-l="vi">4. Quyền truy cập và cách rút lại</span><span data-l="en">4. Permissions, and how to withdraw them</span></h2>
+  <p>
+    <span data-l="vi">Ứng dụng xin từng quyền đúng vào lúc cần, giải thích ngay tại chỗ, và vẫn chạy — chỉ giảm một tính năng — nếu bạn từ chối.</span>
+    <span data-l="en">The app asks for each permission at the moment it is needed, explains why on the spot, and keeps working — with one feature reduced — if you refuse.</span>
+  </p>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th><span data-l="vi">Quyền</span><span data-l="en">Permission</span></th>
+          <th><span data-l="vi">Dùng để</span><span data-l="en">Used for</span></th>
+          <th><span data-l="vi">Nếu từ chối</span><span data-l="en">If refused</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span data-l="vi">Máy ảnh</span><span data-l="en">Camera</span></td>
+          <td><span data-l="vi">Nhận diện thứ bạn đang hướng ống kính vào, đọc thực đơn và biển hiệu</span><span data-l="en">Recognising what you point at, reading menus and signs</span></td>
+          <td><span data-l="vi">Vẫn chọn được ảnh có sẵn từ thư viện</span><span data-l="en">You can still import a picture</span></td>
+        </tr>
+        <tr>
+          <td><span data-l="vi">Thư viện ảnh</span><span data-l="en">Photo library</span></td>
+          <td><span data-l="vi">Lấy đúng tấm ảnh bạn chọn</span><span data-l="en">Taking only the picture you select</span></td>
+          <td><span data-l="vi">Vẫn dùng được máy ảnh</span><span data-l="en">You can still use the camera</span></td>
+        </tr>
+        <tr>
+          <td><span data-l="vi">Vị trí</span><span data-l="en">Location</span></td>
+          <td><span data-l="vi">Đóng dấu ảnh vào đúng tỉnh trên hộ chiếu, phân biệt các địa điểm giống nhau, tìm nơi gần đây</span><span data-l="en">Stamping a photo onto the right province, telling similar places apart, finding what is nearby</span></td>
+          <td><span data-l="vi">Nhận diện vẫn chạy; hộ chiếu không tô được và Khám phá không tìm được</span><span data-l="en">Recognition still works; the passport cannot fill in and Explore cannot search</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    <span data-l="vi">Bạn rút lại bất kỳ quyền nào trong <em>Cài đặt Android › Ứng dụng › Saola › Quyền</em> hoặc <em>Cài đặt iOS › Saola</em>. Riêng vị trí có thể tắt ngay trong ứng dụng.</span>
+    <span data-l="en">You can withdraw any of them in <em>Android Settings › Apps › Saola › Permissions</em> or <em>iOS Settings › Saola</em>. Location can also be switched off inside the app.</span>
+  </p>
+
+  <h2><span data-l="vi">5. Trẻ em</span><span data-l="en">5. Children</span></h2>
+  <p>
+    <span data-l="vi">Saola là ứng dụng du lịch cho công chúng nói chung, <strong>không hướng tới trẻ em dưới 13 tuổi</strong>, và chúng tôi không cố ý thu thập dữ liệu cá nhân của trẻ — thực tế là không thu thập của ai, vì không có tài khoản và không có máy chủ.</span>
+    <span data-l="en">Saola is a travel app for a general audience. It is <strong>not directed at children under 13</strong>, and we do not knowingly collect a child's personal data — in fact we collect no one's, because there is no account and no server.</span>
+  </p>
+  <ul>
+    <li><span data-l="vi"><strong>Không có bề mặt xã hội nào:</strong> không tài khoản, không hồ sơ, không nhắn tin, không bình luận, không kết bạn. Không có đường nào để người lạ tiếp cận một đứa trẻ qua ứng dụng này.</span><span data-l="en"><strong>No social surface at all:</strong> no accounts, no profiles, no messaging, no comments, no friend lists. There is no path for a stranger to reach a child through this app.</span></li>
+    <li><span data-l="vi"><strong>Không nội dung người lớn, không cờ bạc, không cổ vũ rượu bia thuốc lá, không bạo lực mô phỏng</strong>, và ứng dụng cũng không tạo ra chúng: mọi câu trả lời của AI đều bị ràng buộc trong phạm vi du lịch, văn hoá, lịch sử và kiến thức phổ thông. Hệ thống an toàn của Google là lớp lọc thứ hai, độc lập.</span><span data-l="en"><strong>No adult content, no gambling, no alcohol or tobacco promotion, no simulated violence</strong>, and the app generates none: every AI answer is constrained to travel, culture, history and general knowledge. Google's own safety systems act as a second, independent filter.</span></li>
+    <li><span data-l="vi"><strong>Ảnh có chủ thể nằm ngoài phạm vi đó</strong> — nội dung khiêu dâm, vũ khí đang sử dụng, biểu tượng thù hận, giấy tờ cá nhân của người khác — bị <em>từ chối</em> chứ không được mô tả, và không có gì về nó được ghi vào nhật ký.</span><span data-l="en"><strong>A photo whose subject falls outside that scope</strong> — explicit content, a weapon in use, a hate symbol, somebody's personal documents — is <em>refused</em> rather than described, and nothing about it is written to the journal.</span></li>
+    <li><span data-l="vi"><strong>Không có trình duyệt web bên trong ứng dụng</strong>, nên không có đường nào dẫn ra nội dung không kiểm soát. Ứng dụng không hướng tới trẻ em; quảng cáo hiển thị trong ứng dụng chịu chính sách nội dung của mạng quảng cáo, và chúng tôi không dùng nội dung của bạn để nhắm quảng cáo.</span><span data-l="en"><strong>No in-app browser</strong>, so there is no path out to unmoderated content. The app is not directed at children; any advertising shown is subject to the ad network's content policies, and we never use your content to target it.</span></li>
+  </ul>
+  <p>
+    <span data-l="vi">Nếu bạn là phụ huynh và cần xoá dữ liệu, bạn tự làm được ngay: <em>Cài đặt › Xoá toàn bộ khám phá</em>. Có thắc mắc, hãy liên hệ chúng tôi ở mục 9.</span>
+    <span data-l="en">If you are a parent and need data erased, you can do it yourself, at once: <em>Settings › Clear all discoveries</em>. For anything else, contact us in section 9.</span>
+  </p>
+
+  <h2><span data-l="vi">6. Chuẩn mực nội dung do ứng dụng tạo ra</span><span data-l="en">6. Standards for what the app generates</span></h2>
+  <p>
+    <span data-l="vi">Mọi câu trả lời đều bị ràng buộc bởi các quy tắc viết sẵn trong ứng dụng. Tóm lại, ứng dụng buộc phải:</span>
+    <span data-l="en">Every answer is constrained by rules written into the app itself. In summary, the app must:</span>
+  </p>
+  <ul>
+    <li><span data-l="vi"><strong>Ở trong phạm vi du lịch, văn hoá, lịch sử và kiến thức phổ thông.</strong> Không chính trị đảng phái, không bình luận về chính phủ hay lãnh đạo, không truyền giáo, không tư vấn pháp lý, y tế hay tài chính, không nội dung người lớn, và không nói về cá nhân riêng tư nào.</span><span data-l="en"><strong>Stay inside travel, culture, history and general knowledge.</strong> No party politics, no opinions on governments or leaders, no religious advocacy, no legal, medical or financial advice, no adult content, and nothing about identifiable private individuals.</span></li>
+    <li><span data-l="vi"><strong>Không bao giờ tô hồng bạo lực, vũ khí, chiến tranh hay xung đột, và không bao giờ khơi lên thù hằn hay thù địch giữa các quốc gia, vùng miền, dân tộc hay tôn giáo.</strong> Chiến tranh là một phần lịch sử mà du khách đến để hiểu — Hoả Lò, Côn Đảo, địa đạo Củ Chi, các nghĩa trang liệt sĩ — nên ứng dụng kể về chúng như một sự <strong>tưởng niệm</strong>: cái giá con người đã trả, sức bền bỉ, và những gì còn đứng đó hôm nay. Trung thực và trân trọng; không rùng rợn, không đắc thắng, không kích động.</span><span data-l="en"><strong>Never glorify violence, weapons, war or conflict, and never stir hatred or hostility between countries, regions, ethnic groups or faiths.</strong> Vietnam's wars are part of what travellers come to understand — Hỏa Lò, Côn Đảo, the Củ Chi tunnels, the martyrs' cemeteries — so the app speaks of them as <strong>remembrance</strong>: the human cost, the resilience, and what stands there today. Factual and respectful; never graphic, never triumphal, never inflammatory.</span></li>
+    <li><span data-l="vi"><strong>Kể đúng lịch sử Việt Nam và tôn trọng nó.</strong> Dùng tên gọi, niên đại và cách nhìn của Việt Nam về các triều đại, nhân vật và sự kiện. Không xuyên tạc, không tầm thường hoá. <strong>Không bao giờ bịa</strong> một niên đại, một triều đại hay một người xây dựng — chỗ nào không biết thì nói thẳng và hạ độ tin cậy xuống, thay vì lấp đầy chỗ trống.</span><span data-l="en"><strong>Get Vietnamese history right and treat it with respect.</strong> Use Vietnamese names, dates and framing for dynasties, figures and events. Do not distort or trivialise it. <strong>Never invent</strong> a date, a dynasty or a builder — where it does not know, say so plainly and lower the confidence rather than filling the gap.</span></li>
+    <li><span data-l="vi"><strong>Không bao giờ mô tả một người riêng tư làm chủ thể của bức ảnh</strong>, và không mô tả giấy tờ hay màn hình chứa dữ liệu cá nhân của ai đó.</span><span data-l="en"><strong>Never describe a private person as the subject of a photograph</strong>, and never describe a document or screen showing somebody's personal data.</span></li>
+    <li><span data-l="vi"><strong>Không bao giờ đòi tiền, thông tin thanh toán hay thông tin đăng nhập</strong>, và không dẫn bạn đi làm việc đó ở nơi khác.</span><span data-l="en"><strong>Never solicit money, payment details or credentials</strong>, and never direct you elsewhere to provide them.</span></li>
+  </ul>
+  <div class="note">
+    <p>
+      <span data-l="vi"><strong>Về chủ quyền.</strong> Hoàng Sa và Trường Sa là lãnh thổ Việt Nam, và mọi bản đồ, địa danh cũng như câu chuyện trong ứng dụng đều thể hiện điều đó. Ứng dụng trình bày lập trường này một cách điềm tĩnh và dựa trên sử liệu, <strong>không thù địch với bất kỳ quốc gia nào</strong>, và luôn giữ câu chuyện ở phần lịch sử.</span>
+      <span data-l="en"><strong>On sovereignty.</strong> The Hoàng Sa (Paracel) and Trường Sa (Spratly) archipelagos are Vietnamese territory, and every map, place name and story in the app reflects that. The app states this calmly and from the historical record, <strong>without hostility toward any country</strong>, and keeps to the history.</span>
+    </p>
+  </div>
+
+  <h2><span data-l="vi">7. Quyền của bạn</span><span data-l="en">7. Your rights</span></h2>
+  <p>
+    <span data-l="vi">Vì mọi thứ nằm trên máy bạn và không có gì nằm ở chỗ chúng tôi, bạn tự thực hiện được ngay, không cần hỏi ai:</span>
+    <span data-l="en">Because everything is on your device and nothing is on ours, you exercise these yourself, instantly:</span>
+  </p>
+  <ul>
+    <li><span data-l="vi"><strong>Xem</strong> — toàn bộ nằm trong ứng dụng: Nhật ký, Hộ chiếu, Bộ sưu tập.</span><span data-l="en"><strong>See it</strong> — it is all in the app: Journal, Passport, Collection.</span></li>
+    <li><span data-l="vi"><strong>Sửa hoặc xoá từng mục</strong> — sửa ghi chú, xoá một khám phá bất kỳ.</span><span data-l="en"><strong>Correct or delete any item</strong> — edit a note, delete a discovery.</span></li>
+    <li><span data-l="vi"><strong>Xoá sạch</strong> — <em>Cài đặt › Xoá toàn bộ khám phá</em> xoá vĩnh viễn mọi khám phá, ảnh, hội thoại và nhật ký. Gỡ ứng dụng thì mất cả tuỳ chọn.</span><span data-l="en"><strong>Erase everything</strong> — <em>Settings › Clear all discoveries</em> permanently deletes every discovery, photo, conversation and journal entry. Uninstalling removes the preferences too.</span></li>
+    <li><span data-l="vi"><strong>Rút lại sự đồng ý</strong> — tắt quyền trong cài đặt máy, hoặc tắt vị trí ngay trong ứng dụng.</span><span data-l="en"><strong>Withdraw consent</strong> — turn a permission off in your device settings, or location inside the app.</span></li>
+  </ul>
+  <p>
+    <span data-l="vi">Chúng tôi không có dữ liệu nào của bạn để giao nộp cho bất kỳ ai, vì chúng tôi không giữ gì cả.</span>
+    <span data-l="en">We have no data of yours to hand to anyone, because we hold none.</span>
+  </p>
+
+  <h2><span data-l="vi">8. An toàn</span><span data-l="en">8. Security</span></h2>
+  <ul>
+    <li><span data-l="vi">Dữ liệu nằm trong vùng lưu trữ riêng của ứng dụng, ứng dụng khác không đọc được trên máy chưa bị root hay jailbreak.</span><span data-l="en">Data is written to the app's private storage, which other apps cannot read on a device that is not rooted or jailbroken.</span></li>
+    <li><span data-l="vi"><strong>Toàn bộ lưu lượng mạng đều dùng HTTPS.</strong></span><span data-l="en"><strong>All network traffic uses HTTPS.</strong></span></li>
+    <li><span data-l="vi">Ứng dụng không lưu bất kỳ thông tin đăng nhập nào của bạn, vì nó không bao giờ hỏi.</span><span data-l="en">The app stores no credential of yours, because it never asks for one.</span></li>
+    <li><span data-l="vi">Nếu bạn phát hiện lỗ hổng bảo mật, xin báo cho chúng tôi trước khi công bố rộng rãi.</span><span data-l="en">If you find a security problem, please tell us before disclosing it publicly.</span></li>
+  </ul>
+
+  <h2><span data-l="vi">9. Bên thứ ba và liên hệ</span><span data-l="en">9. Third parties and contact</span></h2>
+  <p>
+    <span data-l="vi">Ứng dụng chỉ nói chuyện với đúng những dịch vụ sau, và không có đích mạng nào khác:</span>
+    <span data-l="en">The app talks to exactly these services, and to no other network destination:</span>
+  </p>
+  <ul>
+    <li><span data-l="vi">Google — Gemini (nhận diện, giải thích, dịch), Maps SDK và dịch vụ vị trí trên Android, và mạng quảng cáo (mục 2.5) · <a href="https://policies.google.com/privacy" rel="noopener">Chính sách của Google</a> · <a href="https://policies.google.com/technologies/partner-sites" rel="noopener">Cách Google dùng dữ liệu từ ứng dụng đối tác</a></span><span data-l="en">Google — Gemini (recognition, explanation, translation), Maps SDK and location services on Android, and the ad network (section 2.5) · <a href="https://policies.google.com/privacy" rel="noopener">Google's policy</a> · <a href="https://policies.google.com/technologies/partner-sites" rel="noopener">How Google uses data from partner apps</a></span></li>
+    <li><span data-l="vi">Apple — MapKit và Core Location trên iOS · <a href="https://www.apple.com/legal/privacy/data/" rel="noopener">Chính sách của Apple</a></span><span data-l="en">Apple — MapKit and Core Location on iOS · <a href="https://www.apple.com/legal/privacy/data/en/maps/" rel="noopener">Apple's policy</a></span></li>
+    <li><span data-l="vi">OpenStreetMap — dữ liệu địa điểm, qua các máy chủ tra cứu công cộng</span><span data-l="en">OpenStreetMap — place data, through public query servers</span></li>
+    <li><span data-l="vi">Wikimedia Foundation — Wikipedia và Wikimedia Commons · <a href="https://foundation.wikimedia.org/wiki/Policy:Privacy_policy" rel="noopener">Chính sách của Wikimedia</a></span><span data-l="en">Wikimedia Foundation — Wikipedia and Wikimedia Commons · <a href="https://foundation.wikimedia.org/wiki/Policy:Privacy_policy" rel="noopener">Wikimedia's policy</a></span></li>
+  </ul>
+  <p>
+    <span data-l="vi">Các dịch vụ này đặt ngoài Việt Nam, nên phần dữ liệu hạn chế nói trên được xử lý ở nước ngoài. Phần đó không chứa tên, tài khoản hay mã định danh của bạn — chỉ là bức ảnh bạn muốn nhận diện, một vị trí thô, hoặc một tên địa điểm.</span>
+    <span data-l="en">These services are operated outside Vietnam, so the limited data above is processed abroad. It carries no name, no account and no identifier of you — only a photo you chose to have recognised, a coarse position, or a place name.</span>
+  </p>
+  <p>
+    <span data-l="vi">Nếu chúng tôi thay đổi cách ứng dụng xử lý dữ liệu, trang này sẽ được cập nhật cùng ngày hiệu lực mới. Mọi câu hỏi, khiếu nại hay báo cáo bảo mật: <a href="mailto:beedyto@gmail.com">beedyto@gmail.com</a>. Chúng tôi trả lời trong vòng 30 ngày, và với báo cáo bảo mật thì nhanh hơn.</span>
+    <span data-l="en">If we change how the app handles data, this page is updated along with the effective date. Questions, complaints or security reports: <a href="mailto:beedyto@gmail.com">beedyto@gmail.com</a>. We answer within 30 days, and faster for security reports.</span>
+  </p>
+</section>
+
+<!-- ============================== TERMS ============================== -->
+<section id="terms" data-doc role="tabpanel" aria-labelledby="tab-terms">
+
+  <p class="meta">
+    <span data-l="vi">Có hiệu lực từ 07/08/2026 · Áp dụng cho Saola phiên bản 1.0.0 (Android &amp; iOS)</span>
+    <span data-l="en">Effective 7 August 2026 · Applies to Saola version 1.0.0 (Android &amp; iOS)</span>
+  </p>
+  <h1><span data-l="vi">Điều khoản dịch vụ</span><span data-l="en">Terms of Service</span></h1>
+  <p class="lede">
+    <span data-l="vi">Khi cài đặt hoặc sử dụng Saola, bạn đồng ý với các điều khoản này. Đây là thoả thuận giữa bạn và Evora Technologies Global — không phải với Apple hay Google.</span>
+    <span data-l="en">By installing or using Saola, you agree to these terms. This is an agreement between you and Evora Technologies Global — not with Apple or Google.</span>
+  </p>
+
+  <h2><span data-l="vi">1. Saola là gì</span><span data-l="en">1. What Saola is</span></h2>
+  <p>
+    <span data-l="vi">Saola là bạn đồng hành khi đi du lịch. Bạn hướng máy ảnh vào một di tích, một món ăn, một hiện vật hay một tấm biển; ứng dụng dùng AI của Google để nhận diện, giải thích, dịch chữ trong ảnh, trả lời câu hỏi tiếp theo, và giữ lại những gì bạn đã chụp thành một hành trình riêng trên máy bạn.</span>
+    <span data-l="en">Saola is a travel companion. You point your camera at a landmark, a dish, an artefact or a sign; the app uses Google's AI to recognise it, explain it, translate text in the image, answer follow-up questions, and keep what you photographed as a personal journey on your device.</span>
+  </p>
+  <p>
+    <span data-l="vi"><strong>Saola miễn phí tải về.</strong> Ứng dụng có thể hiển thị quảng cáo do bên thứ ba cung cấp, và có thể có tính năng trả phí — nếu có, việc thanh toán đi qua Google Play hoặc App Store, xem mục 5.</span>
+    <span data-l="en"><strong>Saola is free to download.</strong> The app may display third-party advertising, and may offer paid features — if it does, payment goes through Google Play or the App Store; see section 5.</span>
+  </p>
+
+  <h2><span data-l="vi">2. Ai được dùng</span><span data-l="en">2. Who may use it</span></h2>
+  <ul>
+    <li><span data-l="vi">Bạn phải <strong>từ 13 tuổi trở lên</strong>. Nếu luật nơi bạn sống quy định độ tuổi cao hơn để tự đồng ý với dịch vụ trực tuyến — 16 tuổi ở phần lớn châu Âu — thì áp dụng độ tuổi đó.</span><span data-l="en">You must be <strong>at least 13</strong>. If the law where you live sets a higher age for consenting to online services — 16 across much of Europe — that age applies instead.</span></li>
+    <li><span data-l="vi">Dưới 18 tuổi thì cần sự cho phép của cha mẹ hoặc người giám hộ.</span><span data-l="en">If you are under 18, you need a parent or guardian's permission.</span></li>
+  </ul>
+
+  <h2><span data-l="vi">3. Ứng dụng là trợ thủ, không phải nguồn thẩm quyền</span><span data-l="en">3. An assistant, not an authority</span></h2>
+  <p>
+    <span data-l="vi"><strong>Nội dung do AI tạo ra có thể sai.</strong> Ứng dụng cho bạn biết mức độ tin cậy và được yêu cầu nói thẳng khi không biết, thay vì bịa — nhưng vẫn có thể nhận nhầm hoặc sai chi tiết.</span>
+    <span data-l="en"><strong>AI-generated content can be wrong.</strong> The app tells you how confident it is and is instructed to say plainly when it does not know rather than invent — but it can still misidentify something or get a detail wrong.</span>
+  </p>
+  <ul>
+    <li><span data-l="vi">Mọi nhận diện, giải thích, tường thuật lịch sử, bản dịch và gợi ý chỉ mang <strong>tính tham khảo</strong>.</span><span data-l="en">Recognitions, explanations, historical accounts, translations and suggestions are <strong>for general information only</strong>.</span></li>
+    <li><span data-l="vi"><strong>Đừng dựa vào ứng dụng cho những việc liên quan tới an toàn, pháp lý, y tế, tài chính hay chế độ ăn.</strong> Cụ thể: thực đơn đã dịch là tiện lợi, không phải bảo đảm — nếu bạn <strong>dị ứng thực phẩm</strong> hoặc kiêng vì lý do sức khoẻ, hãy hỏi người thật.</span><span data-l="en"><strong>Do not rely on the app for anything with a safety, legal, medical, financial or dietary consequence.</strong> In particular: a translated menu is a convenience, not a guarantee — if you have a <strong>food allergy</strong> or a medical restriction, confirm with a person.</span></li>
+    <li><span data-l="vi">Giờ mở cửa, giá cả và việc một địa điểm còn tồn tại hay không đến từ dữ liệu mở do tình nguyện viên đóng góp, có thể đã cũ. Không có địa điểm nào trả tiền để xuất hiện trong ứng dụng này.</span><span data-l="en">Opening hours, prices and whether a place still exists come from volunteer-contributed open data that may be out of date. No place has ever paid to appear in this app.</span></li>
+  </ul>
+
+  <h2><span data-l="vi">4. Sử dụng được chấp nhận</span><span data-l="en">4. Acceptable use</span></h2>
+  <p><span data-l="vi">Bạn đồng ý không dùng ứng dụng, kết quả của nó, hay tên của nó để làm hoặc để cố làm những việc sau.</span><span data-l="en">You agree not to use the app, its output, or its name to do or attempt any of the following.</span></p>
+
+  <h3><span data-l="vi">Lừa đảo và gian dối — cấm</span><span data-l="en">Fraud and deception — prohibited</span></h3>
+  <ul>
+    <li><span data-l="vi">Không dùng ứng dụng hoặc bất cứ thứ gì nó tạo ra để <strong>lừa đảo, chiếm đoạt, giả mạo danh tính</strong> hay dựng vật liệu cho những việc đó.</span><span data-l="en">Do not use the app or anything it produces to commit <strong>fraud, a scam, phishing or impersonation</strong>, or to build material for one.</span></li>
+    <li><span data-l="vi">Không trình bày kết quả của ứng dụng như sự thật đã kiểm chứng, như phát ngôn chính thức của một di tích, bảo tàng hay cơ quan nhà nước.</span><span data-l="en">Do not present the app's output as verified fact, or as an official statement of a heritage site, a museum or a government body.</span></li>
+    <li><span data-l="vi">Không giả mạo Saola hoặc Evora Technologies Global. <strong>Chúng tôi không bao giờ hỏi bạn về tiền, thông tin thẻ, thông tin đăng nhập ngân hàng, mã OTP hay mật khẩu.</strong> Bất kỳ tin nhắn, màn hình hay website nào làm việc đó trong khi tự xưng là Saola đều là lừa đảo — xin báo cho chúng tôi.</span><span data-l="en">Do not impersonate Saola or Evora Technologies Global. <strong>We will never ask you for money, card details, bank credentials, an OTP or a password.</strong> Any message, screen or website that does so while claiming to be Saola is fraudulent — please report it to us.</span></li>
+  </ul>
+
+  <h3><span data-l="vi">Bạo lực, thù hằn và chiến tranh — cấm</span><span data-l="en">Violence, hatred and war — prohibited</span></h3>
+  <ul>
+    <li><span data-l="vi">Không dùng ứng dụng để tạo ra, cổ vũ hay phát tán nội dung <strong>kích động chiến tranh, xung đột vũ trang, khủng bố hay bạo lực</strong> dưới bất kỳ hình thức nào.</span><span data-l="en">Do not use the app to produce, promote or distribute content that <strong>incites war, armed conflict, terrorism or violence</strong> of any kind.</span></li>
+    <li><span data-l="vi">Không dùng nó để khơi <strong>thù hằn, thù địch, chia rẽ hay phân biệt đối xử giữa các quốc gia, vùng miền, dân tộc, tôn giáo</strong>, hay để miệt thị văn hoá, cái nghèo hoặc tín ngưỡng của bất kỳ ai.</span><span data-l="en">Do not use it to stir <strong>hatred, hostility, division or discrimination between countries, regions, ethnic groups or faiths</strong>, or to demean anyone's culture, poverty or beliefs.</span></li>
+    <li><span data-l="vi">Ứng dụng được xây dựng theo hướng ngược lại một cách có chủ ý: các di tích chiến tranh của Việt Nam là nơi du khách đến để hiểu, và ứng dụng buộc phải kể về chúng như một sự <strong>tưởng niệm</strong> — cái giá con người đã trả, sức bền bỉ, và những gì còn đứng đó hôm nay. Cố ý đẩy ứng dụng ra khỏi giới hạn đó là vi phạm điều khoản này.</span><span data-l="en">The app is built the other way round on purpose: Vietnam's war sites are places travellers come to understand, and the app must treat them as <strong>remembrance</strong> — the human cost, the resilience, and what stands there today. Attempting to push it away from that is a breach of these terms.</span></li>
+  </ul>
+
+  <h3><span data-l="vi">Nội dung người lớn và nội dung có hại — cấm</span><span data-l="en">Adult and harmful content — prohibited</span></h3>
+  <ul>
+    <li><span data-l="vi">Ứng dụng <strong>không chứa nội dung tình dục, khiêu dâm, cờ bạc, ma tuý hay bạo lực phản cảm</strong>, và không tạo ra chúng. Không được tìm cách khiến nó tạo ra.</span><span data-l="en">The app contains <strong>no sexual, pornographic, gambling, drug or gratuitously violent content</strong>, and generates none. Do not attempt to make it produce any.</span></li>
+    <li><span data-l="vi">Không tìm cách vượt qua, bẻ khoá hay chèn lệnh để phá các quy tắc nội dung của ứng dụng hoặc hệ thống an toàn của dịch vụ AI bên dưới.</span><span data-l="en">Do not attempt to bypass, jailbreak or prompt-inject the app's content rules or the safety systems of the underlying AI service.</span></li>
+  </ul>
+
+  <h3><span data-l="vi">An toàn trẻ em — cấm tuyệt đối</span><span data-l="en">Child safety — prohibited absolutely</span></h3>
+  <ul>
+    <li><span data-l="vi">Mọi hành vi sử dụng ứng dụng liên quan tới <strong>xâm hại, bóc lột hay gây nguy hiểm cho trẻ em</strong> đều bị cấm không ngoại lệ, và chúng tôi sẽ báo cho cơ quan chức năng. Ứng dụng không có nhắn tin, không có hồ sơ người dùng và không có cách nào để người dùng liên lạc với nhau — và chúng tôi có ý định giữ nguyên như vậy.</span><span data-l="en">Any use involving the <strong>sexual exploitation, endangerment or abuse of a child</strong> is forbidden without exception, and we will report it to the authorities. The app has no messaging, no user profiles and no way for users to reach one another, and we intend to keep it that way.</span></li>
+  </ul>
+
+  <h3><span data-l="vi">Quyền riêng tư của người khác — cấm</span><span data-l="en">Other people's privacy — prohibited</span></h3>
+  <ul>
+    <li><span data-l="vi">Không chụp một con người làm chủ thể để nhận dạng, lập hồ sơ hay mô tả người đó. Ứng dụng từ chối việc này, và bạn cũng không được tìm cách làm.</span><span data-l="en">Do not photograph a person as the subject in order to have them identified, profiled or described. The app refuses this, and you must not attempt it.</span></li>
+    <li><span data-l="vi">Không chụp giấy tờ tuỳ thân, màn hình, thẻ ngân hàng hay dữ liệu cá nhân của người khác.</span><span data-l="en">Do not photograph anyone's identity documents, screens, bank cards or personal data.</span></li>
+    <li><span data-l="vi">Tôn trọng quy định chụp ảnh tại đền chùa, bảo tàng, cộng đồng dân tộc thiểu số và khu vực quân sự hoặc hạn chế, và tôn trọng những người xung quanh bạn.</span><span data-l="en">Respect local rules on photography in temples, museums, ethnic-minority communities and military or restricted areas, and respect the people around you.</span></li>
+  </ul>
+
+  <h3><span data-l="vi">Lạm dụng kỹ thuật — cấm</span><span data-l="en">Technical abuse — prohibited</span></h3>
+  <ul>
+    <li><span data-l="vi">Không dịch ngược, giải mã hay sửa đổi ứng dụng, trừ khi pháp luật cho phép rõ ràng.</span><span data-l="en">No reverse engineering, decompiling or modifying the app except where the law expressly allows it.</span></li>
+    <li><span data-l="vi">Không dùng tự động hoá hay số lượng lớn, không thu thập dữ liệu hàng loạt, không dùng ứng dụng làm hậu trường cho một dịch vụ khác.</span><span data-l="en">No automated or bulk use, no scraping, and no using the app as a backend for another service.</span></li>
+    <li><span data-l="vi">Không làm quá tải các dịch vụ công cộng miễn phí mà ứng dụng phụ thuộc vào (OpenStreetMap, Wikipedia). Đó là hạ tầng do cộng đồng đóng góp; lạm dụng nó là lấy đi phần của mọi người.</span><span data-l="en">Do not overload the free public services the app depends on (OpenStreetMap, Wikipedia). They are donated infrastructure; abusing them takes them away from everybody.</span></li>
+  </ul>
+
+  <h2><span data-l="vi">5. Không thanh toán, không ngân hàng</span><span data-l="en">5. No payments, no bank</span></h2>
+  <ul>
+    <li><span data-l="vi">Saola <strong>miễn phí tải về</strong>. Mọi khoản trả phí, nếu có, đều là tự nguyện và diễn ra trong hệ thống thanh toán của cửa hàng ứng dụng.</span><span data-l="en">Saola is <strong>free to download</strong>. Any payment, if offered at all, is optional and happens inside the app store's own billing system.</span></li>
+    <li><span data-l="vi">Ứng dụng <strong>không kết nối, không đọc và không trao đổi dữ liệu với bất kỳ ngân hàng, ví điện tử, tổ chức thẻ, cổng thanh toán hay tổ chức tài chính nào</strong>, và không bao giờ xử lý công cụ thanh toán.</span><span data-l="en">The app <strong>does not connect to, read from or communicate with any bank, e-wallet, card network, payment gateway or financial institution</strong>, and never handles payment instruments.</span></li>
+    <li><span data-l="vi">Ứng dụng <strong>không bao giờ hỏi số thẻ, số tài khoản, mật khẩu ngân hàng, mã PIN, OTP, số CCCD hay dữ liệu sinh trắc học</strong>, và không có màn hình nào có khả năng nhận những thứ đó.</span><span data-l="en">The app <strong>never requests a card number, bank account, banking password, PIN, OTP, national ID or biometric data</strong>, and has no screen capable of accepting them.</span></li>
+    <li><span data-l="vi">Nếu sau này có tính năng trả phí, việc thanh toán sẽ đi qua <strong>hệ thống thanh toán của chính Google Play hoặc App Store</strong> — nghĩa là giao dịch diễn ra trong giao diện của Google hoặc Apple, và thông tin thẻ của bạn không bao giờ đi qua chúng tôi.</span><span data-l="en">If a paid feature ever arrives, payment will go through <strong>Google Play's or the App Store's own billing</strong> — the transaction happens in Google's or Apple's interface, and your card details never pass through us.</span></li>
+  </ul>
+
+  <h2><span data-l="vi">6. Nội dung của bạn</span><span data-l="en">6. Your content</span></h2>
+  <p>
+    <span data-l="vi">Những gì bạn chụp, viết và lưu trong ứng dụng là <strong>của bạn</strong>. Chúng nằm trên máy bạn. Chúng tôi không truy cập được, không đòi bất kỳ quyền nào với chúng, và không dùng chúng để huấn luyện bất cứ thứ gì. Bạn chịu trách nhiệm về việc mình có quyền chụp những gì mình chụp.</span>
+    <span data-l="en">Whatever you photograph, write and keep in the app is <strong>yours</strong>. It stays on your device. We have no access to it, claim no licence over it, and do not use it to train anything. You are responsible for having the right to photograph what you photograph.</span>
+  </p>
+
+  <h2><span data-l="vi">7. Dữ liệu bên thứ ba và ghi công</span><span data-l="en">7. Third-party data and attribution</span></h2>
+  <p>
+    <span data-l="vi">Ứng dụng dựa vào các dịch vụ và nguồn dữ liệu mở mà nó không vận hành: <strong>Google Gemini</strong> (nhận diện và dịch), <strong>OpenStreetMap</strong> (dữ liệu địa điểm và ranh giới, giấy phép ODbL 1.0), <strong>Natural Earth</strong> (đường bờ biển, phạm vi công cộng), <strong>Wikipedia</strong> (nội dung bài, CC BY-SA 4.0), <strong>Wikimedia Commons</strong> (ảnh, theo giấy phép riêng của từng ảnh), và bản đồ của Google hoặc Apple. Ghi công đầy đủ nằm trong ứng dụng tại <em>Cài đặt › Giới thiệu › Giấy phép</em>.</span>
+    <span data-l="en">The app relies on services and open data it does not operate: <strong>Google Gemini</strong> (recognition and translation), <strong>OpenStreetMap</strong> (place and boundary data, ODbL 1.0), <strong>Natural Earth</strong> (coastlines, public domain), <strong>Wikipedia</strong> (article content, CC BY-SA 4.0), <strong>Wikimedia Commons</strong> (photographs, each under its own licence), and Google's or Apple's maps. Full credits are in the app at <em>Settings › About › Licences</em>.</span>
+  </p>
+  <p>
+    <span data-l="vi">Các dịch vụ này có thể chậm, bị giới hạn lưu lượng hoặc tạm ngưng, nên đôi khi ứng dụng hiển thị ít kết quả hơn hoặc không có kết quả. Đó không phải lỗi của ứng dụng.</span>
+    <span data-l="en">These services may be slow, rate-limited or unavailable, so the app may show fewer results, or none, at times. That is not a defect.</span>
+  </p>
+
+  <h2><span data-l="vi">8. Nội dung văn hoá và lãnh thổ</span><span data-l="en">8. Cultural and territorial content</span></h2>
+  <p>
+    <span data-l="vi">Saola trình bày địa lý, địa danh và lịch sử Việt Nam theo cách được hiểu và được dạy tại Việt Nam, bao gồm chủ quyền của Việt Nam đối với hai quần đảo <strong>Hoàng Sa</strong> và <strong>Trường Sa</strong>, và tên gọi <strong>Biển Đông</strong>. Ứng dụng nêu lập trường này dựa trên sử liệu và <strong>không thù địch với bất kỳ quốc gia nào</strong>, giữ câu chuyện ở phần lịch sử thay vì phần tranh chấp. Bản đồ trong ứng dụng phục vụ mục đích du lịch và bối cảnh văn hoá, không phải công cụ đo đạc và không nhằm phân định pháp lý bất kỳ đường biên nào.</span>
+    <span data-l="en">Saola presents Vietnam's geography, place names and history as they are understood and taught in Vietnam, including Vietnam's sovereignty over the <strong>Hoàng Sa (Paracel)</strong> and <strong>Trường Sa (Spratly)</strong> archipelagos and the naming of the sea as <strong>Biển Đông / the East Sea</strong>. The app states this from the historical record and <strong>without hostility toward any country</strong>, keeping to the history rather than the dispute. Maps in the app serve travel guidance and cultural context; they are not surveying instruments and are not offered as a legal delimitation of any boundary.</span>
+  </p>
+
+  <h2><span data-l="vi">9. Bảo đảm, trách nhiệm và luật áp dụng</span><span data-l="en">9. Warranties, liability and governing law</span></h2>
+  <p>
+    <span data-l="vi">Ứng dụng được cung cấp <strong>"nguyên trạng"</strong>, không kèm bảo đảm dưới bất kỳ hình thức nào. Chúng tôi không bảo đảm kết quả nhận diện là chính xác hay ứng dụng chạy không gián đoạn. Trong phạm vi pháp luật cho phép, chúng tôi không chịu trách nhiệm cho thiệt hại gián tiếp, ngẫu nhiên hay hệ quả, cho việc mất dữ liệu, hay cho tổn thất phát sinh từ việc bạn dựa vào kết quả của ứng dụng để ra quyết định khi đi đường. Những giới hạn này không loại trừ trách nhiệm mà pháp luật không cho phép loại trừ, và không ảnh hưởng tới quyền của người tiêu dùng theo luật định.</span>
+    <span data-l="en">The app is provided <strong>"as is"</strong>, without warranties of any kind. We do not warrant that recognitions are correct or that the app is uninterrupted. To the extent the law allows, we are not liable for indirect, incidental or consequential damages, for loss of data, or for loss arising from your reliance on the app's output when travelling. Nothing here excludes liability that cannot be excluded by law, and your statutory consumer rights are unaffected.</span>
+  </p>
+  <p>
+    <span data-l="vi">Bạn có thể ngừng sử dụng bất cứ lúc nào bằng cách gỡ ứng dụng — thao tác đó xoá mọi thứ ứng dụng đang giữ. Chúng tôi có thể cập nhật các điều khoản này; thay đổi quan trọng sẽ được ghi trong ghi chú phát hành. Các điều khoản này chịu sự điều chỉnh của pháp luật <strong>nước Cộng hoà xã hội chủ nghĩa Việt Nam</strong>, trừ khi luật bảo vệ người tiêu dùng nơi bạn cư trú cho bạn quyền khởi kiện tại toà án địa phương.</span>
+    <span data-l="en">You may stop using the app at any time by uninstalling it, which deletes everything it holds. We may update these terms; material changes will be noted in the release notes. These terms are governed by the laws of the <strong>Socialist Republic of Vietnam</strong>, except where consumer-protection law where you live gives you the right to your local courts.</span>
+  </p>
+  <p>
+    <span data-l="vi">Apple và Google không phải là bên tham gia thoả thuận này và không chịu trách nhiệm về ứng dụng. Apple và các công ty con là bên thứ ba thụ hưởng của các điều khoản này và có quyền viện dẫn chúng.</span>
+    <span data-l="en">Apple and Google are not parties to this agreement and are not responsible for the app. Apple and its subsidiaries are third-party beneficiaries of these terms and may enforce them.</span>
+  </p>
+  <p>
+    <span data-l="vi">Liên hệ: <a href="mailto:beedyto@gmail.com">beedyto@gmail.com</a></span>
+    <span data-l="en">Contact: <a href="mailto:beedyto@gmail.com">beedyto@gmail.com</a></span>
+  </p>
+</section>
+
+</main>
+
+<footer>
+  <div class="inner">
+    <img src="logo.png" alt="" width="48" height="48" class="foot-mark">
+    <p><strong>Evora Technologies Global</strong></p>
+    <p>20 Đ. Đình Thôn, Đình Thôn, Từ Liêm, Hà Nội, Việt Nam</p>
+    <p><a href="mailto:beedyto@gmail.com">beedyto@gmail.com</a></p>
+    <p style="margin-top:12px">
+      <span data-l="vi">Saola 1.0.0 · Cập nhật 07/08/2026</span>
+      <span data-l="en">Saola 1.0.0 · Updated 7 August 2026</span>
+    </p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var body = document.body;
+  body.classList.add('js');
+
+  /* ---------- language ---------- */
+  var btnVi = document.getElementById('btn-vi');
+  var btnEn = document.getElementById('btn-en');
+
+  function setLang(lang) {
+    body.setAttribute('data-lang', lang);
+    document.documentElement.lang = lang;
+    btnVi.setAttribute('aria-pressed', String(lang === 'vi'));
+    btnEn.setAttribute('aria-pressed', String(lang === 'en'));
+    try { localStorage.setItem('saola-lang', lang); } catch (e) {}
+  }
+
+  var saved = null;
+  try { saved = localStorage.getItem('saola-lang'); } catch (e) {}
+  var initial = saved || ((navigator.language || 'vi').toLowerCase().indexOf('vi') === 0 ? 'vi' : 'en');
+  setLang(initial);
+
+  btnVi.addEventListener('click', function () { setLang('vi'); });
+  btnEn.addEventListener('click', function () { setLang('en'); });
+
+  /* ---------- documents ---------- */
+  var tabs = {
+    privacy: document.getElementById('tab-privacy'),
+    terms: document.getElementById('tab-terms')
+  };
+  var docs = {
+    privacy: document.getElementById('privacy'),
+    terms: document.getElementById('terms')
+  };
+
+  function show(name, push) {
+    if (!docs[name]) name = 'privacy';
+    Object.keys(docs).forEach(function (key) {
+      var on = key === name;
+      docs[key].classList.toggle('is-active', on);
+      tabs[key].setAttribute('aria-selected', String(on));
+    });
+    if (push && history.replaceState) history.replaceState(null, '', '#' + name);
+    window.scrollTo({ top: 0, behavior: push ? 'smooth' : 'auto' });
+  }
+
+  /* The same file can be served at /privacy and at /terms — pick the document from
+     whichever path or hash the visitor arrived on. */
+  var path = (location.pathname + location.hash).toLowerCase();
+  show(path.indexOf('terms') !== -1 ? 'terms' : 'privacy', false);
+
+  tabs.privacy.addEventListener('click', function () { show('privacy', true); });
+  tabs.terms.addEventListener('click', function () { show('terms', true); });
+})();
+</script>
+
+</body>
+</html>

@@ -3,7 +3,7 @@
 > Hướng máy ảnh vào một mái đình, một tô bún hay một tấm biển — ứng dụng nhận ra nó, kể
 > câu chuyện đằng sau, và ghi lại vào hành trình của bạn.
 
-🇬🇧 [English version](README-en.md) · 🛠 [Chi tiết kỹ thuật](TechStack-temp.md)
+🇬🇧 [English version](README-en.md) · 🛠 [Chi tiết kỹ thuật](docs/tech-stack.md)
 
 ---
 
@@ -75,7 +75,7 @@ nhận được màn hình, câu trả lời và giọng đọc tiếng Nhật.
 
 Chụp lại ngày 07.08.2026 trên máy ảo Pixel 7 Pro, Pixel Tablet, iPhone 17 và iPad Pro 11".
 Dữ liệu là bộ demo 24 điểm từ Sa Pa tới Cần Thơ (xem
-[§10 TechStack](TechStack-temp.md#10-demoing-it-and-the-seeded-data)); ảnh trong các màn hình là
+[§10 tech-stack](docs/tech-stack.md#10-demoing-it-and-the-seeded-data)); ảnh trong các màn hình là
 ảnh thật lấy từ Wikimedia Commons. Riêng ảnh Khám phá khổ tablet chụp trên **Pixel 7 Pro ép về
 đúng khổ Pixel Tablet** (`wm size 2560x1600`, `wm density 320`), vì máy ảo tablet không nhận
 được vị trí giả trong phiên chụp — cùng số đo cửa sổ, nên bố cục là thật.
@@ -84,15 +84,15 @@ Dữ liệu là bộ demo 24 điểm từ Sa Pa tới Cần Thơ (xem
 
 | Ống kính | Nhật ký | Hộ chiếu du lịch | Bộ sưu tập văn hoá |
 |---|---|---|---|
-| <img src="screenshots/android-phone/01-lens.png" width="180" alt="Ống kính"> | <img src="screenshots/android-phone/02-journal.png" width="180" alt="Nhật ký"> | <img src="screenshots/android-phone/03-passport.png" width="180" alt="Hộ chiếu"> | <img src="screenshots/android-phone/04-collection.png" width="180" alt="Bộ sưu tập"> |
+| <img src="screenshots/android-phone/01-lens.webp" width="180" alt="Ống kính"> | <img src="screenshots/android-phone/02-journal.webp" width="180" alt="Nhật ký"> | <img src="screenshots/android-phone/03-passport.webp" width="180" alt="Hộ chiếu"> | <img src="screenshots/android-phone/04-collection.webp" width="180" alt="Bộ sưu tập"> |
 
 | Chi tiết khám phá | Trò chuyện | Khám phá quanh đây |
 |---|---|---|
-| <img src="screenshots/android-phone/05-discovery.png" width="180" alt="Chi tiết"> | <img src="screenshots/android-phone/06-chat.png" width="180" alt="Trò chuyện"> | <img src="screenshots/android-phone/07-explore.png" width="180" alt="Khám phá"> |
+| <img src="screenshots/android-phone/05-discovery.webp" width="180" alt="Chi tiết"> | <img src="screenshots/android-phone/06-chat.webp" width="180" alt="Trò chuyện"> | <img src="screenshots/android-phone/07-explore.webp" width="180" alt="Khám phá"> |
 
 | Chi tiết địa điểm | Dịch thực đơn | Cài đặt |
 |---|---|---|
-| <img src="screenshots/android-phone/08-explore-detail.png" width="180" alt="Địa điểm"> | <img src="screenshots/android-phone/09-translate.png" width="180" alt="Dịch"> | <img src="screenshots/android-phone/10-settings.png" width="180" alt="Cài đặt"> |
+| <img src="screenshots/android-phone/08-explore-detail.webp" width="180" alt="Địa điểm"> | <img src="screenshots/android-phone/09-translate.webp" width="180" alt="Dịch"> | <img src="screenshots/android-phone/10-settings.webp" width="180" alt="Cài đặt"> |
 
 ### Android — máy tính bảng
 
@@ -100,21 +100,21 @@ Bố cục rộng: thanh điều hướng dọc bên trái, hai khung nội dung
 
 | Ống kính | Nhật ký + Hộ chiếu | Bộ sưu tập |
 |---|---|---|
-| <img src="screenshots/android-tablet/01-lens.png" width="250" alt="Ống kính"> | <img src="screenshots/android-tablet/02-journal.png" width="250" alt="Nhật ký"> | <img src="screenshots/android-tablet/03-collection.png" width="250" alt="Bộ sưu tập"> |
+| <img src="screenshots/android-tablet/01-lens.webp" width="250" alt="Ống kính"> | <img src="screenshots/android-tablet/02-journal.webp" width="250" alt="Nhật ký"> | <img src="screenshots/android-tablet/03-collection.webp" width="250" alt="Bộ sưu tập"> |
 
 | Bài viết + Hỏi hướng dẫn viên | Khám phá | Cài đặt |
 |---|---|---|
-| <img src="screenshots/android-tablet/04-discovery.png" width="250" alt="Chi tiết"> | <img src="screenshots/android-tablet/05-explore.png" width="250" alt="Khám phá"> | <img src="screenshots/android-tablet/06-settings.png" width="250" alt="Cài đặt"> |
+| <img src="screenshots/android-tablet/04-discovery.webp" width="250" alt="Chi tiết"> | <img src="screenshots/android-tablet/05-explore.webp" width="250" alt="Khám phá"> | <img src="screenshots/android-tablet/06-settings.webp" width="250" alt="Cài đặt"> |
 
 ### iOS — iPhone
 
 | Ống kính | Nhật ký | Hộ chiếu | Bộ sưu tập |
 |---|---|---|---|
-| <img src="screenshots/ios-phone/01-lens.png" width="180" alt="Ống kính"> | <img src="screenshots/ios-phone/02-journal.png" width="180" alt="Nhật ký"> | <img src="screenshots/ios-phone/03-passport.png" width="180" alt="Hộ chiếu"> | <img src="screenshots/ios-phone/04-collection.png" width="180" alt="Bộ sưu tập"> |
+| <img src="screenshots/ios-phone/01-lens.webp" width="180" alt="Ống kính"> | <img src="screenshots/ios-phone/02-journal.webp" width="180" alt="Nhật ký"> | <img src="screenshots/ios-phone/03-passport.webp" width="180" alt="Hộ chiếu"> | <img src="screenshots/ios-phone/04-collection.webp" width="180" alt="Bộ sưu tập"> |
 
 | Chi tiết khám phá | Trò chuyện | Khám phá (MapKit) | Cài đặt |
 |---|---|---|---|
-| <img src="screenshots/ios-phone/05-discovery.png" width="180" alt="Chi tiết"> | <img src="screenshots/ios-phone/06-chat.png" width="180" alt="Trò chuyện"> | <img src="screenshots/ios-phone/07-explore.png" width="180" alt="Khám phá"> | <img src="screenshots/ios-phone/08-settings.png" width="180" alt="Cài đặt"> |
+| <img src="screenshots/ios-phone/05-discovery.webp" width="180" alt="Chi tiết"> | <img src="screenshots/ios-phone/06-chat.webp" width="180" alt="Trò chuyện"> | <img src="screenshots/ios-phone/07-explore.webp" width="180" alt="Khám phá"> | <img src="screenshots/ios-phone/08-settings.webp" width="180" alt="Cài đặt"> |
 
 > Khung ngắm trong ảnh Ống kính trắng vì máy ảo iOS không có camera. Phần còn lại của màn hình
 > — chế độ, nút chụp, chồng ảnh vừa chụp — là thật.
@@ -123,11 +123,11 @@ Bố cục rộng: thanh điều hướng dọc bên trái, hai khung nội dung
 
 | Ống kính | Nhật ký + Hộ chiếu | Bộ sưu tập |
 |---|---|---|
-| <img src="screenshots/ios-ipad/01-lens.png" width="250" alt="Ống kính"> | <img src="screenshots/ios-ipad/02-journal.png" width="250" alt="Nhật ký"> | <img src="screenshots/ios-ipad/03-collection.png" width="250" alt="Bộ sưu tập"> |
+| <img src="screenshots/ios-ipad/01-lens.webp" width="250" alt="Ống kính"> | <img src="screenshots/ios-ipad/02-journal.webp" width="250" alt="Nhật ký"> | <img src="screenshots/ios-ipad/03-collection.webp" width="250" alt="Bộ sưu tập"> |
 
 | Bài viết + Hỏi hướng dẫn viên | Khám phá | Cài đặt |
 |---|---|---|
-| <img src="screenshots/ios-ipad/04-discovery.png" width="250" alt="Chi tiết"> | <img src="screenshots/ios-ipad/05-explore.png" width="250" alt="Khám phá"> | <img src="screenshots/ios-ipad/06-settings.png" width="250" alt="Cài đặt"> |
+| <img src="screenshots/ios-ipad/04-discovery.webp" width="250" alt="Chi tiết"> | <img src="screenshots/ios-ipad/05-explore.webp" width="250" alt="Khám phá"> | <img src="screenshots/ios-ipad/06-settings.webp" width="250" alt="Cài đặt"> |
 
 > **Ảnh Khám phá chỉ có quán ăn, không có di tích ở ba trong bốn bộ.** Overpass (máy chủ
 > OpenStreetMap) giới hạn truy vấn theo IP, và nhánh truy vấn di tích nặng hơn nên bị từ chối
@@ -165,7 +165,7 @@ thiết kế viết một lần** bằng Compose Multiplatform. Chỉ camera, OC
 | Giọng đọc | TextToSpeech · AVSpeechSynthesizer | nền tảng |
 | Ghi log | Kermit (logcat / os_log) | 2.1.0 |
 | **AI** | **Google Gemini 3** qua Google AI Studio REST API | 3.5-flash → 3.1-flash-lite → 3-pro-preview |
-| Kiểm thử | JUnit4 · MockK · Turbine · Ktor MockEngine · Koin test | 4.13.2 · 1.14.11 · 1.2.1 |
+| Kiểm thử | `kotlin.test` · JUnit4 · Turbine · Ktor MockEngine · `koin-test` | 4.13.2 · 1.2.1 |
 
 **Nền tảng tối thiểu:** Android 8.0 (API 26) trở lên · iOS 16.0 trở lên.
 
@@ -186,7 +186,7 @@ Android  giao diện    Kotlin       DataStore
   sang model tiếp theo, chỉ bỏ cuộc khi cả chuỗi đều bận.
 
 Chi tiết đầy đủ (hình học bản đồ 34 tỉnh, truy vấn Overpass, R8/AGP, ký APK) nằm ở
-[TechStack-temp.md](TechStack-temp.md).
+[docs/tech-stack.md](docs/tech-stack.md).
 
 ---
 
@@ -196,7 +196,7 @@ Chi tiết đầy đủ (hình học bản đồ 34 tỉnh, truy vấn Overpass,
 
 | Loại dữ liệu | Lưu ở đâu | Ghi chú |
 |---|---|---|
-| Khám phá, hội thoại, ghi chú, bản dịch, tổng kết ngày | **Room (SQLite)** — 5 bảng | Nguồn sự thật duy nhất; màn hình đọc qua `Flow`, nên hoạt động cả khi offline |
+| Khám phá, hội thoại, ghi chú, báo sai, bản dịch, tổng kết ngày | **Room (SQLite)** — 6 bảng | Nguồn sự thật duy nhất; màn hình đọc qua `Flow`, nên hoạt động cả khi offline |
 | Ảnh chụp | **Tệp JPEG** trong thư mục riêng của app | Đã xoay đúng chiều theo EXIF, thu về cạnh dài 1024 px |
 | Tuỳ chọn (giao diện, đọc to, định vị) | **DataStore Preferences** | Khoá API và model **không** nằm ở đây nữa từ 06.08.2026 — cả hai là quyết định lúc build |
 | Dữ liệu 34 tỉnh + 61 mục văn hoá | **Tệp đóng gói sẵn trong app** | Chỉ đọc, không cần mạng |
@@ -360,7 +360,7 @@ Cần một khoá Gemini từ [Google AI Studio](https://aistudio.google.com/api
 `local.properties` — không còn cách nào nhập khoá từ trong app, nên bản build thiếu khoá sẽ báo
 ngay trên màn Ống kính và không nhận diện được gì. Hướng dẫn đầy đủ, kèm khoá Maps SDK cho
 Android và cách tạo bản release, xem
-[TechStack-temp.md §9–§11](TechStack-temp.md#9-getting-started).
+[docs/tech-stack.md §9–§11](docs/tech-stack.md#9-getting-started).
 
 ---
 

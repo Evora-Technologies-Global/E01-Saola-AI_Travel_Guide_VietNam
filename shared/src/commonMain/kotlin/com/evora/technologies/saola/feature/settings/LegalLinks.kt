@@ -14,10 +14,17 @@ package com.evora.technologies.saola.feature.settings
  * `feature/discovery/ReportMail.kt` makes for its single address, and the same one
  * `mobile/feature/licenses/LicensesScreen.kt` makes for its four licence URLs.
  *
- * Replace both before shipping; until they are real pages, the rows lead somewhere that does
- * not answer.
+ * Both point at the published site. Re-check them when the site moves: a URL that has stopped
+ * answering is worse than a dead button, because the traveller has left the app to find out.
+ *
+ * **Moved off GitHub Pages on 07.08.2026, and the reason is the status code rather than the
+ * page.** Pages serves a single-page site by handing every unknown path to `404.html`, so
+ * `…github.io/…/privacy` rendered correctly in a browser and answered **404** to everything
+ * else. A human reviewer would not have noticed; the Play Console's check on the privacy-policy
+ * URL reads the status line, and a 404 there blocks the submission. The Vercel deployment
+ * answers 200 on both paths.
  */
-internal const val PRIVACY_POLICY_URL = "https://evora-technologies-global.github.io/Evora-Technologies-Global-Website/privacy"
+internal const val PRIVACY_POLICY_URL = "https://evoratech.vercel.app/privacy"
 
 /** @see PRIVACY_POLICY_URL */
-internal const val TERMS_OF_SERVICE_URL = "https://evora-technologies-global.github.io/Evora-Technologies-Global-Website/terms"
+internal const val TERMS_OF_SERVICE_URL = "https://evoratech.vercel.app/terms"

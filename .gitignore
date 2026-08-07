@@ -58,3 +58,5 @@ data/schemas/
 # through it, and a scheme that only exists in xcuserdata is invisible to them.
 xcuserdata/
 *.xcuserstate
+
+app/release

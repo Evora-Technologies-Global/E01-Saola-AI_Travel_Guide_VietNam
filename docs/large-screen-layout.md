@@ -16,7 +16,8 @@ decides what the app knows or does is shared: Contract, ViewModel, use case, rep
 `Routes`, the design system. A file under `tablet/` receives `state`, emits `onIntent`, and
 puts composables somewhere.
 
-The reason is arithmetic. Ten features, ten ViewModels, eighteen arrangement files. A defect in
+The reason is arithmetic. Ten features, ten ViewModels, eighteen arrangements of them — ten
+phone screens and eight large-window ones. A defect in
 what a screen *knows* is fixed once and both form factors get it; only a defect in where
 something *sits* is fixed twice. Let one `tablet/` file own a decision and the project has
 twenty ViewModels wearing ten names — and the second copy is the one nobody re-reads when the
@@ -121,8 +122,10 @@ Two constraints come with that, and both have already cost a device session:
    destination's composable, leave `backQueue` alone — when it judges them equal. One route the
    other shell does not declare, or one `navArgument` default written differently, fails that
    comparison and the controller answers by clearing the back stack. So both graphs list the
-   same nine routes and the same three `Routes.TRANSLATION` defaults, and `Routes.PASSPORT` /
-   `Routes.COLLECTION` stay registered on the tablet even though they open the journal there.
+   same **eleven** routes — lens, journal, collection, passport, sovereignty, explore,
+   settings, licences, discovery, chat, translation — and the same three
+   `Routes.TRANSLATION` defaults, and `Routes.PASSPORT` / `Routes.COLLECTION` stay registered
+   on the tablet even though they open the journal there.
 
 The rail decides its own visibility through `railDestination()`, **not** `isTopLevel()` — on a
 large window the passport and the collection *are* the journal, and judged by `isTopLevel()`

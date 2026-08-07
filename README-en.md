@@ -3,7 +3,7 @@
 > Point the camera at a temple roof, a bowl of noodles or a street sign — the app recognises
 > it, tells the story behind it, and keeps it in your journey.
 
-🇻🇳 [Bản tiếng Việt](README.md) · 🛠 [Technical detail](TechStack-temp.md)
+🇻🇳 [Bản tiếng Việt](README.md) · 🛠 [Technical detail](docs/tech-stack.md)
 
 ---
 
@@ -79,7 +79,7 @@ right.
 
 Retaken on 07.08.2026 on Pixel 7 Pro, Pixel Tablet, iPhone 17 and iPad Pro 11" simulators, with
 the 24-place demo dataset from Sa Pa to Cần Thơ (see
-[TechStack §10](TechStack-temp.md#10-demoing-it-and-the-seeded-data)); the pictures inside the
+[tech-stack §10](docs/tech-stack.md#10-demoing-it-and-the-seeded-data)); the pictures inside the
 app are real photographs from Wikimedia Commons. The one exception is the tablet Explore shot,
 taken on a **Pixel 7 Pro forced to the Pixel Tablet's own metrics** (`wm size 2560x1600`,
 `wm density 320`) because the tablet AVD would not accept a mock location during the session —
@@ -89,15 +89,15 @@ same window measurements, so the arrangement is the real one.
 
 | Lens | Journal | Travel passport | Culture collection |
 |---|---|---|---|
-| <img src="screenshots/android-phone/01-lens.png" width="180" alt="Lens"> | <img src="screenshots/android-phone/02-journal.png" width="180" alt="Journal"> | <img src="screenshots/android-phone/03-passport.png" width="180" alt="Passport"> | <img src="screenshots/android-phone/04-collection.png" width="180" alt="Collection"> |
+| <img src="screenshots/android-phone/01-lens.webp" width="180" alt="Lens"> | <img src="screenshots/android-phone/02-journal.webp" width="180" alt="Journal"> | <img src="screenshots/android-phone/03-passport.webp" width="180" alt="Passport"> | <img src="screenshots/android-phone/04-collection.webp" width="180" alt="Collection"> |
 
 | Discovery detail | Chat | Explore nearby |
 |---|---|---|
-| <img src="screenshots/android-phone/05-discovery.png" width="180" alt="Discovery"> | <img src="screenshots/android-phone/06-chat.png" width="180" alt="Chat"> | <img src="screenshots/android-phone/07-explore.png" width="180" alt="Explore"> |
+| <img src="screenshots/android-phone/05-discovery.webp" width="180" alt="Discovery"> | <img src="screenshots/android-phone/06-chat.webp" width="180" alt="Chat"> | <img src="screenshots/android-phone/07-explore.webp" width="180" alt="Explore"> |
 
 | Place detail | Menu translation | Settings |
 |---|---|---|
-| <img src="screenshots/android-phone/08-explore-detail.png" width="180" alt="Place"> | <img src="screenshots/android-phone/09-translate.png" width="180" alt="Translate"> | <img src="screenshots/android-phone/10-settings.png" width="180" alt="Settings"> |
+| <img src="screenshots/android-phone/08-explore-detail.webp" width="180" alt="Place"> | <img src="screenshots/android-phone/09-translate.webp" width="180" alt="Translate"> | <img src="screenshots/android-phone/10-settings.webp" width="180" alt="Settings"> |
 
 ### Android — tablet
 
@@ -105,21 +105,21 @@ The wide layout: a vertical navigation rail on the left and two content panes si
 
 | Lens | Journal + passport | Collection |
 |---|---|---|
-| <img src="screenshots/android-tablet/01-lens.png" width="250" alt="Lens"> | <img src="screenshots/android-tablet/02-journal.png" width="250" alt="Journal"> | <img src="screenshots/android-tablet/03-collection.png" width="250" alt="Collection"> |
+| <img src="screenshots/android-tablet/01-lens.webp" width="250" alt="Lens"> | <img src="screenshots/android-tablet/02-journal.webp" width="250" alt="Journal"> | <img src="screenshots/android-tablet/03-collection.webp" width="250" alt="Collection"> |
 
 | Article + ask the guide | Explore | Settings |
 |---|---|---|
-| <img src="screenshots/android-tablet/04-discovery.png" width="250" alt="Discovery"> | <img src="screenshots/android-tablet/05-explore.png" width="250" alt="Explore"> | <img src="screenshots/android-tablet/06-settings.png" width="250" alt="Settings"> |
+| <img src="screenshots/android-tablet/04-discovery.webp" width="250" alt="Discovery"> | <img src="screenshots/android-tablet/05-explore.webp" width="250" alt="Explore"> | <img src="screenshots/android-tablet/06-settings.webp" width="250" alt="Settings"> |
 
 ### iOS — iPhone
 
 | Lens | Journal | Passport | Collection |
 |---|---|---|---|
-| <img src="screenshots/ios-phone/01-lens.png" width="180" alt="Lens"> | <img src="screenshots/ios-phone/02-journal.png" width="180" alt="Journal"> | <img src="screenshots/ios-phone/03-passport.png" width="180" alt="Passport"> | <img src="screenshots/ios-phone/04-collection.png" width="180" alt="Collection"> |
+| <img src="screenshots/ios-phone/01-lens.webp" width="180" alt="Lens"> | <img src="screenshots/ios-phone/02-journal.webp" width="180" alt="Journal"> | <img src="screenshots/ios-phone/03-passport.webp" width="180" alt="Passport"> | <img src="screenshots/ios-phone/04-collection.webp" width="180" alt="Collection"> |
 
 | Discovery detail | Chat | Explore (MapKit) | Settings |
 |---|---|---|---|
-| <img src="screenshots/ios-phone/05-discovery.png" width="180" alt="Discovery"> | <img src="screenshots/ios-phone/06-chat.png" width="180" alt="Chat"> | <img src="screenshots/ios-phone/07-explore.png" width="180" alt="Explore"> | <img src="screenshots/ios-phone/08-settings.png" width="180" alt="Settings"> |
+| <img src="screenshots/ios-phone/05-discovery.webp" width="180" alt="Discovery"> | <img src="screenshots/ios-phone/06-chat.webp" width="180" alt="Chat"> | <img src="screenshots/ios-phone/07-explore.webp" width="180" alt="Explore"> | <img src="screenshots/ios-phone/08-settings.webp" width="180" alt="Settings"> |
 
 > The viewfinder is blank in the Lens shots because the iOS Simulator has no camera. Everything
 > else on the screen — the modes, the shutter, the recent-capture pile — is real.
@@ -128,11 +128,11 @@ The wide layout: a vertical navigation rail on the left and two content panes si
 
 | Lens | Journal + passport | Collection |
 |---|---|---|
-| <img src="screenshots/ios-ipad/01-lens.png" width="250" alt="Lens"> | <img src="screenshots/ios-ipad/02-journal.png" width="250" alt="Journal"> | <img src="screenshots/ios-ipad/03-collection.png" width="250" alt="Collection"> |
+| <img src="screenshots/ios-ipad/01-lens.webp" width="250" alt="Lens"> | <img src="screenshots/ios-ipad/02-journal.webp" width="250" alt="Journal"> | <img src="screenshots/ios-ipad/03-collection.webp" width="250" alt="Collection"> |
 
 | Article + ask the guide | Explore | Settings |
 |---|---|---|
-| <img src="screenshots/ios-ipad/04-discovery.png" width="250" alt="Discovery"> | <img src="screenshots/ios-ipad/05-explore.png" width="250" alt="Explore"> | <img src="screenshots/ios-ipad/06-settings.png" width="250" alt="Settings"> |
+| <img src="screenshots/ios-ipad/04-discovery.webp" width="250" alt="Discovery"> | <img src="screenshots/ios-ipad/05-explore.webp" width="250" alt="Explore"> | <img src="screenshots/ios-ipad/06-settings.webp" width="250" alt="Settings"> |
 
 > **Three of the four Explore shots show restaurants and no landmarks.** Overpass (the
 > OpenStreetMap query server) rate-limits per IP, and the sights half of the query is the
@@ -171,7 +171,7 @@ location and narration are written per platform.
 | Narration | TextToSpeech · AVSpeechSynthesizer | platform |
 | Logging | Kermit (logcat / os_log) | 2.1.0 |
 | **AI** | **Google Gemini 3** via the Google AI Studio REST API | 3.5-flash → 3.1-flash-lite → 3-pro-preview |
-| Testing | JUnit4 · MockK · Turbine · Ktor MockEngine · Koin test | 4.13.2 · 1.14.11 · 1.2.1 |
+| Testing | `kotlin.test` · JUnit4 · Turbine · Ktor MockEngine · `koin-test` | 4.13.2 · 1.2.1 |
 
 **Platform floor:** Android 8.0 (API 26) and above · iOS 16.0 and above.
 
@@ -192,7 +192,7 @@ Android   the whole   pure       Room, Ktor,
   next model and only gives up when the whole chain is busy.
 
 The full detail — 34-province map geometry, the Overpass query, R8/AGP, APK signing — is in
-[TechStack-temp.md](TechStack-temp.md).
+[docs/tech-stack.md](docs/tech-stack.md).
 
 ---
 
@@ -202,7 +202,7 @@ The full detail — 34-province map geometry, the Overpass query, R8/AGP, APK si
 
 | Data | Stored in | Notes |
 |---|---|---|
-| Discoveries, conversations, notes, translations, day summaries | **Room (SQLite)** — five tables | The single source of truth; screens read it through `Flow`, so it works offline |
+| Discoveries, conversations, notes, reports, translations, day summaries | **Room (SQLite)** — six tables | The single source of truth; screens read it through `Flow`, so it works offline |
 | Photographs | **JPEG files** in the app's own directory | EXIF-corrected upright, downscaled to a 1024 px long edge |
 | Preferences (theme, narration, location) | **DataStore Preferences** | The API key and the model are **no longer here** as of 06.08.2026 — both are build decisions |
 | The 34 provinces and 61 catalogue entries | **Assets bundled in the app** | Read-only, no network needed |
@@ -371,7 +371,7 @@ You need a Gemini key from [Google AI Studio](https://aistudio.google.com/apikey
 `local.properties` — there is no in-app way to supply one, so a build without it says so on the
 lens screen and recognises nothing. Full instructions, including the Android Maps SDK key and
 how to produce a release build, are in
-[TechStack-temp.md §9–§11](TechStack-temp.md#9-getting-started).
+[docs/tech-stack.md §9–§11](docs/tech-stack.md#9-getting-started).
 
 ---
 
