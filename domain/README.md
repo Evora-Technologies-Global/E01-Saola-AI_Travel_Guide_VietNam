@@ -66,7 +66,8 @@ domain/src/commonMain/kotlin/com/evora/technologies/saola/domain/
 └── util/
     ├── AppResult.kt          Success / Failure, plus map / flatMap / onSuccess / onFailure
     ├── AppError.kt           every failure the app can surface, in domain terms
-    └── MapsUrls.kt           the directions hand-off URL
+    ├── MapsUrls.kt           the directions hand-off URL
+    └── UserAgent.kt          how the app names itself to Overpass and Wikimedia
 ```
 
 Tests live in `domain/src/commonTest/` and run on every target.
@@ -185,6 +186,7 @@ development build may do gets an interface here and two implementations in `:dat
 | A business rule | `usecase/XUseCases.kt` | One `factory { }` line in `useCaseModule` |
 | A new outbound capability | `repository/XRepository.kt` | The implementation goes in `:data/repository/`, bound in `RepositoryModule.kt` |
 | A new failure the UI must distinguish | `util/AppError.kt` | Give it a branch in `ErrorMessages.kt` in `:shared`, or it renders as the generic message |
+| A constant two modules both send | `util/` | `MapsUrls.kt` and `UserAgent.kt` are here for that reason — `:data` and `:shared` can both see `:domain`, and neither can see the other |
 | Anything needing a platform API | **not here** | An interface here, the actual in `:data` |
 | A new package under `domain/` | anywhere | Add it to `compose-stability.conf` in the same change |
 

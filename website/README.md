@@ -6,15 +6,15 @@ policy* and *› Terms of service*, and the URL both store submission forms must
 
 ```
 website/
-├── legal.html     the page. No build step, no dependency, no external request
+├── index.html     the page. No build step, no dependency, no external request
 ├── logo.png       the app icon at 128 px, from app/src/main/assets/logo_app.png
-├── vercel.json    serves that one file at / , /privacy and /terms — all 200
+├── vercel.json    maps /privacy and /terms onto it — all three answer 200
 └── README.md      this file
 ```
 
 The page wears **the app's own palette** — lacquer red, temple gold, warm sand neutrals — read
 straight off `shared/.../core/designsystem/theme/Color.kt` and `Theme.kt`, light scheme and dark
-scheme both. Each custom property in `legal.html` carries the Kotlin name it came from, so a
+scheme both. Each custom property in `index.html` carries the Kotlin name it came from, so a
 change to the app's theme can be mirrored here without guessing which red was which.
 
 `logo.png` is `sips -Z 128` of the 1254 px original — 27 KB against 1.4 MB, and the header draws
@@ -47,12 +47,23 @@ cd website
 vercel deploy --prod
 ```
 
-`cleanUrls` plus the three rewrites give `/`, `/privacy` and `/terms`, all answering **200**.
-Point `LegalLinks.kt` at whatever domain the project gets.
+The page is `index.html`, so `/` serves it with no configuration at all; `vercel.json` only adds
+`/privacy` and `/terms` on top. All three answer **200**. Point `LegalLinks.kt` at whatever domain
+the project gets.
+
+**If a fresh deployment 404s, it is almost always the Root Directory.** Deploying the repository
+without setting it to `website` gives Vercel an Android project: no `index.html` at the root, no
+`vercel.json`, and therefore a 404 on every path. Either set *Project Settings › Build & Development
+Settings › Root Directory* to `website`, or run `vercel deploy --prod` from inside this folder so
+the folder itself is the deployment root.
+
+The destination of a rewrite must never be a `.html` path while `cleanUrls` is on — that option
+makes `/x.html` redirect to `/x`, so a rewrite pointing at `/x.html` lands on a redirect instead of
+a file. That is why both rewrites here target `/`.
 
 ### Option B — dropped into the existing company site
 
-Copy `legal.html` into that project's `public/` directory twice:
+Copy `index.html` into that project's `public/` directory twice:
 
 ```
 public/privacy/index.html
@@ -85,7 +96,7 @@ folder, `LegalLinks.kt`, and both store listings.
 
 ## 4. What the text is allowed to say
 
-Every claim in `legal.html` was written against what the code actually does, and a few of them
+Every claim in `index.html` was written against what the code actually does, and a few of them
 are load-bearing:
 
 | The page says | What has to stay true |
@@ -112,8 +123,8 @@ Plain HTML, inline CSS and about 40 lines of JavaScript. No framework, no build.
   **Both must exist**, or the page goes blank in one language. A quick check:
 
   ```bash
-  grep -c 'data-l="vi"' website/legal.html
-  grep -c 'data-l="en"' website/legal.html   # the two numbers must match
+  grep -c 'data-l="vi"' website/index.html
+  grep -c 'data-l="en"' website/index.html   # the two numbers must match
   ```
 
 - Section numbers are written by hand in the headings. Renumbering one means fixing the

@@ -4,6 +4,7 @@ import com.evora.technologies.saola.data.remote.openmap.dto.WikiQueryResponse
 import com.evora.technologies.saola.data.util.log
 import com.evora.technologies.saola.domain.model.AppLanguage
 import com.evora.technologies.saola.domain.model.GeoPoint
+import com.evora.technologies.saola.domain.util.SAOLA_USER_AGENT
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
@@ -59,7 +60,7 @@ internal class WikipediaClient(
         language: AppLanguage,
     ): Map<String, WikiArticle> = try {
         val response: WikiQueryResponse = httpClient.get(apiUrl(language)) {
-            header(HttpHeaders.UserAgent, USER_AGENT)
+            header(HttpHeaders.UserAgent, SAOLA_USER_AGENT)
             parameter("action", "query")
             parameter("format", "json")
             parameter("formatversion", "2")
@@ -128,7 +129,7 @@ internal class WikipediaClient(
         limit: Int = MAX_PHOTOS,
     ): List<GeoPhoto> = try {
         val response: WikiQueryResponse = httpClient.get(COMMONS_API) {
-            header(HttpHeaders.UserAgent, USER_AGENT)
+            header(HttpHeaders.UserAgent, SAOLA_USER_AGENT)
             parameter("action", "query")
             parameter("format", "json")
             parameter("formatversion", "2")
@@ -168,13 +169,6 @@ internal class WikipediaClient(
 
     private companion object {
         const val COMMONS_API = "https://commons.wikimedia.org/w/api.php"
-
-        /**
-         * Required by Wikimedia's user-agent policy, which asks for an identifiable
-         * application rather than a generic library string. Requests without one are
-         * liable to be refused outright.
-         */
-        const val USER_AGENT = "Saola/1.0 (https://github.com/Evora-Technologies-Global/E01-VietLensTravel; hackathon build)"
 
         /** See [articles] — this is a correctness limit, not a performance one. */
         const val PAGEVIEW_SAFE_BATCH = 10

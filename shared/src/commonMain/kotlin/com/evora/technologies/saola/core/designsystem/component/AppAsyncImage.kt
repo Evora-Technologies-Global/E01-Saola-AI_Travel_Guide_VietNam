@@ -36,6 +36,7 @@ import coil3.network.NetworkHeaders
 import coil3.network.httpHeaders
 import coil3.request.ImageRequest
 import com.evora.technologies.saola.core.designsystem.theme.Motion
+import com.evora.technologies.saola.domain.util.SAOLA_USER_AGENT
 
 /**
  * Every photograph in the app, with its own wait and its own failure drawn in.
@@ -180,17 +181,20 @@ fun AppAsyncImage(
  *
  * Wikimedia — which serves every photograph on the Explore map — enforces its user-agent
  * policy on `upload.wikimedia.org` and answers **403** to a request with no agent *or*
- * with a generic library one. Measured against a real thumbnail: `200` with the string
- * below, `403` with `okhttp/4.12.0`, which is what the image loader sends by default.
- * The symptom is every photograph on the screen rendering as the broken-image mark,
- * with nothing in the logs to say why.
+ * with a generic library one. Measured against a real thumbnail: `200` with
+ * [SAOLA_USER_AGENT], `403` with `okhttp/4.12.0`, which is what the image loader sends by
+ * default. The symptom is every photograph on the screen rendering as the broken-image
+ * mark, with nothing in the logs to say why.
+ *
+ * The agent string itself is in `:domain` — the two Explore clients send the same one, and
+ * the contact address in it has to change in one place.
  *
  * Applied to every request rather than only to remote ones. A local file path never
  * reaches the network layer, so the header costs nothing there, and a rule with an
  * exception is a rule somebody forgets at the next call site.
  */
 private val REMOTE_IMAGE_HEADERS = NetworkHeaders.Builder()
-    .set("User-Agent", "Saola/1.0 (https://github.com/Evora-Technologies-Global/E01-VietLensTravel; hackathon build)")
+    .set("User-Agent", SAOLA_USER_AGENT)
     .build()
 
 /** What the frame is doing, which is not always what the image is doing. */
