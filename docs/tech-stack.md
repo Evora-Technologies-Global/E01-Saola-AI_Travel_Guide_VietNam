@@ -1,13 +1,18 @@
-# Saola — Technical appendix
+# Saola — tech stack and technical detail
 
-Everything that used to live in `README.md` and is too detailed for it. Kept in English
-because it is the same register as [`LLM.md`](LLM.md) and quotes code identifiers verbatim;
-`README.md` (Vietnamese) and `README-en.md` are the documents for a reader who has not
-opened the project yet.
+> What the app is built out of, why each choice was made, and what it costs to change it.
+> Kept in English, the same register as [`LLM.md`](../LLM.md), because it quotes code
+> identifiers verbatim. [`README.md`](../README.md) (Vietnamese) and
+> [`README-en.md`](../README-en.md) are the documents for a reader who has not opened the
+> project yet; this one assumes they have.
 
-> **Temporary file.** Split out on 05.08.2026 so the README could become an overview. The
-> intent is to fold these sections into `docs/` as the project is refactored — most of §4,
-> §5 and §6 belong beside the features they describe.
+| Question | Read |
+|---|---|
+| Where does a file go? What may depend on what? | [`../LLM.md`](../LLM.md) |
+| How do I write an MVI screen? | [`android-mvi-best-practices.md`](android-mvi-best-practices.md) |
+| How does the app arrange itself on a large window? | [`large-screen-layout.md`](large-screen-layout.md) |
+| What is in one module, and what are its rules? | [`../domain/README.md`](../domain/README.md) · [`../data/README.md`](../data/README.md) · [`../shared/README.md`](../shared/README.md) |
+| What is it built out of, and why? | this file |
 
 ---
 
@@ -41,8 +46,9 @@ what a screen *knows* is fixed once for both form factors; only a defect in wher
 
 Every screen ViewModel extends `MviViewModel<S, I, E>`; `onIntent` is its only public
 method; State/Intent/Effect live in `XContract.kt`; every coroutine goes through
-`launchSafely`. The full rule set is in `docs/android-mvi-best-practices.md`, the file map
-in `LLM.md`.
+`launchSafely`. The full rule set is in
+[`android-mvi-best-practices.md`](android-mvi-best-practices.md), the file map in
+[`LLM.md`](../LLM.md).
 
 ---
 
@@ -75,7 +81,7 @@ in `LLM.md`.
 | Logging | Kermit (logcat / os_log) | 2.1.0 |
 | IO | Okio | 3.16.0 |
 | AI | Google Gemini 3 via the Google AI Studio REST API | see below |
-| Testing | JUnit4 · MockK · Turbine · Ktor MockEngine · Koin test | 4.13.2 · 1.14.11 · 1.2.1 |
+| Testing | `kotlin.test` · JUnit4 · Turbine · Ktor MockEngine · `koin-test` | 4.13.2 · 1.2.1 |
 
 **Platform floor:** Android `minSdk` 26, `targetSdk` 36, `compileSdk` 37. iOS deployment
 target 16.0. App version 1.0.0 (`versionCode` 100), set once in the root `gradle.properties`
@@ -84,6 +90,12 @@ because `:app` stamps the APK and `:shared` compiles it into the Settings footer
 **Model chain** (`AppSettings.kt`): `gemini-3.5-flash` → `gemini-3.1-flash-lite` →
 `gemini-3-pro-preview`. Only 3.x ids are offered — Google retires older generations for keys
 created after a cutoff, so a `gemini-2.x` id would `404` for any new user.
+
+**There is no mocking library.** `libs.versions.toml` still declares `mockk` and
+`mockk-android`, but no module depends on either and nothing imports `io.mockk` — doubles are
+hand-written fakes (`commonTest/testing/Fakes.kt`) plus Ktor's `MockEngine`, because MockK is
+JVM-only and `commonTest` compiles for Kotlin/Native. Those two catalog entries are dead and
+should be deleted rather than reached for.
 
 **Espresso and the test runner are pinned up on purpose** (3.7.0 / 1.7.0). Neither is a
 dependency this project asks for; both arrive under `ui-test-junit4`, which still declares
@@ -95,13 +107,14 @@ test died with `NoSuchMethodException` before its body ran.
 
 ## 3. Where the data lives
 
-**Room is the single source of truth** for everything the traveller has seen. Five tables:
+**Room is the single source of truth** for everything the traveller has seen. Six tables:
 
 | Table | Holds | Notes |
 |---|---|---|
 | `discoveries` | one row per recognised photo | indices on `createdAt`, `isFavorite`, `provinceId` |
 | `chat_messages` | one row per conversation turn | cascade-deletes with its discovery |
 | `discovery_notes` | the traveller's own note + kept photos | keyed by `discoveryId`, at most one per discovery |
+| `discovery_reports` | "this recognition is wrong" | keyed by `discoveryId`, cascade-deletes with it; a re-filed objection overwrites, so `createdAt` is the latest one |
 | `translations` | OCR + translation results | blocks stored as JSON with their bounding boxes |
 | `trip_summaries` | one AI-written diary entry per day | keyed by ISO date, so regeneration overwrites |
 
@@ -132,17 +145,35 @@ older install happened to be left on.
 backend and no analytics. The only outbound calls are Gemini (the photo and the prompt),
 Overpass/Wikipedia/Commons (a coordinate), and the map tiles.
 
-**Schema version 2, with `fallbackToDestructiveMigration(dropAllTables = true)` and no
+**Schema version 1, with `fallbackToDestructiveMigration(dropAllTables = true)` and no
 migrations.** Acceptable only because nothing is published: any version Room has no
 migration for — in either direction — drops every table and recreates them empty, silently.
 A device carrying demo data has to be re-seeded.
+
+**The number stays at 1 while the app is unpublished, and that is the rule rather than an
+accident.** It had reached 3 — 2 for the `imagePath` → `imageName` rename, 3 for
+`discovery_reports` — and every one of those bumps was destructive anyway: each existed only
+to *trigger* the fallback, never to carry data across. Counting up while destroying everything
+at each step describes a migration history that does not exist. So: change the schema freely,
+leave the version alone.
+
+The one thing that rule cannot do, worth knowing before trusting it: Room hashes the schema
+into the file and compares it on open, so a **same-version** change is an integrity failure it
+throws on rather than a fallback it runs. A developer holding an older `saola.db` uninstalls or
+clears app data; on a debug build the demo trip re-seeds on the next launch. `data/schemas/`
+holds the single exported `1.json` and is **git-ignored**, so it is a local build artefact, not
+a record a reviewer can read in a diff.
+
+**Publishing ends this.** The rows stop being disposable, the number starts moving, the first
+real `Migration` is written, and `fallbackToDestructiveMigration` comes out of
+`applySharedConfiguration`.
 
 **Bundled assets**, read-only, shipped in the APK/app bundle:
 
 | Asset | Size | What |
 |---|---|---|
 | `provinces.json` | 189 KB | the 34 provinces as polygons, generated from OSM (ODbL) |
-| `catalog.json` | — | the 61 culture-collection entries in eight languages |
+| `catalog.json` | 95 KB | the 61 culture-collection entries in eight languages |
 
 ---
 
@@ -180,7 +211,9 @@ key, no billing, no network — and about 200 KB to the release APK.
 was taken at, so pointing the camera at a temple *is* the check-in.
 `DiscoveryRepositoryImpl` resolves the province at write time and stores it in a
 denormalised `provinceId` column, which turns the map's per-province roll-up into one
-grouped SQL query instead of point-in-polygon over 9,151 vertices per row on every read.
+grouped SQL query instead of point-in-polygon over 11,041 vertices per row on every read —
+`Province.contains` tests `mainlandRings` and then `offshoreRings`, so a fix that matches
+nothing walks the whole corpus behind its bounding-box early-out.
 
 ### The data
 
@@ -218,7 +251,9 @@ a regenerated asset built from a pre-merger source fails the build instead of sh
 ### Rendering
 
 A plain Compose `Canvas`. Paths are built once in unmagnified canvas space and pan and zoom
-are applied as a transform, so a gesture never rebuilds 9,228 vertices. Photos are filled
+are applied as a transform, so a gesture never rebuilds the mainland's **9,151** vertices —
+`Province.toShape` walks `mainlandRings` only, and the insets build their 1,813 separately.
+Photos are filled
 with `clipPath(ring) { drawImage(…) }`, **fitted per ring rather than per province**: Khánh
 Hòa's bounding box reaches Trường Sa and is almost entirely open sea, so a single copy
 stretched across it left the mainland showing a narrow strip of the photo while the islets
@@ -539,7 +574,7 @@ of a sign that says something else.
   colour, which is why that had to look deliberate rather than broken.
 - **Overpass is donated infrastructure and it throttles.** A burst of development traffic
   exhausts the per-IP allowance and every request until it recovers is refused; the mirror
-  rotation exists for exactly this. This is visible in `screenshots/ios-ipad/04-explore.png`,
+  rotation exists for exactly this. This is visible in `screenshots/ios-ipad/05-explore.webp`,
   taken after a day of repeated searches: the food query returned and the sights query did
   not, so the screen shows twelve restaurants and no landmarks.
 - **Neither map actual is tested.** `OpenMapClientTest` covers the wire formats, the query

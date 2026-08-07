@@ -3,7 +3,7 @@
 > Point the camera at a temple roof, a bowl of noodles or a street sign — the app recognises
 > it, tells the story behind it, and keeps it in your journey.
 
-🇻🇳 [Bản tiếng Việt](README.md) · 🛠 [Technical detail](TechStack-temp.md)
+🇻🇳 [Bản tiếng Việt](README.md) · 🛠 [Technical detail](docs/tech-stack.md)
 
 ---
 
@@ -79,7 +79,7 @@ right.
 
 Retaken on 07.08.2026 on Pixel 7 Pro, Pixel Tablet, iPhone 17 and iPad Pro 11" simulators, with
 the 24-place demo dataset from Sa Pa to Cần Thơ (see
-[TechStack §10](TechStack-temp.md#10-demoing-it-and-the-seeded-data)); the pictures inside the
+[tech-stack §10](docs/tech-stack.md#10-demoing-it-and-the-seeded-data)); the pictures inside the
 app are real photographs from Wikimedia Commons. The one exception is the tablet Explore shot,
 taken on a **Pixel 7 Pro forced to the Pixel Tablet's own metrics** (`wm size 2560x1600`,
 `wm density 320`) because the tablet AVD would not accept a mock location during the session —
@@ -171,7 +171,7 @@ location and narration are written per platform.
 | Narration | TextToSpeech · AVSpeechSynthesizer | platform |
 | Logging | Kermit (logcat / os_log) | 2.1.0 |
 | **AI** | **Google Gemini 3** via the Google AI Studio REST API | 3.5-flash → 3.1-flash-lite → 3-pro-preview |
-| Testing | JUnit4 · MockK · Turbine · Ktor MockEngine · Koin test | 4.13.2 · 1.14.11 · 1.2.1 |
+| Testing | `kotlin.test` · JUnit4 · Turbine · Ktor MockEngine · `koin-test` | 4.13.2 · 1.2.1 |
 
 **Platform floor:** Android 8.0 (API 26) and above · iOS 16.0 and above.
 
@@ -192,7 +192,7 @@ Android   the whole   pure       Room, Ktor,
   next model and only gives up when the whole chain is busy.
 
 The full detail — 34-province map geometry, the Overpass query, R8/AGP, APK signing — is in
-[TechStack-temp.md](TechStack-temp.md).
+[docs/tech-stack.md](docs/tech-stack.md).
 
 ---
 
@@ -202,7 +202,7 @@ The full detail — 34-province map geometry, the Overpass query, R8/AGP, APK si
 
 | Data | Stored in | Notes |
 |---|---|---|
-| Discoveries, conversations, notes, translations, day summaries | **Room (SQLite)** — five tables | The single source of truth; screens read it through `Flow`, so it works offline |
+| Discoveries, conversations, notes, reports, translations, day summaries | **Room (SQLite)** — six tables | The single source of truth; screens read it through `Flow`, so it works offline |
 | Photographs | **JPEG files** in the app's own directory | EXIF-corrected upright, downscaled to a 1024 px long edge |
 | Preferences (theme, narration, location) | **DataStore Preferences** | The API key and the model are **no longer here** as of 06.08.2026 — both are build decisions |
 | The 34 provinces and 61 catalogue entries | **Assets bundled in the app** | Read-only, no network needed |
@@ -371,7 +371,7 @@ You need a Gemini key from [Google AI Studio](https://aistudio.google.com/apikey
 `local.properties` — there is no in-app way to supply one, so a build without it says so on the
 lens screen and recognises nothing. Full instructions, including the Android Maps SDK key and
 how to produce a release build, are in
-[TechStack-temp.md §9–§11](TechStack-temp.md#9-getting-started).
+[docs/tech-stack.md §9–§11](docs/tech-stack.md#9-getting-started).
 
 ---
 
