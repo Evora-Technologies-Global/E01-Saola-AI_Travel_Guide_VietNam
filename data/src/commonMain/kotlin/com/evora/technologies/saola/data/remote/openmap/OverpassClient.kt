@@ -6,6 +6,7 @@ import com.evora.technologies.saola.data.util.log
 import com.evora.technologies.saola.domain.model.GeoPoint
 import com.evora.technologies.saola.domain.util.AppError
 import com.evora.technologies.saola.domain.util.AppResult
+import com.evora.technologies.saola.domain.util.SAOLA_USER_AGENT
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.HttpRequestTimeoutException
@@ -144,7 +145,7 @@ internal class OverpassClient(
             // Wikimedia and Overpass both ask for a descriptive agent identifying the
             // application. Ktor's default says only "Ktor client", which is exactly the
             // sort of caller these services throttle first.
-            header(HttpHeaders.UserAgent, USER_AGENT)
+            header(HttpHeaders.UserAgent, SAOLA_USER_AGENT)
             // Far shorter than the client-wide 90 s, which is sized for a Gemini vision
             // call. Overpass either answers in a few seconds or is refusing us, and a
             // traveller watching a spinner does not care which — three attempts at the
@@ -274,14 +275,6 @@ internal class OverpassClient(
             "https://overpass-api.de/api/interpreter",
             "https://overpass.kumi.systems/api/interpreter",
         )
-
-        /**
-         * Identifies the app, as Overpass's usage policy asks callers to do.
-         *
-         * A contact address is included on purpose: it is what lets the operators ask
-         * this app to stop rather than simply blocking the whole address range.
-         */
-        const val USER_AGENT = "Saola/1.0 (https://github.com/Evora-Technologies-Global/E01-VietLensTravel; hackathon build)"
 
         /**
          * Things to see, in the order they are asked for.
